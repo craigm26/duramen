@@ -9,6 +9,7 @@ import { renderSpec, renderDecisions, renderTrace } from './render.mjs';
 import { generateCases, runCases } from './suite.mjs';
 import { implDriver, killAll, parseCommand } from './driver.mjs';
 import { regen } from './regen.mjs';
+import { serve } from './serve.mjs';
 import { mutate, oracleSources } from './mutate.mjs';
 import { agree } from './agree.mjs';
 import { diffRecords } from './diff.mjs';
@@ -25,6 +26,7 @@ const USAGE = `usage:
   duramen diff   <old record> <new record> [--json]
   duramen regen  <record> --lang ts|py [--model sonnet] [--runs <dir>] [--sandbox-root <dir>] [--leak-terms <file.json>]
                 [--prompt <file>] [--run-id <id>] [--max-minutes <n>] [--json]
+  duramen serve  (duramen as a driver: check and cases requests on standard input)
   duramen --version
 
 A record is a .duramen file or a folder of them.`;
@@ -62,6 +64,11 @@ const sortDs = (ds) => [...ds].sort((a, b) => (a.file === b.file ? a.line - b.li
 export async function main(argv, io = { out: (s) => process.stdout.write(s + '\n'), err: (s) => process.stderr.write(s + '\n') }) {
   const [cmd, ...rest] = argv;
   if (cmd === '--version' || cmd === 'version') { io.out(`duramen ${VERSION}`); return 0; }
+  if (cmd === 'serve') {
+    if (argv.length > 1) { io.err('duramen serve takes no arguments: it reads requests on standard input'); return 2; }
+    await serve();
+    return 0;
+  }
   if (!cmd || cmd === 'help' || cmd === '--help' || cmd === '-h') { (cmd ? io.out : io.err)(USAGE); return cmd ? 0 : 2; }
   if (!OPTIONS[cmd]) { io.err(`duramen: unknown command "${cmd}"\n${USAGE}`); return 2; }
   const args = parseArgs(rest, OPTIONS[cmd]);

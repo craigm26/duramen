@@ -1,0 +1,230 @@
+duramen 0.1
+
+section SU "The suite"
+  text
+    The suite is what judges an implementation: one case per example, each a request line and
+    what the response to it must hold. `cases` lists it; running it against an implementation
+    is not part of this document (OPEN-SU-001).
+
+req SU-001 "No suite from a record with errors"
+  text
+    `cases` MUST answer `errors`, the number of errors `check` reports for the same record,
+    and no cases when that number is not 0. Warnings do not stop the suite.
+  example cases {}
+    input files."s.duramen"
+      frobnicate
+    expect result = {"errors": 3, "cases": []}
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      req A "a"
+        text
+          Nothing to show.
+    expect result = {"errors": 1, "cases": []}
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {"y": 1}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.errors = 0
+    expect result.cases.0.id = "A#1"
+
+req SU-002 "One case per example"
+  text
+    For a record without errors, `cases` MUST list one case per example and table row of its
+    requirements: requirement by requirement in record order (REQ-RC-002), and within one, in
+    order of lines. A case is an object with these members:
+    - `id`: `<requirement ID>#<n>`, counting the requirement's examples and table rows from 1;
+    - `kind`: `"example"`;
+    - `reqs`: `["REQ-<requirement ID>"]`;
+    - `platform`: the requirement's platform (REQ-SY-009);
+    - `line`: the request line (REQ-SU-003);
+    - `solo`: `true`, only for a case sent alone (REQ-OR-002), and absent otherwise;
+    - `checks`: what the response must hold (REQ-SU-004);
+    - `full`: the oracle's whole answer (REQ-SU-005).
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {"x": 1}
+          expect result.x = 1
+      req B "b"
+        on posix
+        table f
+          | x | result.x |
+          | 2 | 2        |
+          | 3 | ?        |
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result = {"errors": 0, "cases": [{"id": "A#1", "kind": "example", "reqs": ["REQ-A"], "platform": "any", "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\": 1}}", "checks": [{"path": "result.x", "kind": "eq", "value": 1}], "full": {"members": ["id", "result"], "result": {"x": 1}, "tolerances": {}}}, {"id": "B#1", "kind": "example", "reqs": ["REQ-B"], "platform": "posix", "line": "{\"id\":\"B#1\",\"op\":\"f\",\"input\":{\"x\":2}}", "checks": [{"path": "result.x", "kind": "eq", "value": 2}], "full": {"members": ["id", "result"], "result": {"x": 2}, "tolerances": {}}}, {"id": "B#2", "kind": "example", "reqs": ["REQ-B"], "platform": "posix", "line": "{\"id\":\"B#2\",\"op\":\"f\",\"input\":{\"x\":3}}", "checks": [{"path": "result.x", "kind": "eq", "value": 3, "from": "oracle"}], "full": {"members": ["id", "result"], "result": {"x": 3}, "tolerances": {}}}]}
+  example cases {}
+    input files."b.duramen"
+      duramen 0.1
+      req B "b"
+        on windows
+        example f {}
+    input files."a.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {}
+        example f {}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.cases.0.id = "A#1"
+    expect result.cases.1.id = "A#2"
+    expect result.cases.2.id = "B#1"
+    expect result.cases.2.platform = "windows"
+
+req SU-003 "Request lines"
+  decision D-010
+  text
+    A case's request line MUST be, for a raw example, its line exactly as written. Otherwise
+    it is a JSON object written without spaces between members: `"id"` (the case's ID) and
+    `"op"` first; then the request members, which are the operation's `request` members if it
+    has a `request` clause and the spec's otherwise, with the example's own on top (a member
+    the example sets again keeps its place), each value written as compact JSON; then
+    `"input"`, last. Members the example's `omit` names are left out, and an example written
+    `example <op>` has no `input`.
+
+    The input MUST be written exactly as the example wrote it: every character of its JSON
+    text, spaces and the spelling of numbers included; for a table row, `{`, then
+    `"<field>":<cell>` for each non-empty input cell in the order of the columns, separated by
+    commas, then `}`. An example with input lines (REQ-SY-011) instead sends the compact JSON
+    of its input, as ECMAScript's `JSON.stringify` writes it: the members of the example's
+    object in the order written, then the members its input lines add, in order, a member set
+    again keeping its place.
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+        request {"clock": "c", "trace": true}
+      oracle node echo.mjs
+      op f
+        input x? json
+      op g
+        input x? json
+        request {"mode": 2}
+      req A "a"
+        example f {"x" : 2.50e0 }
+        example f
+        example f {"x": 1}
+          request {"trace": false, "user": "u"}
+          omit clock
+        example g {"x": 1}
+          omit id, input
+        example f {"x": 1}
+          omit op, id
+        example raw '{"id": "A#6",  "op": "f"}'
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.cases.0 = {"id": "A#1", "kind": "example", "reqs": ["REQ-A"], "platform": "any", "line": "{\"id\":\"A#1\",\"op\":\"f\",\"clock\":\"c\",\"trace\":true,\"input\":{\"x\" : 2.50e0 }}", "checks": [], "full": {"members": ["id", "result"], "result": {"x": 2.5}, "tolerances": {}}}
+    expect result.cases.1.line = "{\"id\":\"A#2\",\"op\":\"f\",\"clock\":\"c\",\"trace\":true}"
+    expect result.cases.2.line = "{\"id\":\"A#3\",\"op\":\"f\",\"trace\":false,\"user\":\"u\",\"input\":{\"x\": 1}}"
+    expect result.cases.3 = {"id": "A#4", "kind": "example", "reqs": ["REQ-A"], "platform": "any", "line": "{\"op\":\"g\",\"mode\":2}", "solo": true, "checks": [], "full": {"members": ["id", "result"], "result": {}, "tolerances": {}}}
+    expect result.cases.4.line = "{\"clock\":\"c\",\"trace\":true,\"input\":{\"x\": 1}}"
+    expect result.cases.4.solo = true
+    expect result.cases.5.line = "{\"id\": \"A#6\",  \"op\": \"f\"}"
+    expect result.cases.5.solo = true
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input files? object, n? number
+      req A "a"
+        example f {"n" : 1.50, "files": {"z": "old"}}
+          input files."a.duramen"
+            duramen 0.1
+            "quoted" é
+          input files.z
+            new
+        table f
+          | n      | files |
+          | 1.50   |       |
+          |        | {}    |
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.cases.0.line = "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"n\":1.5,\"files\":{\"z\":\"new\\n\",\"a.duramen\":\"duramen 0.1\\n\\\"quoted\\\" é\\n\"}}}"
+    expect result.cases.1.line = "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"n\":1.50}}"
+    expect result.cases.2.line = "{\"id\":\"A#3\",\"op\":\"f\",\"input\":{\"files\":{}}}"
+
+req SU-004 "Checks"
+  text
+    A case's `checks` MUST list its example's expectations in order:
+    `{"path": <path>, "kind": "eq", "value": <value>}` for `expect <path> = <value>`;
+    `{"path": <path>, "kind": "approx", "value": <number>, "tol": <tolerance>}` for
+    `expect <path> ≈ <number> ± <tolerance>` and for a cell in a column with a tolerance; and
+    for `expect <path> = ?` and a `?` cell,
+    `{"path": <path>, "kind": "eq", "value": <the oracle's value at the path>, "from": "oracle"}`.
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {"x": {"y": [1, 2]}}
+          expect result.x.y.0 = 1
+          expect result.x.y.1 ~ 2.1 +- 0.25
+          expect result.x = ?
+          expect id = "A#1"
+        table f
+          | x | result.x ± 0.5 |
+          | 2 | 2.25           |
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.cases.0.checks = [{"path": "result.x.y.0", "kind": "eq", "value": 1}, {"path": "result.x.y.1", "kind": "approx", "value": 2.1, "tol": 0.25}, {"path": "result.x", "kind": "eq", "value": {"y": [1, 2]}, "from": "oracle"}, {"path": "id", "kind": "eq", "value": "A#1"}]
+    expect result.cases.1.checks = [{"path": "result.x", "kind": "approx", "value": 2.25, "tol": 0.5}]
+
+req SU-005 "The oracle's whole answer"
+  text
+    A case's `full` MUST be the oracle's whole answer to its request, as an object with:
+    `members`, the names of the response's members, sorted by UTF-16 code units; `error`, the
+    response's error, when it has one; `result`, the response's result, when it has one;
+    `audit`, the response's audit text, when the operation declares an audit and the response
+    has one; and `tolerances`, an object that maps each path in the operation's `tolerance`
+    clauses to its number (`{}` when there are none, or no such operation).
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+        audit
+        tolerance result.t 0.5
+        tolerance result.u 0
+      op g
+        input answer? json
+      errors
+        e when never
+      req A "a"
+        example f {"answer": {"result": {"t": 1}, "audit": "A"}}
+        example f {"answer": {"error": "e", "extra": 1}}
+          expect error = "e"
+        example g {"answer": {"result": 2, "audit": "B"}}
+        example h {"answer": {"error": "e"}}
+          expect error = "e"
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.cases.0.full = {"members": ["audit", "id", "result"], "result": {"t": 1}, "audit": "A", "tolerances": {"result.t": 0.5, "result.u": 0}}
+    expect result.cases.1.full = {"members": ["error", "extra", "id"], "error": "e", "tolerances": {"result.t": 0.5, "result.u": 0}}
+    expect result.cases.2.full = {"members": ["audit", "id", "result"], "result": 2, "tolerances": {}}
+    expect result.cases.3.full = {"members": ["error", "id"], "error": "e", "tolerances": {}}
+
+open SU-001 "Running the suite"
+  text
+    How a suite is run against an implementation: the protocol cases on the stream itself
+    (exit status, bytes, one response per request in order), the comparison of responses with
+    each case's checks and whole answer, and the other kinds of case the rest of the language
+    adds.

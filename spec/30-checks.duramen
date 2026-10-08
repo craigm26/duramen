@@ -1,0 +1,294 @@
+duramen 0.1
+
+section CK "Checking a record"
+  text
+    These checks run on a record that was read without errors (REQ-RC-005). Most example
+    records here have an oracle, the small program shown under Files (`fixtures/echo.mjs`),
+    which answers each request with its input as the result, so that their examples run
+    cleanly and the diagnostics shown are the ones each example is about.
+
+req CK-001 "Every requirement has an example"
+  text
+    A requirement with no example and no table row MUST get T001 at its line. (In the rest of
+    the language, a static check, a property or evidence can stand in for an example.)
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      req A "a"
+        text
+          It MUST work.
+    expect result.diagnostics = ["s.duramen:3: error T001"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      req A "a"
+        table f
+          | x |
+          |---|
+    expect result.diagnostics = ["s.duramen:4: error P013"]
+
+req CK-002 "IDs are unique"
+  text
+    The IDs of requirements MUST be unique, and so MUST those of open items and those of
+    decisions; a second use MUST get T007 at its line. A requirement and an open item may share
+    an ID: they are REQ-x and OPEN-x.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {}
+      req A "again"
+        example f {}
+      open A "an open item may share a requirement's ID"
+        text
+          Open.
+      open B "b"
+        text
+          Open.
+      open B "b again"
+        text
+          Open.
+      decision D-1 "d"
+        source s
+      decision D-1 "d again"
+        source s
+      req C "c"
+        decision D-1
+        example f {}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:8: error T007", "s.duramen:16: error T007", "s.duramen:21: error T007"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {}
+    input files."b.duramen"
+      duramen 0.1
+      req A "a"
+        example f {}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["b.duramen:2: error T007"]
+
+req CK-003 "Cited decisions are declared"
+  text
+    Every decision a requirement cites MUST be declared; each one that is not MUST get T008 at
+    the requirement's line.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      decision D-1 "d"
+        source s
+      req A "a"
+        decision D-1 D-2, D-3
+        example f {}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:8: error T008", "s.duramen:8: error T008"]
+
+req CK-004 "Examples of declared operations"
+  text
+    An example that expects no error and is not raw MUST name a declared operation, else T009
+    at its line. Its input MUST have every field the operation declares without `?`, else T010
+    for each one missing, and each field of its input that the operation does not declare MUST
+    get the warning T011. For a table row, the line is the row's. An example that expects an
+    error (`expect error = ...`), or is raw, is not checked against the operation: it may be
+    about a request the operation would refuse.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input a number, b? number
+      errors
+        e when never
+      req A "a"
+        example g {"a": 1}
+        example f {"b": 1}
+        example f {"a": 1, "c": 2}
+        example f
+        example g {"answer": {"error": "e"}}
+          expect error = "e"
+        example raw '{"id": "A#6", "op": "g"}'
+        table f
+          | b | c |
+          | 1 | 2 |
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:9: error T009", "s.duramen:10: error T010", "s.duramen:11: warning T011", "s.duramen:12: error T010", "s.duramen:18: error T010", "s.duramen:18: warning T011"]
+
+req CK-005 "Expected errors are declared"
+  text
+    The code in an example's `expect error = <code>` MUST be declared under `errors`, else
+    T023 at the expectation's line.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+      errors
+        e when never
+      req A "a"
+        example f {"answer": {"error": "e"}}
+          expect error = "e"
+        example f {"answer": {"error": "nope"}}
+          expect error = "nope"
+        example raw '{"id": "r", "op": "f", "input": {"answer": {"error": "other"}}}'
+          expect error = "other"
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:12: error T023", "s.duramen:14: error T023"]
+
+req CK-006 "Obligations live in requirements"
+  decision D-006
+  text
+    The words MUST, MUST NOT, SHALL, SHALL NOT and REQUIRED, in capitals and as whole words,
+    state obligations, and obligations belong in requirements, where they have an ID and
+    examples. Outside requirements, a text holding such a word MUST get one T004: the text of
+    the spec, of a section, of a note or of a decision (at that statement's line), each
+    rejected alternative of a decision (at the decision's line), an operation's `result` (at
+    the `op` line), and each condition under `errors` (at its clause's line). The text of an
+    open item holding such a word MUST get the warning T014 at the open item's line. A word
+    inside a quotation on one line, between `"` and `"`, `“` and `”`, or two backquotes, is not
+    such a word, and titles are not checked.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+        text
+          The program MUST work.
+      op f
+        result what it MUST return
+      errors
+        e when it SHALL fail
+      section S "It MUST be titled"
+        text
+          REQUIRED reading.
+      note
+        text
+          This note says `MUST`, "SHALL" and “REQUIRED”, MUSTARD and must.
+      decision D-1 "d"
+        source s
+        text
+          Fine.
+        rejected "Another MUST."
+      open O "o"
+        text
+          It MUST NOT be.
+    expect result.diagnostics = ["s.duramen:2: error T004", "s.duramen:5: error T004", "s.duramen:8: error T004", "s.duramen:9: error T004", "s.duramen:15: error T004", "s.duramen:15: warning T012", "s.duramen:20: warning T014"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      decision D-1 "d"
+        source s
+        text
+          It MUST.
+        rejected "It SHALL."
+        rejected "It is REQUIRED."
+    expect result.diagnostics = ["s.duramen:3: error T004", "s.duramen:3: error T004", "s.duramen:3: error T004", "s.duramen:3: warning T012"]
+
+req CK-007 "Open items are not tested"
+  text
+    An open item is deliberately left unspecified, so each `example` or `table` clause of an
+    open item MUST get T003 at its line, whatever it holds.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      open O "o"
+        example f {}
+        table f
+          | x |
+          | 1 |
+    expect result.diagnostics = ["s.duramen:4: error T003", "s.duramen:5: error T003"]
+
+req CK-008 "The order of errors is stated once"
+  decision D-007
+  text
+    The order in which errors are checked is stated once, by the order of the `errors` list. A
+    requirement's text that contains two or more of the codes declared there, and one of the
+    phrases "in this order", "in the order", "first that applies", "first match", "precede",
+    "precedes", "preceded", "before", "after", "take precedence" and "takes precedence" (as
+    whole words, in any letter case), MUST get T005 at its `text` clause's line.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      errors
+        too_big when x > 9
+        too_small when x < 0
+      req A "a"
+        text
+          A request that is too_big gets too_big, and one too_small gets too_small.
+        example f {}
+      req B "b"
+        text
+          too_big is checked Before too_small.
+        example f {}
+      req C "c"
+        text
+          too_big is checked first.
+          After that, nothing.
+        example f {}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:14: error T005"]
+
+req CK-009 "Decisions"
+  decision D-008
+  text
+    A decision that no requirement cites MUST get the warning T012, and one without a `source`
+    the warning T013, at its line. A decision's `status`, when it has one, MUST start with one
+    of the words `observed`, `inferred`, `proposed`, `accepted`, `contested`, `superseded` and
+    `rejected`, and a superseded decision's status MUST be exactly `superseded by <ID>`, naming
+    a declared decision; else T027 at the decision's line. A decision without a status counts
+    as accepted. A requirement that cites a contested, superseded or rejected decision MUST get
+    T028 at its line for each, and one that cites an observed, inferred or proposed decision
+    the warning T028 for each.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      decision D-1 "uncited, no source"
+      decision D-2 "bad status"
+        source s
+        status Accepted
+      decision D-3 "superseded by nothing"
+        source s
+        status superseded
+      decision D-4 "superseded by an undeclared one"
+        source s
+        status superseded by D-9
+      decision D-5 "superseded properly"
+        source s
+        status superseded by D-6
+      decision D-6 "accepted, with more words"
+        source s
+        status accepted on 2026-01-01
+      decision D-7 "observed"
+        source s
+        status observed
+      req A "a"
+        decision D-2, D-3, D-4, D-5, D-6, D-7
+        example f {}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:6: warning T012", "s.duramen:6: warning T013", "s.duramen:7: error T027", "s.duramen:10: error T027", "s.duramen:13: error T027", "s.duramen:25: error T028", "s.duramen:25: error T028", "s.duramen:25: error T028", "s.duramen:25: warning T028"]

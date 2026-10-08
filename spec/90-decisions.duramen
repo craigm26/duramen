@@ -1,0 +1,91 @@
+duramen 0.1
+
+
+decision D-001 "duramen is judged through a driver of its own"
+  source written for this record, 2026-10-08
+  text
+    A program rebuilt from a specification is judged only through its driver: one JSON request
+    per line in, one JSON response per line out. To specify duramen in duramen, the checker
+    itself speaks that protocol (`duramen serve`), and a record travels inside a request as a
+    map of file names to texts, so that one request is one whole, self-contained case: no
+    files to set up, nothing left behind.
+  rejected "Command-line cases (arguments in, exit status and output out): the driver protocol is what every duramen suite already runs, and one protocol keeps the suite runner unchanged."
+
+decision D-002 "A folder record is read in one order everywhere"
+  source written for this record, 2026-10-08
+  text
+    File systems list a folder in different orders, so the files of a record are sorted, and
+    by UTF-16 code units, the order JavaScript and Java compare strings in, so that "first" and
+    "second" mean the same on every platform. Diagnostics are sorted the same way, so that two
+    checkers that agree on a record write the same list. Folders named `build` and
+    `node_modules`, and names starting with `.`, hold generated files, dependencies and tool
+    state, not the record.
+  rejected "Unicode code point order: it differs from UTF-16 order only above U+FFFF, and every tool that compares strings natively in JavaScript gets UTF-16 order for free."
+
+decision D-003 "Problems found while reading stop the check"
+  source written for this record, 2026-10-08
+  text
+    A record that was not read as written makes the later checks report the consequences of
+    the misreading (an unknown op because a clause was dropped, say) rather than its cause. The
+    checker reports what it found while reading, and checks nothing else until that is fixed.
+
+decision D-004 "Indentation is spaces"
+  source duramen 0.1
+  text
+    Indentation carries the structure of a record, and a tab has no agreed width, so a line
+    indented with anything but spaces is an error rather than a guess. A line of white space
+    only is blank, whatever it holds: it carries nothing.
+
+decision D-005 "A line that belongs to nothing is an error"
+  source found while writing this record, 2026-10-08
+  text
+    Before this record was written, duramen ignored some lines without a word: a line under a
+    clause that takes none (a second line of a `title`), a line under a table that is not a
+    row, and a line under an example indented three spaces or six. Each was a place where a
+    writer's intent could be dropped silently. Now each is P006, so every line of a record is
+    either read or reported.
+  rejected "Reading such lines as continuations: it would give `title`, `source` and the rest a second syntax for no gain."
+
+decision D-006 "Obligations live in requirements"
+  source a blind build of another specification (r05), and duramen 0.1
+  text
+    A builder acts on requirements and reads everything else as context. In one blind build, a
+    fact that an implementation had to act on was written in a decision, as context, and the
+    builder's tests missed it. An obligation outside a requirement has no ID and no example, so
+    nothing checks it; the checker rejects the words that state obligations anywhere else.
+    Quotations are exempt, so that a decision can quote an earlier text.
+
+decision D-007 "The order of errors is stated once"
+  source a blind build of another specification (r02), and duramen 0.1
+  text
+    One specification listed its error codes in a table and then restated their order in a
+    sentence, and the two disagreed. An order stated twice can drift; stated once, as the
+    order of the `errors` list, it cannot. The check is a heuristic: it catches the form that
+    mistake took, not every way of restating an order.
+
+decision D-008 "Decisions have a lifecycle"
+  source Chad Fowler, "The Specification Is Not a Document" (the seven states)
+  text
+    A decision is observed, inferred or proposed before it is accepted, and may later be
+    contested, superseded or rejected. Only an accepted decision should carry a requirement: a
+    requirement resting on a weaker one is a warning, and on a withdrawn one an error. A
+    decision that nothing cites, or that does not say where its claim came from, is a warning.
+
+decision D-009 "Every example is run through the oracle before a builder sees it"
+  source a blind build of another specification (r01), and duramen 0.1
+  text
+    In one blind build, an example typed by hand contradicted the formula its requirement
+    stated, and the builder had to choose between them. A value typed by hand is a claim; the
+    oracle, the specification's executable model, checks every such claim when the record is
+    checked, so a contradiction is found by the checker, not by a builder. Values written `?`
+    are the oracle's own and are shown, not checked: a requirement backed only by them is only
+    as right as the oracle.
+
+decision D-010 "An example's input is sent as written"
+  source duramen 0.1, from the examples of another specification
+  text
+    Some behavior lives in the spelling of an input: `2.0e1` and `20`, or `-0` and `0`, are the
+    same number but not the same text, and a program that reads text can treat them
+    differently. So an example's input is spliced into its request line exactly as the example
+    wrote it, and reaches the oracle and every implementation unchanged. An input built from
+    input lines has no spelling of its own, so it is written as compact JSON.

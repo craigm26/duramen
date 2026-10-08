@@ -40,9 +40,40 @@ function rowsTable(rows, respOf) {
   return out;
 }
 
-function renderExamples(r, oracle) {
+// An example whose input holds whole texts (input blocks) is shown with each text as a block.
+const pathText = (path) => path.map((p) => (/^[\w-]+$/.test(p) ? p : JSON.stringify(p))).join('.');
+const fence = (text) => { let f = '```'; while (text.includes(f)) f += '`'; return f; };
+function renderBlockExample(ex, resp, k, files) {
+  const rest = structuredClone(ex.input);
+  for (const path of ex.inputBlocks) {
+    let o = rest;
+    for (const key of path.slice(0, -1)) o = o?.[key];
+    if (o) delete o[path[path.length - 1]];
+  }
+  const drop = (o) => { if (o && typeof o === 'object' && !Array.isArray(o)) for (const key of Object.keys(o)) { drop(o[key]); if (o[key] && typeof o[key] === 'object' && !Array.isArray(o[key]) && !Object.keys(o[key]).length) delete o[key]; } };
+  drop(rest);
+  const out = ['', `Example ${k + 1}: ${code(ex.op)} with input ${code(val(rest))}${ex.inputBlocks.length ? ' and these texts' : ''}:`];
+  for (const path of ex.inputBlocks) {
+    let v = ex.input;
+    for (const key of path) v = v?.[key];
+    // A text taken from a file is shown once, under Files at the end of this document.
+    const from = ex.inputFrom?.[JSON.stringify(path)];
+    if (from !== undefined && files) {
+      if (!files.has(from)) files.set(from, String(v));
+      out.push('', `${code(`input.${pathText(path)}`)}: the file ${code(from)}, shown under Files at the end.`);
+      continue;
+    }
+    const f = fence(String(v));
+    out.push('', `${code(`input.${pathText(path)}`)}:`, '', f, String(v).replace(/\n$/, ''), f);
+  }
+  out.push('', `⟶ ${ex.expects.length ? ex.expects.map((e) => renderExpect(e, resp)).join('; ') : resp ? code(val('error' in resp ? { error: resp.error } : resp.result)) : '(no oracle answer)'}`);
+  return out;
+}
+
+function renderExamples(r, oracle, files) {
   const out = [];
-  const listed = r.examples.map((ex, k) => ({ ex, k })).filter(({ ex }) => ex.from === 'example');
+  for (const { ex, k } of r.examples.map((x, i) => ({ ex: x, k: i })).filter(({ ex: x }) => x.inputBlocks?.length)) out.push(...renderBlockExample(ex, oracle?.responses.get(exampleId(r, k)), k, files));
+  const listed = r.examples.map((ex, k) => ({ ex, k })).filter(({ ex }) => ex.from === 'example' && !ex.inputBlocks?.length);
   if (listed.length) {
     out.push('', 'Examples:');
     for (const { ex, k } of listed) {
@@ -219,6 +250,7 @@ export function renderSpec(ast, oracle, { version: duramenVersion = '0.2', prope
   out.push('');
   const shownProps = new Set();
   const shownEvidence = new Set();
+  const files = new Map(); // texts examples take from files, shown once at the end
   for (const item of ast.items) {
     if (item.type === 'section') { out.push('---', '', `## ${item.title}`, ''); if (item.text) out.push(item.text, ''); }
     else if (item.type === 'note') { out.push(item.text, ''); }
@@ -227,7 +259,7 @@ export function renderSpec(ast, oracle, { version: duramenVersion = '0.2', prope
       out.push(`**REQ-${item.id}.** *${item.title}.*${item.platform !== 'any' ? ` (${item.platform} only)` : ''} ${oneLine ? item.text : ''}`.trimEnd());
       if (!oneLine) out.push('', item.text);
       if (item.decisions.length) out.push('', `Decisions: ${item.decisions.join(', ')}.`);
-      out.push(...renderExamples(item, oracle));
+      out.push(...renderExamples(item, oracle, files));
       if (item.statics.length) {
         out.push('', 'Checked on the implementation folder:');
         for (const st of item.statics) out.push(`- ${describeStatic(st)}.`);
@@ -245,6 +277,14 @@ export function renderSpec(ast, oracle, { version: duramenVersion = '0.2', prope
     out.push('---', '', '## Other checks', '');
     for (const ev of restEvidence) out.push(...renderEvidence(ev, oracle), '');
     for (const pr of restProps) out.push(...renderProperty(pr, runOf(pr.id)), '');
+  }
+  if (files.size) {
+    out.push('---', '', '## Files', '', 'Texts that examples above take from files, each shown once.');
+    for (const [name, text] of [...files].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))) {
+      const f = fence(text);
+      out.push('', `### ${code(name)}`, '', f, text.replace(/\n$/, ''), f);
+    }
+    out.push('');
   }
   return out.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n';
 }

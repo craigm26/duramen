@@ -1,0 +1,301 @@
+duramen 0.1
+
+section RC "Records"
+  text
+    A record is what the checker reads: one file, or a folder of files read as one.
+
+req RC-001 "The files of a record"
+  decision D-002
+  text
+    A record named by a file MUST consist of that file alone, whatever its name. A record named
+    by a folder MUST consist of every file in the folder and its subfolders whose name ends in
+    `.duramen`, leaving out every file and folder whose name starts with `.`, and every folder
+    named `build` or `node_modules`. A record named by a file or folder that does not exist, or
+    a folder record with no files, MUST get P046 at line 1 of the name it was given (`.` for
+    the folder that holds all the files) and no other diagnostic.
+  example check {}
+    input files."a.duramen"
+      duramen 0.1
+      spec a 1
+    input files."notes.md"
+      frobnicate
+    input files."build/x.duramen"
+      frobnicate
+    input files."sub/build/x.duramen"
+      frobnicate
+    input files."node_modules/x.duramen"
+      frobnicate
+    input files.".hidden.duramen"
+      frobnicate
+    input files."sub/.hidden/x.duramen"
+      frobnicate
+    input files."sub/b.duramen"
+      duramen 0.1
+    expect result.diagnostics = []
+  example check {"entry": "notes.md"}
+    input files."notes.md"
+      duramen 0.1
+      spec n 1
+    input files."a.duramen"
+      frobnicate
+    expect result.diagnostics = []
+  example check {"entry": "sub"}
+    input files."sub/a.duramen"
+      duramen 0.1
+      spec a 1
+    input files."sub/deeper/b.duramen"
+      duramen 0.1
+    input files."c.duramen"
+      frobnicate
+    expect result.diagnostics = []
+  example check {"entry": "sub/a.duramen"}
+    input files."sub/a.duramen"
+      duramen 0.1
+      spec a 1
+    input files."sub/b.duramen"
+      frobnicate
+    expect result.diagnostics = []
+  example check {"entry": "missing.duramen"}
+    input files."a.duramen"
+      duramen 0.1
+      spec a 1
+    expect result.diagnostics = ["missing.duramen:1: error P046"]
+  example check {"entry": "sub"}
+    input files."a.duramen"
+      duramen 0.1
+      spec a 1
+    expect result.diagnostics = ["sub:1: error P046"]
+  example check {}
+    input files."notes.md"
+      duramen 0.1
+      spec a 1
+    expect result = {"diagnostics": [".:1: error P046"], "errors": 1, "warnings": 0}
+
+req RC-002 "The order of a record's files"
+  decision D-002
+  text
+    The files of a folder record MUST be read in the order of their names relative to the
+    folder, with `/` between the parts, compared as sequences of UTF-16 code units. Where this
+    document speaks of a first and a second statement in a record, it means first and second in
+    this order of files, and within a file, in the order of lines.
+  example check {}
+    input files."b.duramen"
+      duramen 0.1
+      spec b 1
+    input files."a.duramen"
+      duramen 0.1
+      spec a 1
+    expect result.diagnostics = ["b.duramen:2: error P044"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.1
+      spec a 1
+    input files."B.duramen"
+      duramen 0.1
+      spec b 1
+    expect result.diagnostics = ["a.duramen:2: error P044"]
+  example check {}
+    input files."a/z.duramen"
+      duramen 0.1
+      spec z 1
+    input files."a.duramen"
+      duramen 0.1
+      spec a 1
+    expect result.diagnostics = ["a/z.duramen:2: error P044"]
+  example check {}
+    input files."｡.duramen"
+      duramen 0.1
+      spec x 1
+    input files."😀.duramen"
+      duramen 0.1
+      spec y 1
+    expect result.diagnostics = ["｡.duramen:2: error P044"]
+
+req RC-003 "Versions"
+  text
+    Every file of a record MUST state the version of the language it is written in, with the
+    statement `duramen <version>`; the versions this checker reads are `0.1` and `0.2`. A file
+    that states none MUST get P020 at line 1. A version that is not one of these, or a second
+    `duramen` statement in one file, MUST get P023 at that statement's line. When the files of
+    one record state different versions, the record MUST get P047 at line 1 of its name (`.`
+    for the folder that holds all the files).
+  example check {}
+    input files."s.duramen"
+      spec s 1
+    expect result.diagnostics = ["s.duramen:1: error P020"]
+  example check {"files": {"s.duramen": ""}}
+    expect result.diagnostics = [".:1: error P021", "s.duramen:1: error P020"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.3
+      spec s 1
+    expect result.diagnostics = ["s.duramen:1: error P023"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      duramen 0.1
+    expect result.diagnostics = ["s.duramen:3: error P023"]
+  example check {}
+    input files."s.duramen"
+      duramen
+      spec s 1
+    expect result.diagnostics = ["s.duramen:1: error P023"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.1
+      spec s 1
+    input files."b.duramen"
+      duramen 0.2
+    expect result.diagnostics = [".:1: error P047"]
+  example check {"entry": "r"}
+    input files."r/a.duramen"
+      duramen 0.2
+      spec s 1
+    input files."r/b.duramen"
+      duramen 0.1
+    expect result.diagnostics = ["r:1: error P047"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.2
+      spec s 1
+    input files."b.duramen"
+      duramen 0.2
+    expect result.diagnostics = []
+
+req RC-004 "One spec, one oracle, one list of errors"
+  text
+    A record MUST have exactly one `spec` statement; without one it MUST get P021 at line 1 of
+    its name (for a folder record, `.` or the folder's name; for a file record, the file's).
+    A second `spec` or `oracle` statement, in the same file or another, MUST get P044, and a
+    second `errors` statement P032, at that statement's line.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+    expect result.diagnostics = [".:1: error P021"]
+  example check {"entry": "s.duramen"}
+    input files."s.duramen"
+      duramen 0.1
+    expect result.diagnostics = ["s.duramen:1: error P021"]
+  example check {"entry": "r"}
+    input files."r/s.duramen"
+      duramen 0.1
+    expect result.diagnostics = ["r:1: error P021"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec a 1
+
+      spec b 1
+    expect result.diagnostics = ["s.duramen:4: error P044"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node a.mjs
+    input files."b.duramen"
+      duramen 0.1
+      oracle node b.mjs
+    expect result.diagnostics = ["b.duramen:2: error P044"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      errors
+        e1 when x
+      errors
+        e2 when y
+    expect result.diagnostics = ["s.duramen:5: error P032"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.1
+      spec s 1
+      errors
+        e1 when x
+    input files."b.duramen"
+      duramen 0.1
+
+      errors
+        e2 when y
+    expect result.diagnostics = ["b.duramen:3: error P032"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      errors
+      errors
+    expect result.diagnostics = ["s.duramen:4: error P032"]
+
+req RC-005 "Problems found while reading stop the check"
+  decision D-003
+  text
+    When reading a record finds an error (any diagnostic with a P code at level `error`), the
+    checker MUST NOT check the record further: its diagnostics are the ones found while
+    reading.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      frobnicate
+      req A "a"
+        example nope {}
+    expect result.diagnostics = ["s.duramen:3: error P002"]
+
+req RC-006 "The order of diagnostics"
+  decision D-002
+  text
+    A record's diagnostics MUST be listed in order of file name (compared as UTF-16 code
+    units), then line, then code (compared the same way), then level (`error`, `warning`,
+    `info`). Two problems with the same file, line, level and code are two diagnostics.
+    `errors` and `warnings` MUST count the diagnostics at those levels.
+  example check {}
+    input files."b.duramen"
+      frobnicate
+      duramen 0.1
+    input files."a.duramen"
+      duramen 0.1
+      spec s 1
+
+
+      frobnicate
+      frobnicate
+    expect result = {"diagnostics": ["a.duramen:5: error P002", "a.duramen:6: error P002", "b.duramen:1: error P002"], "errors": 3, "warnings": 0}
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+
+      decision D-1 "one"
+        text
+          No source, and cited by nothing.
+
+      req A "a"
+        decision D-2
+    expect result = {"diagnostics": ["s.duramen:4: warning T012", "s.duramen:4: warning T013", "s.duramen:8: error T001", "s.duramen:8: error T008"], "errors": 2, "warnings": 2}
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+
+      decision D-1 "proposed"
+        source here
+        status proposed
+
+      decision D-2 "contested"
+        source there
+        status contested
+
+      req A "a"
+        decision D-1, D-2
+    expect result = {"diagnostics": ["s.duramen:12: error T001", "s.duramen:12: error T028", "s.duramen:12: warning T028"], "errors": 2, "warnings": 1}
+
+open RC-001 "The rest of the language"
+  text
+    The statements `type`, `edge`, `edgedef`, `property` and `evidence`, the clauses `returns`
+    (of `op`) and `static` (of `req`), and every check that `duramen 0.2` adds to those of
+    `duramen 0.1` for the statements specified here. The examples here never use them.
+
+open RC-002 "Where the version is stated"
+  text
+    Whether the `duramen` statement may come after other statements in a file. (Every file in
+    these examples states it first.)

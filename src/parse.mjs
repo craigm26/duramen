@@ -8,6 +8,9 @@ import { parseExpr, namesOf, unknownFunctions } from './expr.mjs';
 
 export const VERSIONS = ['0.1', '0.2'];
 const TOP = new Set(['duramen', 'spec', 'oracle', 'type', 'edge', 'edgedef', 'section', 'op', 'errors', 'req', 'property', 'evidence', 'open', 'decision', 'note']);
+// A number written as JSON writes one (no hex, no Infinity, no leading +), or NaN.
+const JSON_NUMBER = /^-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?$/;
+export const jsonNumber = (text) => (JSON_NUMBER.test(text) ? Number(text) : NaN);
 export const EVIDENCE_KINDS = ['published', 'derived', 'computed', 'measured', 'implementation', 'incident'];
 
 export function parse(source, file = '<input>') {
@@ -29,19 +32,21 @@ export function parse(source, file = '<input>') {
 function parseInto(source, file, ast, diag) {
   const lines = source.replace(/^\ufeff/, '').replace(/\r\n?/g, '\n').split('\n');
   let section = null;
+  let versionLine = null;
 
   // Split into top-level statements: [{ line, kw, rest, restCol, body: [{ n, indent, text }] }]
   const stmts = [];
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
     const n = i + 1;
+    // A line of white space only is blank, whatever its indent; it belongs to the statement
+    // above it (prose keeps its paragraphs).
+    if (raw.trim() === '') { stmts[stmts.length - 1]?.body.push({ n, indent: 0, text: '' }); continue; }
     const lead = raw.match(/^\s*/)[0];
-    if (lead.includes('\t')) { diag('error', n, 'P001', 'indent with spaces, not tabs', lead.indexOf('\t') + 1); continue; }
-    const indent = raw.match(/^ */)[0].length;
+    if (/[^ ]/.test(lead)) { diag('error', n, 'P001', 'indent with spaces only (no tabs or other white space)', lead.search(/[^ ]/) + 1); continue; }
+    const indent = lead.length;
     const text = raw.slice(indent).replace(/\s+$/, '');
     if (indent === 0) {
-      // A blank line belongs to the statement above it (prose keeps its paragraphs).
-      if (text === '') { stmts[stmts.length - 1]?.body.push({ n, indent: 0, text: '' }); continue; }
       if (text.startsWith('#')) continue;
       const [kw] = text.split(/\s+/, 1);
       if (!TOP.has(kw)) { diag('error', n, 'P002', `unknown statement "${kw}"`); stmts.push({ line: n, kw: null, rest: '', body: [] }); continue; }
@@ -71,7 +76,7 @@ function parseInto(source, file, ast, diag) {
     const out = [];
     for (const l of body) {
       if (l.indent === 2) {
-        if (l.text === '' || l.text.startsWith('#')) continue;
+        if (l.text.startsWith('#')) continue;
         const [kw] = l.text.split(/\s+/, 1);
         const rest = l.text.slice(kw.length).trim();
         out.push({ n: l.n, kw, rest, col: 3, restCol: 3 + l.text.length - rest.length, sub: [] });
@@ -103,6 +108,20 @@ function parseInto(source, file, ast, diag) {
       return { ok: false };
     }
   }
+  // `request <json object>` under spec or op: members every request carries.
+  function requestObject(c) {
+    const j = parseJSON(c.rest, c.n, 'request members', c.restCol);
+    if (!j.ok) return null;
+    if (j.value === null || typeof j.value !== 'object' || Array.isArray(j.value)) { diag('error', c.n, 'P009', 'request members are a JSON object', c.restCol); return null; }
+    if (!ownMembersOk(j.value, c.n, c.restCol)) return null;
+    return j.value;
+  }
+  // `id`, `op` and `input` are the example's own; request members cannot set them.
+  function ownMembersOk(members, n, col) {
+    const own = Object.keys(members).filter((k) => ['id', 'op', 'input'].includes(k));
+    if (own.length) diag('error', n, 'P051', `request members cannot set ${own.join(', ')}: the example's own (use omit to leave one out, or a raw example)`, col);
+    return !own.length;
+  }
   function typeOf(text, n, col, what) {
     const r = parseType(text);
     if (r.error) { diag('error', n, 'P024', `${what}: ${r.error}`, col + (r.at ?? 0)); return null; }
@@ -122,7 +141,7 @@ function parseInto(source, file, ast, diag) {
     if (/^expect\s+\S+\s*=\s*\?$/.test(text)) return { path: text.match(/^expect\s+(\S+)/)[1], kind: 'show', line: n };
     let m = text.match(/^expect\s+(\S+)\s*(?:≈|~)\s*(\S+)\s*(?:±|\+-)\s*(\S+)$/);
     if (m) {
-      const v = Number(m[2]); const tol = Number(m[3]);
+      const v = jsonNumber(m[2]); const tol = jsonNumber(m[3]);
       if (!Number.isFinite(v) || !Number.isFinite(tol) || tol < 0) { diag('error', n, 'P010', 'approximate expectation needs finite numbers and a tolerance of 0 or more', col); return null; }
       return { path: m[1], kind: 'approx', value: v, tol, line: n };
     }
@@ -137,16 +156,22 @@ function parseInto(source, file, ast, diag) {
   const cells = (l) => l.text.replace(/^\|/, '').replace(/\|$/, '').split(/(?<!\\)\|/).map((x) => x.trim().replace(/\\\|/g, '|'));
   const isExpectPath = (name) => /^(result|audit|error|id)(\.|$)/.test(name);
   function tableRows(c, op, from) {
-    const rows = c.sub.filter((l) => l.text.startsWith('|'));
-    if (!op || rows.length < 2) { diag('error', c.n, 'P013', 'table <op>, then a header row and at least one row', c.restCol); return []; }
+    for (const l of c.sub) if (l.text !== '' && !l.text.startsWith('#') && !l.text.startsWith('|')) diag('error', l.n, 'P006', 'a line under a table is a row, starting with |', l.indent + 1);
+    // A separator row (|---|:--:|) after the header is not a row.
+    const rows = c.sub.filter((l) => l.text.startsWith('|')).filter((l, i) => i === 0 || !/^\|[\s|:-]+\|$/.test(l.text));
+    if (!op || /\s/.test(op) || rows.length < 2) { diag('error', c.n, 'P013', 'table <op>, then a header row and at least one row', c.restCol); return []; }
     const header = cells(rows[0]).map((h) => {
       const hm = h.match(/^(\S+)(?:\s*(?:±|\+-)\s*(\S+))?$/);
-      return hm ? { name: hm[1], tol: hm[2] === undefined ? null : Number(hm[2]) } : { name: h, tol: null };
+      return hm ? { name: hm[1], tol: hm[2] === undefined ? null : jsonNumber(hm[2]) } : { name: h, tol: null };
     });
-    for (const h of header) if (h.tol !== null && !(Number.isFinite(h.tol) && h.tol >= 0)) diag('error', rows[0].n, 'P010', `column "${h.name}": a tolerance is a number of 0 or more`, rows[0].indent + 1);
+    if (header.some((h) => h.name === '')) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
+    for (const h of header) {
+      if (h.tol === null) continue;
+      if (!isExpectPath(h.name)) diag('error', rows[0].n, 'P010', `column "${h.name}": only an expectation column takes a tolerance`, rows[0].indent + 1);
+      else if (!(Number.isFinite(h.tol) && h.tol >= 0)) diag('error', rows[0].n, 'P010', `column "${h.name}": a tolerance is a number of 0 or more`, rows[0].indent + 1);
+    }
     const out = [];
     for (const l of rows.slice(1)) {
-      if (/^\|[\s|:-]+\|$/.test(l.text)) continue; // markdown separator row
       const vals = cells(l);
       if (vals.length !== header.length) { diag('error', l.n, 'P014', `row has ${vals.length} cells, header has ${header.length}`, l.indent + 1); continue; }
       const ex = { op, input: {}, raw: null, request: null, omit: [], expects: [], line: l.n, from };
@@ -177,6 +202,41 @@ function parseInto(source, file, ast, diag) {
   //   example raw '<line>'           well-formed request); sent on its own, in its own run
   // Under an example: `request <json>` adds or replaces request members, `omit <a>, <b>`
   // leaves members out, and `expect` lines state what the response holds.
+  // input paths: names separated by dots; a name is a word or a JSON string ("s.duramen")
+  function inputPath(text) {
+    const out = [];
+    let i = 0;
+    while (i < text.length) {
+      if (text[i] === '"') {
+        const m = text.slice(i).match(/^"(?:[^"\\]|\\.)*"/);
+        if (!m) return null;
+        try { out.push(JSON.parse(m[0])); } catch { return null; }
+        i += m[0].length;
+      } else {
+        const m = text.slice(i).match(/^[\w-]+/);
+        if (!m) return null;
+        out.push(m[0]);
+        i += m[0].length;
+      }
+      if (i < text.length) { if (text[i] !== '.') return null; i++; if (i === text.length) return null; }
+    }
+    return out.length ? out : null;
+  }
+  // Put text at a path in the example's input; the request is then written as JSON.stringify of
+  // the input, so the input's own spelling is not kept.
+  function setInput(ex, path, text, n) {
+    if (ex.noInput) { ex.noInput = false; ex.input = {}; }
+    let o = ex.input;
+    for (const key of path.slice(0, -1)) {
+      if (o[key] === undefined) o[key] = {};
+      if (o[key] === null || typeof o[key] !== 'object' || Array.isArray(o[key])) { diag('error', n, 'P049', `input ${path.join('.')}: ${key} is not an object`); return; }
+      o = o[key];
+    }
+    o[path[path.length - 1]] = text;
+    ex.raw = JSON.stringify(ex.input);
+    (ex.inputBlocks ??= []).push(path);
+  }
+
   function example(c) {
     let ex;
     const rm = c.rest.match(/^raw\s+(".*")$/) ?? c.rest.match(/^raw\s+'(.*)'$/);
@@ -195,14 +255,38 @@ function parseInto(source, file, ast, diag) {
         ex = { op: m[1], input: j.value, raw: m[2], request: null, omit: [], expects: [], line: c.n, from: 'example' };
       }
     }
-    for (const l of contLines(c)) {
+    // Lines under the example, in order. `input <path>` starts a block of text, the lines after
+    // it indented six or more (blank lines kept), which becomes the value at <path> in the
+    // input; `input <path> from "<file>"` takes the text of a file next to this one instead.
+    const sub = c.sub;
+    for (let k = 0; k < sub.length; k++) {
+      const l = sub[k];
+      if (l.text === '' || l.text.startsWith('#')) continue;
+      const im = l.indent === 4 ? l.text.match(/^input\s+(.+?)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/) : null;
+      if (im) {
+        // The text of a block is taken first, so that a bad input line does not make its text
+        // look like lines of the example.
+        const block = [];
+        if (!im[2]) {
+          while (k + 1 < sub.length && (sub[k + 1].text === '' || sub[k + 1].indent >= 6)) { k++; block.push(sub[k].text === '' ? '' : ' '.repeat(sub[k].indent - 6) + sub[k].text); }
+          while (block.length && block[block.length - 1] === '') block.pop();
+        }
+        if (ex.rawLine !== undefined) { diag('error', l.n, 'P022', 'a raw example is sent exactly as written: no input lines', l.indent + 1); continue; }
+        const path = inputPath(im[1]);
+        if (!path) { diag('error', l.n, 'P049', 'input <path>: names separated by dots, each a word or a "quoted string"', l.indent + 7); continue; }
+        if (im[2]) { (ex.inputFiles ??= []).push({ path, file: JSON.parse(im[2]), line: l.n }); continue; }
+        if (!block.length) { diag('error', l.n, 'P049', 'input <path> needs its text on the next lines, indented six spaces', l.indent + 1); continue; }
+        setInput(ex, path, block.join('\n') + '\n', l.n);
+        continue;
+      }
+      if (l.indent !== 4) { diag('error', l.n, 'P006', 'lines under an example are indented four spaces (the text of an input block, six)', l.indent + 1); continue; }
       if (l.text.startsWith('request ') || l.text.startsWith('omit ')) {
         if (ex.rawLine !== undefined) { diag('error', l.n, 'P022', 'a raw example is sent exactly as written: no request or omit lines', l.indent + 1); continue; }
         if (l.text.startsWith('omit ')) { ex.omit.push(...ids(l.text.slice(5))); continue; }
         const r = parseJSON(l.text.slice(8), l.n, 'request members', l.indent + 9);
         if (r.ok) {
           if (r.value === null || typeof r.value !== 'object' || Array.isArray(r.value)) diag('error', l.n, 'P009', 'request members are a JSON object', l.indent + 9);
-          else ex.request = r.value;
+          else if (ownMembersOk(r.value, l.n, l.indent + 9)) ex.request = r.value;
         }
         continue;
       }
@@ -251,35 +335,42 @@ function parseInto(source, file, ast, diag) {
 
   function statement(s) {
     const cs = clauses(s.body);
+    // Only text, example and table clauses, and the clauses of errors (whose conditions may
+    // continue), take indented lines; under any other clause such a line belongs to nothing.
+    if (s.kw !== 'errors') for (const c of cs) if (!['text', 'example', 'table'].includes(c.kw)) for (const l of c.sub) if (l.text !== '' && !l.text.startsWith('#')) diag('error', l.n, 'P006', `${c.kw} takes no indented lines`, l.indent + 1);
     const only = (allowed) => { for (const c of cs) if (!allowed.includes(c.kw)) diag('error', c.n, 'P015', `"${c.kw}" is not a clause of ${s.kw}`, c.col); };
     const textOf = () => { const c = cs.find((x) => x.kw === 'text'); return c ? prose(c) : ''; };
     switch (s.kw) {
       case 'duramen':
-        if (ast.version) diag('error', s.line, 'P023', 'the version is stated twice');
-        ast.version = s.rest;
+        if (versionLine) diag('error', s.line, 'P023', `the version is stated twice (first at line ${versionLine})`);
+        else { versionLine = s.line; ast.version = s.rest; }
         if (!VERSIONS.includes(s.rest)) diag('error', s.line, 'P023', `duramen ${s.rest} is not a version this tool reads (${VERSIONS.join(', ')})`, s.restCol);
         only([]);
         break;
       case 'spec': {
+        if (ast.spec) diag('error', s.line, 'P044', `a second spec statement (the first is at line ${ast.spec.line})`);
         const [name, version, extra] = s.rest.split(/\s+/);
         if (!name || !version || extra) diag('error', s.line, 'P021', 'spec <name> <version>', s.restCol);
-        ast.spec = { name: name ?? '?', version: version ?? '?', title: '', contract: null, text: '', request: {}, line: s.line };
+        const spec = { name: name ?? '?', version: version ?? '?', title: '', contract: null, text: '', request: {}, line: s.line };
         for (const c of cs) {
-          if (c.kw === 'title') ast.spec.title = unquote(c.rest, c.n, 'title', c.restCol);
-          else if (c.kw === 'contract') ast.spec.contract = c.rest;
-          else if (c.kw === 'request') { const j = parseJSON(c.rest, c.n, 'request members', c.restCol); if (j.ok) ast.spec.request = j.value; }
-          else if (c.kw === 'text') ast.spec.text = prose(c);
+          if (c.kw === 'title') spec.title = unquote(c.rest, c.n, 'title', c.restCol);
+          else if (c.kw === 'contract') spec.contract = c.rest;
+          else if (c.kw === 'request') { const j = requestObject(c); if (j) spec.request = j; }
+          else if (c.kw === 'text') spec.text = prose(c);
           else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of spec`, c.col);
         }
+        ast.spec ??= spec;
         break;
       }
       case 'oracle': {
+        if (ast.oracle) diag('error', s.line, 'P044', `a second oracle (the first is at line ${ast.oracle.line})`);
         if (!s.rest) { diag('error', s.line, 'P028', 'oracle <command>', s.restCol); break; }
-        ast.oracle = { command: s.rest, sources: [], line: s.line };
+        const oracle = { command: s.rest, sources: [], line: s.line };
         for (const c of cs) {
-          if (c.kw === 'source') ast.oracle.sources.push(...ids(c.rest));
+          if (c.kw === 'source') oracle.sources.push(...ids(c.rest));
           else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of oracle`, c.col);
         }
+        ast.oracle ??= oracle;
         break;
       }
       case 'type': {
@@ -353,7 +444,7 @@ function parseInto(source, file, ast, diag) {
         if (!/^\S+$/.test(s.rest)) { diag('error', s.line, 'P031', 'op <name>', s.restCol); break; }
         const op = { name: s.rest, inputs: [], returns: null, returnsText: null, tolerances: {}, audit: null, summary: '', request: null, line: s.line };
         for (const c of cs) {
-          if (c.kw === 'request') { const j = parseJSON(c.rest, c.n, 'request members', c.restCol); if (j.ok) op.request = j.value; continue; }
+          if (c.kw === 'request') { const j = requestObject(c); if (j) op.request = j; continue; }
           if (c.kw === 'input') {
             // name[?] <type>, ... ; commas inside braces, brackets, parens or quotes do not split
             for (const { text: f, at } of splitTop(c.rest)) {
@@ -367,8 +458,8 @@ function parseInto(source, file, ast, diag) {
             op.returnsText = c.rest;
           } else if (c.kw === 'tolerance') {
             const tm = c.rest.match(/^(\S+)\s+(\S+)$/);
-            if (!tm || !Number.isFinite(Number(tm[2])) || Number(tm[2]) < 0) diag('error', c.n, 'P018', 'tolerance <result path> <number of 0 or more>', c.restCol);
-            else op.tolerances[tm[1]] = Number(tm[2]);
+            if (!tm || !Number.isFinite(jsonNumber(tm[2])) || jsonNumber(tm[2]) < 0) diag('error', c.n, 'P018', 'tolerance <result path> <number of 0 or more>', c.restCol);
+            else op.tolerances[tm[1]] = jsonNumber(tm[2]);
           } else if (c.kw === 'audit') op.audit = c.rest || 'text';
           else if (c.kw === 'result') op.summary = c.rest;
           else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of op`, c.col);
@@ -379,7 +470,9 @@ function parseInto(source, file, ast, diag) {
       case 'errors': {
         // One "<code> when <condition>" per clause, first match wins; a condition may continue
         // on lines indented four.
-        if (ast.errors.length) diag('error', s.line, 'P032', 'errors is declared once (it is the order in which checks run)');
+        if (s.rest) diag('error', s.line, 'P050', 'errors takes nothing after the keyword', s.restCol);
+        if (ast.errorsLine !== undefined) diag('error', s.line, 'P032', `errors is declared once (it is the order in which checks run; the first is at line ${ast.errorsLine})`);
+        else ast.errorsLine = s.line;
         for (const c of cs) {
           const m = (c.kw + ' ' + c.rest).match(/^(\S+)\s+when\s+(.+)$/);
           if (!m) { diag('error', c.n, 'P019', 'errors: one "<code> when <condition>" per line, first match wins', c.col); continue; }
@@ -517,6 +610,7 @@ function parseInto(source, file, ast, diag) {
         break;
       }
       case 'note': {
+        if (s.rest) diag('error', s.line, 'P050', 'note takes nothing after the keyword', s.restCol);
         only(['text']);
         ast.items.push({ type: 'note', section: section?.id ?? null, text: textOf(), line: s.line });
         break;
@@ -543,7 +637,7 @@ function parseInto(source, file, ast, diag) {
     return t ? { kind: 'type', type: t, text } : null;
   }
 
-  if (!ast.version) diag('error', 1, 'P020', 'the file must start with "duramen <version>"');
+  if (!versionLine) diag('error', 1, 'P020', 'every file states its version: "duramen <version>"');
 }
 
 // Split on commas that are not inside quotes, braces, brackets or parentheses.

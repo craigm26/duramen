@@ -137,7 +137,10 @@ export function loadRecord(path, { useLibrary = true } = {}) {
   }
   const root = st.isDirectory() ? path : dirname(path);
   const files = st.isDirectory() ? recordFiles(path) : [path];
-  if (!files.length) diagnostics.push({ level: 'error', file: path, line: 1, col: 1, code: 'P046', message: `${path} holds no .duramen files` });
+  if (!files.length) {
+    diagnostics.push({ level: 'error', file: path, line: 1, col: 1, code: 'P046', message: `${path} holds no .duramen files` });
+    return { ast: emptyAst(path), diagnostics, files, root };
+  }
   const parts = [];
   for (const f of files) {
     let text;
@@ -160,6 +163,29 @@ export function loadRecord(path, { useLibrary = true } = {}) {
   for (const def of ast.edgedefs) addDef(def, false);
   for (const fam of families.keys()) if (defs.has(fam)) diag('error', defs.get(fam), 'T033', `"${fam}" names both an edge and a family of edges`);
   ast.edgeLib = { defs, families };
+  // Example inputs taken from files (`input <path> from "<file>"`), relative to the file that
+  // names them.
+  for (const r of ast.items.filter((i) => i.type === 'req')) {
+    for (const ex of r.examples) {
+      for (const f of ex.inputFiles ?? []) {
+        let text;
+        try { text = readFileSync(resolve(dirname(ex.file ?? r.file), f.file), 'utf8'); } catch (e) { diag('error', { file: ex.file ?? r.file, line: f.line }, 'P048', `cannot read ${f.file}: ${e.code ?? e.message}`); continue; }
+        if (ex.noInput) { ex.noInput = false; ex.input = {}; }
+        let o = ex.input;
+        let ok = true;
+        for (const key of f.path.slice(0, -1)) {
+          if (o[key] === undefined) o[key] = {};
+          if (o[key] === null || typeof o[key] !== 'object' || Array.isArray(o[key])) { diag('error', { file: ex.file ?? r.file, line: f.line }, 'P049', `input ${f.path.join('.')}: ${key} is not an object`); ok = false; break; }
+          o = o[key];
+        }
+        if (!ok) continue;
+        o[f.path[f.path.length - 1]] = text;
+        ex.raw = JSON.stringify(ex.input);
+        (ex.inputBlocks ??= []).push(f.path);
+        (ex.inputFrom ??= {})[JSON.stringify(f.path)] = f.file;
+      }
+    }
+  }
   // Evidence data files, relative to the file that names them.
   for (const ev of ast.evidence) {
     ev.rows = [];
@@ -196,9 +222,9 @@ function merge(parts, path, isDir, diag) {
       if (ast.oracle) diag('error', { file: a.file, line: a.oracle.line }, 'P044', `a second oracle (the first is in ${ast.oracle.file}:${ast.oracle.line})`);
       else ast.oracle = tag(a.oracle);
     }
-    if (a.errors.length) {
-      if (ast.errors.length) diag('error', { file: a.file, line: a.errors[0].line }, 'P032', `errors is declared once (it is also in ${ast.errors[0].file})`);
-      else ast.errors = a.errors.map(tag);
+    if (a.errorsLine !== undefined) {
+      if (ast.errorsLine !== undefined) diag('error', { file: a.file, line: a.errorsLine }, 'P032', `errors is declared once (it is also in ${ast.errorsFile}:${ast.errorsLine})`);
+      else { ast.errors = a.errors.map(tag); ast.errorsLine = a.errorsLine; ast.errorsFile = a.file; }
     }
     for (const k of ['types', 'edges', 'edgedefs', 'ops', 'items', 'decisions', 'properties', 'evidence']) ast[k].push(...a[k].map(tag));
     for (const r of a.items) if (r.type === 'req') { r.examples.forEach((ex) => { tag(ex); ex.expects.forEach(tag); }); r.statics.forEach((s) => tag(s)); }

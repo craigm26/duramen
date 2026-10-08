@@ -361,7 +361,8 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
     if (!e.via || !lib.defs.has(e.name) || !opNames.has(e.via.op)) continue;
     lib.defs.get(e.name).pack.forEach((item, k) => { const id = edgeCaseId(ast, e, k); packs.push({ e, item, id }); lines.push(edgeRequest(ast, e.via, id, item.input)); });
   }
-  const run = await runDriver(ast.oracle.command, lines, runOpts);
+  // One run for everything that is matched by id; none when there is nothing to send.
+  const run = lines.length ? await runDriver(ast.oracle.command, lines, runOpts) : { responses: new Map(), list: [], order: [], error: null };
   if (run.error) d('error', ast.oracle, 'T020', `oracle: ${run.error}${run.stderr ? `\n${run.stderr.trim()}` : ''}`);
   const answers = new Map(run.responses);
   for (const s of solos) {

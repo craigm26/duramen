@@ -1,0 +1,277 @@
+duramen 0.1
+
+section OR "Running the examples through the oracle"
+  text
+    Every example is a claim about the program, and the oracle is the specification's model of
+    it. When a record has no other errors, the checker runs every example through the oracle
+    and reports where the two disagree, before any builder sees the example. The example records
+    here use the oracle under Files (`fixtures/echo.mjs`), which answers with its input, or as
+    its input tells it to.
+
+req OR-001 "A record with examples has an oracle"
+  text
+    A record that has at least one example and no `oracle` statement MUST get T019 at its
+    `spec` statement's line, and none of its examples is run.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      op f
+        input x? json
+      req A "a"
+        example f {}
+          expect result = 1
+    expect result.diagnostics = ["s.duramen:2: error T019"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      op f
+        input x? json
+      req A "a"
+        text
+          No example.
+      req B "b"
+        example f {}
+    expect result.diagnostics = ["s.duramen:2: error T019", "s.duramen:5: error T001"]
+
+req OR-002 "How the oracle is run"
+  text
+    The oracle is the command after `oracle`, split into words at spaces and tabs, where a
+    word may be quoted with `"…"` or `'…'` to hold spaces (inside `"…"`, `\"` stands for `"`
+    and every other backslash for itself). The checker MUST start it without a shell, in the
+    folder of the file that holds the `oracle` statement, as a driver: it writes one request
+    line per example to the oracle's standard input, in record order, each ending with LF,
+    closes it, and reads one JSON response per line from its standard output, matching each to
+    its example by `id`; it runs the oracle so only when there is at least one such line. An
+    example that is raw, or that leaves out `id`, MUST be sent alone, in a run of the oracle of
+    its own, and its response is the one line that run writes (none when the run writes no
+    line, or more than one). The examples run are those of declared operations, and those that
+    expect an error or are raw (REQ-CK-004), whatever else the checks of REQ-CK-001 to
+    REQ-CK-009 find. REQ-SU-003 says how each request line is made.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+        request {"clock": 1}
+      oracle node echo.mjs
+      op f
+        input line? boolean, x? json
+      req A "a"
+        example f {"line": true,  "x": 2.50}
+          expect result = "{\"id\":\"A#1\",\"op\":\"f\",\"clock\":1,\"input\":{\"line\": true,  \"x\": 2.50}}"
+        example f {"line": true}
+          omit id
+          expect result = "{\"op\":\"f\",\"clock\":1,\"input\":{\"line\": true}}"
+        example raw '{"id": "x",  "op": "f", "input": {"line": true}}'
+          expect id = "x"
+          expect result = "{\"id\": \"x\",  \"op\": \"f\", \"input\": {\"line\": true}}"
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = []
+  example check {}
+    input files."sub/s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node "my echo.mjs"
+      op f
+        input x? json
+      req A "a"
+        example f {"x": 1}
+          expect result.x = 1
+    input files."sub/my echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = []
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        text
+          No example.
+      req B "b"
+        example f {"x": 1}
+          expect result.x = 2
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:6: error T001", "s.duramen:11: error T002"]
+
+req OR-003 "Examples the oracle disagrees with"
+  decision D-009
+  text
+    For each expectation `expect <path> = <value>`, the oracle's response MUST hold an equal
+    value at the path, else T002 at the expectation's line; for a table row, at the row's
+    line, once for each expectation that fails. A path is names separated by dots: member
+    names, and for arrays, indexes from 0; `audit.<path>` reads the path in the JSON value
+    that the response's `audit` text holds. Two values are equal when they are the same JSON
+    value: object members in any order, and numbers by value, so that `1.0` equals `1`. For
+    `expect <path> ≈ <number> ± <tolerance>`, the value at the path MUST be a number no
+    further from the number than the tolerance.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json, y? json, answer? json
+      req A "a"
+        example f {"x": 1.0, "y": [5, {"z": null}]}
+          expect result = {"y": [5, {"z": null}], "x": 1}
+          expect result.y.1.z = null
+          expect result.y.0 ≈ 5.5 ± 0.5
+          expect result.x = 2
+          expect result.y.2 = 5
+          expect result.y.0 ≈ 5.5 ± 0.4
+          expect result.y.1 = {}
+        example f {"answer": {"result": 0, "audit": "{\"a\": [1, 2]}"}}
+          expect audit.a.1 = 2
+          expect audit = "{\"a\": [1, 2]}"
+          expect audit.b = 1
+        table f
+          | x | result.x | result.y |
+          | 1 | 2        | 3        |
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:11: error T002", "s.duramen:12: error T002", "s.duramen:13: error T002", "s.duramen:14: error T002", "s.duramen:18: error T002", "s.duramen:21: error T002", "s.duramen:21: error T002"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+      errors
+        e when never
+      req A "a"
+        example f {"answer": {"result": 1}}
+          expect error = "e"
+        example g {"answer": {"error": "e"}}
+          expect error = "e"
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:10: error T002"]
+
+req OR-004 "An oracle that fails"
+  text
+    When the oracle cannot be started, exits with a status other than 0, or is stopped (by a
+    signal, or for taking too long), the checker MUST report T020 at the `oracle` statement's
+    line, or for an example sent alone, at the example's line; and it MUST still use every
+    response that arrived.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle no-such-program-for-duramen
+      op f
+        input x? json
+      req A "a"
+        example f {}
+    expect result.diagnostics = ["s.duramen:3: error T020", "s.duramen:7: error T021"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json, exit? integer
+      req A "a"
+        example f {"x": 1}
+          expect result.x = 2
+        example f {"exit": 3}
+          expect result.exit = 3
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:3: error T020", "s.duramen:8: error T002"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input exit? integer
+      req A "a"
+        example f {}
+        example raw '{"id": "r", "op": "f", "input": {"exit": 4}}'
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:8: error T020"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle no-such-program-for-duramen
+      op f
+        input x? json
+      req A "a"
+        example raw '{"id": "r", "op": "f"}'
+    expect result.diagnostics = ["s.duramen:7: error T020", "s.duramen:7: error T021"]
+
+req OR-005 "Examples with no answer"
+  text
+    An example run through the oracle that gets no response MUST get T021 at its line.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input silent? boolean
+      req A "a"
+        example f {"silent": true}
+        example f {}
+        example raw '{"id": "r", "op": "f", "input": {"silent": true}}'
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:7: error T021", "s.duramen:9: error T021"]
+
+req OR-006 "Examples the oracle cannot compute"
+  text
+    A response holding `oracle_error` says that the oracle has no answer to the request, as for
+    behavior a specification leaves open. The example MUST get T022 at its line, and its
+    expectations are not checked.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+      req A "a"
+        example f {"answer": {"oracle_error": "left open"}}
+          expect result = 1
+          expect result = ?
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:7: error T022"]
+
+req OR-007 "Errors nobody expected"
+  text
+    When the oracle answers an example that states no expectation with an error, the example
+    MUST get the warning T024 at its line.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+      errors
+        e when never
+      req A "a"
+        example f {"answer": {"error": "e"}}
+        example f {"answer": {"error": "e"}}
+          expect error = "e"
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result = {"diagnostics": ["s.duramen:9: warning T024"], "errors": 0, "warnings": 1}
+
+req OR-008 "Values taken from the oracle"
+  text
+    `expect <path> = ?` takes whatever value the oracle's response holds at the path; when it
+    holds none, the expectation MUST get T025 at its line.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {"x": 1}
+          expect result.x = ?
+          expect result.y = ?
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:9: error T025"]
