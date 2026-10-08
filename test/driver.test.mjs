@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 import { parseCommand, runDriver, implDriver } from '../src/driver.mjs';
 import { withFiles } from './helpers.mjs';
 
@@ -41,7 +42,8 @@ test('driver: a hung driver is killed, and the answers it gave are kept', async 
 });
 
 test('driver: runaway output is cut off', async () => {
-  await withFiles({ 'd.mjs': "const b = Buffer.alloc(65536, 120); for (;;) process.stdout.write(b);" }, async (dir) => {
+  // synchronous writes, so the driver keeps writing as fast as the pipe takes it
+  await withFiles({ 'd.mjs': "import { writeSync } from 'node:fs'; const b = Buffer.alloc(65536, 120); for (;;) writeSync(1, b);" }, async (dir) => {
     const r = await runDriver('node d.mjs', [], { cwd: dir, maxOutputBytes: 1 << 20, timeoutMs: 20_000 });
     assert.equal(r.truncated, true);
     assert.match(r.error, /more than/);
@@ -73,7 +75,11 @@ test('driver: the whole process tree goes on timeout', { skip: process.platform 
     assert.equal(r.timedOut, true);
     const pid = r.responses.get('pid').result;
     await new Promise((res) => setTimeout(res, 300));
-    assert.throws(() => process.kill(pid, 0), /ESRCH/, 'the grandchild was killed too');
+    // gone, or a zombie that no init process has reaped yet (as in some containers): not running
+    let state = 'gone';
+    try { state = readFileSync(`/proc/${pid}/stat`, 'utf8').split(') ')[1][0]; } catch { /* gone */ }
+    if (state === 'gone' && process.platform !== 'linux') { try { process.kill(pid, 0); state = 'running'; } catch { /* gone */ } }
+    assert.ok(state === 'gone' || state === 'Z', `the grandchild was killed too (state ${state})`);
   });
 });
 

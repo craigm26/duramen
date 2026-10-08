@@ -64,7 +64,7 @@ Rejected:
 ## D-009: RH is clamped to [5, 100], not [5, 99]
 
 - Source: extraction
-- Cited by: REQ-WB-001
+- Cited by: REQ-WB-001, PROP-WB-P8, PROP-WB-P2, PROP-WB-P3
 
 Stull's stated validity range is RH 5–99 %; the earlier input schema said implementations
 "MUST clamp to [5, 99]"; the earlier code clamped to [5, 100], and a test asserts
@@ -78,7 +78,7 @@ Rejected:
 ## D-010: Flag bands are in °F, and the °C path uses one exact expression
 
 - Source: extraction, primary source
-- Cited by: REQ-WB-005, REQ-FL-001, REQ-FL-004
+- Cited by: REQ-WB-005, REQ-FL-001, REQ-FL-004, PROP-WB-P1, PROP-FL-P1
 
 MCO 6200.1E defines the bands in °F with inclusive lower bounds. The °C path converts
 first. Floating-point error can move a value across a boundary: for `26.66666666666666` °C,

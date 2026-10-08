@@ -201,7 +201,7 @@ function merge(parts, path, isDir, diag) {
       else ast.errors = a.errors.map(tag);
     }
     for (const k of ['types', 'edges', 'edgedefs', 'ops', 'items', 'decisions', 'properties', 'evidence']) ast[k].push(...a[k].map(tag));
-    for (const r of a.items) if (r.type === 'req') { r.examples.forEach((ex) => tag(ex)); r.statics.forEach((s) => tag(s)); }
+    for (const r of a.items) if (r.type === 'req') { r.examples.forEach((ex) => { tag(ex); ex.expects.forEach(tag); }); r.statics.forEach((s) => tag(s)); }
     for (const ev of a.evidence) ev.tables.forEach((t) => t.rows?.forEach((r) => tag(r)));
     for (const op of a.ops) op.inputs.forEach((i) => tag(i));
   }

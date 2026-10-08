@@ -115,7 +115,7 @@ edgedef my/edge "Mine"
   assert.deepEqual(p.vars.map((v) => v.gen.kind), ['type', 'type', 'oneof']);
   assert.equal(p.calls.length, 2);
   assert.equal(ast.evidence[0].tables[0].rows.length, 1);
-  assert.deepEqual(ast.edgedefs[0].pack.map((i) => i.text ?? 'refused'), ['1e+21', '" "', 'refused']);
+  assert.deepEqual(ast.edgedefs[0].pack.map((i) => i.text ?? 'refused'), ['1e+21', '"\u2028"', 'refused']);
 });
 
 test('parse: properties name only bound variables', () => {
