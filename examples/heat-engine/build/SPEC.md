@@ -17,10 +17,12 @@ records are compared byte for byte, so their serialized form is part of the cont
 
 Conventions: MUST and MUST NOT appear only in requirements (`REQ-`) and in the shared
 definitions under Edges, and every requirement has at least one example that the suite
-checks. Every example was checked against the
-specification's own model (its oracle) when this file was generated; where an example states
-no value, the value shown is the model's. `OPEN-` items are deliberately unspecified and never
-tested. An order that matters (such as which error wins) is stated once, in a numbered list.
+checks. Every example was checked against the specification's own model (its oracle) when
+this file was generated; where an example states no value, the value shown is the model's.
+`OPEN-` items are deliberately unspecified and never tested. An order that matters (such as
+which error wins) is stated once, in a numbered list. An object written in this document
+lists its members in no particular order; text produced as canonical JSON orders them as its
+edge says.
 
 ---
 
@@ -207,17 +209,20 @@ edges in the Edges section: number text (number-text/ecmascript), fixed-point te
 
 **REQ-CJ-005.** *The canonical operation.*
 
-`canonical` takes `input.value`, any JSON value, and MUST respond
+`canonical` takes `input.value`, any JSON value, `null` included, and MUST respond
 `{"id": <id>, "result": <string>}`, where the string is the canonical JSON text of the
 value (edge json/sorted-utf16). It has no `audit` member and needs no `clock`. JSON numbers
 in `value` are binary64 values (REQ-IF-006); the special strings of REQ-IF-006 are **not**
-interpreted here: they are ordinary strings.
+interpreted here: they are ordinary strings. Without a `value` member the request is a
+`bad_request`.
 
 Decisions: D-017.
 
 Examples:
 - `canonical {"value": {"b": [1, 2.50, 1e21], "a": null}}` ⟶ `result` = `"{\"a\":null,\"b\":[1,2.5,1e+21]}"`
 - `canonical {"value": {"y": "Infinity", "x": "NaN"}}` ⟶ `result` = `"{\"x\":\"NaN\",\"y\":\"Infinity\"}"`
+- `canonical {"value": null}` ⟶ `result` = `"null"`
+- `canonical {}` ⟶ `error` = `"bad_request"`
 
 **OPEN-CJ-001.** *Numbers outside binary64.* JSON numbers outside the binary64 range (e.g. `1e400`), anywhere in a request: their
 canonical text in `canonical`, and how operations treat them. (Open: implementations may differ; never tested.)

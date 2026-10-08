@@ -142,15 +142,20 @@ op canonical
 req CJ-005 "The canonical operation"
   decision D-017
   text
-    `canonical` takes `input.value`, any JSON value, and MUST respond
+    `canonical` takes `input.value`, any JSON value, `null` included, and MUST respond
     `{"id": <id>, "result": <string>}`, where the string is the canonical JSON text of the
     value (edge json/sorted-utf16). It has no `audit` member and needs no `clock`. JSON numbers
     in `value` are binary64 values (REQ-IF-006); the special strings of REQ-IF-006 are **not**
-    interpreted here: they are ordinary strings.
+    interpreted here: they are ordinary strings. Without a `value` member the request is a
+    `bad_request`.
   example canonical {"value": {"b": [1, 2.50, 1e21], "a": null}}
     expect result = "{\"a\":null,\"b\":[1,2.5,1e+21]}"
   example canonical {"value": {"y": "Infinity", "x": "NaN"}}
     expect result = "{\"x\":\"NaN\",\"y\":\"Infinity\"}"
+  example canonical {"value": null}
+    expect result = "null"
+  example canonical {}
+    expect error = "bad_request"
 
 open CJ-001 "Numbers outside binary64"
   text

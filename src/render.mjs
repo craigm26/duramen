@@ -85,10 +85,12 @@ export function renderSpec(ast, oracle, { version: tilthVersion = '0.1' } = {}) 
   out.push(
     'Conventions: MUST and MUST NOT appear only in requirements (`REQ-`) and in the shared',
     'definitions under Edges, and every requirement has at least one example that the suite',
-    'checks. Every example was checked against the',
-    'specification\'s own model (its oracle) when this file was generated; where an example states',
-    'no value, the value shown is the model\'s. `OPEN-` items are deliberately unspecified and never',
-    'tested. An order that matters (such as which error wins) is stated once, in a numbered list.',
+    'checks. Every example was checked against the specification\'s own model (its oracle) when',
+    'this file was generated; where an example states no value, the value shown is the model\'s.',
+    '`OPEN-` items are deliberately unspecified and never tested. An order that matters (such as',
+    'which error wins) is stated once, in a numbered list. An object written in this document',
+    'lists its members in no particular order; text produced as canonical JSON orders them as its',
+    'edge says.',
     '', '---', '');
 
   out.push('## Interface', '', '### Driver protocol', '',

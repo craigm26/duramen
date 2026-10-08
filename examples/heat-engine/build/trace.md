@@ -6,7 +6,7 @@
 | REQ-IF-006 | 2 | 2 | D-007 |
 | REQ-IF-007 | 11 | 11 | D-019, D-024 |
 | REQ-IF-008 | 1 | 1 | — |
-| REQ-CJ-005 | 2 | 2 | D-017 |
+| REQ-CJ-005 | 4 | 4 | D-017 |
 | REQ-AU-001 | 1 | 1 | D-001, D-003 |
 | REQ-AU-002 | 1 | 1 | D-007 |
 | REQ-WB-001 | 4 | 4 | D-009, D-018 |
@@ -29,4 +29,4 @@
 
 Open (never tested): OPEN-IF-001, OPEN-IF-002, OPEN-IF-003, OPEN-IF-005, OPEN-CJ-001, OPEN-WB-001, OPEN-WB-002, OPEN-FL-001
 
-Total suite cases: 102, plus 3 protocol cases in every run.
+Total suite cases: 104, plus 3 protocol cases in every run.
