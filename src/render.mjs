@@ -7,7 +7,12 @@ import { exampleId, pick } from './check.mjs';
 
 const code = (s) => '`' + String(s).replace(/`/g, 'ˋ') + '`';
 const cell = (s) => String(s).replace(/\|/g, '\\|');
-const val = (v) => JSON.stringify(v);
+// Values are shown with object members sorted (by UTF-16 code units). Expectations are compared
+// as parsed JSON, so member order means nothing there, and a sorted object cannot look like it
+// contradicts a canonical-JSON rule (the first blind build from a generated brief, t01, read an
+// unsorted example that way).
+const sorted = (v) => (v === null || typeof v !== 'object' ? v : Array.isArray(v) ? v.map(sorted) : Object.fromEntries(Object.keys(v).sort().map((k) => [k, sorted(v[k])])));
+const val = (v) => JSON.stringify(sorted(v));
 
 // `expect <path> = ?` shows the oracle's value.
 function renderExpect(e, resp) {
@@ -103,7 +108,7 @@ export function renderSpec(ast, oracle, { version: tilthVersion = '0.1' } = {}) 
     '- After end of input and the last response, the driver exits with status 0.');
   const rm = requestMembersLine(ast);
   if (rm) out.push('', rm);
-  out.push('', '### Operations', '', '| op | input fields | result | audit |', '|---|---|---|---|');
+  out.push('', '### Operations', '', '| op | input fields (required unless marked optional) | result | audit |', '|---|---|---|---|');
   for (const o of ast.ops) {
     out.push(`| ${code(o.name)} | ${o.inputs.map((f) => `${code(f.name)} (${f.type}${f.optional ? ', optional' : ''})`).join(', ') || '—'} | ${cell(o.summary || '—')} | ${o.audit ? 'yes' : 'no'} |`);
   }

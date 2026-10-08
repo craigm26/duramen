@@ -48,7 +48,7 @@ Requests also carry `clock` (every operation except `canonical`).
 
 ### Operations
 
-| op | input fields | result | audit |
+| op | input fields (required unless marked optional) | result | audit |
 |---|---|---|---|
 | `canonical` | `value` (any) | the canonical JSON text of `value`, as a string | no |
 | `wetBulb` | `tempC` (number), `rhPercent` (number) | `wetBulbC`, `wetBulbF`, and `clampedRhPct` when RH was clamped (REQ-WB-001) | yes |
@@ -256,7 +256,7 @@ In `inputs`, a non-finite number MUST be written as the string `"NaN"`, `"Infini
 Decisions: D-007.
 
 Examples:
-- `wetBulb {"tempC": "Infinity", "rhPercent": "NaN"}` ⟶ `audit.inputs` = `{"tempC":"Infinity","rhPercent":"NaN"}`
+- `wetBulb {"tempC": "Infinity", "rhPercent": "NaN"}` ⟶ `audit.inputs` = `{"rhPercent":"NaN","tempC":"Infinity"}`
 
 ---
 
@@ -325,7 +325,7 @@ The audit record for a finite computation:
 Decisions: D-001.
 
 Examples:
-- `wetBulb {"tempC": 25, "rhPercent": 120}` ⟶ `audit.inputs` = `{"tempC":25,"rhPercent":120}`; `audit.constants` = `{"stull_a":0.151977,"stull_b":8.313659,"stull_c":1.676331,"stull_d":0.00391838,"stull_e":0.023101,"stull_offset":-4.686035,"rh_clamp_min":5,"rh_clamp_max":100}`
+- `wetBulb {"tempC": 25, "rhPercent": 120}` ⟶ `audit.inputs` = `{"rhPercent":120,"tempC":25}`; `audit.constants` = `{"rh_clamp_max":100,"rh_clamp_min":5,"stull_a":0.151977,"stull_b":8.313659,"stull_c":1.676331,"stull_d":0.00391838,"stull_e":0.023101,"stull_offset":-4.686035}`
 
 | tempC | rhPercent | audit.result_summary |
 |---|---|---|
@@ -367,9 +367,9 @@ binary64 (this exact expression), and then MUST behave exactly as `wetBulb` with
 Decisions: D-010.
 
 Examples:
-- `wetBulbF {"tempF": 68, "rhPercent": 50}` ⟶ `audit.result_summary` = `"T=20.0°C RH=50% → Tw=13.70°C"`; `audit.inputs` = `{"tempC":20,"rhPercent":50}`
-- `wetBulbF {"tempF": 100, "rhPercent": 40}` ⟶ `audit.inputs` = `{"tempC":37.77777777777778,"rhPercent":40}`
-- `wetBulbF {"tempF": 98.6, "rhPercent": 50}` ⟶ `audit.inputs` = `{"tempC":37,"rhPercent":50}`
+- `wetBulbF {"tempF": 68, "rhPercent": 50}` ⟶ `audit.result_summary` = `"T=20.0°C RH=50% → Tw=13.70°C"`; `audit.inputs` = `{"rhPercent":50,"tempC":20}`
+- `wetBulbF {"tempF": 100, "rhPercent": 40}` ⟶ `audit.inputs` = `{"rhPercent":40,"tempC":37.77777777777778}`
+- `wetBulbF {"tempF": 98.6, "rhPercent": 50}` ⟶ `audit.inputs` = `{"rhPercent":50,"tempC":37}`
 - `wetBulbF {"tempF": "NaN", "rhPercent": 50}` ⟶ `result` = `null`; `audit.result_summary` = `"invalid_input:tempC"`
 
 **OPEN-WB-001.** *Overflow.* Results when the computation overflows or loses all precision (inputs of enormous
