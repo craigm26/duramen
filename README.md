@@ -65,23 +65,23 @@ The full list of checks, the syntax and the limits are in [DESIGN.md](DESIGN.md)
 
 [`examples/heat-engine/heat.tilth`](examples/heat-engine/heat.tilth) restates part of
 regen-heat-engine's SPEC 1.0.2: wet-bulb temperature, heat flags, the `canonical` operation,
-audit records and request handling (18 requirements, 60 examples, 11 decisions, 8 open items,
+audit records and request handling (18 requirements, 62 examples, 11 decisions, 8 open items,
 3 edges). Its oracle is that repository's suite oracle, copied unchanged with attribution,
 behind a 75-line driver. The generated brief, decisions, trace and suite are in
 [`examples/heat-engine/build/`](examples/heat-engine/build/).
 
-The generated suite has 102 cases (60 examples and 42 edge pack items) plus 3 protocol checks
+The generated suite has 104 cases (62 examples and 42 edge pack items) plus 3 protocol checks
 in every run. Both released implementations from regen-heat-engine (commit 4d99222) pass it:
 
 | implementation | `tilth run` |
 |---|---|
-| `impl/ts` | 105/105 |
-| `impl/py` | 105/105 |
+| `impl/ts` | 107/107 |
+| `impl/py` | 107/107 |
 
 Does the suite have teeth? [`mutants.mjs`](examples/heat-engine/mutants.mjs) plants 14 small,
 plausible mistakes in a copy of `impl/ts`, one at a time, and runs both this suite and the
 hand-built regen suite. The hand-built suite has 364 cases for the whole spec; 240 of them (129
-distinct requests) are in the slice's scope, against 102 requests here. I chose the mistakes,
+distinct requests) are in the slice's scope, against 104 requests here. I chose the mistakes,
 mostly from the spec's decisions file (8 of the 14 imitate a decision), so they are a biased
 sample.
 
@@ -99,28 +99,42 @@ does not say it is stricter.
 
 ## Blind builds from the generated brief
 
-Three blind builds used only the generated `SPEC.md` and `DECISIONS.md` plus a prompt, under the
-regen kit's isolation (nested `claude -p`, `claude-sonnet-5-5`, Linux container; details in
-[`examples/heat-engine/blind/`](examples/heat-engine/blind/)). regen-heat-engine's r01 to r04
-were built the same way from the prose brief, for the whole spec, on Windows.
+Five blind builds used only the generated `SPEC.md` and `DECISIONS.md` plus a prompt (which
+carried REGEN.json and the budgets, since tilth 0.1 cannot express them), under the regen kit's
+isolation: nested `claude -p` with `claude-sonnet-5-5`, the kit's current launcher (blob f94f845,
+an allow-listed environment), in a Linux container. Details are in
+[`examples/heat-engine/blind/`](examples/heat-engine/blind/). regen-heat-engine's r01 to r04 were
+built under the same protocol from the prose brief, for the whole spec, on Windows, with the
+earlier launcher (blob 3b7118a, which passed the orchestrator's environment through instead of an
+allow-list) and the unmodified prompt. Blind means the builders were not shown the reference or
+earlier builds; the model may still have seen the public heat-engine sources in training.
 
-| run | brief | tilth suite | hand-built suite, slice scope | own tests | lines | choices | clarify | clean |
+| run | brief | tilth suite | hand-built suite, slice scope | own tests | non-blank lines | choices | clarify | clean |
 |---|---|---|---|---|---|---|---|---|
-| t01 (ts) | brief-t1 | 105/105 | 240/240 | 19/19 | 219 | 7 | 1 | no |
-| t02 (py) | brief-t1 | 105/105 | 240/240 | 21/21 | 210 | 10 | 0 | yes |
+| t01 (ts) | brief-t1 | 105/105 | 240/240 | 19/19 | 219 | 7 | 2 | no |
+| t02 (py) | brief-t1 | 105/105 | 240/240 | 21/21 | 210 | 10 | 1 | no |
 | t03 (ts) | brief-t2 | 105/105 | 240/240 | 19/19 | 163 | 9 | 0 | yes |
+| t04 (ts) | brief-t3 | 107/107 | 240/240 | 19/19 | 174 | 10 | 0 | yes |
+| t05 (py) | brief-t3 | 107/107 | 240/240 | 15/15 | 215 | 7 | 0 | yes |
 
-None of the three has a silent divergence. t01's one `clarify` came from tilth itself: the
-renderer showed an author-typed example object in source order, and the builder read it as
-contradicting the canonical key order. The checker could not see this, because the example was
-correct. The renderer now shows example values sorted, and t03, on the fixed brief, is clean.
-The other choices are almost all deliberately open items.
+Every build passes every in-scope case of both suites, and none has a silent divergence; t01 to
+t03 also pass the brief-t3 suite (107/107). The three `clarify` items came from how tilth wrote
+brief-t1. Its renderer showed an author-typed example object in source order, which t01 read as
+contradicting the canonical key order, and its operations table never said that inputs are
+required, which t01 and t02 both asked about for `canonical`'s `value`. brief-t2 shows example
+values sorted and says inputs are required unless marked optional; brief-t3 also states the
+`value` rule with two examples and says that objects written in the brief list their members in
+no particular order. Of the other 40 choices, 21 were triaged open (19 of them already marked
+open in the brief the builder had) and 19 were already answered by the brief.
 
-For comparison, the prose brief's two `clarify` findings in the slice (r01's typed example and
-r02's twice-stated order) are both rejected by `tilth check` before any build (see History);
-r03 and r04, on the prose brief after those fixes, had none. So the generated brief did as well
-as the corrected prose brief, introduced one defect of its own, and made the two earlier kinds
-impossible. Three builds of a 160 to 220 line program are a small sample.
+For comparison, the prose brief's two `clarify` findings in the slice, r01's typed example and
+r02's twice-stated order, are of kinds that `tilth check` rejects as written (T002, T005; the
+history files below), though T005 is a text heuristic and values typed in requirement prose are
+never run. r03 and r04, on the prose brief after those fixes, had none. On this slice, then, the
+final generated brief (t04 and t05, clean in both languages) did as well as the corrected prose
+brief did on the whole spec, and the first generated brief had defects of its own that only
+builders could find. These are five builds of programs of 160 to 220 non-blank lines, with one
+model: a small sample.
 
 ## The edge library across specs
 

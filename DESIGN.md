@@ -215,10 +215,14 @@ REQ-CJ-001 to REQ-CJ-004. Edge texts are normative and may use MUST.
 - **No modules or versions:** one file per spec, a built-in edge library, no deltas between
   spec versions.
 - **Text heuristics** (T004, T005) can miss and can misfire.
-- **Three blind builds, on one small slice.** Builders given only the generated brief produced
-  passing implementations in TypeScript and Python (README, Blind builds). The first found a
-  defect in the renderer, now fixed. Three builds of a 160 to 220 line program do not show
-  how the language does on a larger spec or with another builder model.
+- **Five blind builds, on one small slice.** Builders given only the generated brief and a
+  prompt (which carried REGEN.json and the budgets) produced passing implementations in
+  TypeScript and Python (README, Blind builds). The first two found defects in how tilth wrote
+  the brief: example objects shown in source order, and a table that never said inputs are
+  required. Only example values are now sorted; objects typed in requirement prose still appear
+  as typed, so the brief says that objects list their members in no particular order. Five
+  builds of programs of 160 to 220 non-blank lines, with one model, do not show how the
+  language does on a larger spec or with another builder.
 
 ## Compared with spec-driven development tools
 

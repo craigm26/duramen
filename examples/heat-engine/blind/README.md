@@ -3,7 +3,11 @@
 The experiment: give a blind builder the brief tilth generates from `../heat.tilth`
 (`../build/SPEC.md` and `../build/DECISIONS.md`) plus `PROMPT.<lang>.md`, under the regen kit's
 isolation, and score the result with tilth's generated suite and with regen-heat-engine's
-hand-built suite. regen-heat-engine's r01 to r04 were built the same way from the prose brief.
+hand-built suite. regen-heat-engine's r01 to r04 were built under the same protocol from the
+prose brief, for the whole spec, on Windows, with the earlier launcher (blob 3b7118a, which
+passed the orchestrator's environment through instead of an allow-list) and the unmodified
+prompt. Blind means not shown the reference or the earlier builds; the model may still have seen
+the public heat-engine sources in training.
 
 `PROMPT.<lang>.md` is regen-heat-engine's prompt with three changes, because tilth 0.1 cannot
 express requirements that are not observable through the driver: rule 3 spells out REGEN.json
@@ -21,13 +25,16 @@ Results are in `runs/`.
 
 | run | brief | sandbox | tilth suite | hand-built, slice scope | own tests | clean |
 |---|---|---|---|---|---|---|
-| [t01](runs/t01.md) (ts) | brief-t1 | prdycy | 105/105 | 240/240 | 19/19 | no: one `clarify` |
-| [t02](runs/t02.md) (py) | brief-t1 | rpgsul | 105/105 | 240/240 | 21/21 | yes |
+| [t01](runs/t01.md) (ts) | brief-t1 | prdycy | 105/105 | 240/240 | 19/19 | no: two `clarify` |
+| [t02](runs/t02.md) (py) | brief-t1 | rpgsul | 105/105 | 240/240 | 21/21 | no: one `clarify` |
 | [t03](runs/t03.md) (ts) | brief-t2 | wbcasg | 105/105 | 240/240 | 19/19 | yes |
+| [t04](runs/t04.md) (ts) | brief-t3 | frlixr | 107/107 | 240/240 | 19/19 | yes |
+| [t05](runs/t05.md) (py) | brief-t3 | zocenj | 107/107 | 240/240 | 15/15 | yes |
 
-"Slice scope" is computed by [`slice-score.mjs`](slice-score.mjs): the hand-built suite's 240
-cases for the slice's five operations, its error cases that name no other operation, and its
-stream and static checks. The other 124 cases are for workRest, verdict and cascade.
-`runs/ledger.jsonl` has one entry per run, in the regen kit's format (transcripts are identified
-by SHA-256; they stay in the sandbox). `impl/` holds each builder's output, as copied for
-scoring.
+t01 to t03 also pass the brief-t3 suite, 107/107 (rescores in the ledger). "Slice scope" is
+computed by [`slice-score.mjs`](slice-score.mjs): the hand-built suite's 240 cases for the
+slice's five operations, its error cases that name no other operation, and its stream and static
+checks. The other 124 cases are for workRest, verdict and cascade (116 result and audit cases, 3
+version cases, 5 error cases). `runs/ledger.jsonl` has one entry per run and rescore, adapted
+from the regen kit's format (no `suite_tree` or `branch`; transcripts are identified by SHA-256
+and stay in the sandbox). `impl/` holds each builder's output as copied for scoring.
