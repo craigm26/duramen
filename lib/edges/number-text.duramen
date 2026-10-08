@@ -1,0 +1,46 @@
+# Number text. Each item: the JSON input as written => the text an implementation writes.
+
+duramen 0.2
+
+edgedef number-text/ecmascript "Number text (ECMAScript Number::toString)"
+  family number-text
+  text
+    A finite number `x` is written exactly as ECMAScript's `Number::toString(x)` (radix 10)
+    writes it:
+
+    1. If `x` is `+0` or `-0`, write `0`.
+    2. If `x < 0`, write `-` followed by the text of `-x`.
+    3. Otherwise let `s` be the shortest string of decimal digits (`k` digits, no trailing zeros
+       unless `k = 1`) and `n` an integer such that `s × 10^(n−k)` is the number closest to `x`
+       that rounds back to exactly `x`. When several such digit strings of the same length exist,
+       take the one whose value is closest to `x`.
+    4. If `k ≤ n ≤ 21`: write `s` followed by `n − k` zeros.
+    5. If `0 < n ≤ 21`: write the first `n` digits of `s`, `.`, then the remaining `k − n` digits.
+    6. If `−6 < n ≤ 0`: write `0.`, then `−n` zeros, then `s`.
+    7. Otherwise write exponent form: the first digit of `s`; if `k > 1`, `.` and the remaining
+       digits; then `e`, then `+` or `-` for the sign of `n − 1`, then `|n − 1|` in decimal.
+
+    This is not C `%g`, Python `repr` (`1e-07`) or Java `Double.toString`.
+  item 5 => 5
+  item 1.5 => 1.5
+  item 0.30000000000000004 => 0.30000000000000004
+  item 1e20 => 100000000000000000000
+  item 1e21 => 1e+21
+  item -1e21 => -1e+21
+  item 1e-6 => 0.000001
+  item 1e-7 => 1e-7
+  item 2e-7 => 2e-7
+  item -1.5e-7 => -1.5e-7
+  item 1.23e-18 => 1.23e-18
+  item 123e-20 => 1.23e-18
+  item -0 => 0
+  item 100 => 100
+  item 1e2 => 100
+  item 123456789012345680000 => 123456789012345680000
+  item 1.7976931348623157e308 => 1.7976931348623157e+308
+  item 5e-324 => 5e-324
+  item 1e-323 => 1e-323
+  item 0.000001234 => 0.000001234
+  item 9007199254740993 => 9007199254740992
+  item 0.1 => 0.1
+  item 4.35 => 4.35

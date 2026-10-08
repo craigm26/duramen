@@ -1,10 +1,13 @@
 # heat-engine, a slice: wet-bulb temperature, heat flags, the canonical operation, and the
 # request rules they need. Adapted from github.com/craigm26/regen-heat-engine at 4d99222
 # (.regenerate/SPEC.md 1.0.2 and DECISIONS.md; MIT License, Copyright (c) 2026 craigm26).
-# Left out of the slice: work/rest, verdict, the weather cascade, REGEN.json details and budgets.
-# The oracle is that repository's suite oracle, unchanged, behind a small driver.
+# Left out of the slice: work/rest, verdict and the weather cascade. REGEN.json and the budgets
+# are in, as static checks on the implementation folder (section BU).
+# The oracle is that repository's suite oracle, unchanged, behind a small driver. Two evidence
+# files, evidence/*.csv, are unchanged copies of HeatCompass/heat-engine-spec's fixtures at
+# f621520 (MIT, Copyright (c) 2026 HeatCompass), as imported by regen-heat-engine.
 
-duramen 0.1
+duramen 0.2
 
 spec heat-engine 1.0.2-slice
   title "Wet-bulb temperature and heat flags, with byte-exact audit records"
@@ -20,6 +23,13 @@ spec heat-engine 1.0.2-slice
     "Number" means an IEEE 754 binary64 value (a JavaScript `number`, a Python `float`).
 
 oracle node oracle-driver.mjs
+  source oracle.mjs
+
+type num = number | "NaN" | "Infinity" | "-Infinity"
+type wetBulbResult = {wetBulbC: number, wetBulbF: number, clampedRhPct?: number} | null
+type flag = "white" | "green" | "yellow" | "red" | "black"
+type flagResult = {flag: flag, flagDartLabel: "low" | "moderate" | "high" | "extreme" | "critical"} | null
+type command = string | {default: string, ...}
 
 # ---------------------------------------------------------------------------------------------
 section RQ "Requests"
@@ -136,6 +146,7 @@ edge json/sorted-utf16 via canonical value
 
 op canonical
   input value any
+  returns string
   result the canonical JSON text of `value`, as a string
   request {}
 
@@ -156,6 +167,14 @@ req CJ-005 "The canonical operation"
     expect result = "null"
   example canonical {}
     expect error = "bad_request"
+
+property CJ-P1 "Canonical text is a fixed point and reads back as the value"
+  supports CJ-005
+  for v in json
+  call a = canonical {"value": v}
+  call b = canonical {"value": parse(a.result)}
+  expect b.result == a.result
+  expect parse(a.result) == v
 
 open CJ-001 "Numbers outside binary64"
   text
@@ -188,6 +207,17 @@ req AU-001 "Audit members"
     expect audit.function = "flagFromWetBulbF"
     expect audit.computed_at = "2026-05-26T17:00:00.000Z"
 
+property AU-P1 "Audits are canonical JSON text"
+  supports AU-001
+  for t in -20 .. 50
+  for rh in 0 .. 120
+  call a = wetBulb {"tempC": t, "rhPercent": rh}
+  call b = flagC {"wetBulbC": a.result.wetBulbC}
+  call ca = canonical {"value": parse(a.audit)}
+  call cb = canonical {"value": parse(b.audit)}
+  expect ca.result == a.audit
+  expect cb.result == b.audit
+
 req AU-002 "Non-finite inputs in audits"
   decision D-007
   text
@@ -203,7 +233,8 @@ section WB "Wet-bulb temperature (Stull 2011)"
     Temperature*, J. Appl. Meteor. Climatol. 50(11):2267–2269, DOI 10.1175/JAMC-D-11-0143.1.
 
 op wetBulb
-  input tempC number, rhPercent number
+  input tempC num, rhPercent num
+  returns wetBulbResult
   result `wetBulbC`, `wetBulbF`, and `clampedRhPct` when RH was clamped (REQ-WB-001)
   tolerance result.wetBulbC 0.00001
   tolerance result.wetBulbF 0.000018001
@@ -288,7 +319,8 @@ req WB-004 "Non-finite wet-bulb input"
     | "NaN"      | "NaN"       | null   | "invalid_input:tempC"     |
 
 op wetBulbF
-  input tempF number, rhPercent number
+  input tempF num, rhPercent num
+  returns wetBulbResult
   result as `wetBulb` (REQ-WB-005)
   tolerance result.wetBulbC 0.00001
   tolerance result.wetBulbF 0.000018001
@@ -313,6 +345,102 @@ req WB-005 "Wet-bulb from °F"
     expect result = null
     expect audit.result_summary = "invalid_input:tempC"
 
+evidence WB-FIXTURES "Wet-bulb values from an independent program"
+  source HeatCompass/heat-engine-spec at f621520, spec/tier1-foundation/wet-bulb.fixtures.csv, written by its scripts/build-fixtures.py (Python, not this spec's oracle)
+  kind computed
+  supports WB-001
+  table wetBulb from "evidence/wet-bulb.fixtures.csv"
+    id id
+    columns tempC = temp_c, rhPercent = rh_percent
+    expect result.wetBulbC ≈ expected_wet_bulb_c ± tolerance_c
+    expect result.wetBulbF ≈ expected_wet_bulb_f ± 0.000018001
+
+evidence WB-EXTENDED "Wet-bulb values outside Stull's range, from the same independent formula"
+  source evidence/make-extended.py, which runs stull() copied unchanged from HeatCompass/heat-engine-spec's scripts/build-fixtures.py at f621520 (Python, not this spec's oracle)
+  kind computed
+  supports WB-002
+  text
+    Added after `duramen mutate` showed that a change in the sixth decimal place of one of
+    the formula's constants went unnoticed: inside Stull's range it moves results by less than
+    the tolerance, and outside it nothing independent checked the values.
+  table wetBulb from "evidence/wet-bulb-extended.csv"
+    id id
+    columns tempC = temp_c, rhPercent = rh_percent
+    expect result.wetBulbC ≈ expected_wet_bulb_c ± tolerance_c
+    expect result.wetBulbF ≈ expected_wet_bulb_f ± 0.000018001
+
+property WB-P8 "RH is clamped exactly when it is outside [5, 100]"
+  supports WB-001
+  decision D-009
+  samples 40
+  for t in -20 .. 50
+  for rh in one of 4.999999, 5, 5.000001, 5.5, 6, 50, 99.999999, 100, 100.000001, 101
+  call a = wetBulb {"tempC": t, "rhPercent": rh}
+  expect has(a.result, "clampedRhPct") == (rh < 5 or rh > 100)
+
+property WB-P1 "wetBulbF is wetBulb on the converted temperature"
+  supports WB-005
+  decision D-010
+  for f in -100 .. 200
+  for rh in 0 .. 150
+  call a = wetBulbF {"tempF": f, "rhPercent": rh}
+  call b = wetBulb {"tempC": (f - 32) * 5 / 9, "rhPercent": rh}
+  expect a.result == b.result
+  expect a.audit == b.audit
+
+property WB-P2 "Humidity above 100 computes as 100"
+  supports WB-001
+  decision D-009
+  for t in -20 .. 50
+  for rh in 100.001 .. 1000
+  call a = wetBulb {"tempC": t, "rhPercent": rh}
+  call b = wetBulb {"tempC": t, "rhPercent": 100}
+  expect a.result.wetBulbC == b.result.wetBulbC and a.result.wetBulbF == b.result.wetBulbF
+  expect a.result.clampedRhPct == 100 and not has(b.result, "clampedRhPct")
+
+property WB-P3 "Humidity below 5 computes as 5"
+  supports WB-001
+  decision D-009
+  for t in -20 .. 50
+  for rh in -100 .. 4.999
+  call a = wetBulb {"tempC": t, "rhPercent": rh}
+  call b = wetBulb {"tempC": t, "rhPercent": 5}
+  expect a.result.wetBulbC == b.result.wetBulbC and a.result.clampedRhPct == 5
+
+property WB-P4 "wetBulbF is the °F of wetBulbC"
+  supports WB-001
+  for t in -60 .. 60
+  for rh in 0 .. 120
+  call a = wetBulb {"tempC": t, "rhPercent": rh}
+  expect a.result.wetBulbF == (a.result.wetBulbC * 9) / 5 + 32
+
+property WB-P5 "From 5 °C up, more humidity gives a higher wet-bulb"
+  supports WB-001
+  text
+    Stull's fit is not monotonic everywhere in its range: up to about 3 °C, more humidity can
+    give a lower result (at -20 °C, going from 5 % to 6 % RH lowers it by 0.37 °C). This
+    specification pins the formula, so that behavior is part of it; the property is stated
+    where the formula rises.
+  for t in 5 .. 50
+  for rh in 5 .. 99
+  call a = wetBulb {"tempC": t, "rhPercent": rh}
+  call b = wetBulb {"tempC": t, "rhPercent": rh + 1}
+  expect b.result.wetBulbC > a.result.wetBulbC
+
+property WB-P7 "The validity marker, at and around -20 and 50"
+  supports WB-003
+  for t in one of -20, 50, -20.000001, 50.000001, -19.999999, 49.999999, -60, 60, 0
+  for rh in 5 .. 100
+  call a = wetBulb {"tempC": t, "rhPercent": rh}
+  expect contains(parse(a.audit).result_summary, "out_of_validity_range") == (t < -20 or t > 50)
+
+property WB-P6 "The audit records the inputs as given"
+  supports WB-003
+  for t in -60 .. 60
+  for rh in 0 .. 120
+  call a = wetBulb {"tempC": t, "rhPercent": rh}
+  expect parse(a.audit).inputs == {"tempC": t, "rhPercent": rh}
+
 open WB-001 "Overflow"
   text
     Results when the computation overflows or loses all precision (inputs of enormous
@@ -328,7 +456,8 @@ section FL "Heat flags (MCO 6200.1E)"
     Primary source: U.S. Marine Corps Order 6200.1E, Marine Corps Heat Stress Program.
 
 op flagF
-  input wetBulbF number
+  input wetBulbF num
+  returns flagResult
   result `flag` and `flagDartLabel` (REQ-FL-001)
   audit text
 
@@ -364,6 +493,9 @@ req FL-002 "Flag audit record"
     `{"white_max":80,"green_max":85,"yellow_max":88,"red_max":90}`; `result_summary`
     `wetBulbF=<w> → <flag>` with `<w>` as number text, followed by ` (out_of_observed_range)`
     when `wetBulbF < -50` or `wetBulbF > 200`.
+  example flagF {"wetBulbF": 86.5}
+    expect audit.constants = {"white_max": 80, "green_max": 85, "yellow_max": 88, "red_max": 90}
+    expect audit.inputs = {"wetBulbF": 86.5}
   table flagF
     | wetBulbF | audit.result_summary                             |
     | 85       | "wetBulbF=85 → yellow"                           |
@@ -383,7 +515,8 @@ req FL-003 "Non-finite °F"
     expect audit.constants = {}
 
 op flagC
-  input wetBulbC number
+  input wetBulbC num
+  returns flagResult
   result as `flagF` (REQ-FL-004)
   audit text
 
@@ -424,10 +557,89 @@ req FL-006 "Non-finite °C"
     expect result = null
     expect audit.result_summary = "invalid_input:wetBulbC"
 
+evidence FL-FIXTURES "Flag rows worked out from MCO 6200.1E's boundaries"
+  source HeatCompass/heat-engine-spec at f621520, spec/tier1-foundation/flag-mapping.fixtures.csv
+  kind derived
+  supports FL-001
+  table flagF from "evidence/flag-mapping.fixtures.csv"
+    id id
+    columns wetBulbF = wet_bulb_f
+    expect result.flag = expected_flag as string
+    expect result.flagDartLabel = expected_flag_dart_label as string
+
+property FL-P1 "flagC is flagF of the converted temperature"
+  supports FL-004, FL-005
+  decision D-010
+  for c in -50 .. 60
+  call a = flagC {"wetBulbC": c}
+  call b = flagF {"wetBulbF": (c * 9) / 5 + 32}
+  expect a.result == b.result
+  expect parse(a.audit).children == [parse(b.audit)]
+
+property FL-P4 "The observed-range marker, at and around -50 and 200"
+  supports FL-002
+  samples 30
+  for w in one of -50, -50.000001, -49.999999, -50.5, 200, 200.000001, 199.999999, 200.5, 0
+  call a = flagF {"wetBulbF": w}
+  expect contains(parse(a.audit).result_summary, "out_of_observed_range") == (w < -50 or w > 200)
+
+property FL-P2 "Each flag has one label"
+  supports FL-001
+  for w in -60 .. 250
+  call a = flagF {"wetBulbF": w}
+  expect {"white": "low", "green": "moderate", "yellow": "high", "red": "extreme", "black": "critical"}[a.result.flag] == a.result.flagDartLabel
+
+property FL-P3 "A hotter wet-bulb never gives a milder flag"
+  supports FL-001
+  for w in -60 .. 250
+  for dw in 0 .. 15
+  call a = flagF {"wetBulbF": w}
+  call b = flagF {"wetBulbF": w + dw}
+  expect {"white": 0, "green": 1, "yellow": 2, "red": 3, "black": 4}[b.result.flag] >= {"white": 0, "green": 1, "yellow": 2, "red": 3, "black": 4}[a.result.flag]
+
 open FL-001 "Overflow in the °C path"
   text
     `flagC` for a finite `wetBulbC` whose °F conversion overflows to a non-finite value (only
     reachable near ±1.8e308).
+
+# ---------------------------------------------------------------------------------------------
+section BU "The implementation folder"
+  text
+    These requirements are checked on the implementation folder, not through the driver.
+
+req BU-001 "REGEN.json"
+  text
+    The implementation folder MUST contain `REGEN.json`, a JSON object with exactly the keys
+    `lang` (`"ts"` or `"py"`), `build`, `test` and `driver`. Each of `build`, `test` and
+    `driver` is a command string, or an object whose keys are Node.js `process.platform`
+    values (such as `"win32"`) plus a required `"default"`, each mapping to a command string.
+    Commands run in the implementation folder. `build` and `test` run through the platform
+    shell; an empty `build` means there is nothing to build, and build output, if any, goes in
+    `bin/`. `driver` is split on single spaces and started without a shell, so it MUST be plain
+    space-separated words. The same REGEN.json MUST work on Windows and on Linux.
+  static json "REGEN.json" matches {lang: "ts" | "py", build: command, test: command, driver: command}
+
+req BU-002 "Own tests"
+  text
+    The implementation MUST have its own tests, including at least one for every MUST in this
+    document, and the command `REGEN.json` names as `test` MUST pass.
+  static command test exits 0 within 300
+
+req BU-003 "Runtime and dependencies"
+  text
+    TypeScript MUST run on Node.js 22.18 or later directly by type stripping: erasable syntax
+    only, no build step, relative imports with the `.ts` extension. Python MUST run on 3.11 or
+    later. Only the language's standard library is used: nothing is installed, and a
+    `package.json`, if there is one, declares no dependencies.
+  static file "node_modules", "package-lock.json", "requirements.txt", "Pipfile", "poetry.lock" absent
+  static text "package.json" not matching "\"(dev|peer|optional)?[dD]ependencies\""
+
+req BU-004 "Size"
+  text
+    At most 800 non-blank lines of source in all: `.ts .mts .mjs .js` or `.py` files under the
+    implementation folder, not counting tests (`*.test.*`, `*_test.*`, `test_*.py`, and
+    anything under a `test/` or `tests/` folder).
+  static lines "**/*.ts", "**/*.mts", "**/*.mjs", "**/*.js", "**/*.py" at most 800 excluding "**/*.test.*", "**/*_test.*", "**/test_*.py", "**/test/**", "**/tests/**"
 
 # ---------------------------------------------------------------------------------------------
 decision D-001 "The whole audit record is pinned, byte for byte"
