@@ -1,6 +1,8 @@
 # heat-engine, a slice: wet-bulb temperature, heat flags, the canonical operation, and the
 # request rules they need. Adapted from github.com/craigm26/regen-heat-engine at 4d99222
 # (.regenerate/SPEC.md 1.0.2 and DECISIONS.md; MIT License, Copyright (c) 2026 craigm26).
+# Slice versions: 1.0.2-slice was the duramen 0.1 restatement; 1.1.0-slice adds evidence,
+# properties, result types and static checks (duramen diff: tightening, so a new minor).
 # Left out of the slice: work/rest, verdict and the weather cascade. REGEN.json and the budgets
 # are in, as static checks on the implementation folder (section BU).
 # The oracle is that repository's suite oracle, unchanged, behind a small driver. Two evidence
@@ -9,7 +11,7 @@
 
 duramen 0.2
 
-spec heat-engine 1.0.2-slice
+spec heat-engine 1.1.0-slice
   title "Wet-bulb temperature and heat flags, with byte-exact audit records"
   contract 0.2.0
   request {"clock": "2026-05-26T17:00:00.000Z"}

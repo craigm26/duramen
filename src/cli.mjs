@@ -8,6 +8,8 @@ import { renderSpec, renderDecisions, renderTrace } from './render.mjs';
 import { generateCases, runCases } from './suite.mjs';
 import { implDriver, killAll } from './driver.mjs';
 import { mutate, oracleSources } from './mutate.mjs';
+import { agree } from './agree.mjs';
+import { diffRecords } from './diff.mjs';
 
 export const VERSION = '0.2.0';
 
@@ -17,6 +19,8 @@ const USAGE = `usage:
   duramen run   <record> (--impl <dir> | --driver "<command>" [--cwd <dir>]) [--repeat <n>] [--timeout <s>]
                 [--without-oracle] [--no-static] [--strict] [--json]
   duramen mutate <record> [--file <oracle source>] [--limit <n>] [--jobs <n>] [--json]
+  duramen agree  <record> --impl <dir> [--impl <dir> ...] [--oracle] [--samples <n>] [--seed <n>] [--json]
+  duramen diff   <old record> <new record> [--json]
   duramen --version
 
 A record is a .duramen file or a folder of them.`;
@@ -32,7 +36,8 @@ export function parseArgs(argv, spec) {
     if (spec[name] === 'flag') { if (inline !== undefined) return { error: `--${name} takes no value` }; out[name] = true; continue; }
     const v = inline ?? argv[++i];
     if (v === undefined || (inline === undefined && v.startsWith('--'))) return { error: `--${name} needs a value` };
-    out[name] = v;
+    if (spec[name] === 'list') (out[name] ??= []).push(v);
+    else out[name] = v;
   }
   return out;
 }
@@ -42,6 +47,8 @@ const OPTIONS = {
   build: { out: 'value', strict: 'flag', json: 'flag', timeout: 'value' },
   run: { impl: 'value', driver: 'value', cwd: 'value', repeat: 'value', timeout: 'value', strict: 'flag', json: 'flag', 'without-oracle': 'flag', 'no-static': 'flag' },
   mutate: { file: 'value', limit: 'value', jobs: 'value', timeout: 'value', json: 'flag' },
+  agree: { impl: 'list', oracle: 'flag', samples: 'value', seed: 'value', timeout: 'value', json: 'flag' },
+  diff: { json: 'flag' },
 };
 
 const shown = (f) => { if (!f) return f; const r = relative(process.cwd(), f); return r && !r.startsWith('..') && !isAbsolute(r) ? r : f; };
@@ -54,6 +61,7 @@ export async function main(argv, io = { out: (s) => process.stdout.write(s + '\n
   if (!OPTIONS[cmd]) { io.err(`duramen: unknown command "${cmd}"\n${USAGE}`); return 2; }
   const args = parseArgs(rest, OPTIONS[cmd]);
   if (args.error) { io.err(`duramen ${cmd}: ${args.error}\n${USAGE}`); return 2; }
+  if (cmd === 'diff') return diffCommand(args, io);
   if (args._.length !== 1) { io.err(`duramen ${cmd}: name one record (a .duramen file or a folder)\n${USAGE}`); return 2; }
   const timeoutMs = args.timeout !== undefined ? Number(args.timeout) * 1000 : undefined;
   if (timeoutMs !== undefined && !(timeoutMs > 0)) { io.err(`duramen ${cmd}: --timeout needs a number of seconds`); return 2; }
@@ -61,6 +69,7 @@ export async function main(argv, io = { out: (s) => process.stdout.write(s + '\n
   if (!Number.isInteger(repeat) || repeat < 1 || repeat > 10) { io.err(`duramen ${cmd}: --repeat needs a whole number from 1 to 10`); return 2; }
   if (cmd === 'run' && !args.impl && !args.driver) { io.err('duramen run: name an implementation (--impl <dir>) or a driver (--driver "<command>")'); return 2; }
   if (cmd === 'mutate') return mutateCommand(args, io, timeoutMs);
+  if (cmd === 'agree') return agreeCommand(args, io, timeoutMs);
 
   const path = resolve(args._[0]);
   const { ast, diagnostics: loadDs } = loadRecord(path);
@@ -137,6 +146,58 @@ async function mutateCommand(args, io, timeoutMs) {
   io.out(`${r.total + r.unreached} mutants of the oracle${r.total < r.of ? ` (${r.total} of ${r.of} reached ones sampled)` : ''}: ${r.killed} caught; ${r.unpinned.length} unpinned (an answer to some check's request changed beyond tolerance, and no check noticed); ${r.tolerated.length} within tolerance; ${r.silent.length} silent (no answer to any check's request changed); ${r.unreached} in code no check runs`);
   io.out(`caught by: ${Object.entries(r.byCode).sort((a, b) => b[1] - a[1]).map(([c, n]) => `${c} ${n}`).join(', ') || 'nothing'}`);
   return 0;
+}
+
+async function agreeCommand(args, io, timeoutMs) {
+  const path = resolve(args._[0]);
+  const { ast, diagnostics } = loadRecord(path);
+  if (diagnostics.some((d) => d.level === 'error')) { for (const d of diagnostics.filter((x) => x.level === 'error')) io.out(`${shown(d.file)}:${d.line}:${d.col ?? 1}: ${d.level} ${d.code}: ${d.message}`); return 1; }
+  const participants = [];
+  if (args.oracle) {
+    if (!ast.oracle) { io.err('duramen agree: --oracle, but the record has no oracle'); return 2; }
+    participants.push({ name: 'oracle', command: ast.oracle.command, cwd: dirname(ast.oracle.file ?? ast.file) });
+  }
+  for (const dir of args.impl ?? []) {
+    const d = implDriver(resolve(dir));
+    if (d.error) { io.err(`duramen agree: ${d.error}`); return 2; }
+    participants.push({ name: shown(resolve(dir)), command: d.command, cwd: resolve(dir) });
+  }
+  if (participants.length < 2) { io.err('duramen agree: name at least two of --impl <dir> (repeatable) and --oracle'); return 2; }
+  const samples = args.samples !== undefined ? Number(args.samples) : 50;
+  const seed = args.seed !== undefined ? Number(args.seed) : 1;
+  if (!(Number.isInteger(samples) && samples > 0 && samples <= 10000) || !Number.isInteger(seed)) { io.err('duramen agree: --samples is 1 to 10000 and --seed a whole number'); return 2; }
+  const r = await agree(ast, participants, { samples, seed, timeoutMs });
+  if (args.json) { io.out(JSON.stringify({ duramen: VERSION, command: 'agree', record: shown(path), participants: participants.map((p) => p.name), ...r })); return r.disagreements.length || r.errors.length ? 1 : 0; }
+  for (const e of r.errors) io.out(`  ${e.name}: ${e.error}`);
+  for (const s of r.skipped) io.out(`  skipped ${s.op}: ${s.why}`);
+  for (const dis of r.disagreements.slice(0, 20)) {
+    io.out(`  ${dis.id} ${dis.op} ${JSON.stringify(dis.input)}`);
+    for (const g of dis.groups) io.out(`      ${g.names.join(', ')}: ${g.answer ? JSON.stringify(g.answer).slice(0, 160) : '(no answer)'}`);
+  }
+  if (r.disagreements.length > 20) io.out(`  ... and ${r.disagreements.length - 20} more`);
+  io.out(`${participants.length} participants, ${r.requests} generated requests: ${r.disagreements.length} disagreements`);
+  return r.disagreements.length || r.errors.length ? 1 : 0;
+}
+
+async function diffCommand(args, io) {
+  if (args._.length !== 2) { io.err(`duramen diff: name two records, the old one and the new one\n${USAGE}`); return 2; }
+  const [A, B] = args._.map((p) => loadRecord(resolve(p)));
+  for (const [x, p] of [[A, args._[0]], [B, args._[1]]]) {
+    if (x.diagnostics.some((d) => d.code === 'P046')) { io.err(`duramen diff: cannot read ${p}`); return 2; }
+    if (x.diagnostics.some((d) => d.level === 'error')) { io.err(`duramen diff: ${p} has errors; run duramen check on it first`); return 1; }
+  }
+  const r = diffRecords(A.ast, B.ast);
+  if (args.json) { io.out(JSON.stringify({ duramen: VERSION, command: 'diff', ...r })); return r.version.ok === false ? 1 : 0; }
+  for (const kind of ['breaking', 'tightening', 'additive', 'relaxing', 'prose']) {
+    const cs = r.changes.filter((c) => c.kind === kind);
+    if (!cs.length) continue;
+    io.out(`${kind} (${cs.length}):`);
+    for (const c of cs) io.out(`  ${c.what}`);
+  }
+  if (r.contract) io.out(`contract version: ${r.contract[0] ?? '(none)'} -> ${r.contract[1] ?? '(none)'}`);
+  const v = r.version;
+  io.out(`version ${v.from} -> ${v.to}: ${v.ok === null ? v.why : v.ok ? `ok (${v.bump}${v.need !== 'none' ? `, needs ${v.need}` : ''})` : `too small: ${v.why}`}`);
+  return v.ok === false ? 1 : 0;
 }
 
 export async function cli(argv) {
