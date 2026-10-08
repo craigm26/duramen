@@ -1,0 +1,15 @@
+# An edge is a claim the oracle has to meet. The heat-engine oracle escapes lone surrogates
+# (json/sorted-utf16, its spec's choice). Bound to json/rfc8785 instead, which refuses them, the
+# pack items with lone surrogates fail against the oracle (T006): the spec and its own model
+# disagree, and `tilth check` says where.
+tilth 0.1
+
+spec heat-engine-rfc8785 0.1
+
+oracle node ../heat-engine/oracle-driver.mjs
+
+op canonical
+  input value any
+  request {}
+
+edge json/rfc8785 via canonical value

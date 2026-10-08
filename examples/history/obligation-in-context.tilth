@@ -1,0 +1,18 @@
+# History: mcp-tape, blind build r05. mcp-tape's decision D-026 described a Windows trap as
+# context: Python's text-mode standard output writes CRLF. r05 skipped its POSIX-only tests on
+# Windows as REQ-IF-001 asked, but one of its tests still expected LF from a Python child.
+# D-028 then moved the fact into REQ-IF-001, because "a builder acts on requirements and reads
+# context".
+#
+# Tilth rejects obligation words outside a requirement (T004): written as the note below, the
+# fact has to move into a `req`, where it gets an ID and needs an evaluation. D-026 itself used
+# no obligation word, so this check alone would not have caught it; it catches the version of
+# the mistake that says MUST.
+tilth 0.1
+
+spec mcp-tape-r05 1.1.1
+
+note
+  text
+    On Windows, Python's text-mode standard output writes CRLF. A test that compares bytes a
+    child wrote MUST have the child write bytes, or accept CRLF.

@@ -1,0 +1,502 @@
+# heat-engine, a slice: wet-bulb temperature, heat flags, the canonical operation, and the
+# request rules they need. Adapted from github.com/craigm26/regen-heat-engine at 4d99222
+# (.regenerate/SPEC.md 1.0.2 and DECISIONS.md; MIT License, Copyright (c) 2026 craigm26).
+# Left out of the slice: work/rest, verdict, the weather cascade, REGEN.json details and budgets.
+# The oracle is that repository's suite oracle, unchanged, behind a small driver.
+
+tilth 0.1
+
+spec heat-engine 1.0.2-slice
+  title "Wet-bulb temperature and heat flags, with byte-exact audit records"
+  contract 0.2.0
+  request {"clock": "2026-05-26T17:00:00.000Z"}
+  text
+    `heat-engine` is a small calculation library for outdoor heat-stress decisions. This slice
+    covers wet-bulb temperature from air temperature and relative humidity (Stull 2011), from
+    °C or °F, and the U.S. Marine Corps heat flag (MCO 6200.1E) for a wet-bulb temperature in °F
+    or °C. Every computing operation returns its result together with an **audit record**: what
+    was computed, from which inputs and constants, under which citation, and when. Audit
+    records are compared byte for byte, so their serialized form is part of the contract.
+    "Number" means an IEEE 754 binary64 value (a JavaScript `number`, a Python `float`).
+
+oracle node oracle-driver.mjs
+
+# ---------------------------------------------------------------------------------------------
+section RQ "Requests"
+
+errors
+  bad_request when the line is not a JSON object, or `id` is missing or not a string (the
+    response then has `"id": null`)
+  unknown_op when `op` is missing, not a string, or not one of the operations
+  bad_request when `input` is missing or not an object; `clock` is missing or not a string
+    where the operation needs it; a required input field is missing; or an input field has the
+    wrong JSON type (a number field holding `true` or `"80"`, for example)
+
+req IF-004 "The injected clock"
+  text
+    Every request except `canonical` carries `clock`, a UTC timestamp in the exact form
+    `YYYY-MM-DDTHH:MM:SS.sssZ` (24 characters). It is the injected clock: every `computed_at`
+    in every audit record produced by the request MUST equal it exactly. An implementation
+    never reads the wall clock for an audit.
+  example flagF {"wetBulbF": 70}
+    request {"clock": "1999-12-31T23:59:59.999Z"}
+    expect audit.computed_at = "1999-12-31T23:59:59.999Z"
+  example flagC {"wetBulbC": 30}
+    request {"clock": "1999-12-31T23:59:59.999Z"}
+    expect audit.children.0.computed_at = "1999-12-31T23:59:59.999Z"
+
+req IF-006 "Numbers in requests"
+  decision D-007
+  text
+    Numeric input fields accept either a JSON number or one of the three strings `"NaN"`,
+    `"Infinity"`, `"-Infinity"`, which stand for the corresponding non-finite values. This is
+    how invalid numeric input reaches the operations. A JSON number in a request MUST be
+    treated as a binary64 value regardless of how it is written: `20`, `20.0` and `2e1` are
+    the same input and are written identically (`20`).
+  example wetBulb {"tempC": 2.0e1, "rhPercent": 50.000}
+    expect audit.result_summary = "T=20.0°C RH=50% → Tw=13.70°C"
+  example flagC {"wetBulbC": "-Infinity"}
+    expect result = null
+    expect audit.inputs = {"wetBulbC": "-Infinity"}
+
+req IF-007 "Requests that cannot be handled"
+  decision D-019, D-024
+  text
+    A request line that cannot be handled MUST get exactly `{"id": <id>, "error": <code>}`,
+    with the code given by the numbered list under Errors, and the driver MUST then continue
+    with the next line. Invalid values are not errors: a non-finite number or an unknown flag
+    name reaches the operation, which reports it in its result.
+  example raw "{not json"
+    expect id = null
+    expect error = "bad_request"
+  example raw "[1,2]"
+    expect id = null
+    expect error = "bad_request"
+  example flagF {"wetBulbF": 80}
+    omit id
+    expect id = null
+    expect error = "bad_request"
+  example heatIndex {"tempC": 20}
+    expect error = "unknown_op"
+  example flagF {"wetBulbF": 80}
+    omit op
+    expect error = "unknown_op"
+  example heatIndex
+    omit clock
+    expect error = "unknown_op"
+  example flagF
+    expect error = "bad_request"
+  example flagF {"wetBulbF": 80}
+    omit clock
+    expect error = "bad_request"
+  example wetBulb {"tempC": 20}
+    expect error = "bad_request"
+  example flagF {"wetBulbF": true}
+    expect error = "bad_request"
+  example flagF {"wetBulbF": "80"}
+    expect error = "bad_request"
+
+open IF-001 "Standard error"
+  text
+    What the driver writes to standard error.
+
+open IF-002 "Error text"
+  text
+    Any human-readable error text; it never appears in a response.
+
+# ---------------------------------------------------------------------------------------------
+section CJ "Canonical JSON"
+  text
+    Audit records, result summaries and the `canonical` operation write numbers and JSON by the
+    edges in the Edges section: number text (number-text/ecmascript), fixed-point text
+    (fixed-text/ecmascript) and canonical JSON (json/sorted-utf16).
+
+edge number-text/ecmascript via canonical value
+  decision D-002
+edge fixed-text/ecmascript
+  decision D-002
+edge json/sorted-utf16 via canonical value
+  decision D-021
+
+op canonical
+  input value any
+  result the canonical JSON text of `value`, as a string
+  request {}
+
+req CJ-005 "The canonical operation"
+  decision D-017
+  text
+    `canonical` takes `input.value`, any JSON value, and MUST respond
+    `{"id": <id>, "result": <string>}`, where the string is the canonical JSON text of the
+    value (edge json/sorted-utf16). It has no `audit` member and needs no `clock`. JSON numbers
+    in `value` are binary64 values (REQ-IF-006); the special strings of REQ-IF-006 are **not**
+    interpreted here: they are ordinary strings.
+  example canonical {"value": {"b": [1, 2.50, 1e21], "a": null}}
+    expect result = "{\"a\":null,\"b\":[1,2.5,1e+21]}"
+  example canonical {"value": {"y": "Infinity", "x": "NaN"}}
+    expect result = "{\"x\":\"NaN\",\"y\":\"Infinity\"}"
+
+open CJ-001 "Numbers outside binary64"
+  text
+    JSON numbers outside the binary64 range (e.g. `1e400`), anywhere in a request: their
+    canonical text in `canonical`, and how operations treat them.
+
+# ---------------------------------------------------------------------------------------------
+section AU "Audit records"
+
+req AU-001 "Audit members"
+  decision D-001
+  text
+    Every audit record is a JSON object with these members, always present:
+
+    | member | value |
+    |---|---|
+    | `spec_version` | the string `"0.2.0"` |
+    | `function` | the operation's function name (given per operation) |
+    | `inputs` | an object of the inputs, as each operation specifies |
+    | `constants` | an object mapping constant names to numbers, as each operation specifies (possibly empty) |
+    | `citation` | a fixed string per operation |
+    | `result_summary` | a one-line human-readable string, as each operation specifies |
+    | `computed_at` | the request's `clock` (REQ-IF-004) |
+
+    `flagC` adds `children` (REQ-FL-005). No other members appear.
+  example flagF {"wetBulbF": 85}
+    expect audit.spec_version = "0.2.0"
+    expect audit.function = "flagFromWetBulbF"
+    expect audit.computed_at = "2026-05-26T17:00:00.000Z"
+
+req AU-002 "Non-finite inputs in audits"
+  decision D-007
+  text
+    In `inputs`, a non-finite number MUST be written as the string `"NaN"`, `"Infinity"` or
+    `"-Infinity"` (not as `null`).
+  example wetBulb {"tempC": "Infinity", "rhPercent": "NaN"}
+    expect audit.inputs = {"tempC": "Infinity", "rhPercent": "NaN"}
+
+# ---------------------------------------------------------------------------------------------
+section WB "Wet-bulb temperature (Stull 2011)"
+  text
+    Primary source: Stull, R. (2011), *Wet-Bulb Temperature from Relative Humidity and Air
+    Temperature*, J. Appl. Meteor. Climatol. 50(11):2267–2269, DOI 10.1175/JAMC-D-11-0143.1.
+
+op wetBulb
+  input tempC number, rhPercent number
+  result `wetBulbC`, `wetBulbF`, and `clampedRhPct` when RH was clamped (REQ-WB-001)
+  tolerance result.wetBulbC 0.00001
+  tolerance result.wetBulbF 0.000018001
+  audit text
+
+req WB-001 "Wet-bulb temperature"
+  decision D-009, D-018
+  text
+    For finite `tempC` (T, °C) and `rhPercent`, let `RH` be `rhPercent` clamped to the closed
+    range [5, 100] (below 5 becomes 5, above 100 becomes 100). Compute, in binary64,
+    evaluating exactly these terms in this order:
+
+    ```
+    term1 = T * atan(0.151977 * sqrt(RH + 8.313659))
+    term2 = atan(T + RH)
+    term3 = atan(RH - 1.676331)
+    term4 = 0.00391838 * RH^1.5 * atan(0.023101 * RH)
+    wetBulbC = term1 + term2 - term3 + term4 + (-4.686035)
+    wetBulbF = (wetBulbC * 9) / 5 + 32
+    ```
+
+    `RH^1.5` is the library power function with exponent 1.5. The result MUST be
+    `{"wetBulbC": wetBulbC, "wetBulbF": wetBulbF}`, plus `"clampedRhPct": RH` only when
+    `RH ≠ rhPercent`.
+  table wetBulb
+    | tempC | rhPercent | result.wetBulbC ± 0.00001 | result.clampedRhPct |
+    | 20    | 50        | 13.69934                  |                     |
+    | 25    | 120       | 25.04558                  | 100                 |
+    | 30    | 2.5       | 10.77218                  | 5                   |
+    | 25    | 99.5      | 24.97823                  |                     |
+
+req WB-002 "No clamping of temperature"
+  text
+    Temperatures outside [-20, 50] °C still compute a result: `tempC` is never clamped.
+  table wetBulb
+    | tempC | rhPercent | result.wetBulbC ± 0.00001 |
+    | 60    | 50        | 48.08736                  |
+    | -30   | 50        | -29.31486                 |
+
+req WB-003 "Wet-bulb audit record"
+  decision D-001
+  text
+    The audit record for a finite computation:
+
+    - `function`: `"calculateWetBulb"`; `citation`: `"Stull (2011) eq. 1"`.
+    - `inputs`: `{"tempC": tempC, "rhPercent": rhPercent}`, with the values as given (before
+      clamping).
+    - `constants`: `stull_a` 0.151977, `stull_b` 8.313659, `stull_c` 1.676331, `stull_d`
+      0.00391838, `stull_e` 0.023101, `stull_offset` -4.686035; when RH was clamped, also
+      `rh_clamp_min` 5 and `rh_clamp_max` 100.
+    - `result_summary`: `T=<T>°C RH=<rh><markers> → Tw=<Tw>°C`, where
+      - `<T>` is `tempC` fixed to 1 place (edge fixed-text/ecmascript);
+      - `<rh>` is `<RH>%` when not clamped, or `<rhPercent>→<RH>%` when clamped, both as
+        number text (edge number-text/ecmascript);
+      - `<markers>` is empty, or ` (` + a comma-separated list + `)`: `rh_clamped` when
+        clamped, then `out_of_validity_range` when `tempC < -20` or `tempC > 50`;
+      - `<Tw>` is `wetBulbC` fixed to 2 places.
+  example wetBulb {"tempC": 25, "rhPercent": 120}
+    expect audit.inputs = {"tempC": 25, "rhPercent": 120}
+    expect audit.constants = {"stull_a": 0.151977, "stull_b": 8.313659, "stull_c": 1.676331, "stull_d": 0.00391838, "stull_e": 0.023101, "stull_offset": -4.686035, "rh_clamp_min": 5, "rh_clamp_max": 100}
+  table wetBulb
+    | tempC | rhPercent | audit.result_summary                                                 |
+    | 20    | 50        | "T=20.0°C RH=50% → Tw=13.70°C"                                       |
+    | 25    | 120       | "T=25.0°C RH=120→100% (rh_clamped) → Tw=25.05°C"                     |
+    | 60    | 2.5       | "T=60.0°C RH=2.5→5% (rh_clamped,out_of_validity_range) → Tw=25.97°C" |
+    | 20.25 | 50        | "T=20.3°C RH=50% → Tw=13.91°C"                                       |
+    | -0.04 | 50        | "T=-0.0°C RH=50% → Tw=-3.53°C"                                       |
+
+req WB-004 "Non-finite wet-bulb input"
+  decision D-007, D-019
+  text
+    If `tempC` or `rhPercent` is not finite, the result MUST be `null` and the audit MUST have
+    `function` and `citation` as above, `inputs` with both values (REQ-AU-002), `constants`
+    `{}`, and `result_summary` `invalid_input:tempC` if `tempC` is not finite, otherwise
+    `invalid_input:rhPercent`.
+  table wetBulb
+    | tempC      | rhPercent   | result | audit.result_summary      |
+    | "NaN"      | 50          | null   | "invalid_input:tempC"     |
+    | 20         | "NaN"       | null   | "invalid_input:rhPercent" |
+    | "Infinity" | 50          | null   | "invalid_input:tempC"     |
+    | 20         | "-Infinity" | null   | "invalid_input:rhPercent" |
+    | "NaN"      | "NaN"       | null   | "invalid_input:tempC"     |
+
+op wetBulbF
+  input tempF number, rhPercent number
+  result as `wetBulb` (REQ-WB-005)
+  tolerance result.wetBulbC 0.00001
+  tolerance result.wetBulbF 0.000018001
+  audit text
+
+req WB-005 "Wet-bulb from °F"
+  decision D-010
+  text
+    `wetBulbF` takes `tempF` and `rhPercent`, computes `tempC = ((tempF - 32) * 5) / 9` in
+    binary64 (this exact expression), and then MUST behave exactly as `wetBulb` with that
+    `tempC` and the same `rhPercent`. The result and the audit are those of `wetBulb`
+    (`function` is `"calculateWetBulb"`; `inputs` holds the converted `tempC`). A non-finite
+    `tempF` gives a non-finite `tempC` and so `invalid_input:tempC`.
+  example wetBulbF {"tempF": 68, "rhPercent": 50}
+    expect audit.result_summary = "T=20.0°C RH=50% → Tw=13.70°C"
+    expect audit.inputs = {"tempC": 20, "rhPercent": 50}
+  example wetBulbF {"tempF": 100, "rhPercent": 40}
+    expect audit.inputs = {"tempC": 37.77777777777778, "rhPercent": 40}
+  example wetBulbF {"tempF": 98.6, "rhPercent": 50}
+    expect audit.inputs = {"tempC": 37, "rhPercent": 50}
+  example wetBulbF {"tempF": "NaN", "rhPercent": 50}
+    expect result = null
+    expect audit.result_summary = "invalid_input:tempC"
+
+open WB-002 "Extra precision"
+  text
+    Results more precise than the stated tolerance.
+
+# ---------------------------------------------------------------------------------------------
+section FL "Heat flags (MCO 6200.1E)"
+  text
+    Primary source: U.S. Marine Corps Order 6200.1E, Marine Corps Heat Stress Program.
+
+op flagF
+  input wetBulbF number
+  result `flag` and `flagDartLabel` (REQ-FL-001)
+  audit text
+
+req FL-001 "Flag from °F"
+  decision D-010
+  text
+    For finite `wetBulbF` (`w` below), the result MUST be
+    `{"flag": <flag>, "flagDartLabel": <label>}` from this table. The bands are in °F with
+    inclusive lower bounds, and comparisons are on the binary64 value as given.
+
+    | flag | wet-bulb °F | label |
+    |---|---|---|
+    | `white` | `w < 80` | `low` |
+    | `green` | `80 ≤ w < 85` | `moderate` |
+    | `yellow` | `85 ≤ w < 88` | `high` |
+    | `red` | `88 ≤ w < 90` | `extreme` |
+    | `black` | `w ≥ 90` | `critical` |
+  table flagF
+    | wetBulbF | result.flag | result.flagDartLabel |
+    | 79.99    | "white"     | "low"                |
+    | 80       | "green"     | "moderate"           |
+    | 84.99    | "green"     | "moderate"           |
+    | 85       | "yellow"    | "high"               |
+    | 88       | "red"       | "extreme"            |
+    | 89.99    | "red"       | "extreme"            |
+    | 90       | "black"     | "critical"           |
+
+req FL-002 "Flag audit record"
+  decision D-001
+  text
+    The audit: `function` `"flagFromWetBulbF"`; `citation` `"USMC 6200.1E Table 3-1"`;
+    `inputs` `{"wetBulbF": wetBulbF}`; `constants`
+    `{"white_max":80,"green_max":85,"yellow_max":88,"red_max":90}`; `result_summary`
+    `wetBulbF=<w> → <flag>` with `<w>` as number text, followed by ` (out_of_observed_range)`
+    when `wetBulbF < -50` or `wetBulbF > 200`.
+  table flagF
+    | wetBulbF | audit.result_summary                             |
+    | 85       | "wetBulbF=85 → yellow"                           |
+    | 250      | "wetBulbF=250 → black (out_of_observed_range)"   |
+    | -60      | "wetBulbF=-60 → white (out_of_observed_range)"   |
+    | 200      | "wetBulbF=200 → black"                           |
+
+req FL-003 "Non-finite °F"
+  decision D-007
+  text
+    For non-finite `wetBulbF` the result MUST be `null`; the audit has the same `function` and
+    `citation`, `inputs` per REQ-AU-002, `constants` `{}`, and `result_summary`
+    `invalid_input:wetBulbF`.
+  example flagF {"wetBulbF": "NaN"}
+    expect result = null
+    expect audit.result_summary = "invalid_input:wetBulbF"
+    expect audit.constants = {}
+
+op flagC
+  input wetBulbC number
+  result as `flagF` (REQ-FL-004)
+  audit text
+
+req FL-004 "Flag from °C"
+  decision D-010
+  text
+    For finite `wetBulbC`, compute `wetBulbF = (wetBulbC * 9) / 5 + 32` in binary64, with
+    exactly this expression (not `wetBulbC * 1.8 + 32`, which rounds differently near the
+    boundaries), then classify as `flagF`. The result MUST be the `flagF` result.
+  table flagC
+    | wetBulbC           | result.flag |
+    | 26.66666666666666  | "white"     |
+    | 30                 | "yellow"    |
+    | 29.444444444444443 | "yellow"    |
+    | 29.444444443444443 | "green"     |
+
+req FL-005 "°C flag audit record"
+  decision D-001
+  text
+    The audit: `function` `"flagFromWetBulbC"`; `citation` `"USMC 6200.1E Table 3-1"`;
+    `inputs` `{"wetBulbC": wetBulbC}`; the same four `constants` as `flagF`; `result_summary`
+    `wetBulbC=<c> → wetBulbF=<f> → <flag>`, with `<c>` as number text and `<f>` fixed to 4
+    places; and `children`: an array of one element, the complete `flagF` audit record for the
+    converted value.
+  example flagC {"wetBulbC": 30}
+    expect audit.result_summary = "wetBulbC=30 → wetBulbF=86.0000 → yellow"
+    expect audit.children.0.result_summary = "wetBulbF=86 → yellow"
+  example flagC {"wetBulbC": 26.66666666666666}
+    expect audit.result_summary = "wetBulbC=26.66666666666666 → wetBulbF=80.0000 → white"
+
+req FL-006 "Non-finite °C"
+  decision D-007
+  text
+    For non-finite `wetBulbC` the result MUST be `null`; the audit has `function`
+    `"flagFromWetBulbC"`, the same `citation`, `inputs` per REQ-AU-002, `constants` `{}`,
+    `result_summary` `invalid_input:wetBulbC`, and no `children`.
+  example flagC {"wetBulbC": "NaN"}
+    expect result = null
+    expect audit.result_summary = "invalid_input:wetBulbC"
+
+# ---------------------------------------------------------------------------------------------
+decision D-001 "The whole audit record is pinned, byte for byte"
+  source extraction
+  text
+    The earlier implementation's main cross-language guarantee was byte-equal serialized
+    audit records, including the human-readable `result_summary`. Pinning all of it makes the
+    spec nearly as detailed as the code for summaries and number formatting. Decision: pin
+    every audit member, including `result_summary`, number text, fixed-point text and
+    canonical JSON (the three edges), and member presence rules; leave error message text,
+    standard error and library shape open. Why: the audit record is what a downstream consumer
+    stores and compares; if two implementations may differ in it, byte comparison stops being
+    useful.
+  rejected "Pin only the structured members and compare result_summary by pattern, as some earlier tests did: the earlier cross-language check compared whole records."
+
+decision D-002 "Number text follows ECMAScript, not the host language"
+  source extraction
+  text
+    Canonical JSON and summaries write numbers as text. The earlier implementation used
+    JavaScript's `String(n)` and `toFixed`. Other languages differ: Python's `repr` writes
+    `1e-07` and `1e+20` where JavaScript writes `1e-7` and `100000000000000000000`; Python's
+    `'%.1f'` rounds exact ties to even (`20.25` → `20.2`) where `toFixed` rounds them up
+    (`20.3`). Decision: the edges number-text/ecmascript and fixed-text/ecmascript. Why: byte
+    equality across languages needs one rule; the earlier fixtures were produced with this one.
+  rejected "Fixed significant digits everywhere: changes all existing expected bytes."
+
+decision D-007 "Non-finite inputs are written as strings in audits"
+  source extraction
+  text
+    The earlier TypeScript wrote `NaN` inputs as the string `"NaN"` but let `Infinity`
+    through, which its serializer then wrote as `null`; the other earlier implementation wrote
+    `"Infinity"`. Decision: `"NaN"`, `"Infinity"`, `"-Infinity"` (REQ-AU-002); requests use
+    the same three strings (REQ-IF-006), since JSON has no non-finite numbers. Why: symmetric,
+    lossless, and matches one of the two earlier behaviors.
+  rejected "null: loses which value it was."
+
+decision D-009 "RH is clamped to [5, 100], not [5, 99]"
+  source extraction
+  text
+    Stull's stated validity range is RH 5–99 %; the earlier input schema said implementations
+    "MUST clamp to [5, 99]"; the earlier code clamped to [5, 100], and a test asserts
+    `RH=120 → 100`. Decision: clamp to [5, 100] (REQ-WB-001); RH in (99, 100] computes without
+    a marker. Why: code and tests agreed, and 100 % is a real humidity.
+  rejected "Clamp to 99: contradicts the earlier tests."
+  rejected "Mark RH above 99 as out of range: new behavior nobody asked for."
+
+decision D-010 "Flag bands are in °F, and the °C path uses one exact expression"
+  source extraction, primary source
+  text
+    MCO 6200.1E defines the bands in °F with inclusive lower bounds. The °C path converts
+    first. Floating-point error can move a value across a boundary: for `26.66666666666666` °C,
+    `(c*9)/5+32` gives `79.99999999999999` (white) but `c*1.8+32` gives `80` (green). Decision:
+    REQ-FL-004 pins `(wetBulbC * 9) / 5 + 32`; REQ-WB-005 pins `((tempF - 32) * 5) / 9`. Why:
+    the order of operations is observable at the boundaries.
+  rejected "A tolerance at boundaries: makes flags ambiguous."
+
+decision D-017 "canonical returns no audit"
+  source extraction
+  text
+    Every computing operation returns a result and an audit. The canonical serializer is a
+    utility, exposed so the suite can test number and string rules directly. Decision:
+    `canonical` responds with `result` only (REQ-CJ-005). Why: an audit of the serializer would
+    itself need serializing; nothing consumes it.
+  rejected "A trivial audit: noise."
+
+decision D-018 "Wet-bulb tolerance is ±1e-5 °C"
+  source extraction
+  text
+    The imported wet-bulb fixtures carry a tolerance of 0.00001 and expected values to six
+    decimals, generated by evaluating the formula in double precision. Stull's own claimed
+    accuracy is about ±0.65 °C against observations; the tolerance here is about agreeing on
+    the formula, not about meteorology. Why: any faithful double-precision evaluation passes; a
+    wrong constant does not.
+  rejected "A looser tolerance: would hide a mistyped constant."
+
+decision D-019 "Malformed requests are errors, invalid values are results"
+  source extraction
+  text
+    The earlier library returned `invalid_input` audits for non-finite numbers and unknown
+    flag names, which are values a caller can legitimately pass. Missing fields and wrong JSON
+    types have no library equivalent once a process boundary exists. Decision: missing fields
+    and wrong JSON types are `bad_request`; non-finite numbers and unknown flag names are
+    `invalid_input` results. Why: keeps the earlier invalid-input audits intact while giving
+    the driver a clean failure for garbage.
+  rejected "Turn everything into invalid_input audits: which field names would the audit carry for a missing member?"
+
+decision D-021 "Object keys sort by UTF-16 code units"
+  source extraction
+  text
+    The earlier serializers sorted keys with JavaScript's default comparison, which compares
+    UTF-16 code units. That differs from code-point order only for keys mixing characters above
+    U+FFFF with characters in U+E000–U+FFFF. All keys in audit records are ASCII, so it matters
+    only for `canonical`. Decision: the edge json/sorted-utf16. Why: one rule, matching the
+    earlier output.
+  rejected "Code-point order."
+
+decision D-024 "Error checks are a numbered order"
+  source r02
+  text
+    The prose spec once said checks happen "in the order the table lists them" (the table
+    listed `bad_request` first) and, in the same sentence, "`unknown_op` before input checks".
+    The r02 builder chose the intended order and noted the wording was loose. Decision: the
+    order is the numbered Errors list, declared once; `tilth check` rejects a requirement that
+    restates it (T005).
+  rejected "Keep a table and drop the first clause: still easy to misread."

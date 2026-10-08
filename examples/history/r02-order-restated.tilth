@@ -1,0 +1,35 @@
+# History: heat-engine, blind build r02. SPEC 1.0.1's REQ-IF-007 listed the error categories in
+# a table (`bad_request` first) and then said: "Checks happen in the order the table lists them,
+# `unknown_op` before input checks." The two halves of that sentence disagree. The r02 builder
+# chose the intended order and noted that the wording was loose (r02 choice C-1, then D-024).
+#
+# In Tilth an order is declared once, as the `errors` list. A requirement whose text names two
+# of the codes and talks about order is rejected (T005), so a second statement of the order
+# cannot drift from the first.
+tilth 0.1
+
+spec heat-engine-r02 1.0.1
+  request {"clock": "2026-05-26T17:00:00.000Z"}
+
+oracle node ../heat-engine/oracle-driver.mjs
+
+op flagF
+  input wetBulbF number
+  audit text
+
+errors
+  bad_request when the line is not a JSON object, or `id` is missing or not a string
+  unknown_op when `op` is missing, not a string, or not one of the operations
+  bad_request when `input` is missing or not an object, or an input field is missing or has the
+    wrong JSON type
+
+req IF-007 "Errors"
+  text
+    If a request line cannot be handled, the response MUST be exactly
+    `{"id": <id>, "error": <category>}` with no other members. Categories: `bad_request` when
+    the line is not a JSON object, `id` is missing or not a string, `input` is missing or not an
+    object, or an input field is missing or mistyped; `unknown_op` when `op` is missing, not a
+    string, or not one of the operations. Checks happen in the order the table lists them,
+    `unknown_op` before input checks.
+  example heatIndex
+    expect error = "unknown_op"

@@ -1,0 +1,11 @@
+# "Canonical JSON" names a family, not one function: keys sorted by UTF-16 code units or by
+# code points, lone surrogates escaped or refused. Tilth's edge library has no edge called
+# canonical-json; a spec that asks for one is told to choose (T015).
+tilth 0.1
+
+spec ambiguous 0.1
+
+op canonical
+  input value any
+
+edge canonical-json via canonical value
