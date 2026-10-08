@@ -65,25 +65,25 @@ The full list of checks, the syntax and the limits are in [DESIGN.md](DESIGN.md)
 
 [`examples/heat-engine/heat.tilth`](examples/heat-engine/heat.tilth) restates part of
 regen-heat-engine's SPEC 1.0.2: wet-bulb temperature, heat flags, the `canonical` operation,
-audit records and request errors (17 requirements, 59 examples, 10 decisions, 4 open items, 3
-edges). Its oracle is that repository's suite oracle, copied unchanged with attribution, behind
-a 75-line driver. The generated brief, decisions, trace and suite are in
+audit records and request handling (18 requirements, 60 examples, 11 decisions, 8 open items,
+3 edges). Its oracle is that repository's suite oracle, copied unchanged with attribution,
+behind a 75-line driver. The generated brief, decisions, trace and suite are in
 [`examples/heat-engine/build/`](examples/heat-engine/build/).
 
-The generated suite has 101 cases (59 examples and 42 edge pack items) plus 3 protocol checks
+The generated suite has 102 cases (60 examples and 42 edge pack items) plus 3 protocol checks
 in every run. Both released implementations from regen-heat-engine (commit 4d99222) pass it:
 
 | implementation | `tilth run` |
 |---|---|
-| `impl/ts` | 104/104 |
-| `impl/py` | 104/104 |
+| `impl/ts` | 105/105 |
+| `impl/py` | 105/105 |
 
 Does the suite have teeth? [`mutants.mjs`](examples/heat-engine/mutants.mjs) plants 14 small,
 plausible mistakes in a copy of `impl/ts`, one at a time, and runs both this suite and the
-hand-built regen suite. The hand-built suite has 364 cases for the whole spec; 241 of them
-(134 distinct requests) are for the slice's five operations or are error and stream checks,
-against 101 requests here. I chose the mistakes, mostly from the spec's decisions file (8 of
-the 14 imitate a decision), so they are a biased sample.
+hand-built regen suite. The hand-built suite has 364 cases for the whole spec; 240 of them (129
+distinct requests) are in the slice's scope, against 102 requests here. I chose the mistakes,
+mostly from the spec's decisions file (8 of the 14 imitate a decision), so they are a biased
+sample.
 
 - First run: the tilth suite caught 12 of 14, the hand-built suite 13 of 14. Both missed
   `(tempF - 32) / 1.8` in place of `((tempF - 32) * 5) / 9`; the tilth suite also missed an
@@ -91,11 +91,36 @@ the 14 imitate a decision), so they are a biased sample.
   request without `input`).
 - I then added one example (`tempF` 98.6, where the two expressions differ) and the missing
   error examples, which needed three additions to the language (`example raw`, `omit`, and an
-  example with no input). Second run: tilth 14 of 14, hand-built 13 of 14.
+  example with no input). Since then: tilth 14 of 14, hand-built 13 of 14.
 
 The hand-built suite would also catch the first mutant with one more case. The comparison says
 that a suite generated from the brief can be as strict as a hand-built one on this slice; it
 does not say it is stricter.
+
+## Blind builds from the generated brief
+
+Three blind builds used only the generated `SPEC.md` and `DECISIONS.md` plus a prompt, under the
+regen kit's isolation (nested `claude -p`, `claude-sonnet-5-5`, Linux container; details in
+[`examples/heat-engine/blind/`](examples/heat-engine/blind/)). regen-heat-engine's r01 to r04
+were built the same way from the prose brief, for the whole spec, on Windows.
+
+| run | brief | tilth suite | hand-built suite, slice scope | own tests | lines | choices | clarify | clean |
+|---|---|---|---|---|---|---|---|---|
+| t01 (ts) | brief-t1 | 105/105 | 240/240 | 19/19 | 219 | 7 | 1 | no |
+| t02 (py) | brief-t1 | 105/105 | 240/240 | 21/21 | 210 | 10 | 0 | yes |
+| t03 (ts) | brief-t2 | 105/105 | 240/240 | 19/19 | 163 | 9 | 0 | yes |
+
+None of the three has a silent divergence. t01's one `clarify` came from tilth itself: the
+renderer showed an author-typed example object in source order, and the builder read it as
+contradicting the canonical key order. The checker could not see this, because the example was
+correct. The renderer now shows example values sorted, and t03, on the fixed brief, is clean.
+The other choices are almost all deliberately open items.
+
+For comparison, the prose brief's two `clarify` findings in the slice (r01's typed example and
+r02's twice-stated order) are both rejected by `tilth check` before any build (see History);
+r03 and r04, on the prose brief after those fixes, had none. So the generated brief did as well
+as the corrected prose brief, introduced one defect of its own, and made the two earlier kinds
+impossible. Three builds of a 160 to 220 line program are a small sample.
 
 ## The edge library across specs
 

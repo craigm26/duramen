@@ -16,3 +16,18 @@ current launcher, with the allow-listed environment), and `allowed-*.txt`, `leak
 `leak-terms.json`, `brief-terms.md` and `score.mjs` from regen-heat-engine at 4d99222.
 
 Results are in `runs/`.
+
+## Results
+
+| run | brief | sandbox | tilth suite | hand-built, slice scope | own tests | clean |
+|---|---|---|---|---|---|---|
+| [t01](runs/t01.md) (ts) | brief-t1 | prdycy | 105/105 | 240/240 | 19/19 | no: one `clarify` |
+| [t02](runs/t02.md) (py) | brief-t1 | rpgsul | 105/105 | 240/240 | 21/21 | yes |
+| [t03](runs/t03.md) (ts) | brief-t2 | wbcasg | 105/105 | 240/240 | 19/19 | yes |
+
+"Slice scope" is computed by [`slice-score.mjs`](slice-score.mjs): the hand-built suite's 240
+cases for the slice's five operations, its error cases that name no other operation, and its
+stream and static checks. The other 124 cases are for workRest, verdict and cascade.
+`runs/ledger.jsonl` has one entry per run, in the regen kit's format (transcripts are identified
+by SHA-256; they stay in the sandbox). `impl/` holds each builder's output, as copied for
+scoring.

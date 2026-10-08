@@ -36,8 +36,8 @@ without a shell, in the implementation folder.
 - Requests arrive on standard input, one JSON object per line:
   `{"id": <string>, "op": <string>, "input": <object>}`, plus any members named below.
 - For each line that is not blank the driver writes exactly one JSON object, as one line, to
-  standard output, in request order, with the request's `id`. Blank lines (empty, or white
-  space only) get no response.
+  standard output, in request order, with the request's `id`. Blank lines (empty, or only
+  spaces and tabs) get no response; whether other white space makes a line blank is open.
 - A response holds `id` and `result` (plus `audit` for operations that have one), or `id` and
   `error`, and nothing else.
 - Standard output is UTF-8. Every line ends with LF (0x0A) and contains no CR (0x0D). Nothing

@@ -215,9 +215,10 @@ REQ-CJ-001 to REQ-CJ-004. Edge texts are normative and may use MUST.
 - **No modules or versions:** one file per spec, a built-in edge library, no deltas between
   spec versions.
 - **Text heuristics** (T004, T005) can miss and can misfire.
-- **Not tested on a blind build yet.** Both heat-engine implementations pass the generated
-  suite, but they were built from the prose brief. Whether a builder does as well from the
-  generated brief is the experiment that would test the language.
+- **Three blind builds, on one small slice.** Builders given only the generated brief produced
+  passing implementations in TypeScript and Python (README, Blind builds). The first found a
+  defect in the renderer, now fixed. Three builds of a 160 to 220 line program do not show
+  how the language does on a larger spec or with another builder model.
 
 ## Compared with spec-driven development tools
 
@@ -235,10 +236,11 @@ enforced. It is a checker for briefs that will be rebuilt from, not a workflow f
 
 ## Next
 
-1. A blind build from the generated heat-engine brief, scored against the prose brief's
-   results (r01 to r04 in regen-heat-engine).
-2. Fixture import: `table <op> from "<file>"`, so evidence from an earlier implementation
+1. Fixture import: `table <op> from "<file>"`, so evidence from an earlier implementation
    checks the oracle instead of the oracle checking itself.
-3. Static requirements (files, budgets, commands) with their own kind of evaluation.
-4. Restating regen-mcp-tape or regen-rcan-assurance in full, which would test the response
-   shape, streams and signals that 0.1 does not cover.
+2. Static requirements (files, budgets, commands) with their own kind of evaluation, so the
+   prompt no longer has to carry REGEN.json and the budgets.
+3. Restating regen-mcp-tape or regen-rcan-assurance in full, with blind builds from it, which
+   would test the response shape, streams and signals that 0.1 does not cover.
+4. Blind builds with another model, to see whether a weaker builder gains more from a checked
+   brief than a strong one does.
