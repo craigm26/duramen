@@ -1,15 +1,18 @@
 # Blind builds from the generated brief
 
-The experiment: give a blind builder the brief tilth generates from `../heat.tilth`
+The language was called tilth when these runs were made, so the briefs the builders received
+and the records under `runs/` use that name.
+
+The experiment: give a blind builder the brief duramen generates from `../heat.duramen`
 (`../build/SPEC.md` and `../build/DECISIONS.md`) plus `PROMPT.<lang>.md`, under the regen kit's
-isolation, and score the result with tilth's generated suite and with regen-heat-engine's
+isolation, and score the result with duramen's generated suite and with regen-heat-engine's
 hand-built suite. regen-heat-engine's r01 to r04 were built under the same protocol from the
 prose brief, for the whole spec, on Windows, with the earlier launcher (blob 3b7118a, which
 passed the orchestrator's environment through instead of an allow-list) and the unmodified
 prompt. Blind means not shown the reference or the earlier builds; the model may still have seen
 the public heat-engine sources in training.
 
-`PROMPT.<lang>.md` is regen-heat-engine's prompt with three changes, because tilth 0.1 cannot
+`PROMPT.<lang>.md` is regen-heat-engine's prompt with three changes, because duramen 0.1 cannot
 express requirements that are not observable through the driver: rule 3 spells out REGEN.json
 (the prose brief's REQ-IF-001), rule 6 states the budgets (its REQ-BU-001 to REQ-BU-003), and
 rule 1 points at rule 6 instead of the brief's budgets section.
@@ -23,7 +26,7 @@ Results are in `runs/`.
 
 ## Results
 
-| run | brief | sandbox | tilth suite | hand-built, slice scope | own tests | clean |
+| run | brief | sandbox | duramen suite | hand-built, slice scope | own tests | clean |
 |---|---|---|---|---|---|---|
 | [t01](runs/t01.md) (ts) | brief-t1 | prdycy | 105/105 | 240/240 | 19/19 | no: two `clarify` |
 | [t02](runs/t02.md) (py) | brief-t1 | rpgsul | 105/105 | 240/240 | 21/21 | no: one `clarify` |

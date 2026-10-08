@@ -4,10 +4,10 @@
 # followed the formula and recorded the contradiction (r01 choice C-1, then decision D-022). The
 # third example had been left unfinished ("Tw=…").
 #
-# `tilth check` runs every example through the spec's oracle, so the typed value is rejected
+# `duramen check` runs every example through the spec's oracle, so the typed value is rejected
 # (T002) before any builder sees it. The unfinished one is written `?`: its value is the
 # oracle's, shown in the brief and checked by the suite.
-tilth 0.1
+duramen 0.1
 
 spec heat-engine-r01 1.0.0
   request {"clock": "2026-05-26T17:00:00.000Z"}

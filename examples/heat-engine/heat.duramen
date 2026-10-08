@@ -4,7 +4,7 @@
 # Left out of the slice: work/rest, verdict, the weather cascade, REGEN.json details and budgets.
 # The oracle is that repository's suite oracle, unchanged, behind a small driver.
 
-tilth 0.1
+duramen 0.1
 
 spec heat-engine 1.0.2-slice
   title "Wet-bulb temperature and heat flags, with byte-exact audit records"
@@ -539,6 +539,6 @@ decision D-024 "Error checks are a numbered order"
     The prose spec once said checks happen "in the order the table lists them" (the table
     listed `bad_request` first) and, in the same sentence, "`unknown_op` before input checks".
     The r02 builder chose the intended order and noted the wording was loose. Decision: the
-    order is the numbered Errors list, declared once; `tilth check` rejects a requirement that
+    order is the numbered Errors list, declared once; `duramen check` rejects a requirement that
     restates it (T005).
   rejected "Keep a table and drop the first clause: still easy to misread."

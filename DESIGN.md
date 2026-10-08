@@ -1,4 +1,4 @@
-# tilth: design
+# duramen: design
 
 ## The problem
 
@@ -24,7 +24,7 @@ should be strict about authority and loose about vocabulary"; "When Does a Speci
 a Program?" (2026-08-11) says "A piece of executable code can define an obligation". It also
 pulls against them. The first essay's point is that the durable asset is a connected body of
 knowledge, and "It requires us to stop assuming that one of those representations must be the
-source." tilth makes one file the source. It is a narrow, file-based step: it connects
+source." duramen makes one file the source. It is a narrow, file-based step: it connects
 requirements to evaluations, decisions and shared definitions and checks those connections,
 and it does not try to hold incidents, production evidence or confidence.
 
@@ -47,13 +47,13 @@ and it does not try to hold incidents, production evidence or confidence.
 
 ## The language (0.1)
 
-A `.tilth` file is line-oriented. Statements start in column 0; their clauses are indented two
+A `.duramen` file is line-oriented. Statements start in column 0; their clauses are indented two
 spaces; prose, expectations and table rows are indented four. A line starting with `#` is a
 comment, except inside prose (`text`), where it is part of the text. There are no comments at
 the end of a line.
 
 ```
-tilth 0.1
+duramen 0.1
 
 spec <name> <version>
   title "<title>"
@@ -144,7 +144,7 @@ input, one JSON response line per non-blank request on standard output, in order
 request's `id`. A response has `result` (and `audit` when the op declares one), or `error`.
 Output is UTF-8 with LF line ends and nothing else on standard output; the driver exits 0 at end
 of input. An implementation names its driver in `REGEN.json`, as in the regen kit. The rules are
-rendered into every brief, and each `tilth run` checks them with three protocol cases (exit
+rendered into every brief, and each `duramen run` checks them with three protocol cases (exit
 status; bytes; one response per request, in order, with blank lines ignored).
 
 ### Checks
@@ -206,7 +206,7 @@ REQ-CJ-001 to REQ-CJ-004. Edge texts are normative and may use MUST.
 - **The oracle is still hand-written,** and about the size of the implementations it judges
   (256 lines here; regen-rcan-assurance's model is 314 lines, 294 of them not blank). Computed
   examples are only as right as the model. The hand-built heat-engine suite checks its oracle
-  against fixtures imported from the earlier implementation; tilth 0.1 cannot import fixtures
+  against fixtures imported from the earlier implementation; duramen 0.1 cannot import fixtures
   as independent evidence. That is the most important gap.
 - **Requirements that are not observable through the driver,** such as REGEN.json fields,
   runtime and dependency budgets, or the builder's own test command, have no place: they cannot
@@ -217,7 +217,7 @@ REQ-CJ-001 to REQ-CJ-004. Edge texts are normative and may use MUST.
 - **Text heuristics** (T004, T005) can miss and can misfire.
 - **Five blind builds, on one small slice.** Builders given only the generated brief and a
   prompt (which carried REGEN.json and the budgets) produced passing implementations in
-  TypeScript and Python (README, Blind builds). The first two found defects in how tilth wrote
+  TypeScript and Python (README, Blind builds). The first two found defects in how duramen wrote
   the brief: example objects shown in source order, and a table that never said inputs are
   required. Only example values are now sorted; objects typed in requirement prose still appear
   as typed, so the brief says that objects list their members in no particular order. Five
@@ -234,7 +234,7 @@ agent interprets; Tessl treats `.spec.md` files as the source of generated code.
 scenarios are text for an agent or a reviewer to read. Böckeler notes that spec-kit's checklists
 are "interpreted by AI, so there is no 100% guarantee that they will be respected".
 
-tilth makes a narrower bet: examples are executed against a model when the spec is written,
+duramen makes a narrower bet: examples are executed against a model when the spec is written,
 shared semantics are named and carry conformance packs, and the places facts may live are
 enforced. It is a checker for briefs that will be rebuilt from, not a workflow for agents.
 

@@ -1,6 +1,6 @@
 // Does the generated suite have teeth? Applies one small, plausible mistake at a time to a copy
-// of a TypeScript heat-engine implementation, then runs the suite tilth generates from
-// heat.tilth and, if given, the hand-built regen suite, and reports which of them notice.
+// of a TypeScript heat-engine implementation, then runs the suite duramen generates from
+// heat.duramen and, if given, the hand-built regen suite, and reports which of them notice.
 //
 //   node examples/heat-engine/mutants.mjs --impl <regen-heat-engine>/impl/ts [--suite <regen-heat-engine>/.regenerate/suite/run.mjs]
 //
@@ -16,8 +16,8 @@ const IMPL = opt('--impl');
 const SUITE = opt('--suite');
 if (!IMPL) { console.error('usage: mutants.mjs --impl <impl/ts> [--suite <run.mjs>]'); process.exit(2); }
 const HERE = import.meta.dirname;
-const TILTH = join(HERE, '..', '..', 'bin', 'tilth.mjs');
-const SPEC = join(HERE, 'heat.tilth');
+const DURAMEN = join(HERE, '..', '..', 'bin', 'duramen.mjs');
+const SPEC = join(HERE, 'heat.duramen');
 
 const HALF_EVEN = 'const fx = (x: number, f: number) => { const m = x * 10 ** f, t = Math.trunc(m); const v = Math.abs(m - t) === 0.5 ? (t % 2 === 0 ? t : t + Math.sign(m)) : Math.round(m); return (v / 10 ** f).toFixed(f); };\n';
 const CODEPOINT = '.sort((a, b) => { const A = [...a].map((c) => c.codePointAt(0)!), B = [...b].map((c) => c.codePointAt(0)!); for (let i = 0; i < Math.min(A.length, B.length); i++) if (A[i] !== B[i]) return A[i] - B[i]; return A.length - B.length; })';
@@ -40,8 +40,8 @@ const MUTANTS = [
   ['crlf', 'protocol: CRLF line ends', 'driver.ts', 'outLines.push(handle(line) + "\\n");', 'outLines.push(handle(line) + "\\r\\n");'],
 ];
 
-function tilthRun(dir) {
-  const r = spawnSync(process.execPath, [TILTH, 'run', SPEC, '--impl', dir], { encoding: 'utf8' });
+function duramenRun(dir) {
+  const r = spawnSync(process.execPath, [DURAMEN, 'run', SPEC, '--impl', dir], { encoding: 'utf8' });
   const m = r.stdout.match(/passed (\d+)\/(\d+)/);
   return m ? { passed: +m[1], total: +m[2] } : { error: (r.stdout + r.stderr).trim().split('\n').pop() };
 }
@@ -53,7 +53,7 @@ function handRun(dir) {
 const show = (x) => (x.error ? `error (${x.error})` : x.passed === x.total ? `${x.passed}/${x.total} (missed)` : `${x.passed}/${x.total} (caught)`);
 
 const rows = [];
-const base = mkdtempSync(join(tmpdir(), 'tilth-mutants-'));
+const base = mkdtempSync(join(tmpdir(), 'duramen-mutants-'));
 try {
   for (const [name, what, file, from, to] of [['none', 'the implementation as released', null, null, null], ...MUTANTS]) {
     const dir = join(base, name);
@@ -65,15 +65,15 @@ try {
       if (n !== 1) throw new Error(`${name}: "${from}" matches ${n} times in ${file}`);
       writeFileSync(p, src.replace(from, () => to));
     }
-    const t = tilthRun(dir);
+    const t = duramenRun(dir);
     const h = SUITE ? handRun(dir) : null;
-    rows.push({ name, what, tilth: t, hand: h });
-    console.log(`${name.padEnd(24)} tilth ${show(t).padEnd(22)}${h ? ` hand-built ${show(h)}` : ''}`);
+    rows.push({ name, what, duramen: t, hand: h });
+    console.log(`${name.padEnd(24)} duramen ${show(t).padEnd(22)}${h ? ` hand-built ${show(h)}` : ''}`);
   }
 } finally {
   rmSync(base, { recursive: true, force: true });
 }
 if (args.includes('--md')) {
-  console.log('\n| mutant | imitates | tilth suite | hand-built suite |\n|---|---|---|---|');
-  for (const r of rows) console.log(`| \`${r.name}\` | ${r.what} | ${show(r.tilth)} | ${r.hand ? show(r.hand) : '—'} |`);
+  console.log('\n| mutant | imitates | duramen suite | hand-built suite |\n|---|---|---|---|');
+  for (const r of rows) console.log(`| \`${r.name}\` | ${r.what} | ${show(r.duramen)} | ${r.hand ? show(r.hand) : '—'} |`);
 }

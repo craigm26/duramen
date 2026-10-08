@@ -1,5 +1,5 @@
 // Renders the builder's brief (SPEC.md), DECISIONS.md and a trace report from a checked spec.
-// Every example shown in the brief was run through the oracle by `tilth check`; when an example
+// Every example shown in the brief was run through the oracle by `duramen check`; when an example
 // states no expectations, the oracle's own answer is what the brief shows.
 import { basename } from 'node:path';
 import { EDGES } from './edges.mjs';
@@ -74,12 +74,12 @@ function requestMembersLine(ast) {
   return `Requests also carry ${parts.join('; ')}.`;
 }
 
-export function renderSpec(ast, oracle, { version: tilthVersion = '0.1' } = {}) {
+export function renderSpec(ast, oracle, { version: duramenVersion = '0.1' } = {}) {
   const s = ast.spec;
   const out = [`# ${s.name}: specification`, ''];
   out.push(`- Program: ${code(s.name)}`, `- Document version: ${s.version}`);
   if (s.contract) out.push(`- Contract version: ${code(s.contract)}`);
-  out.push(`- Generated from ${code(basename(ast.file))} by tilth ${tilthVersion}. Edit the source, not this file.`, '');
+  out.push(`- Generated from ${code(basename(ast.file))} by duramen ${duramenVersion}. Edit the source, not this file.`, '');
   if (s.title) out.push(`*${s.title}*`, '');
   if (s.text) out.push(s.text, '');
   out.push(

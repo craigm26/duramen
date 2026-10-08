@@ -1,12 +1,12 @@
 {
-  "name": "tilth",
+  "name": "duramen",
   "version": "0.1.0",
   "description": "A specification language for regenerative software: one source for the builder's brief, the decisions, and the suite, with every example checked against the spec's own model.",
   "type": "module",
-  "bin": { "tilth": "bin/tilth.mjs" },
+  "bin": { "duramen": "bin/duramen.mjs" },
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "example": "node bin/tilth.mjs build examples/heat-engine/heat.tilth --out examples/heat-engine/build"
+    "example": "node bin/duramen.mjs build examples/heat-engine/heat.duramen --out examples/heat-engine/build"
   },
   "engines": { "node": ">=22.18" },
   "license": "MIT",

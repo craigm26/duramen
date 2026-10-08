@@ -3,12 +3,12 @@
 # UTF-16 code units. No published test vector told the two apart, and the two SDKs disagreed
 # past the published vectors.
 #
-# Written as tilth, the section binds two edges to one operation. The checker compares their
+# Written as duramen, the section binds two edges to one operation. The checker compares their
 # conformance packs and reports the input where they disagree (T026), with no oracle and no
 # implementation: {"｡":1,"😀":2}, where code-point order and UTF-16 order differ. (Both edges
 # refuse strings with lone surrogates, which cannot be written as the raw UTF-8 that RCAN's
 # rules ask for, so they agree there.)
-tilth 0.1
+duramen 0.1
 
 spec rcan-canonical 3.2
 

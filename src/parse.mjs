@@ -1,9 +1,9 @@
-// Parser for Tilth source files (.tilth). Line-oriented and indentation-based:
+// Parser for duramen source files (.duramen). Line-oriented and indentation-based:
 // statements start in column 0, their clauses are indented two spaces, and prose
 // (`text`), expectations (`expect`) and table rows (`|`) are indented four.
 // The parser never throws on bad input: it returns { ast, diagnostics }.
 
-const TOP = new Set(['tilth', 'spec', 'oracle', 'edge', 'section', 'op', 'errors', 'req', 'open', 'decision', 'note']);
+const TOP = new Set(['duramen', 'spec', 'oracle', 'edge', 'section', 'op', 'errors', 'req', 'open', 'decision', 'note']);
 
 export function parse(source, file = '<input>') {
   const lines = source.replace(/\r\n?/g, '\n').split('\n');
@@ -182,7 +182,7 @@ export function parse(source, file = '<input>') {
       return text;
     };
     switch (s.kw) {
-      case 'tilth': ast.version = s.rest; break;
+      case 'duramen': ast.version = s.rest; break;
       case 'spec': {
         const [name, version] = s.rest.split(/\s+/);
         ast.spec = { name, version, title: '', contract: null, text: '', request: {}, line: s.line };
@@ -286,7 +286,7 @@ export function parse(source, file = '<input>') {
       }
     }
   }
-  if (!ast.version) diag('error', 1, 'P020', 'the file must start with "tilth <version>"');
+  if (!ast.version) diag('error', 1, 'P020', 'the file must start with "duramen <version>"');
   if (!ast.spec) diag('error', 1, 'P021', 'missing "spec <name> <version>"');
   return { ast, diagnostics };
 }

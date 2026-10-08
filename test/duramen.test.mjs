@@ -13,7 +13,7 @@ import { EDGES, packConflicts } from '../src/edges.mjs';
 import { canon } from '../examples/heat-engine/oracle.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..');
-const HEAT = join(ROOT, 'examples', 'heat-engine', 'heat.tilth');
+const HEAT = join(ROOT, 'examples', 'heat-engine', 'heat.duramen');
 const IMPLS = process.env.HEAT_ENGINE_IMPLS ?? join(ROOT, '..', 'regen-heat-engine', 'impl');
 
 async function checkFile(path) {
@@ -28,7 +28,7 @@ const src = (s) => s.replace(/^\n/, '');
 
 test('parse: statements, clauses, prose paragraphs, tables and examples', () => {
   const { ast, diagnostics } = parse(src(`
-tilth 0.1
+duramen 0.1
 spec demo 1.0
   request {"clock": "c"}
 op add
@@ -52,7 +52,7 @@ req ADD-1 "Adds"
     | 1 |   | 1            | ?       |
 decision D-1 "Why"
   source a test
-`), 'demo.tilth');
+`), 'demo.duramen');
   assert.deepEqual(diagnostics, []);
   const r = ast.items.find((i) => i.type === 'req');
   assert.equal(r.text, 'First paragraph.\n\nSecond paragraph.');
@@ -69,24 +69,24 @@ decision D-1 "Why"
 });
 
 test('parse: bad input gives diagnostics, never an exception', () => {
-  const { diagnostics } = parse('spec x 1\n\tbad\nfrobnicate\nreq A "t"\n  example op {not json}\n', 'x.tilth');
+  const { diagnostics } = parse('spec x 1\n\tbad\nfrobnicate\nreq A "t"\n  example op {not json}\n', 'x.duramen');
   assert.deepEqual([...new Set(diagnostics.map((d) => d.code))].sort(), ['P001', 'P002', 'P009', 'P020']);
 });
 
 test('parse: an error condition may continue on the next lines', () => {
-  const { ast } = parse('tilth 0.1\nspec x 1\nerrors\n  e1 when one\n    and two\n  e2 when three\n', 'x.tilth');
+  const { ast } = parse('duramen 0.1\nspec x 1\nerrors\n  e1 when one\n    and two\n  e2 when three\n', 'x.duramen');
   assert.deepEqual(ast.errors.map((e) => [e.code, e.when]), [['e1', 'one and two'], ['e2', 'three']]);
 });
 
 // ---------- the history: each file reports exactly what it is there to show
 
 const HISTORY = {
-  'r01-typed-example.tilth': [['T002'], []],
-  'r02-order-restated.tilth': [['T005'], []],
-  'obligation-in-context.tilth': [['T004'], ['T012']], // and nothing cites the decision
-  'ambiguous-edge.tilth': [['T015'], []],
-  'rcan-two-orders.tilth': [['T026'], []],
-  'rfc8785-vs-oracle.tilth': [['T006', 'T006'], []],
+  'r01-typed-example.duramen': [['T002'], []],
+  'r02-order-restated.duramen': [['T005'], []],
+  'obligation-in-context.duramen': [['T004'], ['T012']], // and nothing cites the decision
+  'ambiguous-edge.duramen': [['T015'], []],
+  'rcan-two-orders.duramen': [['T026'], []],
+  'rfc8785-vs-oracle.duramen': [['T006', 'T006'], []],
 };
 for (const [file, [errors, warnings]] of Object.entries(HISTORY)) {
   test(`history: ${file} reports ${errors.join(', ')}`, async () => {
@@ -97,18 +97,18 @@ for (const [file, [errors, warnings]] of Object.entries(HISTORY)) {
 }
 
 test('history: the unfinished r01 example is filled in by the oracle', async () => {
-  const { ast, oracle } = await checkFile(join(ROOT, 'examples', 'history', 'r01-typed-example.tilth'));
+  const { ast, oracle } = await checkFile(join(ROOT, 'examples', 'history', 'r01-typed-example.duramen'));
   assert.match(renderSpec(ast, oracle), /\| `60` \| `2\.5` \| `"T=60\.0°C RH=2\.5→5% \(rh_clamped,out_of_validity_range\) → Tw=25\.97°C"` \|/);
 });
 
 // ---------- structural rules
 
 test('check: requirement rules (T001, T002, T003, T007 to T013, T023, T024)', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'tilth-test-'));
+  const dir = mkdtempSync(join(tmpdir(), 'duramen-test-'));
   try {
-    const p = join(dir, 'rules.tilth');
+    const p = join(dir, 'rules.duramen');
     writeFileSync(p, src(`
-tilth 0.1
+duramen 0.1
 spec rules 1
   request {"clock": "2026-01-01T00:00:00.000Z"}
 oracle node ${join(ROOT, 'examples', 'heat-engine', 'oracle-driver.mjs').replace(/\\/g, '/')}
@@ -140,7 +140,7 @@ decision D-1 "Uncited, unsourced"
 
 test('check: obligation words outside requirements (T004, T014), quotes exempt', async () => {
   const { ast, diagnostics } = parse(src(`
-tilth 0.1
+duramen 0.1
 spec s 1
   text
     The program MUST do things.
@@ -163,7 +163,7 @@ decision D-1 "D"
   text
     The old schema said "MUST clamp to [5, 99]"; we MUST clamp to [5, 100].
   rejected "Clamping to 99, which MUST be wrong"
-`), 's.tilth');
+`), 's.duramen');
   assert.deepEqual(diagnostics, []);
   const { diagnostics: ds } = await check(ast);
   const t004 = ds.filter((d) => d.code === 'T004').map((d) => d.message.split(':')[0]);
@@ -173,10 +173,10 @@ decision D-1 "D"
 });
 
 test('check: an example the oracle answers with an error must say so (T024)', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'tilth-test-'));
+  const dir = mkdtempSync(join(tmpdir(), 'duramen-test-'));
   try {
-    const p = join(dir, 'x.tilth');
-    writeFileSync(p, `tilth 0.1\nspec x 1\noracle node ${join(ROOT, 'examples', 'heat-engine', 'oracle-driver.mjs').replace(/\\/g, '/')}\nop flagF\n  input wetBulbF? number\nreq A-1 "t"\n  example flagF {}\n`);
+    const p = join(dir, 'x.duramen');
+    writeFileSync(p, `duramen 0.1\nspec x 1\noracle node ${join(ROOT, 'examples', 'heat-engine', 'oracle-driver.mjs').replace(/\\/g, '/')}\nop flagF\n  input wetBulbF? number\nreq A-1 "t"\n  example flagF {}\n`);
     const { ds } = await checkFile(p);
     assert.deepEqual(codes(ds, 'warning'), ['T024']);
   } finally { rmSync(dir, { recursive: true, force: true }); }
@@ -184,7 +184,7 @@ test('check: an example the oracle answers with an error must say so (T024)', as
 
 test('check: decision status (T027, T028)', async () => {
   const { ast, diagnostics } = parse(src(`
-tilth 0.1
+duramen 0.1
 spec s 1
 op o
   input x number
@@ -206,7 +206,7 @@ decision D-3 "Superseded, but by what?"
 decision D-4 "Not a status"
   source a test
   status maybe
-`), 's.tilth');
+`), 's.duramen');
   assert.deepEqual(diagnostics, []);
   const { diagnostics: ds } = await check(ast);
   assert.deepEqual(codes(ds), ['T019', 'T027', 'T027', 'T028']);
@@ -280,7 +280,7 @@ test('heat-engine: the oracle itself passes the generated suite', async () => {
 });
 
 test('protocol: CR in the output, and a wrong response count, are failures', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'tilth-test-'));
+  const dir = mkdtempSync(join(tmpdir(), 'duramen-test-'));
   try {
     // Answers every line, blank ones included, with CRLF.
     writeFileSync(join(dir, 'bad.mjs'), "let s='';for await (const c of process.stdin) s+=c;for (const l of s.split('\\n').slice(0,-1)) { let id=null; try { id=JSON.parse(l).id; } catch {} process.stdout.write(JSON.stringify({id,result:1})+'\\r\\n'); }\n");
@@ -290,10 +290,10 @@ test('protocol: CR in the output, and a wrong response count, are failures', asy
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-test('heat-engine: the committed build output is what `tilth build` writes now', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'tilth-test-'));
+test('heat-engine: the committed build output is what `duramen build` writes now', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'duramen-test-'));
   try {
-    const r = spawnSync(process.execPath, [join(ROOT, 'bin', 'tilth.mjs'), 'build', HEAT, '--out', dir], { encoding: 'utf8' });
+    const r = spawnSync(process.execPath, [join(ROOT, 'bin', 'duramen.mjs'), 'build', HEAT, '--out', dir], { encoding: 'utf8' });
     assert.equal(r.status, 0, r.stdout + r.stderr);
     for (const f of ['SPEC.md', 'DECISIONS.md', 'trace.md', 'cases.jsonl']) {
       assert.equal(readFileSync(join(dir, f), 'utf8'), readFileSync(join(ROOT, 'examples', 'heat-engine', 'build', f), 'utf8'), `${f} is stale: run npm run example`);
@@ -304,7 +304,7 @@ test('heat-engine: the committed build output is what `tilth build` writes now',
 for (const lang of ['ts', 'py']) {
   const impl = join(IMPLS, lang);
   test(`heat-engine: the released ${lang} implementation passes`, { skip: !existsSync(join(impl, 'REGEN.json')) && `no ${impl}` }, () => {
-    const r = spawnSync(process.execPath, [join(ROOT, 'bin', 'tilth.mjs'), 'run', HEAT, '--impl', impl], { encoding: 'utf8' });
+    const r = spawnSync(process.execPath, [join(ROOT, 'bin', 'duramen.mjs'), 'run', HEAT, '--impl', impl], { encoding: 'utf8' });
     assert.equal(r.status, 0, r.stdout + r.stderr);
     assert.match(r.stdout, /passed (\d+)\/\1\b/);
   });

@@ -3,10 +3,10 @@
 # `unknown_op` before input checks." The two halves of that sentence disagree. The r02 builder
 # chose the intended order and noted that the wording was loose (r02 choice C-1, then D-024).
 #
-# In Tilth an order is declared once, as the `errors` list. A requirement whose text names two
+# In duramen an order is declared once, as the `errors` list. A requirement whose text names two
 # of the codes and talks about order is rejected (T005), so a second statement of the order
 # cannot drift from the first.
-tilth 0.1
+duramen 0.1
 
 spec heat-engine-r02 1.0.1
   request {"clock": "2026-05-26T17:00:00.000Z"}

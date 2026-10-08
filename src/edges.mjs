@@ -2,7 +2,7 @@
 // wrong in prose (number text, rounding, key order, string escaping). A spec imports an edge
 // by name instead of describing it; the edge brings its normative text (rendered once into
 // the builder's brief) and a conformance pack. When the spec binds the edge to an operation
-// (`edge <name> via <op> <field>`), every pack item becomes a suite case, and `tilth check`
+// (`edge <name> via <op> <field>`), every pack item becomes a suite case, and `duramen check`
 // first runs the pack against the spec's oracle.
 //
 // Pack items: { input: <raw JSON literal>, text: <expected output> } or

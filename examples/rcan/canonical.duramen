@@ -1,10 +1,10 @@
 # Not RCAN's specification. This file binds two edges, json/rfc8785 and
 # number-text/ecmascript, to the `canonical` operation of the driver protocol in
 # github.com/craigm26/regen-rcan-assurance (SPEC § 2.5: the canonical bytes of input.value, as
-# base64; a value with no canonical form gets an error). With it, `tilth run` sends both packs
+# base64; a value with no canonical form gets an error). With it, `duramen run` sends both packs
 # to any implementation or adapter that speaks that protocol. There is no oracle here: the
 # packs are the whole check.
-tilth 0.1
+duramen 0.1
 
 spec rcan-canonical 0.1
   title "RCAN canonical JSON, as rcan-assurance reads RCAN v3.2 Appendix C"

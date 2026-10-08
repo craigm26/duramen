@@ -4,12 +4,12 @@
 # tests still expected LF from a Python child. D-028 then moved the fact into REQ-IF-001:
 # "A builder acts on requirements and reads context."
 #
-# tilth rejects RFC 2119 keywords outside requirements, decisions included (T004). Written as
+# duramen rejects RFC 2119 keywords outside requirements, decisions included (T004). Written as
 # the decision below, the fact has to move into a `req`, where it gets an ID and needs an
 # evaluation. D-026 as written had no uppercase keyword (only a lowercase "must", twice, about
-# other rules), so no check in tilth would have flagged it. This file shows the form of the
+# other rules), so no check in duramen would have flagged it. This file shows the form of the
 # mistake a checker can see.
-tilth 0.1
+duramen 0.1
 
 spec mcp-tape-r05 1.1.1
 

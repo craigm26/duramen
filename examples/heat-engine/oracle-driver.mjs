@@ -1,6 +1,6 @@
-// The heat-engine oracle (./oracle.mjs) behind the driver protocol of heat.tilth: JSON request
+// The heat-engine oracle (./oracle.mjs) behind the driver protocol of heat.duramen: JSON request
 // lines on standard input, one canonical JSON response line per request on standard output.
-// Tilth runs every example in the spec through this program before it renders anything.
+// duramen runs every example in the spec through this program before it renders anything.
 import * as O from './oracle.mjs';
 
 class Bad extends Error {}
@@ -65,7 +65,7 @@ const out = [];
 for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
   if (line.trim() === '') continue;
   // The oracle cannot answer everything (for example a non-finite number in a result, which the
-  // spec leaves open); it says so instead of stopping, and `tilth check` reports the example.
+  // spec leaves open); it says so instead of stopping, and `duramen check` reports the example.
   try { out.push(handle(line) + '\n'); } catch (e) {
     let id = null;
     try { id = JSON.parse(line).id ?? null; } catch {}

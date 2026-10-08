@@ -153,7 +153,7 @@ Rejected:
 The prose spec once said checks happen "in the order the table lists them" (the table
 listed `bad_request` first) and, in the same sentence, "`unknown_op` before input checks".
 The r02 builder chose the intended order and noted the wording was loose. Decision: the
-order is the numbered Errors list, declared once; `tilth check` rejects a requirement that
+order is the numbered Errors list, declared once; `duramen check` rejects a requirement that
 restates it (T005).
 
 Rejected:

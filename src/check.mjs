@@ -1,4 +1,4 @@
-// `tilth check`: everything that can be known about a spec before any implementation exists.
+// `duramen check`: everything that can be known about a spec before any implementation exists.
 // Structural rules are checked first; then every example and every bound edge pack is run
 // through the oracle, so no example in the brief can disagree with the spec's own model.
 import { dirname } from 'node:path';
