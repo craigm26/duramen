@@ -124,16 +124,17 @@ contradicting the canonical key order, and its operations table never said that 
 required, which t01 and t02 both asked about for `canonical`'s `value`. brief-t2 shows example
 values sorted and says inputs are required unless marked optional; brief-t3 also states the
 `value` rule with two examples and says that objects written in the brief list their members in
-no particular order. Of the other 40 choices, 21 were triaged open (19 of them already marked
-open in the brief the builder had) and 19 were already answered by the brief.
+no particular order. Of the other 40 choices, 21 were triaged open, all but two of them (t02 C-2
+and t03 C-3) already marked open in the brief the builder had, and 19 were already answered by
+the brief. (t05 C-1, counted as marked, also touches t02's unmarked question of line splitting.)
 
 For comparison, the prose brief's two `clarify` findings in the slice, r01's typed example and
 r02's twice-stated order, are of kinds that `tilth check` rejects as written (T002, T005; the
 history files below), though T005 is a text heuristic and values typed in requirement prose are
 never run. r03 and r04, on the prose brief after those fixes, had none. On this slice, then, the
 final generated brief (t04 and t05, clean in both languages) did as well as the corrected prose
-brief did on the whole spec, and the first generated brief had defects of its own that only
-builders could find. These are five builds of programs of 160 to 220 non-blank lines, with one
+brief did on the whole spec, and the first generated brief had defects of its own that
+`tilth check` could not find; the builders did. These are five builds of programs of 160 to 220 non-blank lines, with one
 model: a small sample.
 
 ## The edge library across specs
