@@ -78,8 +78,9 @@ export function renderSpec(ast, oracle, { version: tilthVersion = '0.1' } = {}) 
   if (s.title) out.push(`*${s.title}*`, '');
   if (s.text) out.push(s.text, '');
   out.push(
-    'Conventions: MUST and MUST NOT appear only in requirements (`REQ-`), and every requirement has',
-    'at least one example that the suite checks. Every example was checked against the',
+    'Conventions: MUST and MUST NOT appear only in requirements (`REQ-`) and in the shared',
+    'definitions under Edges, and every requirement has at least one example that the suite',
+    'checks. Every example was checked against the',
     'specification\'s own model (its oracle) when this file was generated; where an example states',
     'no value, the value shown is the model\'s. `OPEN-` items are deliberately unspecified and never',
     'tested. An order that matters (such as which error wins) is stated once, in a numbered list.',

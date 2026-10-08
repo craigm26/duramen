@@ -150,18 +150,24 @@ export async function check(ast, { baseDir = dirname(ast.file) } = {}) {
     if (!cited) d('warning', x.line, 'T012', `${x.id} is not cited by any requirement or edge`);
     if (!x.source) d('warning', x.line, 'T013', `${x.id} has no "source" (where the claim came from)`);
   }
-  // T004: background prose carries no obligations.
-  for (const n of ast.items.filter((i) => i.type === 'note' || i.type === 'section')) {
-    const m = n.text.match(OBLIGATION);
-    if (m) d('error', n.line, 'T004', `"${m[1]}" in a ${n.type}: obligations belong in a req, where they get an ID and an evaluation`);
-  }
-  if (ast.spec?.text) {
-    const m = ast.spec.text.match(OBLIGATION);
-    if (m) d('error', ast.spec.line, 'T004', `"${m[1]}" in the spec's text: obligations belong in a req, where they get an ID and an evaluation`);
+  // T004: obligations live in requirements (and in the edge texts a spec imports). Anywhere
+  // else, an RFC 2119 keyword is an error, unless it is quoted ("..." or `...`), as when a
+  // decision quotes an earlier text.
+  const keyword = (text) => (text ?? '').replace(/"[^"\n]*"|“[^”\n]*”|`[^`\n]*`/g, '').match(OBLIGATION);
+  const place = [
+    ...ast.items.filter((i) => i.type === 'note' || i.type === 'section').map((i) => [i.text, i.line, `a ${i.type}`]),
+    [ast.spec?.text, ast.spec?.line ?? 1, "the spec's text"],
+    ...ast.decisions.flatMap((x) => [[x.text, x.line, `decision ${x.id}`], ...x.rejected.map((t) => [t, x.line, `decision ${x.id}`])]),
+    ...ast.ops.map((o) => [o.summary, o.line, `op ${o.name}`]),
+    ...ast.errors.map((e) => [e.when, e.line, `the errors list`]),
+  ];
+  for (const [text, line, where] of place) {
+    const m = keyword(text);
+    if (m) d('error', line, 'T004', `"${m[1]}" in ${where}: obligations belong in a req, where they get an ID and an evaluation`);
   }
   for (const o of opens) {
     for (const n of o.exampleLines ?? []) d('error', n, 'T003', `open ${o.id} cannot have examples: open behavior is never tested`);
-    const m = o.text.match(OBLIGATION);
+    const m = keyword(o.text);
     if (m) d('warning', o.line, 'T014', `"${m[1]}" in open ${o.id}: open behavior should not be obligatory`);
   }
   // Edges: known, unambiguous, bound to a real op.

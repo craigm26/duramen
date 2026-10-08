@@ -4,30 +4,36 @@
 
 A regenerative system keeps its specification and its evaluations and treats the code as
 replaceable. In the three regen experiments the brief (`SPEC.md` plus `DECISIONS.md`) was what a
-blind builder got, and the suite was how the result was judged. The suites caught the
-implementations' mistakes. The briefs' own mistakes were found later, by builders, at the cost
-of a build each: a hand-typed example that disagreed with its formula, an order stated twice,
-an obligation written as context, a protocol section that named two incompatible key orders.
+blind builder got, and a hand-built suite judged the result. Most blind builds passed every
+case. The mistakes worth a language surfaced elsewhere: in builders' notes on the choices a
+brief forced on them, in a check on Windows after a build, and while a spec was extracted from
+its sources. A hand-typed example disagreed with its formula; an order was stated twice; an
+obligation was written as context in a decision; a protocol section named two incompatible key
+orders.
 
-None of these needs judgment to find. Each is a fact in the wrong place, or the same fact in
-two places, or a claim nobody ran. A spec language can make each kind of fact live in one
-place and can check the claims it can run. That is the whole ambition here. Behavior is still
-described in prose; the language checks the structure of authority around the prose.
+Three of those four need no judgment to find. Each is a claim nobody ran, or the same fact in
+two places that disagree. A spec language can give each kind of fact one place to live and can
+run the claims that are runnable. That is the whole ambition here. Behavior is still described
+in prose; the language checks the structure of authority around the prose. The fourth mistake,
+a fact written as context, is a judgment about what a builder must act on; the language can
+only catch it when the author used an obligation keyword in the wrong place.
 
-This follows Chad Fowler's essays on regenerative software, which argue against "a One True
-Metamodel" and for a durable model that is "strict about authority and loose about vocabulary"
-("The Specification Is Not a Document", 2026-08-19), and note that "a piece of executable code
-can define an obligation" ("When Does a Specification Become a Program?", 2026-08-11). The
-tension is plain too: those essays argue that the durable asset is a connected body of
-knowledge, not one master document, and tilth is a file format. It is a narrow, file-based
-step: it connects requirements to evaluations, decisions and shared definitions, and checks
-those connections; it does not try to hold incidents, production evidence or confidence.
+This draws on Chad Fowler's essays on regenerative software. "The Specification Is Not a
+Document" (2026-08-19) says "None of this requires a One True Metamodel" and "The durable model
+should be strict about authority and loose about vocabulary"; "When Does a Specification Become
+a Program?" (2026-08-11) says "A piece of executable code can define an obligation". It also
+pulls against them. The first essay's point is that the durable asset is a connected body of
+knowledge, and "It requires us to stop assuming that one of those representations must be the
+source." tilth makes one file the source. It is a narrow, file-based step: it connects
+requirements to evaluations, decisions and shared definitions and checks those connections,
+and it does not try to hold incidents, production evidence or confidence.
 
 ## Principles
 
 1. **One home per fact.** Obligations live in `req`, reasons in `decision`, deliberate gaps in
    `open`, an order that matters in a numbered list, shared semantics in an `edge`. The
-   checker rejects obligation words elsewhere and order restated in a requirement.
+   checker rejects RFC 2119 keywords in the other places and an order restated in a
+   requirement.
 2. **Every obligation has an evaluation.** A `req` without an example or table row is an error.
 3. **Examples are checked, never trusted.** Each example runs through the oracle at check time.
    A value can be left as `?` and is then the oracle's.
@@ -42,69 +48,94 @@ those connections; it does not try to hold incidents, production evidence or con
 ## The language (0.1)
 
 A `.tilth` file is line-oriented. Statements start in column 0; their clauses are indented two
-spaces; prose, expectations and table rows are indented four. `#` in column 0 starts a comment.
+spaces; prose, expectations and table rows are indented four. A line starting with `#` is a
+comment, except inside prose (`text`), where it is part of the text. There are no comments at
+the end of a line.
 
 ```
 tilth 0.1
+
 spec <name> <version>
   title "<title>"
-  contract <version>                  # optional: a contract version the program emits
-  request {"clock": "..."}            # members every request carries (an op can replace them)
+  contract <version>
+  request {"clock": "2026-05-26T17:00:00.000Z"}
   text
     <prose: what the program is for>
 
-oracle <command>                      # a driver for the spec's executable model
+oracle <command>
 
-edge <library name> [via <op> <field> [base64]]
+edge <library name> via <op> <field> base64
   decision <ids>
 
 section <id> "<title>"
   text
-    <prose; no obligation words>
+    <prose>
 
 op <name>
-  input <field>[?] <type>, ...        # ? = optional; types are documentation in 0.1
+  input <field> <type>, <field>? <type>
   result <prose summary>
-  tolerance <result path> <number>    # e.g. result.wetBulbC 0.00001
-  audit text                          # the response carries an audit text, compared byte for byte
-  request {...}                       # replaces the spec's request members for this op
+  tolerance <result path> <number>
+  audit text
+  request {...}
 
-errors                                # the order of checks; the first that applies wins
+errors
   <code> when <condition>
-    <condition continues>
+    <condition, continued>
 
 req <id> "<title>"
   decision <ids>
-  on any|posix|windows
+  on posix
   text
-    <prose; MUST and friends belong here>
-  example <op> <json object>          # a request; the input is sent exactly as written
-    expect <path> = <json>            # path: result..., audit... (audit text is parsed), error, id
-    expect <path> ≈ <number> ± <tol>  # or ~ and +-
-    expect <path> = ?                 # the oracle's value, shown in the brief, checked by the suite
-    request {...}                     # members for this request only
-    omit <member>, ...                # leave members out (id, op, clock, input, ...)
-  example <op>                        # a request with no input member
-  example raw "<line>"                # exactly this line, sent on its own
+    <prose>
+  example <op> <json object>
+    expect <path> = <json>
+    expect <path> ≈ <number> ± <tolerance>
+    expect <path> = ?
+    request {...}
+    omit <member>, <member>
+  example <op>
+  example raw "<request line>"
   table <op>
-    | <input field> | <expect path> ± <tol> | ... |
-    | <json>        | <json or ?>           | ... |   # an empty cell states nothing
+    | <input field> | <expect path> ± <tolerance> | <expect path> |
+    | <json>        | <json>                      | ?             |
 
 open <id> "<title>"
   text
-    <prose: deliberately unspecified, never tested>
+    <prose>
 
 decision <id> "<title>"
   source <where the claim came from>
-  status observed|inferred|proposed|accepted|contested|superseded by <id>|rejected
+  status accepted
   text
     <context, decision, why>
   rejected "<an alternative, and why not>"
 
 note
   text
-    <background prose; no obligation words>
+    <prose>
 ```
+
+| statement or clause | meaning |
+|---|---|
+| `spec … request` | members every request carries besides `id`, `op` and `input` |
+| `spec … contract` | a contract version the program emits, shown in the brief |
+| `oracle` | a command that speaks the driver protocol for the spec's model |
+| `edge … via <op> <field>` | bind the edge's pack to an op: each item is sent as that input field; `base64` when the op answers with the bytes in base64 |
+| `op … input` | `name type`, comma-separated; `?` after the name marks it optional; types are documentation in 0.1 |
+| `op … tolerance` | how far a numeric result may differ, by path (`result.wetBulbC`) |
+| `op … audit text` | the response also carries an `audit` string, compared byte for byte |
+| `op … request` | replaces the spec's request members for this op (`request {}` for none) |
+| `errors` | the error codes in the order the checks run; the first that applies wins |
+| `req … on` | `any` (the default), `posix` or `windows` |
+| `example <op> <json>` | a request with this input, sent exactly as written (spellings such as `2.0e1` survive) |
+| `example <op>` | a request with no `input` member |
+| `example raw "<line>"` | exactly this line, sent on its own in its own run (for lines that are not a well-formed request) |
+| `expect <path> = <json>` | the response holds this value at the path: `result…`, `audit…` (the audit text is parsed), `error`, `id` |
+| `expect <path> ≈ x ± t` | a number within `t` of `x` (ASCII: `~` and `+-`) |
+| `expect <path> = ?` | the oracle's value, shown in the brief and checked by the suite |
+| `request`, `omit` under an example | add or replace request members; leave members out (`id`, `op`, `input`, `clock`, ...) |
+| table cells | inputs and expectations as JSON; `?` as above; an empty cell states nothing |
+| `decision … status` | `observed`, `inferred`, `proposed`, `accepted`, `contested`, `superseded by <id>` or `rejected` (Fowler's lifecycle states); none means accepted |
 
 ### The driver protocol
 
@@ -125,34 +156,35 @@ Syntax errors have P codes. The spec rules:
 | T001 | error | a requirement has no example or table row |
 | T002 | error | an example disagrees with the oracle |
 | T003 | error | an open item has examples |
-| T004 | error | MUST, SHALL or REQUIRED outside a requirement (note, section, spec text) |
-| T005 | error | a requirement names two error codes and talks about order |
+| T004 | error | an uppercase MUST, SHALL or REQUIRED (or a negation) outside quotes in a note, section, the spec's text, a decision or its rejected alternatives, an op's result summary, or an error condition |
+| T005 | error | a requirement's text names two codes declared in `errors` and talks about order |
 | T006 | error | the oracle fails a bound edge pack |
 | T007 | error | duplicate ID (`REQ-x`, `OPEN-x` and decision IDs are separate) |
 | T008 | error | a requirement or edge cites an undeclared decision |
-| T009 | error | an example names an unknown op (allowed when it expects an error) |
-| T010 | error | an example leaves out a required input field (same exception) |
+| T009 | error | an example names an unknown op (allowed when it expects an error, and for raw lines) |
+| T010 | error | an example leaves out a required input field (same exceptions) |
 | T011 | warning | an example sends an input field the op does not declare |
-| T012 | warning | a decision nothing cites |
+| T012 | warning | a decision that no requirement or edge cites |
 | T013 | warning | a decision without `source` |
-| T014 | warning | an obligation word in an open item |
+| T014 | warning | an obligation keyword in an open item |
 | T015 | error | an ambiguous edge name; the message lists the choices |
 | T016 | error | an unknown edge |
 | T017 | error | an edge bound to an unknown op |
 | T018 | info | an edge not bound to any op (its text is in the brief; no pack cases) |
 | T019 | error / info | no oracle, with examples to run / with only edge packs |
 | T020 | error | the oracle failed to run |
-| T021 | error | the oracle gave no response for an example |
-| T022 | error | the oracle could not compute an example (it says so instead of crashing) |
+| T021 | error | the oracle gave no response for an example or a pack item |
+| T022 | error | the oracle could not compute an example or a pack item (it says so instead of crashing) |
 | T023 | error | an example expects an error code that `errors` does not declare |
-| T024 | warning | the oracle answers an example with an error the example does not state |
+| T024 | warning | the oracle answers an example that states no expectations with an error |
 | T025 | error | `expect <path> = ?` names a path the oracle's answer does not have |
 | T026 | error | two edges bound to the same op and field disagree on a shared pack input |
-| T027 | error | a decision status that is not one of the seven, or a supersession with no successor |
-| T028 | error / warning | a requirement rests on a contested, superseded or rejected / an unaccepted decision |
+| T027 | error | a decision status that is not one of the seven, or a supersession with no declared successor |
+| T028 | error / warning | a requirement or edge rests on a contested, superseded or rejected decision / on one only observed, inferred or proposed |
 
-T004 and T005 are text heuristics. They catch the form these mistakes took in the experiments;
-an author can phrase around them.
+T004 and T005 are text heuristics. T005 catches the form r02's mistake took. T004 would not
+have caught r05's as written, which used no uppercase keyword; an author can also phrase around
+either check, and quotes exempt text from T004 so that decisions can quote earlier sources.
 
 ### The edge library
 
@@ -161,20 +193,21 @@ an author can phrase around them.
 | `number-text/ecmascript` | 23 | ECMAScript `Number::toString`: `1e+21`, `1e-7`, `0.000001`, `-0` as `0`, binary64 rounding |
 | `fixed-text/ecmascript` | 0 | ECMAScript `toFixed`: exact binary value, ties up (text only so far) |
 | `json/sorted-utf16` | 19 | canonical JSON, keys by UTF-16 code units, lone surrogates escaped |
-| `json/sorted-codepoint` | 19 | the same with keys by code point |
-| `json/rfc8785` | 19 | RFC 8785 read strictly: as `json/sorted-utf16`, but lone surrogates are refused |
+| `json/sorted-codepoint` | 19 | canonical JSON, keys by code point, lone surrogates refused |
+| `json/rfc8785` | 19 | RFC 8785 read strictly: keys by UTF-16 code units, lone surrogates refused |
 
 `canonical-json`, `json` and `number-text` are reserved as ambiguous. `npm test` checks every
-pack against an independent model (ECMAScript `String`, the heat-engine writer, a code-point
-writer). The texts are adapted from regen-heat-engine's REQ-CJ-001 to REQ-CJ-004.
+pack against an independent model: ECMAScript `String`, the heat-engine canonical writer, and a
+code-point writer written for the test. The texts are adapted from regen-heat-engine's
+REQ-CJ-001 to REQ-CJ-004. Edge texts are normative and may use MUST.
 
 ## What 0.1 does not do
 
 - **The oracle is still hand-written,** and about the size of the implementations it judges
-  (256 lines here; regen-rcan-assurance's model was 294). Computed examples are only as right
-  as the model. The hand-built heat-engine suite checks its oracle against fixtures imported
-  from the earlier implementation; tilth 0.1 cannot import fixtures as independent evidence.
-  That is the most important gap.
+  (256 lines here; regen-rcan-assurance's model is 314 lines, 294 of them not blank). Computed
+  examples are only as right as the model. The hand-built heat-engine suite checks its oracle
+  against fixtures imported from the earlier implementation; tilth 0.1 cannot import fixtures
+  as independent evidence. That is the most important gap.
 - **Requirements that are not observable through the driver,** such as REGEN.json fields,
   runtime and dependency budgets, or the builder's own test command, have no place: they cannot
   have examples. The hand-built suites check them statically.

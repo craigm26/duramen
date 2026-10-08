@@ -21,35 +21,42 @@ npm test
 Three specs were rebuilt blind from their briefs in the regen experiments
 ([regen-heat-engine](https://github.com/craigm26/regen-heat-engine),
 [regen-mcp-tape](https://github.com/craigm26/regen-mcp-tape),
-[regen-rcan-assurance](https://github.com/craigm26/regen-rcan-assurance)). The suites caught
-mistakes in the implementations. The mistakes in the briefs were found by the blind builders,
-one build at a time:
+[regen-rcan-assurance](https://github.com/craigm26/regen-rcan-assurance)). The hand-built
+suites measured the earlier implementations and judged every blind build; most blind builds
+passed every case. Mistakes in the briefs and source texts surfaced another way: two in the
+blind builders' notes on choices they had to make, one in a check on Windows after a build, and
+one while a spec was being extracted:
 
 - an example typed by hand that disagreed with the formula next to it (heat-engine r01);
 - an error order stated twice, in two ways that disagree (heat-engine r02);
-- a fact a builder had to act on, written only as context (mcp-tape r05);
+- a fact a builder had to act on, written only as context in a decision (mcp-tape r05);
 - a canonical JSON section that names two different key orders, with no test vector that
-  tells them apart (rcan-assurance, in the protocol's own text).
+  tells them apart (the RCAN protocol's own text, caught during rcan-assurance's extraction).
 
-Each of these can be found mechanically, before a build, if the spec says where each kind of
-fact lives and the checker can run the examples. That is what this language does. It does not
-formalize behavior: requirement text stays prose.
+The first, second and fourth can be found mechanically before any build, if the spec says
+where each kind of fact lives and a checker can run the examples; this language does that. The
+third can be caught only when it is written with an RFC 2119 keyword such as MUST, and in
+mcp-tape it was not. The language does not formalize behavior: requirement text stays prose.
 
 ## What `tilth check` enforces
 
 - Every requirement has at least one example or table row, and every example is run through
   the oracle. A value the author typed must match (T002); a value written `?` is filled in from
   the oracle, so it cannot be mistyped.
-- MUST, SHALL and REQUIRED appear only in requirements (T004).
+- The RFC 2119 keywords (uppercase MUST, SHALL, REQUIRED, and their negations) are rejected
+  outside requirements and imported edge texts: in notes, sections, the spec's text,
+  decisions, operation summaries and error conditions (T004), unless quoted; in open items
+  they are flagged (T014). Lowercase "must" is not checked.
 - An order that matters, such as which error wins, is declared once, as a numbered `errors`
   list; a requirement that restates it is rejected (T005).
 - Shared semantics are imported by name from an edge library instead of restated
   (`edge number-text/ecmascript`, `edge json/sorted-utf16`, ...). Each edge brings its
-  normative text and a conformance pack. A vague name is refused (T015), the oracle must pass
-  every bound pack (T006), and two edges bound to the same operation must not disagree (T026).
-- Decisions say where their claim came from (T013), are cited by what rests on them (T012),
-  and carry a lifecycle status; a requirement cannot rest on a contested, superseded or
-  rejected decision (T028).
+  normative text and a conformance pack (still empty for `fixed-text/ecmascript`). A vague name
+  is refused (T015), the oracle must pass every bound pack (T006), and two edges bound to the
+  same operation and field must not disagree (T026).
+- Decisions should say where their claim came from (T013, a warning) and be cited by what rests
+  on them (T012, a warning). They can carry a lifecycle status; a requirement cannot rest on a
+  contested, superseded or rejected decision (T028).
 - `open` items are deliberately unspecified and can have no examples (T003).
 
 The full list of checks, the syntax and the limits are in [DESIGN.md](DESIGN.md).
@@ -75,8 +82,8 @@ Does the suite have teeth? [`mutants.mjs`](examples/heat-engine/mutants.mjs) pla
 plausible mistakes in a copy of `impl/ts`, one at a time, and runs both this suite and the
 hand-built regen suite. The hand-built suite has 364 cases for the whole spec; 241 of them
 (134 distinct requests) are for the slice's five operations or are error and stream checks,
-against 101 requests here. I chose the mistakes from the spec's decisions file, so they are a
-biased sample.
+against 101 requests here. I chose the mistakes, mostly from the spec's decisions file (8 of
+the 14 imitate a decision), so they are a biased sample.
 
 - First run: the tilth suite caught 12 of 14, the hand-built suite 13 of 14. Both missed
   `(tempF - 32) / 1.8` in place of `((tempF - 32) * 5) / 9`; the tilth suite also missed an
@@ -92,13 +99,13 @@ does not say it is stricter.
 
 ## The edge library across specs
 
-[`examples/rcan/canonical.tilth`](examples/rcan/canonical.tilth) is two lines of binding: it
+[`examples/rcan/canonical.tilth`](examples/rcan/canonical.tilth) binds two edges: it
 attaches the `json/rfc8785` and `number-text/ecmascript` packs (42 cases) to the `canonical`
 operation that regen-rcan-assurance's driver protocol exposes. `tilth run` sends them to the
 RCAN SDKs through regen-rcan-assurance's adapters (copied unchanged apart from the local path
 file each one reads, and the driver flags noted below):
 
-| subject | commit | `tilth run` | what fails |
+| subject | commit | `tilth run` | what fails against the packs |
 |---|---|---|---|
 | rcan-ts, master | ff8c73d | 42/45 | `"9"` written before `"10"`; two strings with lone surrogates accepted |
 | rcan-ts, PR #55 head | b563fb5 | 45/45 | |
@@ -122,9 +129,9 @@ moving between specs by name; it does not show the packs finding them fresh.
 |---|---|---|
 | `r01-typed-example.tilth` | heat-engine r01: `Tw=25.00°C` typed by hand; the formula gives 25.05 | T002 |
 | `r02-order-restated.tilth` | heat-engine r02: "the order the table lists them, `unknown_op` before input checks" | T005 |
-| `obligation-in-context.tilth` | mcp-tape r05: the Windows CRLF trap, written as context | T004 (see the file: the original had no MUST) |
+| `obligation-in-context.tilth` | mcp-tape r05: the Windows CRLF trap, written as context in a decision | T004, but only because this version says MUST; the original did not (see the file) |
 | `ambiguous-edge.tilth` | "canonical JSON" without saying which | T015 |
-| `rcan-two-orders.tilth` | RCAN: code-point order and RFC 8785 in one section | T026 three times, with no oracle and no implementation |
+| `rcan-two-orders.tilth` | RCAN: code-point order and RFC 8785 in one section | T026 on the input where the two orders differ, with no oracle and no implementation |
 | `rfc8785-vs-oracle.tilth` | the heat-engine oracle bound to an edge it does not meet | T006 twice |
 
 ## Layout

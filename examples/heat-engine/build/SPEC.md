@@ -15,8 +15,9 @@ was computed, from which inputs and constants, under which citation, and when. A
 records are compared byte for byte, so their serialized form is part of the contract.
 "Number" means an IEEE 754 binary64 value (a JavaScript `number`, a Python `float`).
 
-Conventions: MUST and MUST NOT appear only in requirements (`REQ-`), and every requirement has
-at least one example that the suite checks. Every example was checked against the
+Conventions: MUST and MUST NOT appear only in requirements (`REQ-`) and in the shared
+definitions under Edges, and every requirement has at least one example that the suite
+checks. Every example was checked against the
 specification's own model (its oracle) when this file was generated; where an example states
 no value, the value shown is the model's. `OPEN-` items are deliberately unspecified and never
 tested. An order that matters (such as which error wins) is stated once, in a numbered list.

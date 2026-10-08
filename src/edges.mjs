@@ -52,10 +52,12 @@ Escaping, per UTF-16 code unit: \`"\` and \`\\\` with a backslash; \`0x08\`, \`0
 surrogate that is not part of a valid pair, as \`\\u\` and four **lowercase** hex digits;
 everything else, including \`/\`, \`0x7F\` and U+2028, as itself. The text is UTF-8 encoded.`;
 
-const JSON_CODEPOINT = `The rules of json/sorted-utf16, except that members are ordered by key comparing keys as
-sequences of Unicode **code points** (a valid surrogate pair counts as the one code point it
-encodes). This differs from UTF-16 order only for keys that mix characters above U+FFFF with
-characters in U+E000–U+FFFF.`;
+const JSON_CODEPOINT = `The rules of json/sorted-utf16, with two differences. Members are ordered by key comparing
+keys as sequences of Unicode **code points** (a valid surrogate pair counts as the one code
+point it encodes); this differs from UTF-16 order only for keys that mix characters above
+U+FFFF with characters in U+E000–U+FFFF. And a string containing a surrogate code unit that is
+not part of a valid pair is not a sequence of code points, so a value containing one has
+**no** canonical form: the implementation MUST answer with an error instead.`;
 
 const JSON_RFC8785 = `RFC 8785 (JSON Canonicalization Scheme) read strictly: the rules of json/sorted-utf16
 (RFC 8785 also orders keys by UTF-16 code units and writes numbers as ECMAScript does), except
@@ -106,9 +108,9 @@ export const EDGES = {
     pack: jsonItems.map(([input, text]) => ({ input, text })),
   },
   'json/sorted-codepoint': {
-    title: 'Canonical JSON, keys in code-point order, lone surrogates escaped',
+    title: 'Canonical JSON, keys in code-point order, lone surrogates refused',
     text: JSON_CODEPOINT,
-    pack: jsonItems.map(([input, text], k) => ({ input, text: k === 1 ? '{"｡":1,"😀":2}' : text })),
+    pack: jsonItems.map(([input, text, lone], k) => (lone ? { input, refuse: true } : { input, text: k === 1 ? '{"｡":1,"😀":2}' : text })),
   },
   'json/rfc8785': {
     title: 'Canonical JSON per RFC 8785, read strictly (lone surrogates refused)',

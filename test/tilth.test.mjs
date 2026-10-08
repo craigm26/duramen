@@ -81,18 +81,18 @@ test('parse: an error condition may continue on the next lines', () => {
 // ---------- the history: each file reports exactly what it is there to show
 
 const HISTORY = {
-  'r01-typed-example.tilth': ['T002'],
-  'r02-order-restated.tilth': ['T005'],
-  'obligation-in-context.tilth': ['T004'],
-  'ambiguous-edge.tilth': ['T015'],
-  'rcan-two-orders.tilth': ['T026', 'T026', 'T026'],
-  'rfc8785-vs-oracle.tilth': ['T006', 'T006'],
+  'r01-typed-example.tilth': [['T002'], []],
+  'r02-order-restated.tilth': [['T005'], []],
+  'obligation-in-context.tilth': [['T004'], ['T012']], // and nothing cites the decision
+  'ambiguous-edge.tilth': [['T015'], []],
+  'rcan-two-orders.tilth': [['T026'], []],
+  'rfc8785-vs-oracle.tilth': [['T006', 'T006'], []],
 };
-for (const [file, want] of Object.entries(HISTORY)) {
-  test(`history: ${file} reports ${want.join(', ')}`, async () => {
+for (const [file, [errors, warnings]] of Object.entries(HISTORY)) {
+  test(`history: ${file} reports ${errors.join(', ')}`, async () => {
     const { ds } = await checkFile(join(ROOT, 'examples', 'history', file));
-    assert.deepEqual(codes(ds), want);
-    assert.deepEqual(codes(ds, 'warning'), []);
+    assert.deepEqual(codes(ds), errors);
+    assert.deepEqual(codes(ds, 'warning'), warnings);
   });
 }
 
@@ -136,6 +136,40 @@ decision D-1 "Uncited, unsourced"
     // T024: the oracle answers the example with the missing field with bad_request.
     assert.deepEqual(codes(ds, 'warning'), ['T011', 'T012', 'T013', 'T024']);
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('check: obligation words outside requirements (T004, T014), quotes exempt', async () => {
+  const { ast, diagnostics } = parse(src(`
+tilth 0.1
+spec s 1
+  text
+    The program MUST do things.
+op o
+  input x number
+  result the result MUST be right
+errors
+  e when the input SHALL be wrong
+section S "S"
+  text
+    Background that is REQUIRED reading.
+note
+  text
+    A quoted rule is fine: "callers MUST retry", and so is \`MUST\` in code.
+open O-1 "Open"
+  text
+    Implementations MUST NOT depend on this.
+decision D-1 "D"
+  source a test
+  text
+    The old schema said "MUST clamp to [5, 99]"; we MUST clamp to [5, 100].
+  rejected "Clamping to 99, which MUST be wrong"
+`), 's.tilth');
+  assert.deepEqual(diagnostics, []);
+  const { diagnostics: ds } = await check(ast);
+  const t004 = ds.filter((d) => d.code === 'T004').map((d) => d.message.split(':')[0]);
+  // Two in D-1: its text and its rejected alternative.
+  assert.deepEqual(t004.sort(), ['"MUST" in decision D-1', '"MUST" in decision D-1', '"MUST" in op o', '"MUST" in the spec\'s text', '"REQUIRED" in a section', '"SHALL" in the errors list'].sort());
+  assert.deepEqual(codes(ds, 'warning').filter((c) => c === 'T014'), ['T014']);
 });
 
 test('check: an example the oracle answers with an error must say so (T024)', async () => {
@@ -192,8 +226,17 @@ test('edges: json/sorted-utf16 agrees with the heat-engine canonical writer', ()
 test('edges: json/sorted-codepoint agrees with a code-point-ordered writer', () => {
   const cp = (s) => [...s].map((c) => c.codePointAt(0));
   const cmp = (a, b) => { const A = cp(a), B = cp(b); for (let i = 0; i < Math.min(A.length, B.length); i++) if (A[i] !== B[i]) return A[i] - B[i]; return A.length - B.length; };
-  const w = (v) => (v === null || typeof v !== 'object' ? canon(v) : Array.isArray(v) ? `[${v.map(w).join(',')}]` : `{${Object.keys(v).sort(cmp).map((k) => `${JSON.stringify(k)}:${w(v[k])}`).join(',')}}`);
-  for (const { input, text } of EDGES['json/sorted-codepoint'].pack) assert.equal(w(JSON.parse(input)), text, input);
+  const lone = (s) => !s.isWellFormed();
+  const w = (v) => {
+    if (typeof v === 'string' && lone(v)) throw new Error('no canonical form');
+    if (v === null || typeof v !== 'object') return canon(v);
+    if (Array.isArray(v)) return `[${v.map(w).join(',')}]`;
+    return `{${Object.keys(v).sort(cmp).map((k) => { if (lone(k)) throw new Error('no canonical form'); return `${JSON.stringify(k)}:${w(v[k])}`; }).join(',')}}`;
+  };
+  for (const item of EDGES['json/sorted-codepoint'].pack) {
+    if (item.refuse) assert.throws(() => w(JSON.parse(item.input)), /no canonical form/, item.input);
+    else assert.equal(w(JSON.parse(item.input)), item.text, item.input);
+  }
 });
 
 test('edges: json/rfc8785 is json/sorted-utf16 except that it refuses lone surrogates', () => {
@@ -208,7 +251,8 @@ test('edges: json/rfc8785 is json/sorted-utf16 except that it refuses lone surro
 
 test('edges: conflicts between packs', () => {
   assert.equal(packConflicts('json/sorted-utf16', 'json/rfc8785').length, 2);
-  assert.equal(packConflicts('json/sorted-utf16', 'json/sorted-codepoint').length, 1);
+  assert.equal(packConflicts('json/sorted-utf16', 'json/sorted-codepoint').length, 3);
+  assert.equal(packConflicts('json/sorted-codepoint', 'json/rfc8785').length, 1);
   assert.equal(packConflicts('json/sorted-utf16', 'json/sorted-utf16').length, 0);
 });
 

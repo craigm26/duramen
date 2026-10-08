@@ -1,18 +1,20 @@
 # History: mcp-tape, blind build r05. mcp-tape's decision D-026 described a Windows trap as
-# context: Python's text-mode standard output writes CRLF. r05 skipped its POSIX-only tests on
-# Windows as REQ-IF-001 asked, but one of its tests still expected LF from a Python child.
-# D-028 then moved the fact into REQ-IF-001, because "a builder acts on requirements and reads
-# context".
+# context: a Python child's `print` writes CRLF on Windows, so a test that expects LF from it
+# fails there. r05 skipped its POSIX-only tests on Windows as REQ-IF-001 asked, but one of its
+# tests still expected LF from a Python child. D-028 then moved the fact into REQ-IF-001:
+# "A builder acts on requirements and reads context."
 #
-# Tilth rejects obligation words outside a requirement (T004): written as the note below, the
-# fact has to move into a `req`, where it gets an ID and needs an evaluation. D-026 itself used
-# no obligation word, so this check alone would not have caught it; it catches the version of
-# the mistake that says MUST.
+# tilth rejects RFC 2119 keywords outside requirements, decisions included (T004). Written as
+# the decision below, the fact has to move into a `req`, where it gets an ID and needs an
+# evaluation. D-026 as written had no uppercase keyword (only a lowercase "must", twice, about
+# other rules), so no check in tilth would have flagged it. This file shows the form of the
+# mistake a checker can see.
 tilth 0.1
 
 spec mcp-tape-r05 1.1.1
 
-note
+decision D-026 "The builder's own tests run on both platforms"
+  source r04 (a check on Windows, outside the suite)
   text
-    On Windows, Python's text-mode standard output writes CRLF. A test that compares bytes a
-    child wrote MUST have the child write bytes, or accept CRLF.
+    A Python child's `print` writes CRLF on Windows, so a test that compares bytes a child
+    wrote MUST have the child write bytes, or accept CRLF.
