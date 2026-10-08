@@ -19,6 +19,10 @@ node bin/duramen.mjs run   examples/heat-engine/heat.duramen --impl <regen-heat-
 npm test
 ```
 
+Two of the tests run regen-heat-engine's released implementations; they are skipped unless a
+clone of [regen-heat-engine](https://github.com/craigm26/regen-heat-engine) sits next to this
+one, or `HEAT_ENGINE_IMPLS` points at its `impl/` folder. CI runs the rest on Linux and Windows.
+
 ## Why
 
 Three specs were rebuilt blind from their briefs in the regen experiments
