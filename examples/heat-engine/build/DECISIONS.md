@@ -34,6 +34,19 @@ equality across languages needs one rule; the earlier fixtures were produced wit
 Rejected:
 - Fixed significant digits everywhere: changes all existing expected bytes.
 
+## D-003: The emitted contract version is 0.2.0
+
+- Source: extraction
+- Cited by: REQ-AU-001
+
+Audit records carry `spec_version`, the version of the audit and behavior contract. The
+earlier implementation emitted `0.1.1`, and this spec changes the contract in places, so
+claiming `0.1.1` would be false. This is a different number from the document's own
+version, which tracks the wording. Decision: emit `"0.2.0"` (REQ-AU-001).
+
+Rejected:
+- Keep 0.1.1: dishonest about the changes.
+
 ## D-007: Non-finite inputs are written as strings in audits
 
 - Source: extraction

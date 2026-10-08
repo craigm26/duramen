@@ -96,6 +96,12 @@ req IF-007 "Requests that cannot be handled"
   example flagF {"wetBulbF": "80"}
     expect error = "bad_request"
 
+req IF-008 "Extra members"
+  text
+    Unknown extra members in a request or in `input` MUST be ignored.
+  example raw '{"id":"extra","op":"flagF","input":{"wetBulbF":86,"note":"x"},"clock":"2026-05-26T17:00:00.000Z","trace":true}'
+    expect result = {"flag": "yellow", "flagDartLabel": "high"}
+
 open IF-001 "Standard error"
   text
     What the driver writes to standard error.
@@ -103,6 +109,16 @@ open IF-001 "Standard error"
 open IF-002 "Error text"
   text
     Any human-readable error text; it never appears in a response.
+
+open IF-003 "Malformed clocks"
+  text
+    Behavior for a `clock` string that is not in the exact 24-character form.
+
+open IF-005 "Streaming and odd request bytes"
+  text
+    Whether responses are written as each request line arrives or only after end of input
+    (only order and completeness are pinned); handling of request bytes that are not valid
+    UTF-8; handling of duplicate member names in a request object.
 
 # ---------------------------------------------------------------------------------------------
 section CJ "Canonical JSON"
@@ -159,7 +175,9 @@ req AU-001 "Audit members"
     | `result_summary` | a one-line human-readable string, as each operation specifies |
     | `computed_at` | the request's `clock` (REQ-IF-004) |
 
-    `flagC` adds `children` (REQ-FL-005). No other members appear.
+    `flagC` adds `children` (REQ-FL-005). No other members appear. In a response, `audit` is
+    this record written as canonical JSON (edge json/sorted-utf16) and carried as a JSON string.
+  decision D-003
   example flagF {"wetBulbF": 85}
     expect audit.spec_version = "0.2.0"
     expect audit.function = "flagFromWetBulbF"
@@ -290,6 +308,11 @@ req WB-005 "Wet-bulb from °F"
     expect result = null
     expect audit.result_summary = "invalid_input:tempC"
 
+open WB-001 "Overflow"
+  text
+    Results when the computation overflows or loses all precision (inputs of enormous
+    magnitude); the result and summary for such inputs are unspecified.
+
 open WB-002 "Extra precision"
   text
     Results more precise than the stated tolerance.
@@ -396,6 +419,11 @@ req FL-006 "Non-finite °C"
     expect result = null
     expect audit.result_summary = "invalid_input:wetBulbC"
 
+open FL-001 "Overflow in the °C path"
+  text
+    `flagC` for a finite `wetBulbC` whose °F conversion overflows to a non-finite value (only
+    reachable near ±1.8e308).
+
 # ---------------------------------------------------------------------------------------------
 decision D-001 "The whole audit record is pinned, byte for byte"
   source extraction
@@ -420,6 +448,15 @@ decision D-002 "Number text follows ECMAScript, not the host language"
     (`20.3`). Decision: the edges number-text/ecmascript and fixed-text/ecmascript. Why: byte
     equality across languages needs one rule; the earlier fixtures were produced with this one.
   rejected "Fixed significant digits everywhere: changes all existing expected bytes."
+
+decision D-003 "The emitted contract version is 0.2.0"
+  source extraction
+  text
+    Audit records carry `spec_version`, the version of the audit and behavior contract. The
+    earlier implementation emitted `0.1.1`, and this spec changes the contract in places, so
+    claiming `0.1.1` would be false. This is a different number from the document's own
+    version, which tracks the wording. Decision: emit `"0.2.0"` (REQ-AU-001).
+  rejected "Keep 0.1.1: dishonest about the changes."
 
 decision D-007 "Non-finite inputs are written as strings in audits"
   source extraction

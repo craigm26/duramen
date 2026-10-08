@@ -101,15 +101,18 @@ export function parse(source, file = '<input>') {
   //   example <op> <json object>     a request with that input
   //   example <op>                   a request with no `input` member at all
   //   example raw "<line>"           exactly this request line (for lines that are not a
-  //                                  well-formed request); sent on its own, in its own run
+  //   example raw '<line>'           well-formed request); sent on its own, in its own run
   // Under an example: `request <json>` adds or replaces request members, `omit <a>, <b>`
   // leaves members out, and `expect` lines state what the response holds.
   function examplesOf(c, req) {
     if (c.kw === 'example') {
       let ex;
-      const rm = c.rest.match(/^raw\s+(".*")$/);
+      // A raw line in double quotes is a JSON string (with escapes); in single quotes it is
+      // taken exactly as written, which suits lines full of double quotes.
+      const rm = c.rest.match(/^raw\s+(".*")$/) ?? c.rest.match(/^raw\s+'(.*)'$/);
       if (rm) {
-        ex = { op: null, input: {}, raw: null, rawLine: unquote(rm[1], c.n, 'raw request line'), request: null, omit: [], expects: [], line: c.n, from: 'example' };
+        const rawLine = rm[1].startsWith('"') ? unquote(rm[1], c.n, 'raw request line') : rm[1];
+        ex = { op: null, input: {}, raw: null, rawLine, request: null, omit: [], expects: [], line: c.n, from: 'example' };
       } else {
         const m = c.rest.match(/^(\S+)(?:\s+(.+))?$/);
         if (!m) { diag('error', c.n, 'P012', 'example <op> [<json input>], or example raw "<request line>"'); return; }

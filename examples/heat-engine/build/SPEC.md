@@ -182,9 +182,20 @@ Examples:
 - `flagF {"wetBulbF": true}` ⟶ `error` = `"bad_request"`
 - `flagF {"wetBulbF": "80"}` ⟶ `error` = `"bad_request"`
 
+**REQ-IF-008.** *Extra members.* Unknown extra members in a request or in `input` MUST be ignored.
+
+Examples:
+- the request line `{"id":"extra","op":"flagF","input":{"wetBulbF":86,"note":"x"},"clock":"2026-05-26T17:00:00.000Z","trace":true}` ⟶ `result` = `{"flag":"yellow","flagDartLabel":"high"}`
+
 **OPEN-IF-001.** *Standard error.* What the driver writes to standard error. (Open: implementations may differ; never tested.)
 
 **OPEN-IF-002.** *Error text.* Any human-readable error text; it never appears in a response. (Open: implementations may differ; never tested.)
+
+**OPEN-IF-003.** *Malformed clocks.* Behavior for a `clock` string that is not in the exact 24-character form. (Open: implementations may differ; never tested.)
+
+**OPEN-IF-005.** *Streaming and odd request bytes.* Whether responses are written as each request line arrives or only after end of input
+(only order and completeness are pinned); handling of request bytes that are not valid
+UTF-8; handling of duplicate member names in a request object. (Open: implementations may differ; never tested.)
 
 ---
 
@@ -229,9 +240,10 @@ Every audit record is a JSON object with these members, always present:
 | `result_summary` | a one-line human-readable string, as each operation specifies |
 | `computed_at` | the request's `clock` (REQ-IF-004) |
 
-`flagC` adds `children` (REQ-FL-005). No other members appear.
+`flagC` adds `children` (REQ-FL-005). No other members appear. In a response, `audit` is
+this record written as canonical JSON (edge json/sorted-utf16) and carried as a JSON string.
 
-Decisions: D-001.
+Decisions: D-001, D-003.
 
 Examples:
 - `flagF {"wetBulbF": 85}` ⟶ `audit.spec_version` = `"0.2.0"`; `audit.function` = `"flagFromWetBulbF"`; `audit.computed_at` = `"2026-05-26T17:00:00.000Z"`
@@ -360,6 +372,9 @@ Examples:
 - `wetBulbF {"tempF": 98.6, "rhPercent": 50}` ⟶ `audit.inputs` = `{"tempC":37,"rhPercent":50}`
 - `wetBulbF {"tempF": "NaN", "rhPercent": 50}` ⟶ `result` = `null`; `audit.result_summary` = `"invalid_input:tempC"`
 
+**OPEN-WB-001.** *Overflow.* Results when the computation overflows or loses all precision (inputs of enormous
+magnitude); the result and summary for such inputs are unspecified. (Open: implementations may differ; never tested.)
+
 **OPEN-WB-002.** *Extra precision.* Results more precise than the stated tolerance. (Open: implementations may differ; never tested.)
 
 ---
@@ -467,3 +482,6 @@ Decisions: D-007.
 
 Examples:
 - `flagC {"wetBulbC": "NaN"}` ⟶ `result` = `null`; `audit.result_summary` = `"invalid_input:wetBulbC"`
+
+**OPEN-FL-001.** *Overflow in the °C path.* `flagC` for a finite `wetBulbC` whose °F conversion overflows to a non-finite value (only
+reachable near ±1.8e308). (Open: implementations may differ; never tested.)

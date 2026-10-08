@@ -270,7 +270,7 @@ test('heat-engine: the suite has one case per example and per bound pack item', 
   const examples = ast.items.filter((i) => i.type === 'req').reduce((n, r) => n + r.examples.length, 0);
   assert.equal(cases.length, examples + EDGES['number-text/ecmascript'].pack.length + EDGES['json/sorted-utf16'].pack.length);
   assert.ok(cases.every((c) => c.full), 'every case carries the oracle answer');
-  assert.equal(cases.filter((c) => c.solo).length, 3);
+  assert.equal(cases.filter((c) => c.solo).length, 4);
 });
 
 test('heat-engine: the oracle itself passes the generated suite', async () => {
