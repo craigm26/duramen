@@ -1,12 +1,14 @@
 // The command line. Exit status: 0 everything passed; 1 the spec has errors or the suite failed;
 // 2 the command line or a file could not be used; 3 duramen itself failed (a bug: please report).
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { resolve, join, dirname, relative, isAbsolute } from 'node:path';
 import { loadRecord } from './record.mjs';
 import { check } from './check.mjs';
 import { renderSpec, renderDecisions, renderTrace } from './render.mjs';
 import { generateCases, runCases } from './suite.mjs';
-import { implDriver, killAll } from './driver.mjs';
+import { implDriver, killAll, parseCommand } from './driver.mjs';
+import { regen } from './regen.mjs';
 import { mutate, oracleSources } from './mutate.mjs';
 import { agree } from './agree.mjs';
 import { diffRecords } from './diff.mjs';
@@ -21,6 +23,8 @@ const USAGE = `usage:
   duramen mutate <record> [--file <oracle source>] [--limit <n>] [--jobs <n>] [--json]
   duramen agree  <record> --impl <dir> [--impl <dir> ...] [--oracle] [--samples <n>] [--seed <n>] [--json]
   duramen diff   <old record> <new record> [--json]
+  duramen regen  <record> --lang ts|py [--model sonnet] [--runs <dir>] [--sandbox-root <dir>] [--leak-terms <file.json>]
+                [--prompt <file>] [--run-id <id>] [--max-minutes <n>] [--json]
   duramen --version
 
 A record is a .duramen file or a folder of them.`;
@@ -49,6 +53,7 @@ const OPTIONS = {
   mutate: { file: 'value', limit: 'value', jobs: 'value', timeout: 'value', json: 'flag' },
   agree: { impl: 'list', oracle: 'flag', samples: 'value', seed: 'value', timeout: 'value', json: 'flag' },
   diff: { json: 'flag' },
+  regen: { lang: 'value', model: 'value', runs: 'value', 'sandbox-root': 'value', 'leak-terms': 'value', prompt: 'value', 'run-id': 'value', 'max-minutes': 'value', builder: 'value', json: 'flag' },
 };
 
 const shown = (f) => { if (!f) return f; const r = relative(process.cwd(), f); return r && !r.startsWith('..') && !isAbsolute(r) ? r : f; };
@@ -70,6 +75,7 @@ export async function main(argv, io = { out: (s) => process.stdout.write(s + '\n
   if (cmd === 'run' && !args.impl && !args.driver) { io.err('duramen run: name an implementation (--impl <dir>) or a driver (--driver "<command>")'); return 2; }
   if (cmd === 'mutate') return mutateCommand(args, io, timeoutMs);
   if (cmd === 'agree') return agreeCommand(args, io, timeoutMs);
+  if (cmd === 'regen') return regenCommand(args, io);
 
   const path = resolve(args._[0]);
   const { ast, diagnostics: loadDs } = loadRecord(path);
@@ -177,6 +183,34 @@ async function agreeCommand(args, io, timeoutMs) {
   if (r.disagreements.length > 20) io.out(`  ... and ${r.disagreements.length - 20} more`);
   io.out(`${participants.length} participants, ${r.requests} generated requests: ${r.disagreements.length} disagreements`);
   return r.disagreements.length || r.errors.length ? 1 : 0;
+}
+
+async function regenCommand(args, io) {
+  const path = resolve(args._[0]);
+  const { ast, diagnostics } = loadRecord(path);
+  if (diagnostics.some((d) => d.level === 'error')) { io.err('duramen regen: the record has errors; run duramen check'); return 1; }
+  if (!['ts', 'py'].includes(args.lang)) { io.err('duramen regen: --lang ts or --lang py'); return 2; }
+  let leakTerms = {};
+  if (args['leak-terms']) { try { leakTerms = JSON.parse(readFileSync(resolve(args['leak-terms']), 'utf8')); } catch (e) { io.err(`duramen regen: --leak-terms: ${e.message}`); return 2; } }
+  const maxMinutes = args['max-minutes'] !== undefined ? Number(args['max-minutes']) : 60;
+  if (!(maxMinutes > 0)) { io.err('duramen regen: --max-minutes needs a positive number'); return 2; }
+  let builder;
+  if (args.builder) { const p = parseCommand(args.builder); if (p.error) { io.err(`duramen regen: --builder: ${p.error}`); return 2; } builder = p.words; }
+  const r = await regen(ast, {
+    lang: args.lang, model: args.model ?? 'sonnet', runsDir: resolve(args.runs ?? join(dirname(path), 'regen')),
+    sandboxRoot: resolve(args['sandbox-root'] ?? join(tmpdir(), 'duramen-regen')), leakTerms, promptFile: args.prompt ? resolve(args.prompt) : undefined,
+    runId: args['run-id'], maxMinutes, version: VERSION, builder, log: args.json ? () => {} : (m) => io.err(`  ${m}`),
+  });
+  if (r.error) { io.err(`duramen regen: ${r.error}`); return 1; }
+  if (args.json) io.out(JSON.stringify(r.entry));
+  else {
+    io.out(`run ${r.entry.run}: ${r.entry.model_id ?? r.entry.model} (${r.entry.lang}), ${r.entry.turns ?? '?'} turns, ${r.entry.duration_min ?? '?'} min, ${r.entry.cost_usd === null ? '?' : `$${r.entry.cost_usd.toFixed(2)}`}`);
+    io.out(`  audit: ${r.audit.violations} violations, init ${r.audit.init.ok ? 'ok' : `not ok (${r.audit.init.problems.join('; ')})`}, ${r.audit.denied_calls} denied calls`);
+    io.out(`  suite: ${r.score.error ?? `passed ${r.score.passed}/${r.score.total}`}`);
+    for (const f of r.score.failures ?? []) io.out(`    FAIL ${f.id}: ${f.why.join('; ').slice(0, 200)}`);
+    io.out(`  build copied to ${shown(r.impl)}; ${r.entry.choices.total} choices to triage in ${shown(join(resolve(args.runs ?? join(dirname(path), 'regen')), `${r.entry.run}-${r.entry.lang}.md`))}`);
+  }
+  return !r.score.error && r.score.passed === r.score.total && r.audit.violations === 0 ? 0 : 1;
 }
 
 async function diffCommand(args, io) {

@@ -81,8 +81,11 @@ function renderProperty(pr, run) {
   return out;
 }
 
+// The brief shows the rows and what kind of evidence they are, not where they came from: a
+// source may name the very implementation a blind builder must not be pointed at. The sources
+// are in the record and in trace.md.
 function renderEvidence(ev, oracle) {
-  const out = [`**EV-${ev.id}.** *${ev.title}.* ${ev.kind}${ev.kindDetail ? ` (${ev.kindDetail})` : ''}. Source: ${ev.source}.${ev.text ? ` ${ev.text}` : ''}`];
+  const out = [`**EV-${ev.id}.** *${ev.title}.* Evidence of kind \`${ev.kind}\`${ev.kindDetail ? ` (${ev.kindDetail})` : ''}.${ev.text ? ` ${ev.text}` : ''}`];
   const rows = ev.rows ?? [];
   const waived = new Map(ev.waivers.map((w) => [w.row, w.decision]));
   const kept = rows.filter((r) => !waived.has(r.rowId));
@@ -94,6 +97,33 @@ function renderEvidence(ev, oracle) {
   }
   void oracle;
   return out;
+}
+
+// How to read the properties: the words their expressions use, and only those.
+const FN_TEXT = {
+  abs: '`abs(x)` absolute value', min: '`min(a, b, ...)`', max: '`max(a, b, ...)`', floor: '`floor(x)`', ceil: '`ceil(x)`',
+  round: '`round(x)` to an integer, `round(x, n)` to n places', sqrt: '`sqrt(x)`', exp: '`exp(x)`', ln: '`ln(x)` natural logarithm', pow: '`pow(x, y)`',
+  len: '`len(x)` length of a string (UTF-16 code units), array or object', keys: '`keys(o)` member names', has: '`has(o, "m")` whether object `o` has member `m`',
+  parse: '`parse(s)` the JSON value the text `s` holds', text: '`text(v)` JSON text of `v`', isnum: '`isnum(x)` whether `x` is a finite number', isint: '`isint(x)` whether `x` is an integer',
+  isstr: '`isstr(x)` whether `x` is a string', approx: '`approx(a, b, t)` whether `|a - b| <= t`', num: '`num(x)` a number, or the non-finite number `"NaN"`, `"Infinity"` or `"-Infinity"` stands for',
+  contains: '`contains(s, t)` whether string `s` contains `t` (or array `s` contains the value `t`)',
+};
+function propertyLanguage(ast) {
+  const used = new Set();
+  const walk = (n) => { if (!n || typeof n !== 'object') return; if (n.k === 'call') used.add(n.fn); for (const v of Object.values(n)) { if (Array.isArray(v)) v.forEach((x) => (Array.isArray(x) ? x.forEach(walk) : walk(x))); else if (v && typeof v === 'object') walk(v); } };
+  for (const p of ast.properties) { p.calls.forEach((c) => walk(c.input)); p.expects.forEach((e) => walk(e.ast)); p.where.forEach((w) => walk(w.ast)); }
+  return [
+    '### Properties', '',
+    'A property (`PROP-`) is checked on generated cases. Each case draws a value for every variable',
+    '(`x in lo .. hi` is a number in that closed range, `one of` a value from the list), sends the',
+    'requests in order as ordinary driver requests (a request may use an earlier response), and',
+    "requires every expectation to be true. In the expectations, a call's name stands for its whole",
+    "response object (`a.result.x` reads member `x` of the response's `result`; `o[k]` reads",
+    'member or element `k`; `a.audit` is the audit text); `==` and `!=` compare JSON values (object',
+    'member order does not matter; numbers compare exactly); `+ - * /` are IEEE 754 binary64',
+    `arithmetic; \`and\`, \`or\`, \`not\` and \`c ? x : y\` are as usual${used.size ? '; and' : '.'}`,
+    ...(used.size ? [...used].sort().map((f) => `- ${FN_TEXT[f] ?? `\`${f}\``}`) : []),
+  ];
 }
 
 // The request members a spec adds, and which operations carry them.
@@ -156,6 +186,7 @@ export function renderSpec(ast, oracle, { version: duramenVersion = '0.2', prope
     out.push('', '### Types', '', 'Types named in this document (`number` is a JSON number, read as an IEEE 754 binary64 value; `{a: t, b?: t}` is an object with exactly these members, `b` optional, and `...` allows others; `t[]` is an array; `|` is either):', '');
     for (const t of ast.types) out.push(`- ${code(t.name)} = ${code(t.text)}`);
   }
+  if (ast.properties.length) out.push('', ...propertyLanguage(ast));
   out.push('', '### Operations', '', '| op | input fields (required unless marked optional) | result | audit |', '|---|---|---|---|');
   for (const o of ast.ops) {
     const result = [o.returnsText ? code(o.returnsText) : '', o.summary].filter(Boolean).join('; ') || '—';
@@ -251,6 +282,10 @@ export function renderTrace(ast, cases, corr = []) {
   }
   const edgeCases = ast.edges.map((e) => `| ${e.name} | ${e.via ? `${e.via.op}.${e.via.field}` : 'not bound'} | ${cases.filter((c) => c.reqs.includes(`EDGE ${e.name}`)).length} |`);
   if (edgeCases.length) out.push('', '| edge | bound to | suite cases |', '|---|---|---|', ...edgeCases);
+  if (ast.evidence.length) {
+    out.push('', '| evidence | kind | rows | waived | supports | source |', '|---|---|---|---|---|---|');
+    for (const ev of ast.evidence) out.push(`| EV-${ev.id} | ${ev.kind}${ev.kindDetail ? ` (${ev.kindDetail})` : ''} | ${ev.rows?.length ?? 0} | ${ev.waivers.length} | ${ev.supports.map((r) => `REQ-${r}`).join(', ')} | ${String(ev.source ?? '').replace(/\|/g, '\\|')} |`);
+  }
   const opens = ast.items.filter((i) => i.type === 'open');
   if (opens.length) out.push('', `Open (never tested): ${opens.map((o) => `OPEN-${o.id}`).join(', ')}`);
   const kinds = {};

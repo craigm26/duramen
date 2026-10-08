@@ -31,6 +31,12 @@
 | fixed-text/ecmascript | not bound | 0 |
 | json/sorted-utf16 | canonical.value | 19 |
 
+| evidence | kind | rows | waived | supports | source |
+|---|---|---|---|---|---|
+| EV-WB-FIXTURES | computed | 38 | 0 | REQ-WB-001 | HeatCompass/heat-engine-spec at f621520, spec/tier1-foundation/wet-bulb.fixtures.csv, written by its scripts/build-fixtures.py (Python, not this spec's oracle) |
+| EV-WB-EXTENDED | computed | 22 | 0 | REQ-WB-002 | evidence/make-extended.py, which runs stull() copied unchanged from HeatCompass/heat-engine-spec's scripts/build-fixtures.py at f621520 (Python, not this spec's oracle) |
+| EV-FL-FIXTURES | derived | 20 | 0 | REQ-FL-001 | HeatCompass/heat-engine-spec at f621520, spec/tier1-foundation/flag-mapping.fixtures.csv |
+
 Open (never tested): OPEN-IF-001, OPEN-IF-002, OPEN-IF-003, OPEN-IF-005, OPEN-CJ-001, OPEN-WB-001, OPEN-WB-002, OPEN-FL-001
 
 Total suite cases: 204 (63 example, 5 static, 80 evidence, 42 edge, 14 property), plus 3 protocol cases in every run.

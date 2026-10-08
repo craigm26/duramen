@@ -61,6 +61,20 @@ Types named in this document (`number` is a JSON number, read as an IEEE 754 bin
 - `flagResult` = `{flag: flag, flagDartLabel: "low" | "moderate" | "high" | "extreme" | "critical"} | null`
 - `command` = `string | {default: string, ...}`
 
+### Properties
+
+A property (`PROP-`) is checked on generated cases. Each case draws a value for every variable
+(`x in lo .. hi` is a number in that closed range, `one of` a value from the list), sends the
+requests in order as ordinary driver requests (a request may use an earlier response), and
+requires every expectation to be true. In the expectations, a call's name stands for its whole
+response object (`a.result.x` reads member `x` of the response's `result`; `o[k]` reads
+member or element `k`; `a.audit` is the audit text); `==` and `!=` compare JSON values (object
+member order does not matter; numbers compare exactly); `+ - * /` are IEEE 754 binary64
+arithmetic; `and`, `or`, `not` and `c ? x : y` are as usual; and
+- `contains(s, t)` whether string `s` contains `t` (or array `s` contains the value `t`)
+- `has(o, "m")` whether object `o` has member `m`
+- `parse(s)` the JSON value the text `s` holds
+
 ### Operations
 
 | op | input fields (required unless marked optional) | result | audit |
@@ -331,7 +345,7 @@ Decisions: D-009, D-018.
 
 (Rows are `wetBulb` requests. An empty cell states nothing.)
 
-**EV-WB-FIXTURES.** *Wet-bulb values from an independent program.* computed. Source: HeatCompass/heat-engine-spec at f621520, spec/tier1-foundation/wet-bulb.fixtures.csv, written by its scripts/build-fixtures.py (Python, not this spec's oracle).
+**EV-WB-FIXTURES.** *Wet-bulb values from an independent program.* Evidence of kind `computed`.
 
 The suite checks all 38 rows. The first 8:
 
@@ -398,7 +412,7 @@ where the formula rises.
 
 (Rows are `wetBulb` requests. An empty cell states nothing.)
 
-**EV-WB-EXTENDED.** *Wet-bulb values outside Stull's range, from the same independent formula.* computed. Source: evidence/make-extended.py, which runs stull() copied unchanged from HeatCompass/heat-engine-spec's scripts/build-fixtures.py at f621520 (Python, not this spec's oracle). Added after `duramen mutate` showed that a change in the sixth decimal place of one of
+**EV-WB-EXTENDED.** *Wet-bulb values outside Stull's range, from the same independent formula.* Evidence of kind `computed`. Added after `duramen mutate` showed that a change in the sixth decimal place of one of
 the formula's constants went unnoticed: inside Stull's range it moves results by less than
 the tolerance, and outside it nothing independent checked the values.
 
@@ -546,7 +560,7 @@ Decisions: D-010.
 
 (Rows are `flagF` requests. An empty cell states nothing.)
 
-**EV-FL-FIXTURES.** *Flag rows worked out from MCO 6200.1E's boundaries.* derived. Source: HeatCompass/heat-engine-spec at f621520, spec/tier1-foundation/flag-mapping.fixtures.csv.
+**EV-FL-FIXTURES.** *Flag rows worked out from MCO 6200.1E's boundaries.* Evidence of kind `derived`.
 
 The suite checks all 20 rows. The first 8:
 
