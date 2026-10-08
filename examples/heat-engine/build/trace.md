@@ -1,4 +1,4 @@
-# heat-engine 1.1.0-slice: trace
+# heat-engine 1.2.0-slice: trace
 
 | requirement | examples | evidence rows | properties | static | suite cases | decisions | backed by more than the oracle |
 |---|---|---|---|---|---|---|---|
@@ -13,7 +13,7 @@
 | REQ-WB-002 | 2 | 22 | 0 | 0 | 24 | — | yes |
 | REQ-WB-003 | 6 | 0 | 2 | 0 | 8 | D-001 | yes |
 | REQ-WB-004 | 5 | 0 | 0 | 0 | 5 | D-007, D-019 | yes |
-| REQ-WB-005 | 4 | 0 | 1 | 0 | 5 | D-010 | yes |
+| REQ-WB-005 | 6 | 0 | 1 | 0 | 7 | D-010, D-025 | yes |
 | REQ-FL-001 | 7 | 20 | 2 | 0 | 29 | D-010 | yes |
 | REQ-FL-002 | 5 | 0 | 1 | 0 | 6 | D-001 | yes |
 | REQ-FL-003 | 1 | 0 | 0 | 0 | 1 | D-007 | yes |
@@ -39,4 +39,4 @@
 
 Open (never tested): OPEN-IF-001, OPEN-IF-002, OPEN-IF-003, OPEN-IF-005, OPEN-CJ-001, OPEN-WB-001, OPEN-WB-002, OPEN-FL-001
 
-Total suite cases: 204 (63 example, 5 static, 80 evidence, 42 edge, 14 property), plus 3 protocol cases in every run.
+Total suite cases: 206 (65 example, 5 static, 80 evidence, 42 edge, 14 property), plus 3 protocol cases in every run.

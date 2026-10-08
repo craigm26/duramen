@@ -1,7 +1,7 @@
 # heat-engine: specification
 
 - Program: `heat-engine`
-- Document version: 1.1.0-slice
+- Document version: 1.2.0-slice
 - Contract version: `0.2.0`
 - Generated from `heat.duramen` by duramen 0.2.0. Edit the source, not this file.
 
@@ -502,16 +502,19 @@ Decisions: D-007, D-019.
 `wetBulbF` takes `tempF` and `rhPercent`, computes `tempC = ((tempF - 32) * 5) / 9` in
 binary64 (this exact expression), and then MUST behave exactly as `wetBulb` with that
 `tempC` and the same `rhPercent`. The result and the audit are those of `wetBulb`
-(`function` is `"calculateWetBulb"`; `inputs` holds the converted `tempC`). A non-finite
-`tempF` gives a non-finite `tempC` and so `invalid_input:tempC`.
+(`function` is `"calculateWetBulb"`; `inputs` holds the converted `tempC`). The expression
+applies to non-finite values too: NaN gives NaN, Infinity gives Infinity and -Infinity gives
+-Infinity, so the result is `invalid_input:tempC` with that value in `inputs`.
 
-Decisions: D-010.
+Decisions: D-010, D-025.
 
 Examples:
 - `wetBulbF {"tempF": 68, "rhPercent": 50}` ⟶ `audit.result_summary` = `"T=20.0°C RH=50% → Tw=13.70°C"`; `audit.inputs` = `{"rhPercent":50,"tempC":20}`
 - `wetBulbF {"tempF": 100, "rhPercent": 40}` ⟶ `audit.inputs` = `{"rhPercent":40,"tempC":37.77777777777778}`
 - `wetBulbF {"tempF": 98.6, "rhPercent": 50}` ⟶ `audit.inputs` = `{"rhPercent":50,"tempC":37}`
 - `wetBulbF {"tempF": "NaN", "rhPercent": 50}` ⟶ `result` = `null`; `audit.result_summary` = `"invalid_input:tempC"`
+- `wetBulbF {"tempF": "Infinity", "rhPercent": 50}` ⟶ `result` = `null`; `audit.inputs` = `{"rhPercent":50,"tempC":"Infinity"}`
+- `wetBulbF {"tempF": "-Infinity", "rhPercent": 50}` ⟶ `audit.inputs` = `{"rhPercent":50,"tempC":"-Infinity"}`
 
 **PROP-WB-P1.** *wetBulbF is wetBulb on the converted temperature.*
 

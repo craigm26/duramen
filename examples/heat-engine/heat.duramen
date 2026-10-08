@@ -2,7 +2,8 @@
 # request rules they need. Adapted from github.com/craigm26/regen-heat-engine at 4d99222
 # (.regenerate/SPEC.md 1.0.2 and DECISIONS.md; MIT License, Copyright (c) 2026 craigm26).
 # Slice versions: 1.0.2-slice was the duramen 0.1 restatement; 1.1.0-slice adds evidence,
-# properties, result types and static checks (duramen diff: tightening, so a new minor).
+# properties, result types and static checks (duramen diff: tightening, so a new minor);
+# 1.2.0-slice pins infinite tempF in wetBulbF after blind build t07 and duramen agree (D-025).
 # Left out of the slice: work/rest, verdict and the weather cascade. REGEN.json and the budgets
 # are in, as static checks on the implementation folder (section BU).
 # The oracle is that repository's suite oracle, unchanged, behind a small driver. Two evidence
@@ -11,7 +12,7 @@
 
 duramen 0.2
 
-spec heat-engine 1.1.0-slice
+spec heat-engine 1.2.0-slice
   title "Wet-bulb temperature and heat flags, with byte-exact audit records"
   contract 0.2.0
   request {"clock": "2026-05-26T17:00:00.000Z"}
@@ -329,13 +330,14 @@ op wetBulbF
   audit text
 
 req WB-005 "Wet-bulb from °F"
-  decision D-010
+  decision D-010, D-025
   text
     `wetBulbF` takes `tempF` and `rhPercent`, computes `tempC = ((tempF - 32) * 5) / 9` in
     binary64 (this exact expression), and then MUST behave exactly as `wetBulb` with that
     `tempC` and the same `rhPercent`. The result and the audit are those of `wetBulb`
-    (`function` is `"calculateWetBulb"`; `inputs` holds the converted `tempC`). A non-finite
-    `tempF` gives a non-finite `tempC` and so `invalid_input:tempC`.
+    (`function` is `"calculateWetBulb"`; `inputs` holds the converted `tempC`). The expression
+    applies to non-finite values too: NaN gives NaN, Infinity gives Infinity and -Infinity gives
+    -Infinity, so the result is `invalid_input:tempC` with that value in `inputs`.
   example wetBulbF {"tempF": 68, "rhPercent": 50}
     expect audit.result_summary = "T=20.0°C RH=50% → Tw=13.70°C"
     expect audit.inputs = {"tempC": 20, "rhPercent": 50}
@@ -346,6 +348,11 @@ req WB-005 "Wet-bulb from °F"
   example wetBulbF {"tempF": "NaN", "rhPercent": 50}
     expect result = null
     expect audit.result_summary = "invalid_input:tempC"
+  example wetBulbF {"tempF": "Infinity", "rhPercent": 50}
+    expect result = null
+    expect audit.inputs = {"tempC": "Infinity", "rhPercent": 50}
+  example wetBulbF {"tempF": "-Infinity", "rhPercent": 50}
+    expect audit.inputs = {"tempC": "-Infinity", "rhPercent": 50}
 
 evidence WB-FIXTURES "Wet-bulb values from an independent program"
   source HeatCompass/heat-engine-spec at f621520, spec/tier1-foundation/wet-bulb.fixtures.csv, written by its scripts/build-fixtures.py (Python, not this spec's oracle)
@@ -756,3 +763,14 @@ decision D-024 "Error checks are a numbered order"
     order is the numbered Errors list, declared once; `duramen check` rejects a requirement that
     restates it (T005).
   rejected "Keep a table and drop the first clause: still easy to misread."
+
+decision D-025 "Infinite °F converts by the same expression"
+  source blind build t07 (choice C-7) and duramen agree, 2026-10-08
+  text
+    REQ-WB-005 said that "a non-finite tempF gives a non-finite tempC". The t07 builder read
+    that as "always NaN" and wrote `"NaN"` in the audit for an infinite `tempF`, where the exact
+    expression gives an infinity; no case checked it, and `duramen agree` found the difference
+    on 199 of 400 generated `wetBulbF` requests. Decision: the text says that the expression
+    applies to non-finite values too, and two examples pin the infinities. Why: the expression
+    was already the rule; the summary sentence invited the shortcut.
+  rejected "Treat every non-finite tempF as NaN: loses the sign the input had, and contradicts the exact expression."

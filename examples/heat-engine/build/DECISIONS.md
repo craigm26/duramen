@@ -158,3 +158,18 @@ restates it (T005).
 
 Rejected:
 - Keep a table and drop the first clause: still easy to misread.
+
+## D-025: Infinite °F converts by the same expression
+
+- Source: blind build t07 (choice C-7) and duramen agree, 2026-10-08
+- Cited by: REQ-WB-005
+
+REQ-WB-005 said that "a non-finite tempF gives a non-finite tempC". The t07 builder read
+that as "always NaN" and wrote `"NaN"` in the audit for an infinite `tempF`, where the exact
+expression gives an infinity; no case checked it, and `duramen agree` found the difference
+on 199 of 400 generated `wetBulbF` requests. Decision: the text says that the expression
+applies to non-finite values too, and two examples pin the infinities. Why: the expression
+was already the rule; the summary sentence invited the shortcut.
+
+Rejected:
+- Treat every non-finite tempF as NaN: loses the sign the input had, and contradicts the exact expression.
