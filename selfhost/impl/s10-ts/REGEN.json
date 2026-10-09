@@ -1,0 +1,3 @@
+{
+  "driver": "node src/serve.ts"
+}

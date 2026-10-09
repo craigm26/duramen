@@ -5,12 +5,14 @@
 // all file access is here.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, resolve, relative, basename, extname, isAbsolute } from 'node:path';
-import { parse, VERSIONS } from './parse.mjs';
+import { setOwn } from './types.mjs';
+import { parse, putInput, VERSIONS } from './parse.mjs';
 
 export const LIB_DIR = resolve(import.meta.dirname, '..', 'lib');
 
 // Files a record reads (example inputs, evidence data) stay inside the record's folder.
-const inside = (root, p) => { const r = relative(resolve(root), p); return r !== '' && !r.startsWith('..') && !isAbsolute(r); };
+// (A name that starts with two dots, such as `..x`, is a name like any other.)
+const inside = (root, p) => { const r = relative(resolve(root), resolve(p)); return r !== '' && r.split(/[\\/]/)[0] !== '..' && !isAbsolute(r); };
 const SKIP_DIRS = new Set(['node_modules', 'build', '.git', '.regenerate']);
 
 // The .duramen files of a folder, recursively, sorted by relative path (UTF-16 code units).
@@ -108,7 +110,7 @@ function evidenceRows(ev, table, data, diag) {
       const cell = r.cells[c.column];
       if (cell === undefined || cell.trim() === '') continue;
       const { value, raw } = cellValue(cell, c.as);
-      ex.input[c.field] = value;
+      setOwn(ex.input, c.field, value);
       rawFields.push(`${JSON.stringify(c.field)}:${raw}`);
     }
     for (const e of table.expects) {
@@ -166,29 +168,26 @@ export function loadRecord(path, { useLibrary = true } = {}) {
   for (const def of ast.edgedefs) addDef(def, false);
   for (const fam of families.keys()) if (defs.has(fam)) diag('error', defs.get(fam), 'T033', `"${fam}" names both an edge and a family of edges`);
   ast.edgeLib = { defs, families };
-  // Example inputs taken from files (`input <path> from "<file>"`), relative to the file that
-  // names them.
+  // Example inputs taken from files (`input <path> from "<file>"`), and the input lines after the
+  // first of them, applied in order (REQ-SY-011). A file's name is read from the folder of the
+  // file that names it, split at `/`: empty parts and `.` are skipped and `..` goes up a folder.
   for (const r of ast.items.filter((i) => i.type === 'req')) {
-    // a dropped example (its first line was malformed) has its files checked, and nothing more
+    // a dropped example (its first line was malformed) has its lines checked, and nothing more
     for (const ex of [...r.examples, ...(r.dropped ?? []).map((x) => ({ ...x, file: x.file ?? r.file }))]) {
-      for (const f of ex.inputFiles ?? []) {
-        let text;
-        const fp = resolve(dirname(ex.file ?? r.file), f.file);
-        if (!inside(root, fp)) { diag('error', { file: ex.file ?? r.file, line: f.line }, 'P048', `${f.file} is outside the record's folder`); continue; }
-        try { text = readFileSync(fp, 'utf8'); } catch (e) { diag('error', { file: ex.file ?? r.file, line: f.line }, 'P048', `cannot read ${f.file}: ${e.code ?? e.message}`); continue; }
-        if (ex.noInput) { ex.noInput = false; ex.input = {}; }
-        let o = ex.input;
-        let ok = true;
-        for (const key of f.path.slice(0, -1)) {
-          if (o[key] === undefined) o[key] = {};
-          if (o[key] === null || typeof o[key] !== 'object' || Array.isArray(o[key])) { diag('error', { file: ex.file ?? r.file, line: f.line }, 'P049', `input ${f.path.join('.')}: ${key} is not an object`); ok = false; break; }
-          o = o[key];
+      const at = (f) => ({ file: ex.file ?? r.file, line: f.line });
+      for (const f of ex.inputLater ?? []) {
+        let text = f.text;
+        if (f.file !== undefined) {
+          let fp = resolve(dirname(ex.file ?? r.file));
+          for (const part of f.file.split('/')) {
+            if (part === '' || part === '.') continue;
+            fp = part === '..' ? dirname(fp) : join(fp, part);
+          }
+          if (!inside(root, fp)) { diag('error', at(f), 'P048', `${f.file} is outside the record's folder`); continue; }
+          try { text = readFileSync(fp, 'utf8'); } catch (e) { diag('error', at(f), 'P048', `cannot read ${f.file}: ${e.code ?? e.message}`); continue; }
         }
-        if (!ok) continue;
-        o[f.path[f.path.length - 1]] = text;
-        ex.raw = JSON.stringify(ex.input);
-        (ex.inputBlocks ??= []).push(f.path);
-        (ex.inputFrom ??= {})[JSON.stringify(f.path)] = f.file;
+        const key = putInput(ex, f.path, text, f.file);
+        if (key !== null) diag('error', at(f), 'P049', `input ${f.path.join('.')}: ${key} is not an object`);
       }
     }
   }

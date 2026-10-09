@@ -25,8 +25,12 @@ const USAGE = `usage:
   duramen agree  <record> --impl <dir> [--impl <dir> ...] [--oracle] [--samples <n>] [--seed <n>] [--json]
   duramen diff   <old record> <new record> [--no-oracle] [--json]
   duramen regen  <record> --lang ts|py [--model sonnet] [--runs <dir>] [--sandbox-root <dir>] [--leak-terms <file.json>]
-                [--prompt <file>] [--run-id <id>] [--max-minutes <n>] [--json]
+                [--prompt <file>] [--run-id <id>] [--max-minutes <n>] [--max-turns <n>] [--json]
+                [--agent <base URL> --model <name> [--agent-key-env VAR] [--agent-text-tools]]
+                  (--agent: build with an OpenAI-compatible endpoint instead of Claude Code)
   duramen serve  (duramen as a driver: check and cases requests on standard input)
+  duramen mcp    (duramen as an MCP server: check, brief, cases, run, diff and explain tools)
+  duramen hook   (a Claude Code PostToolUse hook: checks a .duramen file's record after an edit)
   duramen --version
 
 A record is a .duramen file or a folder of them.`;
@@ -55,7 +59,7 @@ const OPTIONS = {
   mutate: { file: 'value', limit: 'value', jobs: 'value', timeout: 'value', json: 'flag' },
   agree: { impl: 'list', oracle: 'flag', samples: 'value', seed: 'value', timeout: 'value', json: 'flag' },
   diff: { json: 'flag', 'no-oracle': 'flag' },
-  regen: { lang: 'value', model: 'value', runs: 'value', 'sandbox-root': 'value', 'leak-terms': 'value', prompt: 'value', 'run-id': 'value', 'max-minutes': 'value', builder: 'value', json: 'flag' },
+  regen: { lang: 'value', model: 'value', runs: 'value', 'sandbox-root': 'value', 'leak-terms': 'value', prompt: 'value', 'run-id': 'value', 'max-minutes': 'value', 'max-turns': 'value', builder: 'value', agent: 'value', 'agent-key-env': 'value', 'agent-text-tools': 'flag', 'agent-context-chars': 'value', 'agent-max-tokens': 'value', json: 'flag' },
 };
 
 const shown = (f) => { if (!f) return f; const r = relative(process.cwd(), f); return r && !r.startsWith('..') && !isAbsolute(r) ? r : f; };
@@ -64,6 +68,21 @@ const sortDs = (ds) => [...ds].sort((a, b) => (a.file === b.file ? a.line - b.li
 export async function main(argv, io = { out: (s) => process.stdout.write(s + '\n'), err: (s) => process.stderr.write(s + '\n') }) {
   const [cmd, ...rest] = argv;
   if (cmd === '--version' || cmd === 'version') { io.out(`duramen ${VERSION}`); return 0; }
+  if (cmd === 'hook') {
+    if (argv.length > 1) { io.err('duramen hook takes no arguments: it reads a Claude Code hook event on standard input'); return 2; }
+    let input = '';
+    for await (const c of process.stdin) input += c;
+    const { hook } = await import('./hook.mjs');
+    const r = await hook(input, { run: (a, quietIo) => main(a, quietIo) });
+    if (r.out) io.out(r.out);
+    return r.code;
+  }
+  if (cmd === 'mcp') {
+    if (argv.length > 1) { io.err('duramen mcp takes no arguments: it speaks MCP on standard input and output'); return 2; }
+    const { mcpServe } = await import('./mcp.mjs');
+    await mcpServe(process.stdin, (s) => process.stdout.write(s), VERSION);
+    return 0;
+  }
   if (cmd === 'serve') {
     if (argv.length > 1) { io.err('duramen serve takes no arguments: it reads requests on standard input'); return 2; }
     await serve();
@@ -203,10 +222,20 @@ async function regenCommand(args, io) {
   if (!(maxMinutes > 0)) { io.err('duramen regen: --max-minutes needs a positive number'); return 2; }
   let builder;
   if (args.builder) { const p = parseCommand(args.builder); if (p.error) { io.err(`duramen regen: --builder: ${p.error}`); return 2; } builder = p.words; }
+  // --agent <base URL>: build with any OpenAI-compatible endpoint (llama.cpp, Ollama, LM Studio,
+  // vLLM, a vendor's API) through lib/regen/agent.mjs instead of Claude Code.
+  let agent = null;
+  if (args.agent) {
+    if (!/^https?:\/\//.test(args.agent)) { io.err('duramen regen: --agent needs an http(s) base URL, such as http://127.0.0.1:8080/v1'); return 2; }
+    if (!args.model) { io.err('duramen regen: --agent needs --model, the name the endpoint serves'); return 2; }
+    agent = { baseUrl: args.agent, apiKeyEnv: args['agent-key-env'], textTools: !!args['agent-text-tools'], contextChars: args['agent-context-chars'] ? Number(args['agent-context-chars']) : undefined, maxTokens: args['agent-max-tokens'] ? Number(args['agent-max-tokens']) : undefined };
+  }
+  const maxTurns = args['max-turns'] !== undefined ? Number(args['max-turns']) : (agent ? 200 : 400);
+  if (!(Number.isInteger(maxTurns) && maxTurns > 0)) { io.err('duramen regen: --max-turns needs a whole number'); return 2; }
   const r = await regen(ast, {
     lang: args.lang, model: args.model ?? 'sonnet', runsDir: resolve(args.runs ?? join(dirname(path), 'regen')),
     sandboxRoot: resolve(args['sandbox-root'] ?? join(tmpdir(), 'duramen-regen')), leakTerms, promptFile: args.prompt ? resolve(args.prompt) : undefined,
-    runId: args['run-id'], maxMinutes, version: VERSION, builder, log: args.json ? () => {} : (m) => io.err(`  ${m}`),
+    runId: args['run-id'], maxMinutes, maxTurns, version: VERSION, builder, agent, log: args.json ? () => {} : (m) => io.err(`  ${m}`),
   });
   if (r.error) { io.err(`duramen regen: ${r.error}`); return 1; }
   if (args.json) io.out(JSON.stringify(r.entry));

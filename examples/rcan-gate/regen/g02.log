@@ -1,0 +1,6 @@
+  sandbox biylev: brief written, leak check ok; launching sonnet (py)
+  builder exited with 0 after 2.3 min
+run g02: claude-sonnet-5-5 (py), 18 turns, 2.3 min, $0.57
+  audit: 1 violations, init ok, 1 denied calls
+  suite: passed 209/209
+  build copied to examples/rcan-gate/regen/impl/g02-py; 10 choices to triage in examples/rcan-gate/regen/g02-py.md

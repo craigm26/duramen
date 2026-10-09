@@ -1,0 +1,14 @@
+{
+  "name": "duramen-core",
+  "version": "0.7.0",
+  "private": true,
+  "type": "module",
+  "description": "The duramen checker for the core of the language, rebuilt from SPEC.md",
+  "scripts": {
+    "test": "node --test src/*.test.ts",
+    "serve": "node src/serve.ts"
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}

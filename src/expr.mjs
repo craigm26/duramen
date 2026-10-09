@@ -233,7 +233,7 @@ export function evaluate(ast, env) {
     case 'arr': { const xs = ast.items.map((x) => evaluate(x, env)); return xs.find(isU) ?? xs; }
     case 'obj': {
       const o = {};
-      for (const [k, x] of ast.members) { const v = evaluate(x, env); if (isU(v)) return v; o[k] = v; }
+      for (const [k, x] of ast.members) { const v = evaluate(x, env); if (isU(v)) return v; Object.defineProperty(o, k, { value: v, enumerable: true, writable: true, configurable: true }); }
       return o;
     }
     case 'get': {

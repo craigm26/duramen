@@ -5,7 +5,10 @@
 // the specification, the specification is silent (an OPEN item, or a gap to pin), or duramen
 // itself is wrong.
 //
-//   node selfhost/agree.mjs <implementation folder> [--mutants 600] [--seed 1] [--json]
+//   node selfhost/agree.mjs <implementation folder> [--mutants 600] [--seed 1] [--against <folder>] [--json]
+//
+// --against compares with another implementation instead of duramen (it then stands where D0
+// does in the report), so that two rebuilt checkers can be compared with duramen out of the loop.
 import { loadRecord } from '../src/record.mjs';
 import { runDriver } from '../src/driver.mjs';
 import { makeRng } from '../src/types.mjs';
@@ -90,9 +93,11 @@ function signature(a, b, op) {
 async function main(argv) {
   const json = argv.includes('--json');
   const get = (f, d) => { const i = argv.indexOf(f); return i >= 0 ? argv[i + 1] : d; };
-  const dir = argv.find((a, i) => !a.startsWith('--') && !['--mutants', '--seed'].includes(argv[i - 1]));
-  if (!dir) { console.error('usage: node selfhost/agree.mjs <implementation folder> [--mutants 600] [--seed 1] [--json]'); return 2; }
+  const dir = argv.find((a, i) => !a.startsWith('--') && !['--mutants', '--seed', '--against'].includes(argv[i - 1]));
+  if (!dir) { console.error('usage: node selfhost/agree.mjs <implementation folder> [--mutants 600] [--seed 1] [--against <folder>] [--json]'); return 2; }
   const d1 = implementation(dir);
+  const against = get('--against', null);
+  const d0 = against ? { ...implementation(against), name: 'D0' } : D0;
   const all = seeds();
   const rng = makeRng(Number(get("--seed", "1"))).next;
   const count = Number(get('--mutants', '600'));
@@ -102,7 +107,7 @@ async function main(argv) {
   // the unmutated seeds too: the suite's own records
   all.forEach((s, k) => { for (const op of ['check', 'cases']) requests.push({ id: `seed${k}:${op}`, op, input: { files: s.files, entry: s.entry } }); });
   const t0 = Date.now();
-  const [a, b] = [await answers(D0, requests), await answers(d1, requests)];
+  const [a, b] = [await answers(d0, requests), await answers(d1, requests)];
   const groups = new Map();
   let same = 0;
   for (const q of requests) {
@@ -117,7 +122,7 @@ async function main(argv) {
     groups.set(sig, g);
   }
   const sorted = [...groups].sort((x, y) => y[1].count - x[1].count);
-  const report = { implementation: dir, seeds: all.length, mutants: count, requests: requests.length, same, differ: requests.length - same, seconds: Math.round((Date.now() - t0) / 1000), groups: sorted.map(([sig, g]) => ({ signature: sig, count: g.count, examples: g.examples })) };
+  const report = { implementation: dir, against: against ?? 'duramen', seeds: all.length, mutants: count, requests: requests.length, same, differ: requests.length - same, seconds: Math.round((Date.now() - t0) / 1000), groups: sorted.map(([sig, g]) => ({ signature: sig, count: g.count, examples: g.examples })) };
   if (json) { console.log(JSON.stringify(report, null, 1)); return 0; }
   console.log(`${report.requests} requests (${count} mutants and ${all.length} seeds, check and cases each): ${same} answered the same, ${report.differ} differently (${report.seconds} s)`);
   for (const [sig, g] of sorted) {

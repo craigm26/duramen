@@ -11,7 +11,7 @@
 //   static    one per static check on the implementation folder
 // and in every run three protocol cases on the stream itself: exit status, bytes, and one
 // response per request in order (a fourth, determinism, when the run is repeated).
-import { exampleId, edgeCaseId, evidenceCaseId, requestFor, edgeRequest, requestMembers, holds, pick, expectsError, isRaw, isSolo, typeEnv } from './check.mjs';
+import { exampleId, edgeCaseId, evidenceCaseId, requestFor, edgeRequest, requestMembers, holds, pick, deepEqual, expectsError, isRaw, isSolo, typeEnv } from './check.mjs';
 import { runDriver } from './driver.mjs';
 import { runPropertyCases, showBindings } from './property.mjs';
 import { evaluateStatic } from './static.mjs';
@@ -116,31 +116,59 @@ function protocolCases(run, ids) {
   return out;
 }
 
-// How a response differs from an expected whole answer (members, error, result within the op's
-// tolerances, audit byte for byte); [] when it does not.
-export function answerDiffers(f, resp) {
-  const why = [];
-  if (!f) return why;
-  if (!resp) return ['no response'];
-  const got = members(resp);
-  if (got.join() !== f.members.join()) why.push(`members: expected ${f.members.join(', ')}; got ${got.join(', ')}`);
-  if (f.error !== undefined) { if (resp.error !== f.error) why.push(`error: expected ${JSON.stringify(f.error)}, got ${JSON.stringify(resp.error)}`); }
-  else if (f.result !== undefined || f.audit !== undefined) {
-    if (!sameResult(resp.result, f.result, f.tolerances ?? {})) why.push(`result: expected ${JSON.stringify(f.result)}, got ${JSON.stringify(resp.result)}`);
-    if (f.audit !== undefined && resp.audit !== f.audit) why.push(`audit: expected ${f.audit}\n        got      ${resp.audit}`);
+// The parts of a case that an answer does not meet (duramen-core's `judge`, REQ-JU-001): `answer`
+// alone when there is none; else `checks.<n>` for each check it does not hold, counting from 0,
+// then `members`, `error`, `result` and `audit` for each part of the whole answer it does not
+// match (members sorted; the error as a JSON value; the result as a JSON value, a number within
+// the tolerance its path has; the audit byte for byte). [] when it meets them all. This is the
+// one comparison `duramen run`, `duramen agree` and `judge` share.
+export function judgeAnswer(c, answer) {
+  if (answer === null || answer === undefined) return ['answer'];
+  const failed = [];
+  (c.checks ?? []).forEach((ch, k) => {
+    const ok = ch.kind === 'present' ? Object.hasOwn(answer, ch.path) : holds(answer, ch).ok;
+    if (!ok) failed.push(`checks.${k}`);
+  });
+  const f = c.full;
+  if (f) {
+    const got = members(answer);
+    if (got.length !== f.members.length || got.some((m, i) => m !== f.members[i])) failed.push('members');
+    // (an expected answer built in this program may hold a member whose value is undefined: none)
+    if (f.error !== undefined) { if (!deepEqual(answer.error, f.error)) failed.push('error'); }
+    else {
+      if (f.result !== undefined && !sameResult(answer.result, f.result, f.tolerances ?? {})) failed.push('result');
+      if (f.audit !== undefined && answer.audit !== f.audit) failed.push('audit');
+    }
   }
-  return why;
+  return failed;
+}
+
+// What each failed part means, for people.
+function describe(part, c, resp) {
+  if (part === 'answer') return 'no response';
+  const k = part.startsWith('checks.') ? Number(part.slice(7)) : -1;
+  if (k >= 0) {
+    const ch = c.checks[k];
+    if (ch.kind === 'present') return `expected ${ch.path}`;
+    const h = holds(resp, ch);
+    return `${ch.path}: expected ${ch.kind === 'approx' ? `${ch.value} ± ${ch.tol}` : JSON.stringify(ch.value)}, got ${h.got === undefined ? '(nothing)' : JSON.stringify(h.got)}`;
+  }
+  const f = c.full;
+  if (part === 'members') return `members: expected ${f.members.join(', ')}; got ${members(resp).join(', ')}`;
+  if (part === 'error') return `error: expected ${JSON.stringify(f.error)}, got ${JSON.stringify(resp.error)}`;
+  if (part === 'result') return `result: expected ${JSON.stringify(f.result)}, got ${JSON.stringify(resp.result)}`;
+  return `audit: expected ${f.audit}\n        got      ${resp.audit}`;
+}
+
+// How a response differs from an expected whole answer; [] when it does not.
+export function answerDiffers(f, resp) {
+  if (!f) return [];
+  const c = { checks: [], full: f };
+  return judgeAnswer(c, resp ?? null).map((part) => describe(part, c, resp));
 }
 
 function compareDriverCase(c, resp) {
-  const why = [];
-  for (const ch of c.checks) {
-    if (ch.kind === 'present') { if (!(ch.path in resp)) why.push(`expected ${ch.path}`); continue; }
-    const h = holds(resp, ch);
-    if (!h.ok) why.push(`${ch.path}: expected ${ch.kind === 'approx' ? `${ch.value} ± ${ch.tol}` : JSON.stringify(ch.value)}, got ${h.got === undefined ? '(nothing)' : JSON.stringify(h.got)}`);
-  }
-  why.push(...answerDiffers(c.full, resp));
-  return why;
+  return judgeAnswer(c, resp).map((part) => describe(part, c, resp));
 }
 
 // Run the suite. `command` and `cwd` start the implementation's driver; `implDir` is the folder

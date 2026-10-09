@@ -1,0 +1,7 @@
+{
+  "_comment": "Leak check and audit terms for blind builds of rcan-gate. Identifiers fail case-insensitively; symbols (names from the oracle's source) fail case-sensitively. RCAN, rcan.dev and rcan-ts are public sources the decisions cite, not leaks.",
+  "identifiers": ["craigm26", "craigmerry", "github.com/craigm26", "PlatAtlas", "regen-sandbox"],
+  "symbols": ["stateProblem", "commandProblem", "asciiLower", "SAFETY_WINDOW_CAP", "FUTURE_DRIFT"],
+  "allow": [],
+  "allowedDomains": []
+}

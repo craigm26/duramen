@@ -44,6 +44,24 @@ test('serve: one response per non-blank line, in order', async () => {
   ]);
 });
 
+test('serve: standard input is decoded once, so a character split across chunks arrives whole', async () => {
+  const bytes = Buffer.from(JSON.stringify({ id: 'é😀', op: 'lint' }) + '\n');
+  const at = bytes.indexOf(Buffer.from('😀')) + 2; // inside the four bytes of 😀
+  let out = '';
+  await serve(Readable.from([bytes.subarray(0, at), bytes.subarray(at)]), (s) => { out += s; });
+  assert.deepEqual(JSON.parse(out), { id: 'é😀', error: 'unknown_op' });
+});
+
+test('the echo fixture of spec/ keeps U+2028 and U+2029 inside a request line', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const line = JSON.stringify({ id: 'a', op: 'f', input: { x: 'p\u2028q\u2029r' } });
+  const r = spawnSync(process.execPath, [join(ROOT, 'spec', 'fixtures', 'echo.mjs')], { input: `${line}\r\n${line.replace('"a"', '"b"')}`, encoding: 'utf8' });
+  assert.deepEqual(r.stdout.trimEnd().split('\n').map((l) => JSON.parse(l)), [
+    { id: 'a', result: { x: 'p\u2028q\u2029r' } },
+    { id: 'b', result: { x: 'p\u2028q\u2029r' } },
+  ]);
+});
+
 test('self-hosting: duramen agrees with every example in its own specification', async () => {
   const { ds, ast } = await checkPath(join(ROOT, 'spec'));
   assert.deepEqual(ds.filter((d) => d.level !== 'info').map((d) => `${d.file}:${d.line} ${d.code} ${d.message}`), []);

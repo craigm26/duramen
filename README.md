@@ -14,8 +14,13 @@ implementation's driver, and `duramen regen` runs one blind build from the brief
 
 duramen is specified in duramen: [`spec/`](spec/) is a record of the core language whose oracle
 is duramen itself, and a checker rebuilt blind from its brief is judged by its suite (below).
+[`CONFIDENCE.md`](CONFIDENCE.md) states six claims about regenerative software with duramen,
+with pass criteria written before the runs, and what the runs showed: four pass and two fail.
+An agent that had not seen the work checked the results against this repository; its
+corrections are listed there.
 
-Status: prototype, version 0.2.0. Node.js 22.18 or later, no dependencies.
+Status: prototype, version 0.2.0. Node.js 22.18 or later (Node.js 24 and later have a JSON.parse
+bug that duramen warns of: [DESIGN.md](DESIGN.md#nodejs-versions)), no dependencies.
 
 ```
 node bin/duramen.mjs check examples/heat-engine
@@ -86,13 +91,14 @@ The full list of checks, the syntax and the limits are in [DESIGN.md](DESIGN.md)
 
 ## duramen specified in duramen
 
-[`spec/`](spec/) is duramen-core 0.7.0: the core of the language (the statements of 0.1 other
-than `edge`) and two operations of the checker, `check` (a record's diagnostics) and `cases`
-(the suite generated from it), in 43 requirements and 168 examples. It is written in the core
+[`spec/`](spec/) is duramen-core 0.8.0: the core of the language (the statements of 0.1 other
+than `edge`) and three operations of the checker, `check` (a record's diagnostics), `cases`
+(the suite generated from it) and `judge` (whether an implementation's answer passes a case),
+in 47 requirements and 232 examples. It is written in the core
 language it specifies, so that a checker built from it can read it, and its oracle is duramen
 itself, through `duramen serve`, which takes a record as a map of file names to texts. Every
-expected value in it was typed by hand, and `duramen check spec/` runs all 168 through duramen
-in about three seconds.
+expected value in it was typed by hand, and `duramen check spec/` runs all 232 through duramen
+in a few seconds.
 
 Writing it found behavior nobody had decided. Before it was written, duramen dropped some
 lines without a word (a second line under a `title`, a line under a table that is not a row, an example line
@@ -145,9 +151,45 @@ Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
    read three ways. On the numbers no checker was right: for an expectation of `1e999`,
    duramen and s06 wrote `null` into the suite and s07 could not answer. 0.7.0 refuses such
    numbers wherever a record holds JSON ([s06](selfhost/s06-ts.md), [s07](selfhost/s07-py.md)).
+9. **Three models.** Four builds of 0.7.0: s08 (TypeScript) and s09 (Python) by
+   `claude-sonnet-5-5`, s10 by `claude-haiku-5-5` and s11 by `claude-opus-5-5`. All four
+   passed all 171 cases and were fixed points. On 4,500 mutated records each, they differed
+   from duramen on 1 to 3 requests, always about the same three records. 175 records written
+   for their 130 recorded choices found 44 more differences, and this time duramen was wrong as
+   often as the builds: in JavaScript `.` matches no U+2028, and its patterns used it. One
+   build, s08, then stood in for duramen as the oracle of `spec/`: every example agreed with it,
+   and its suite judged eleven builds exactly as duramen's does. `claude-haiku-4-5` did not
+   produce a build that starts (s10b). 0.8.0 pins what the four found ([D-018](spec/90-decisions.duramen),
+   [s08](selfhost/s08-ts.md) to [s11](selfhost/s11-ts.md)).
+10. **The judge, regenerated.** 0.8.0 specifies `judge`, how `duramen run` compares an answer
+    with a case, which until then lived only in duramen's code. s12 (TypeScript) and s13
+    (Python), built from it, passed all 235 cases and are fixed points. Given every answer that
+    twelve earlier builds wrote to the 0.7.0 suite, 2,016 in all, each gave the verdict duramen
+    gives, and named the same failed parts, every time. Their recorded choices led to records on
+    which, this time, duramen was the one most often out of step: it decoded standard input one
+    64 KiB read at a time, kept members in objects that inherit `__proto__`, and applied `from`
+    lines out of order. It was fixed after the round, in 55ae953 ([s12](selfhost/s12-ts.md),
+    [s13](selfhost/s13-py.md)). 0.9.0 changes only the fixture that the examples' records use as
+    their oracle, which Node.js 24 broke ([D-020](spec/90-decisions.duramen)); s12 and s13 pass
+    it.
 
 Blind means the builders were not shown duramen's source; the spec they read describes duramen
-in detail, and seven builds with one model are a small sample.
+in detail, and these builds by three models of one family are a small sample. Their tools
+could have read it (`node` and `python` read any file the user can); their transcripts show
+that none did ([`selfhost/transcripts.mjs`](selfhost/transcripts.mjs), CONFIDENCE.md).
+
+## A second domain: a robot command gate
+
+[`examples/rcan-gate/`](examples/rcan-gate/) specifies whether a robot that speaks RCAN may
+carry out a command: emergency stops that are never blocked, freshness and replay, roles and
+scopes, level of assurance, the stop latches, joint and speed limits, and confidence gates that
+block a command or hold it for a person. Its decisions cite the RCAN documents and SDK each
+rule comes from. Two blind builds, TypeScript and Python, each written in 2.3 minutes from
+version 1.0.0 (20 requirements, 197 examples), passed all 209 cases and answered 6,000
+generated requests as the oracle did; every mutant of `duramen mutate` that no check catches
+is shown to change nothing. A second sweep of mutants found six scopes whose lowest role no
+example reached; 1.1.0 pins them in 16 examples, and both builds pass it. Writing the record
+found disagreements in RCAN's own sources, listed in its [README](examples/rcan-gate/README.md).
 
 ## The heat-engine slice
 
@@ -275,14 +317,17 @@ src/render.mjs               SPEC.md, DECISIONS.md, trace.md
 src/suite.mjs                the generated suite, and the runner
 src/driver.mjs               the line protocol shared by oracles and implementations
 src/mutate.mjs, agree.mjs, diff.mjs, regen.mjs, serve.mjs   the other commands
+src/mcp.mjs, hook.mjs        duramen as an MCP server, and as a Claude Code hook
 lib/edges/                   the edge library, as edgedef records
-lib/regen/                   the generic builder prompts for duramen regen
+lib/regen/                   the generic builder prompts for duramen regen, and agent.mjs, a builder for any OpenAI-compatible endpoint
+integrations/                Claude Code (settings, skill, end-to-end transcripts), Claude desktop and CI
 spec/                        duramen-core, specified in duramen
-selfhost/                    blind builds of duramen-core, the fixed-point and agreement tests, and the probes
+selfhost/                    blind builds of duramen-core, the fixed-point, agreement, reference and judge tests, and the probes
 examples/heat-engine/        the slice, its oracle and evidence, the generated build, mutants.mjs
 examples/heat-engine/blind/  blind builds t01 to t05: prompts, the kit's tools, records, output
 examples/heat-engine/regen/  blind builds t06 and t07 with duramen regen
 examples/rcan/               the edge binding run against the RCAN SDKs
+examples/rcan-gate/          a robot command gate: the record, its oracle, two blind builds, a sweep of mutants
 examples/history/            the incidents, one file each
 test/                        node --test
 ```

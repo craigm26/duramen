@@ -1,0 +1,6 @@
+  sandbox rcqijr: brief written, leak check ok; launching sonnet (ts)
+  builder exited with 0 after 13.4 min
+run s12: claude-sonnet-5-5 (ts), 36 turns, 13.4 min, $2.50
+  audit: 2 violations, init ok, 1 denied calls
+  suite: passed 235/235
+  build copied to selfhost/impl/s12-ts; 27 choices to triage in selfhost/s12-ts.md

@@ -1,0 +1,6 @@
+  sandbox isiiyi: brief written, leak check ok; launching sonnet (ts)
+  builder exited with 0 after 11.5 min
+run s08: claude-sonnet-5-5 (ts), 38 turns, 11.5 min, $2.24
+  audit: 0 violations, init ok, 2 denied calls
+  suite: passed 171/171
+  build copied to selfhost/impl/s08-ts; 20 choices to triage in selfhost/s08-ts.md

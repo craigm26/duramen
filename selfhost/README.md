@@ -1,8 +1,8 @@
 # duramen, rebuilt from its own specification
 
-[`spec/`](../spec/) is duramen-core: the core of the duramen language and two operations of the
-checker, `check` (a record's diagnostics) and `cases` (the suite generated from it), written in
-that core language. Its oracle is duramen itself, through `duramen serve`. This folder holds
+[`spec/`](../spec/) is duramen-core: the core of the duramen language and three operations of
+the checker, `check` (a record's diagnostics), `cases` (the suite generated from it) and, from
+0.8.0, `judge` (whether an answer passes a case), written in that core language. Its oracle is duramen itself, through `duramen serve`. This folder holds
 blind builds of duramen-core from the brief `duramen build spec/` writes, and two tests that go
 beyond the suite.
 
@@ -13,6 +13,9 @@ node bin/duramen.mjs run spec/ --impl selfhost/impl/s01-ts
 node selfhost/fixedpoint.mjs selfhost/impl/s01-ts
 node selfhost/agree.mjs selfhost/impl/s01-ts --mutants 600 --seed 1
 node selfhost/probe.mjs selfhost/probes/s06-s07.txt selfhost/impl/s06-ts selfhost/impl/s07-py --diff
+node selfhost/agree.mjs selfhost/impl/s09-py --against selfhost/impl/s08-ts --mutants 1500 --seed 1
+node selfhost/reference.mjs selfhost/impl/s08-ts selfhost/impl/s09-py selfhost/impl/s10-ts
+node selfhost/judges.mjs <0.7.0 spec folder> --answers selfhost/impl/s01-ts ... --judge selfhost/impl/s12-ts
 ```
 
 - **The suite** (`duramen run`): one case per example of `spec/`, and the three protocol cases.
@@ -31,6 +34,14 @@ node selfhost/probe.mjs selfhost/probes/s06-s07.txt selfhost/impl/s06-ts selfhos
   duramen and to the builds of the round. The mutants explore near the suite's records; the
   choices point at the corners the brief left open. (The counts in the table are against the
   duramen of the build's round; the same records at a later version give later counts.)
+- **The reference** ([`reference.mjs`](reference.mjs)): a build in duramen's place. `spec/` is
+  checked with its oracle pointed at the build, and the suite the build writes judges other
+  builds, case by case, beside duramen's own suite. `agree.mjs --against` compares two builds
+  on mutated records with duramen out of the loop.
+- **The judges** ([`judges.mjs`](judges.mjs)): every earlier build's answers to a suite,
+  collected once, judged by duramen and by a build's `judge` operation (0.8.0), verdict by
+  verdict. s12 and s13 each gave all 2,016 answers of twelve builds to the 0.7.0 suite the
+  verdict duramen gives, and named the same failed parts.
 
 | run | brief | suite | rescored | fixed point | mutants answered alike | choices | already pinned | clarify | clean |
 |---|---|---|---|---|---|---|---|---|---|
@@ -41,10 +52,23 @@ node selfhost/probe.mjs selfhost/probes/s06-s07.txt selfhost/impl/s06-ts selfhos
 | [s05](s05-py.md) (py) | 0.5.0 | 159/159 | 160/161 at 0.6.0 | yes, as JSON values | 1,492 of 1,492; on 4,500 more, the same 9 records, with s04's answers | 29 | 21 | 0 | yes |
 | [s06](s06-ts.md) (ts) | 0.6.0 | 161/161 | 167/171 at 0.7.0 | yes, as JSON values | 9,888 of 9,888 (three seeds of 1,500); 49 probes, 8 differ | 23 | 12 | 0 | yes |
 | [s07](s07-py.md) (py) | 0.6.0 | 161/161 | 166/171 at 0.7.0 | yes, as JSON values | 9,888 of 9,888 (three seeds of 1,500); the same probes | 28 | 18 | 0 | yes |
+| [s08](s08-ts.md) (ts) | 0.7.0 | 171/171 | 186/235 at 0.8.0 | yes, as JSON values | 9,945 of 9,948 (2 records differ); 72 probes, 18 differ | 20 | 6 | 3 | no |
+| [s09](s09-py.md) (py) | 0.7.0 | 171/171 | 187/235 at 0.8.0 | yes, as JSON values | 9,947 of 9,948 (1 record differs); the same probes | 35 | 19 | 3 | no |
+| [s10](s10-ts.md) (ts, haiku) | 0.7.0 | 171/171 | 186/235 at 0.8.0 | yes, as text too | 9,945 of 9,948 (2 records differ); 103 probes, 26 differ | 32 | 16 | 2 | no |
+| [s11](s11-ts.md) (ts, opus) | 0.7.0 | 171/171 | 183/235 at 0.8.0 | yes, as text too | 9,945 of 9,948 (2 records differ); the same probes | 43 | 10 | 11 | no |
+| [s10b](s10b-ts.md) (ts, haiku 4.5) | 0.7.0 | 1/171 | | (does not start) | | 13 | | | no |
+| [s12](s12-ts.md) (ts) | 0.8.0 | 235/235 | 235/235 at 0.9.0 | yes, as text too | 10,066 of 10,068 (1 record differs); 37 probes, 17 differ (7 after 55ae953) | 27 | 16 | 4 | no |
+| [s13](s13-py.md) (py) | 0.8.0 | 235/235 | 235/235 at 0.9.0 | yes, as JSON values | 10,067 of 10,068 (1 record differs); 46 probes, 14 differ (9 after 55ae953) | 34 | 18 | 4 | no |
 
+A probe differs when its checkers do not all answer it alike: duramen and every build of the
+round (five checkers in round six, three in rounds five and seven), with duramen as the round
+found it.
 Each build is compared with the duramen of its own round: the fixed point and the agreement are
 measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a, 0.3.0 at
-66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0, 0.6.0 at 78ecd48). From s03 on, suites and answers
+66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0, 0.6.0 at 78ecd48, 0.7.0 at e39579d). s01 to s09
+were built by `claude-sonnet-5-5`; s10, s10b and s11 by the models named, for
+[CONFIDENCE.md](../CONFIDENCE.md)'s claim 2. From s08 on, the rescored column counts the 44
+cases of `judge`, an operation the earlier versions did not have. From s03 on, suites and answers
 are compared as JSON values, member order ignored, as the specification compares results; s01's
 and s02's were identical as text too.
 

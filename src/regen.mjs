@@ -9,6 +9,10 @@
 // of the caller's session or credentials), only file and shell tools, shell commands limited to
 // the language's toolchain, no web or MCP tools. Blind means the builder was not shown the
 // reference or earlier builds; it does not mean the model never saw similar code in training.
+// The rules limit which commands run, not what they read: `node` and `python` can read any file
+// the user can, so the work folder is not a sandbox. The audit reports the paths a builder named
+// in its tool calls and commands, not those inside an inline script or a file it ran; what the
+// builder was shown rests on its transcript.
 //
 // The audit and the leak check are adapted from the regen kit's audit-transcript.mjs and
 // leak-check.mjs (MIT, Copyright (c) 2026 craigm26).
@@ -64,7 +68,11 @@ export function auditTranscript(text, workDir, { identifiers = [], allowedDomain
   if (tools !== 'Bash,Edit,Glob,Grep,Read,Write') initProblems.push(`tools ${tools}`);
   if ((init.mcp_servers ?? []).length) initProblems.push(`mcp_servers ${JSON.stringify(init.mcp_servers)}`);
   if (init.permissionMode !== 'dontAsk') initProblems.push(`permissionMode ${init.permissionMode}`);
-  if (!new RegExp(`^claude-${family}-`).test(init.model ?? '')) initProblems.push(`model ${init.model} is not a ${family} model`);
+  // `family` is a family (`sonnet`, which the CLI resolves to a dated model) or a full model ID.
+  const asked = String(family);
+  const served = init.model ?? '';
+  const fits = asked.startsWith('claude-') ? served === asked || served.startsWith(`${asked}-`) : served.startsWith(`claude-${asked}-`);
+  if (!fits) initProblems.push(`model ${init.model} is not ${asked.startsWith('claude-') ? asked : `a ${asked} model`}`);
   if (lines.filter((l) => l.type === 'system' && l.subtype === 'init').length !== 1) initProblems.push('not exactly one init line');
   const outside = (p) => {
     if (p === undefined || p === null || p === '') return null;
@@ -118,20 +126,77 @@ export function auditTranscript(text, workDir, { identifiers = [], allowedDomain
   };
 }
 
+// The audit of an agent builder's transcript (lib/regen/agent.mjs). The agent enforces its own
+// confinement; the audit checks it from the record: one init line naming the work folder and
+// the six tools, no tool call that reached outside the folder or ran a command off the
+// toolchain, and refusals counted as denied calls.
+export function auditAgentTranscript(text, workDir, { identifiers = [], lang = 'ts' } = {}) {
+  const WORK = normalize(resolve(workDir));
+  const lines = text.split('\n').filter((l) => l.trim()).map((l, i) => { try { return JSON.parse(l); } catch { return { type: 'unparseable', line: i + 1 }; } });
+  const inits = lines.filter((l) => l.type === 'init');
+  const init = inits[0] ?? {};
+  const initProblems = [];
+  if (inits.length !== 1) initProblems.push('not exactly one init line');
+  if (init.builder !== 'duramen-agent') initProblems.push(`builder ${init.builder}`);
+  if (normalize(resolve(init.cwd ?? '')).toLowerCase() !== WORK.toLowerCase()) initProblems.push(`cwd ${init.cwd} is not the work folder`);
+  if ([...(init.tools ?? [])].sort().join(',') !== 'edit_file,finish,list_files,read_file,run,write_file') initProblems.push(`tools ${(init.tools ?? []).join(',')}`);
+  const pathViolations = [], netViolations = [], recognition = [];
+  let readSpec = false, denied = 0;
+  for (const l of lines) {
+    if (l.type === 'assistant' && typeof l.content === 'string' && !readSpec) for (const id of identifiers) if (l.content.toLowerCase().includes(id.toLowerCase())) recognition.push(id);
+    if (l.type !== 'tool_result') continue;
+    if (l.refused) { denied++; continue; }
+    const input = l.input ?? {};
+    if (l.name === 'read_file' && /SPEC\.md$/i.test(input.path ?? '')) readSpec = true;
+    if (['read_file', 'write_file', 'edit_file', 'list_files'].includes(l.name)) {
+      const p = input.path ?? '.';
+      const rel = relative(WORK, resolve(WORK, String(p)));
+      if (rel.startsWith('..') || isAbsolute(rel)) pathViolations.push({ tool: l.name, path: String(p).slice(0, 200) });
+    }
+    if (l.name === 'run') {
+      const cmd = String(input.command ?? '');
+      for (const re of NET) if (re.test(cmd)) netViolations.push({ command: cmd.slice(0, 200), rule: String(re) });
+      const first = cmd.trim().split(/\s+/)[0];
+      const ok = lang === 'py' ? ['python', 'python3', 'py'].includes(first) : ['node', 'npm'].includes(first);
+      if (!ok) pathViolations.push({ tool: 'run', command: cmd.slice(0, 200) });
+    }
+  }
+  const result = [...lines].reverse().find((l) => l.type === 'result') ?? null;
+  return {
+    init: { ok: initProblems.length === 0, problems: initProblems, model: result?.served_model ?? init.model ?? null },
+    path_violations: pathViolations,
+    network_violations: netViolations,
+    denied_calls: denied,
+    denied_detail: lines.filter((l) => l.type === 'tool_result' && l.refused).slice(0, 20).map((l) => ({ tool: l.name, input: JSON.stringify(l.input).slice(0, 200), why: l.refused })),
+    recognized_reference: recognition.length > 0,
+    recognition_before_spec: [...new Set(recognition)],
+    violations: pathViolations.length + netViolations.length + (initProblems.length ? 1 : 0),
+    result: result ? { subtype: result.subtype, turns: result.turns, duration_ms: result.duration_ms, cost_usd: null, is_error: result.subtype === 'error', served_model: result.served_model ?? null, usage: result.usage ?? null } : null,
+  };
+}
+
 // Launch the builder and wait for it. Settles once, whatever happens: a builder that cannot be
 // started, one that exits, and one that outlives --max-minutes. At the deadline it is asked to
 // stop (SIGTERM to its process group); after a grace period it is killed with its descendants,
 // and the launch settles even if it still has not closed.
-export function launch(work, meta, { prompt, model, lang, maxTurns, maxMinutes, builder = ['claude'], killGraceMs = 10_000 }) {
+export function launch(work, meta, { prompt, model, lang, maxTurns, maxMinutes, builder = ['claude'], agent = null, killGraceMs = 10_000 }) {
   const env = {};
   for (const k of KEEP_ENV) if (process.env[k] !== undefined) env[k] = process.env[k];
   Object.assign(env, { GOPROXY: 'off', GOTOOLCHAIN: 'local', npm_config_offline: 'true', PIP_NO_INDEX: '1' }); // package managers fail closed
+  if (agent?.apiKeyEnv && process.env[agent.apiKeyEnv] !== undefined) env[agent.apiKeyEnv] = process.env[agent.apiKeyEnv];
   writeFileSync(join(meta, 'env-names.txt'), Object.keys(env).sort().join('\n') + '\n');
   const allowed = ['Read', 'Write', 'Edit', 'Glob', 'Grep', 'Bash(mkdir *)', 'Bash(ls *)', 'Bash(git init*)', 'Bash(git add *)', 'Bash(git commit *)', ...LANG_RULES[lang]];
-  const args = ['-p', prompt, '--model', model, '--restricted', '--safe-mode', '--tools', 'Read,Write,Edit,Glob,Grep,Bash',
-    '--disallowedTools', 'WebFetch', 'WebSearch', 'mcp__*', '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
-    '--permission-mode', 'dontAsk', '--permission-prompts', 'none', '--allowedTools', ...allowed,
-    '--max-turns', String(maxTurns), '--no-session-persistence', '--output-format', 'stream-json', '--verbose'];
+  // The agent builder (lib/regen/agent.mjs) talks to an OpenAI-compatible endpoint and writes
+  // its own transcript to standard output, as Claude Code's stream-json does.
+  const args = agent
+    ? [join(LIB_DIR, 'regen', 'agent.mjs'), '--base-url', agent.baseUrl, '--model', model, '--work', work, '--prompt-file', join(work, 'PROMPT.md'), '--lang', lang,
+      '--max-turns', String(maxTurns), '--max-minutes', String(maxMinutes), ...(agent.apiKeyEnv ? ['--api-key-env', agent.apiKeyEnv] : []), ...(agent.textTools ? ['--text-tools'] : []),
+      ...(agent.contextChars ? ['--context-chars', String(agent.contextChars)] : []), ...(agent.maxTokens ? ['--max-tokens', String(agent.maxTokens)] : [])]
+    : ['-p', prompt, '--model', model, '--restricted', '--safe-mode', '--tools', 'Read,Write,Edit,Glob,Grep,Bash',
+      '--disallowedTools', 'WebFetch', 'WebSearch', 'mcp__*', '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
+      '--permission-mode', 'dontAsk', '--permission-prompts', 'none', '--allowedTools', ...allowed,
+      '--max-turns', String(maxTurns), '--no-session-persistence', '--output-format', 'stream-json', '--verbose'];
+  if (agent) builder = [process.execPath];
   const out = openSync(join(meta, 'transcript.jsonl'), 'w');
   const err = openSync(join(meta, 'stderr.log'), 'w');
   return new Promise((done) => {
@@ -174,7 +239,7 @@ const choicesIn = (text) => [...text.matchAll(/^## (C-\d+):\s*(.*)$/gm)].map((m)
 
 // One regeneration. Returns the ledger entry.
 export async function regen(ast, opts) {
-  const { lang, model = 'sonnet', family = model, sandboxRoot, runsDir, leakTerms = {}, promptFile, runId, maxTurns = 400, maxMinutes = 60, version, builder, log = () => {} } = opts;
+  const { lang, model = 'sonnet', family = model, sandboxRoot, runsDir, leakTerms = {}, promptFile, runId, maxTurns = 400, maxMinutes = 60, version, builder, agent = null, log = () => {} } = opts;
   if (!LANG_RULES[lang]) throw new Error(`--lang is ts or py, not ${lang}`);
   // 1. the brief
   const checked = await check(ast);
@@ -198,11 +263,13 @@ export async function regen(ast, opts) {
   log(`sandbox ${sandboxId}: brief written, leak check ok; launching ${model} (${lang})`);
   // 3. the builder
   const t0 = Date.now();
-  const launched = await launch(work, meta, { prompt, model, lang, maxTurns, maxMinutes, builder });
+  const launched = await launch(work, meta, { prompt, model, lang, maxTurns, maxMinutes, builder, agent });
   const transcript = existsSync(join(meta, 'transcript.jsonl')) ? readFileSync(join(meta, 'transcript.jsonl'), 'utf8') : '';
   log(`builder exited with ${launched.code ?? launched.error} after ${((Date.now() - t0) / 60000).toFixed(1)} min`);
   // 4. the audit
-  const audit = auditTranscript(transcript, work, { identifiers: leakTerms.identifiers ?? [], allowedDomains: leakTerms.allowedDomains ?? [], family });
+  const audit = agent
+    ? auditAgentTranscript(transcript, work, { identifiers: leakTerms.identifiers ?? [], lang })
+    : auditTranscript(transcript, work, { identifiers: leakTerms.identifiers ?? [], allowedDomains: leakTerms.allowedDomains ?? [], family });
   writeFileSync(join(meta, 'audit.json'), JSON.stringify(audit, null, 1));
   // 5. copy the build out of the sandbox (without the brief)
   const id = runId ?? `${new Date().toISOString().slice(0, 10)}-${sandboxId}`;
@@ -225,7 +292,10 @@ export async function regen(ast, opts) {
     run: id, kind: 'blind', date: new Date().toISOString().replace(/\.\d+Z$/, 'Z'), record: `${ast.spec.name} ${ast.spec.version}`,
     brief: { spec_sha256: sha256(spec), decisions_sha256: sha256(decisions), prompt_sha256: sha256(prompt), duramen: version },
     model, model_id: audit.init.model, lang, sandbox_id: sandboxId,
-    isolation: 'claude -p from duramen regen (allow-listed environment, file and shell tools only)',
+    isolation: agent
+      ? `duramen agent builder (${agent.baseUrl}): file tools confined to the work folder, commands limited to the language's toolchain, no network tools`
+      : 'claude -p from duramen regen (allow-listed environment, file and shell tools only)',
+    ...(agent ? { builder: { kind: 'agent', base_url: agent.baseUrl, served_model: audit.result?.served_model ?? null } } : {}),
     exit: launched.code ?? launched.error,
     audit: { violations: audit.violations, init_ok: audit.init.ok, denied_calls: audit.denied_calls, recognized_reference: audit.recognized_reference },
     turns: audit.result?.turns ?? null, duration_min: audit.result ? +(audit.result.duration_ms / 60000).toFixed(1) : null, cost_usd: audit.result?.cost_usd ?? null,

@@ -1,0 +1,15 @@
+The steps of integrations/ci/duramen.yml, run in a cloud container on 2026-10-09 with
+RECORD=examples/heat-engine/heat.duramen, IMPL=examples/heat-engine/regen/impl/t06-ts, and the
+base branch main (duramen copied from the working tree instead of cloned):
+
+### The record checks clean, every example run through its oracle
+examples/heat-engine/heat.duramen:145:1: info T018: edge fixed-text/ecmascript is not bound to an op: its definition is in the brief, but no pack cases reach the suite
+ok: 22 requirements, 65 examples, 12 decisions, 8 open, 3 edges, 3 evidence (80 rows), 14 properties, 5 static checks; 0 errors, 0 warnings
+exit 0
+### The implementation passes the suite generated from the record
+passed 209/209 (example 65/65, evidence 80/80, edge 42/42, property 14/14, static 5/5, protocol 3/3)
+exit 0
+### The record's version grows with its changes
+behavior: 0 old examples the new record no longer has, run through the new oracle
+version 1.2.0-slice -> 1.2.0-slice: ok (none)
+exit 0

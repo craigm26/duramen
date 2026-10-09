@@ -5,7 +5,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
-import { checkType } from './types.mjs';
+import { checkType, ownMember } from './types.mjs';
 
 // "**/" any folders (or none), "**" anything, "*" anything but "/", "?" one character but "/".
 export function globToRegExp(glob) {
@@ -57,9 +57,9 @@ const matchAny = (globs, path) => globs.some((g) => globToRegExp(g).test(path) |
 const nonBlank = (text) => text.split(/\r?\n/).filter((l) => l.trim() !== '').length;
 
 function regenCommand(regen, key) {
-  const v = regen?.[key];
+  const v = ownMember(regen, key);
   if (v === undefined) return { error: `REGEN.json has no "${key}"` };
-  const c = typeof v === 'string' || Array.isArray(v) ? v : v && typeof v === 'object' ? v[process.platform] ?? v.default : undefined;
+  const c = typeof v === 'string' || Array.isArray(v) ? v : v && typeof v === 'object' ? ownMember(v, process.platform) ?? ownMember(v, 'default') : undefined;
   if (c === undefined) return { error: `REGEN.json "${key}" has no entry for ${process.platform} and no "default"` };
   return { command: Array.isArray(c) ? c.join(' ') : c };
 }

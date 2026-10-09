@@ -1,0 +1,219 @@
+﻿2026-10-09T08:11:18.9110254Z Current runner version: '2.337.0'
+2026-10-09T08:11:18.9131748Z ##[group]Runner Image Provisioner
+2026-10-09T08:11:18.9132351Z Hosted Compute Agent
+2026-10-09T08:11:18.9132974Z Version: 20261002.596
+2026-10-09T08:11:18.9133464Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T08:11:18.9133909Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T08:11:18.9134385Z Worker ID: {74ffc899-aa83-4a02-833e-c2e956b2fd53}
+2026-10-09T08:11:18.9134829Z Region: centralus
+2026-10-09T08:11:18.9135173Z Cloud: Azure
+2026-10-09T08:11:18.9135544Z ##[endgroup]
+2026-10-09T08:11:18.9136428Z ##[group]Operating System
+2026-10-09T08:11:18.9136895Z Ubuntu
+2026-10-09T08:11:18.9137237Z 24.04.5
+2026-10-09T08:11:18.9137561Z LTS
+2026-10-09T08:11:18.9137923Z ##[endgroup]
+2026-10-09T08:11:18.9138266Z ##[group]Runner Image
+2026-10-09T08:11:18.9138650Z Image: ubuntu-24.04
+2026-10-09T08:11:18.9139050Z Version: 20261004.327.1
+2026-10-09T08:11:18.9139840Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T08:11:18.9140828Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T08:11:18.9141393Z ##[endgroup]
+2026-10-09T08:11:18.9142187Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T08:11:18.9143647Z Contents: read
+2026-10-09T08:11:18.9144066Z Metadata: read
+2026-10-09T08:11:18.9144453Z Packages: read
+2026-10-09T08:11:18.9144860Z ##[endgroup]
+2026-10-09T08:11:18.9146346Z Secret source: Actions
+2026-10-09T08:11:18.9146933Z Cache mode: write
+2026-10-09T08:11:18.9147421Z Prepare workflow directory
+2026-10-09T08:11:18.9492963Z Prepare all required actions
+2026-10-09T08:11:18.9526936Z Getting action download info
+2026-10-09T08:11:19.2047034Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-09T08:11:19.2870872Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-10-09T08:11:19.6034248Z Complete job name: spec
+2026-10-09T08:11:19.6628971Z ##[group]Run actions/checkout@v4
+2026-10-09T08:11:19.6629414Z with:
+2026-10-09T08:11:19.6629651Z   fetch-depth: 0
+2026-10-09T08:11:19.6629911Z   repository: craigm26/duramen
+2026-10-09T08:11:19.6632046Z   token: ***
+2026-10-09T08:11:19.6632291Z   ssh-strict: true
+2026-10-09T08:11:19.6632548Z   ssh-user: git
+2026-10-09T08:11:19.6633099Z   persist-credentials: true
+2026-10-09T08:11:19.6633519Z   clean: true
+2026-10-09T08:11:19.6633913Z   sparse-checkout-cone-mode: true
+2026-10-09T08:11:19.6634358Z   fetch-tags: false
+2026-10-09T08:11:19.6634740Z   show-progress: true
+2026-10-09T08:11:19.6635068Z   lfs: false
+2026-10-09T08:11:19.6635309Z   submodules: false
+2026-10-09T08:11:19.6635569Z   set-safe-directory: true
+2026-10-09T08:11:19.6635863Z   allow-unsafe-pr-checkout: false
+2026-10-09T08:11:19.6636274Z env:
+2026-10-09T08:11:19.6636528Z   RECORD: examples/heat-engine/heat.duramen
+2026-10-09T08:11:19.6636876Z   IMPL: examples/heat-engine/regen/impl/t06-ts
+2026-10-09T08:11:19.6637244Z   DURAMEN_REF: main
+2026-10-09T08:11:19.6637512Z ##[endgroup]
+2026-10-09T08:11:19.7349300Z Syncing repository: craigm26/duramen
+2026-10-09T08:11:19.7350552Z ##[group]Getting Git version info
+2026-10-09T08:11:19.7350931Z Working directory is '/home/runner/work/duramen/duramen'
+2026-10-09T08:11:19.7351540Z [command]/usr/bin/git version
+2026-10-09T08:11:19.7405551Z git version 2.55.0
+2026-10-09T08:11:19.7420249Z ##[endgroup]
+2026-10-09T08:11:19.7431266Z Temporarily overriding HOME='/home/runner/work/_temp/f4096f78-10e9-46b8-ac44-da60d565481b' before making global git config changes
+2026-10-09T08:11:19.7436297Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T08:11:19.7437050Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/duramen/duramen
+2026-10-09T08:11:19.7669403Z Deleting the contents of '/home/runner/work/duramen/duramen'
+2026-10-09T08:11:19.7675499Z ##[group]Initializing the repository
+2026-10-09T08:11:19.7676141Z [command]/usr/bin/git init /home/runner/work/duramen/duramen
+2026-10-09T08:11:19.8068951Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T08:11:19.8069609Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T08:11:19.8070123Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T08:11:19.8070530Z hint: call:
+2026-10-09T08:11:19.8070754Z hint:
+2026-10-09T08:11:19.8071137Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T08:11:19.8071482Z hint:
+2026-10-09T08:11:19.8071810Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T08:11:19.8072324Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T08:11:19.8073034Z hint:
+2026-10-09T08:11:19.8073379Z hint: 	git branch -m <name>
+2026-10-09T08:11:19.8073783Z hint:
+2026-10-09T08:11:19.8074348Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T08:11:19.8075139Z Initialized empty Git repository in /home/runner/work/duramen/duramen/.git/
+2026-10-09T08:11:19.8084886Z [command]/usr/bin/git remote add origin https://github.com/craigm26/duramen
+2026-10-09T08:11:19.8355465Z ##[endgroup]
+2026-10-09T08:11:19.8356083Z ##[group]Disabling automatic garbage collection
+2026-10-09T08:11:19.8356864Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T08:11:19.8446836Z ##[endgroup]
+2026-10-09T08:11:19.8447281Z ##[group]Setting up auth
+2026-10-09T08:11:19.8452077Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T08:11:19.8479926Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T08:11:19.8764492Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T08:11:19.8784387Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T08:11:19.8991753Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T08:11:19.9025582Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T08:11:19.9219559Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T08:11:19.9840118Z ##[endgroup]
+2026-10-09T08:11:19.9866660Z ##[group]Fetching the repository
+2026-10-09T08:11:19.9868858Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +d1ce18ae30c8bf17397d08a919f9d86edc7d7dbd:refs/remotes/pull/2/merge
+2026-10-09T08:11:20.7928089Z From https://github.com/craigm26/duramen
+2026-10-09T08:11:20.7929343Z  * [new branch]      confidence                               -> origin/confidence
+2026-10-09T08:11:20.7930226Z  * [new branch]      main                                     -> origin/main
+2026-10-09T08:11:20.7931043Z  * [new branch]      v0.2                                     -> origin/v0.2
+2026-10-09T08:11:20.7931835Z  * [new tag]         brief-t1                                 -> brief-t1
+2026-10-09T08:11:20.7933516Z  * [new tag]         brief-t2                                 -> brief-t2
+2026-10-09T08:11:20.7934205Z  * [new tag]         brief-t3                                 -> brief-t3
+2026-10-09T08:11:20.7934967Z  * [new ref]         d1ce18ae30c8bf17397d08a919f9d86edc7d7dbd -> pull/2/merge
+2026-10-09T08:11:20.7936835Z ##[endgroup]
+2026-10-09T08:11:20.7937510Z ##[group]Determining the checkout info
+2026-10-09T08:11:20.7938496Z ##[endgroup]
+2026-10-09T08:11:20.7939063Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T08:11:20.8170636Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T08:11:20.8263845Z ##[group]Checking out the ref
+2026-10-09T08:11:20.8266590Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/2/merge
+2026-10-09T08:11:20.8555320Z Note: switching to 'refs/remotes/pull/2/merge'.
+2026-10-09T08:11:20.8556446Z 
+2026-10-09T08:11:20.8557711Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T08:11:20.8559272Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T08:11:20.8560795Z state without impacting any branches by switching back to a branch.
+2026-10-09T08:11:20.8561684Z 
+2026-10-09T08:11:20.8562254Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T08:11:20.8563883Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T08:11:20.8564756Z 
+2026-10-09T08:11:20.8565100Z   git switch -c <new-branch-name>
+2026-10-09T08:11:20.8565666Z 
+2026-10-09T08:11:20.8565985Z Or undo this operation with:
+2026-10-09T08:11:20.8566472Z 
+2026-10-09T08:11:20.8566848Z   git switch -
+2026-10-09T08:11:20.8567290Z 
+2026-10-09T08:11:20.8567981Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T08:11:20.8568945Z 
+2026-10-09T08:11:20.8569971Z HEAD is now at d1ce18a Merge a668e0295e3f4a2a33fdfa54a91d146dd82a6a27 into 1d48d22216e86b243d6887a4312ee49cd96feb12
+2026-10-09T08:11:20.8573343Z ##[endgroup]
+2026-10-09T08:11:20.8606709Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T08:11:20.8629934Z d1ce18ae30c8bf17397d08a919f9d86edc7d7dbd
+2026-10-09T08:11:20.9470956Z ##[group]Run actions/setup-node@v4
+2026-10-09T08:11:20.9471840Z with:
+2026-10-09T08:11:20.9472349Z   node-version: 22
+2026-10-09T08:11:20.9472985Z   always-auth: false
+2026-10-09T08:11:20.9473538Z   check-latest: false
+2026-10-09T08:11:20.9479546Z   token: ***
+2026-10-09T08:11:20.9480026Z env:
+2026-10-09T08:11:20.9480552Z   RECORD: examples/heat-engine/heat.duramen
+2026-10-09T08:11:20.9481366Z   IMPL: examples/heat-engine/regen/impl/t06-ts
+2026-10-09T08:11:20.9482115Z   DURAMEN_REF: main
+2026-10-09T08:11:20.9482713Z ##[endgroup]
+2026-10-09T08:11:21.0642536Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+2026-10-09T08:11:21.0646837Z (node:2070) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-09T08:11:21.0649383Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-09T08:11:21.0651739Z ##[group]Environment details
+2026-10-09T08:11:21.3705494Z node: v22.23.3
+2026-10-09T08:11:21.3705999Z npm: 10.9.9
+2026-10-09T08:11:21.3706225Z yarn: 1.22.22
+2026-10-09T08:11:21.3707068Z ##[endgroup]
+2026-10-09T08:11:21.4067314Z ##[group]Run git clone --depth 1 --branch "$DURAMEN_REF" https://github.com/craigm26/duramen.git "$RUNNER_TEMP/duramen"
+2026-10-09T08:11:21.4068076Z git clone --depth 1 --branch "$DURAMEN_REF" https://github.com/craigm26/duramen.git "$RUNNER_TEMP/duramen"
+2026-10-09T08:11:21.4470800Z shell: /usr/bin/bash -e {0}
+2026-10-09T08:11:21.4471157Z env:
+2026-10-09T08:11:21.4471470Z   RECORD: examples/heat-engine/heat.duramen
+2026-10-09T08:11:21.4471801Z   IMPL: examples/heat-engine/regen/impl/t06-ts
+2026-10-09T08:11:21.4472115Z   DURAMEN_REF: main
+2026-10-09T08:11:21.4472363Z ##[endgroup]
+2026-10-09T08:11:21.4596898Z Cloning into '/home/runner/work/_temp/duramen'...
+2026-10-09T08:11:22.3361458Z ##[group]Run node "$RUNNER_TEMP/duramen/bin/duramen.mjs" check "$RECORD"
+2026-10-09T08:11:22.3361996Z node "$RUNNER_TEMP/duramen/bin/duramen.mjs" check "$RECORD"
+2026-10-09T08:11:22.3420201Z shell: /usr/bin/bash -e {0}
+2026-10-09T08:11:22.3420408Z env:
+2026-10-09T08:11:22.3420578Z   RECORD: examples/heat-engine/heat.duramen
+2026-10-09T08:11:22.3420772Z   IMPL: examples/heat-engine/regen/impl/t06-ts
+2026-10-09T08:11:22.3420935Z   DURAMEN_REF: main
+2026-10-09T08:11:22.3421067Z ##[endgroup]
+2026-10-09T08:11:22.7659864Z examples/heat-engine/heat.duramen:145:1: info T018: edge fixed-text/ecmascript is not bound to an op: its definition is in the brief, but no pack cases reach the suite
+2026-10-09T08:11:22.7762454Z ok: 22 requirements, 65 examples, 12 decisions, 8 open, 3 edges, 3 evidence (80 rows), 14 properties, 5 static checks; 0 errors, 0 warnings
+2026-10-09T08:11:22.7798232Z ##[group]Run node "$RUNNER_TEMP/duramen/bin/duramen.mjs" run "$RECORD" --impl "$IMPL"
+2026-10-09T08:11:22.7798622Z node "$RUNNER_TEMP/duramen/bin/duramen.mjs" run "$RECORD" --impl "$IMPL"
+2026-10-09T08:11:22.7856021Z shell: /usr/bin/bash -e {0}
+2026-10-09T08:11:22.7856236Z env:
+2026-10-09T08:11:22.7856394Z   RECORD: examples/heat-engine/heat.duramen
+2026-10-09T08:11:22.7856592Z   IMPL: examples/heat-engine/regen/impl/t06-ts
+2026-10-09T08:11:22.7856803Z   DURAMEN_REF: main
+2026-10-09T08:11:22.7856951Z ##[endgroup]
+2026-10-09T08:11:23.1825647Z examples/heat-engine/heat.duramen:145:1: info T018: edge fixed-text/ecmascript is not bound to an op: its definition is in the brief, but no pack cases reach the suite
+2026-10-09T08:11:23.1826736Z ok: 22 requirements, 65 examples, 12 decisions, 8 open, 3 edges, 3 evidence (80 rows), 14 properties, 5 static checks; 0 errors, 0 warnings
+2026-10-09T08:11:23.9454292Z passed 209/209 (example 65/65, evidence 80/80, edge 42/42, property 14/14, static 5/5, protocol 3/3)
+2026-10-09T08:11:23.9606180Z ##[group]Run base="$RUNNER_TEMP/base"
+2026-10-09T08:11:23.9606426Z base="$RUNNER_TEMP/base"
+2026-10-09T08:11:23.9606609Z git worktree add "$base" "origin/main"
+2026-10-09T08:11:23.9606832Z if [ -e "$base/$RECORD" ]; then
+2026-10-09T08:11:23.9607079Z   node "$RUNNER_TEMP/duramen/bin/duramen.mjs" diff "$base/$RECORD" "$RECORD"
+2026-10-09T08:11:23.9607329Z else
+2026-10-09T08:11:23.9607468Z   echo "no record on the base branch yet"
+2026-10-09T08:11:23.9607631Z fi
+2026-10-09T08:11:23.9661140Z shell: /usr/bin/bash -e {0}
+2026-10-09T08:11:23.9661320Z env:
+2026-10-09T08:11:23.9661465Z   RECORD: examples/heat-engine/heat.duramen
+2026-10-09T08:11:23.9661659Z   IMPL: examples/heat-engine/regen/impl/t06-ts
+2026-10-09T08:11:23.9661854Z   DURAMEN_REF: main
+2026-10-09T08:11:23.9661979Z ##[endgroup]
+2026-10-09T08:11:23.9755060Z Preparing worktree (detached HEAD 1d48d22)
+2026-10-09T08:11:24.0053202Z HEAD is now at 1d48d22 Merge pull request #1 from craigm26/v0.2
+2026-10-09T08:11:24.0635211Z behavior: 0 old examples the new record no longer has, run through the new oracle
+2026-10-09T08:11:24.0635975Z version 1.2.0-slice -> 1.2.0-slice: ok (none)
+2026-10-09T08:11:24.0758300Z Post job cleanup.
+2026-10-09T08:11:24.1600835Z (node:2348) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-09T08:11:24.1601332Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-09T08:11:24.1754445Z Post job cleanup.
+2026-10-09T08:11:24.2367346Z [command]/usr/bin/git version
+2026-10-09T08:11:24.2398815Z git version 2.55.0
+2026-10-09T08:11:24.2423145Z Temporarily overriding HOME='/home/runner/work/_temp/f44d8564-0c15-43a8-aaf5-ba37c257ab3c' before making global git config changes
+2026-10-09T08:11:24.2424060Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T08:11:24.2427465Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/duramen/duramen
+2026-10-09T08:11:24.2462537Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T08:11:24.2490674Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T08:11:24.2683077Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T08:11:24.2707665Z http.https://github.com/.extraheader
+2026-10-09T08:11:24.2716286Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-09T08:11:24.2745586Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T08:11:24.2935721Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T08:11:24.2964059Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T08:11:24.3267532Z Cleaning up orphan processes
+2026-10-09T08:11:24.3476113Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

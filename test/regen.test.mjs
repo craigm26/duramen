@@ -77,6 +77,17 @@ test('regen: the audit flags network use and tools beyond the allowed set', () =
   assert.equal(a.network_violations.length, 3);
 });
 
+test('regen: the audit takes a family or a full model ID', () => {
+  const init = (model) => [{ type: 'system', subtype: 'init', cwd: '/w', tools: ['Bash', 'Edit', 'Glob', 'Grep', 'Read', 'Write'], mcp_servers: [], permissionMode: 'dontAsk', model }].map((o) => JSON.stringify(o)).join('\n');
+  assert.equal(auditTranscript(init('claude-haiku-5-5'), '/w', { family: 'haiku' }).init.ok, true);
+  assert.equal(auditTranscript(init('claude-haiku-5-5'), '/w', { family: 'sonnet' }).init.ok, false);
+  assert.equal(auditTranscript(init('claude-haiku-4-5-20251001'), '/w', { family: 'claude-haiku-4-5-20251001' }).init.ok, true);
+  assert.equal(auditTranscript(init('claude-haiku-4-5-20251001'), '/w', { family: 'claude-haiku-4-5' }).init.ok, true);
+  const other = auditTranscript(init('claude-haiku-5-5'), '/w', { family: 'claude-haiku-4-5' });
+  assert.equal(other.init.ok, false);
+  assert.match(other.init.problems.join(), /is not claude-haiku-4-5/);
+});
+
 test('regen: a builder that cannot be started settles once, with its error', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'duramen-launch-'));
   try {
@@ -96,4 +107,18 @@ test('regen: a builder that ignores SIGTERM is killed after --max-minutes', { sk
     assert.equal(r.signal, 'SIGKILL');
     assert.ok(Date.now() - t0 < 5000);
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('transcripts: places a builder named outside its work folder, inline scripts and written files included', async () => {
+  const { scanTranscript } = await import('../selfhost/transcripts.mjs');
+  const use = (name, input) => JSON.stringify({ type: 'assistant', message: { content: [{ type: 'tool_use', name, input }] } });
+  const text = [
+    use('Read', { file_path: '/sb/abc/w/SPEC.md' }),
+    use('Bash', { command: 'node -e "console.log(require(\'fs\').readFileSync(\'/home/someone/x.mjs\', \'utf8\'))"' }),
+    use('Bash', { command: 'cat ../meta/transcript.jsonl' }),
+    use('Write', { file_path: '/sb/abc/w/a.mjs', content: "import { readFileSync } from 'node:fs';\nreadFileSync('/etc/hosts');\n" }),
+    use('Bash', { command: 'node --test' }),
+  ].join('\n');
+  const hits = scanTranscript(text, '/sb/abc/w', '/sb/abc');
+  assert.deepEqual(hits.map((h) => [h.line, h.tool]), [[2, 'Bash'], [3, 'Bash'], [4, 'Write']]);
 });

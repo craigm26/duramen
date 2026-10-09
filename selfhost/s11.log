@@ -1,0 +1,6 @@
+  sandbox sjgtno: brief written, leak check ok; launching opus (ts)
+  builder exited with 0 after 24.5 min
+run s11: claude-opus-5-5 (ts), 48 turns, 24.5 min, $4.32
+  audit: 0 violations, init ok, 1 denied calls
+  suite: passed 171/171
+  build copied to selfhost/impl/s11-ts; 43 choices to triage in selfhost/s11-ts.md

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
-import { parseCommand, runDriver, implDriver } from '../src/driver.mjs';
+import { parseCommand, runDriver, implDriver, streamLines, jsonParseMisreadsKeys } from '../src/driver.mjs';
 import { withFiles } from './helpers.mjs';
 
 test('driver: commands are words, quoted words keep spaces, no shell', () => {
@@ -90,4 +90,22 @@ test('driver: REGEN.json driver forms', async () => {
     assert.match(implDriver(join(dir, 'c')).error, /not valid JSON/);
     assert.match(implDriver(join(dir, 'd')).error, /not found/);
   });
+});
+
+test('driver: streamLines ends lines at LF only, and decodes across chunks', async () => {
+  const bytes = Buffer.from('{"a":"é\u2028x"}\r\n\n{"b":"\u2029"}\nlast');
+  const cut = bytes.indexOf(Buffer.from('é')) + 1; // inside the two bytes of é
+  async function* chunks() { yield bytes.subarray(0, cut); yield bytes.subarray(cut, cut + 7); yield bytes.subarray(cut + 7); }
+  const out = [];
+  for await (const line of streamLines(chunks())) out.push(line);
+  assert.deepEqual(out, ['{"a":"é\u2028x"}', '', '{"b":"\u2029"}', 'last']);
+});
+
+test('driver: the probe for the JSON.parse key bug answers as the bug itself does in a fresh process', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const repro = 'JSON.parse(\'{"p":0,"\\\\\\\\":0}\'); process.stdout.write(String(Object.keys(JSON.parse(\'{"p":0,"\\\\\\"":0}\'))[1] !== \'"\'))';
+  const r = spawnSync(process.execPath, ['-e', repro], { encoding: 'utf8' });
+  assert.equal(r.stdout, String(jsonParseMisreadsKeys()));
+  // and the probe changes no other parse
+  assert.deepEqual(Object.keys(JSON.parse('{"p":0,"\\"":0}')), ['p', '"']);
 });

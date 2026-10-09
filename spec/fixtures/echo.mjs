@@ -5,10 +5,17 @@
 //   "silent": true    write no answer to this request
 //   "exit": <n>       answer as usual, and exit with status n at the end of input
 //   "say": "<text>"   write this text as the answer line, exactly
-import { createInterface } from 'node:readline';
+//
+// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and
+// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read
+// whole and split here.
 
+const chunks = [];
+for await (const chunk of process.stdin) chunks.push(chunk);
+const lines = Buffer.concat(chunks).toString('utf8').split(/\r\n|\n|\r/);
+if (lines[lines.length - 1] === '') lines.pop();
 let status = 0;
-for await (const line of createInterface({ input: process.stdin })) {
+for (const line of lines) {
   if (line.trim() === '') continue;
   let req;
   try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }

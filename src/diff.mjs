@@ -15,6 +15,7 @@
 import { dirname } from 'node:path';
 import { requestFor, holds, expectsError, isRaw, isSolo } from './check.mjs';
 import { runDriver } from './driver.mjs';
+import { ownMember } from './types.mjs';
 
 const KINDS = ['breaking', 'tightening', 'additive', 'relaxing', 'prose'];
 
@@ -49,8 +50,8 @@ export function diffRecords(a, b) {
     for (const g of old.inputs) if (!o.inputs.some((f) => f.name === g.name)) add('breaking', `${n}: input ${g.name} removed`);
     if ((old.returnsText ?? '') !== (o.returnsText ?? '')) add(!old.returnsText ? 'tightening' : !o.returnsText ? 'relaxing' : 'breaking', `${n}: result type ${old.returnsText ?? '(none)'} -> ${o.returnsText ?? '(none)'}`);
     if (JSON.stringify(old.tolerances) !== JSON.stringify(o.tolerances)) {
-      for (const [p, t] of Object.entries(o.tolerances)) { const u = old.tolerances[p]; if (u === undefined || t < u) add('tightening', `${n}: tolerance ${p} ${u ?? 'exact'} -> ${t}`); else if (t > u) add('relaxing', `${n}: tolerance ${p} ${u} -> ${t}`); }
-      for (const [p, u] of Object.entries(old.tolerances)) if (!(p in o.tolerances)) add('tightening', `${n}: tolerance ${p} ${u} -> exact`);
+      for (const [p, t] of Object.entries(o.tolerances)) { const u = ownMember(old.tolerances, p); if (u === undefined || t < u) add('tightening', `${n}: tolerance ${p} ${u ?? 'exact'} -> ${t}`); else if (t > u) add('relaxing', `${n}: tolerance ${p} ${u} -> ${t}`); }
+      for (const [p, u] of Object.entries(old.tolerances)) if (!Object.hasOwn(o.tolerances, p)) add('tightening', `${n}: tolerance ${p} ${u} -> exact`);
     }
     if (!!old.audit !== !!o.audit) add('breaking', `${n}: ${o.audit ? 'now has' : 'no longer has'} an audit`);
     if (JSON.stringify(old.request) !== JSON.stringify(o.request)) add('breaking', `${n}: request members changed`);
