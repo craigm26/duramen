@@ -182,14 +182,15 @@ req RC-003 "Versions"
     expect result.diagnostics = ["b.duramen:1: error P023"]
 
 req RC-004 "One spec, one oracle, one list of errors"
-  decision D-015
+  decision D-015, D-016
   text
     A record MUST have exactly one `spec` statement; without one it MUST get P021 at line 1 of
     its name (for a folder record, `.` or the folder's name; for a file record, the file's).
     A second `spec` or `oracle` statement, in the same file or another, MUST get P044, and a
-    second `errors` statement P032, at that statement's line. A second statement of any of
-    these kinds, a second `duramen` statement included, is still read like a first, and its
-    own problems reported; it has no other effect.
+    second `errors` statement P032, at that statement's line; a first statement counts as one
+    even when its own first line is malformed. A second statement of any of these kinds, a
+    second `duramen` statement included, is still read like a first, and its own problems
+    reported; it has no other effect.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -259,6 +260,16 @@ req RC-004 "One spec, one oracle, one list of errors"
       errors x
         e if
     expect result.diagnostics = ["s.duramen:3: error P023", "s.duramen:4: error P015", "s.duramen:5: error P021", "s.duramen:5: error P044", "s.duramen:6: error P028", "s.duramen:8: error P006", "s.duramen:9: error P050", "s.duramen:10: error P019"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.1
+      spec s 1
+      oracle
+      oracle node a.mjs
+    input files."b.duramen"
+      duramen 0.1
+      oracle node b.mjs
+    expect result.diagnostics = ["a.duramen:3: error P028", "a.duramen:4: error P044", "b.duramen:2: error P044"]
 
 req RC-005 "Problems found while reading stop the check"
   decision D-003

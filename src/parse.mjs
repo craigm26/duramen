@@ -194,6 +194,7 @@ function parseInto(source, file, ast, diag) {
       return hm && (isExpectPath(hm[1]) ? !/[=≈~]/.test(hm[1]) : /^[\w-]+$/.test(hm[1])) ? { name: hm[1], tol: hm[2] === undefined ? null : jsonNumber(hm[2]) } : null;
     });
     if (header.some((h) => h === null)) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
+    if (new Set(header.map((h) => h.name)).size < header.length) { diag('error', rows[0].n, 'P013', 'a header names each column once', rows[0].indent + 1); return []; }
     for (const h of header) {
       if (h.tol === null) continue;
       if (!isExpectPath(h.name)) diag('error', rows[0].n, 'P010', `column "${h.name}": only an expectation column takes a tolerance`, rows[0].indent + 1);
@@ -211,6 +212,7 @@ function parseInto(source, file, ast, diag) {
       header.forEach((h, i) => {
         if (vals[i] === '') return; // an empty cell states nothing: no input field, no expectation
         if (isExpectPath(h.name) && vals[i] === '?') { ex.expects.push({ path: h.name, kind: 'show', line: l.n }); return; }
+        if (h.tol !== null && !Number.isFinite(jsonNumber(vals[i]))) { diag('error', l.n, 'P010', `cell "${h.name}": a column with a tolerance holds numbers`, l.indent + 1); ok = false; return; }
         const j = parseJSON(vals[i], l.n, `cell "${h.name}"`, l.indent + 1);
         if (!j.ok) { ok = false; return; }
         if (isExpectPath(h.name)) {
@@ -302,8 +304,9 @@ function parseInto(source, file, ast, diag) {
     for (let k = 0; k < sub.length; k++) {
       const l = sub[k];
       if (l.text === '' || l.text.startsWith('#')) continue;
-      const im = l.indent === 4 ? l.text.match(/^input\s+(.+?)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/) : null;
-      if (im) {
+      // A line whose first word is input, request or omit is a line of that kind, whatever follows.
+      if (l.indent === 4 && /^input(\s|$)/.test(l.text)) {
+        const im = l.text.match(/^input\s+(.+?)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/) ?? [l.text, '', undefined];
         // The text of a block is taken first, so that a bad input line does not make its text
         // look like lines of the example.
         const block = [];
@@ -320,10 +323,15 @@ function parseInto(source, file, ast, diag) {
         continue;
       }
       if (l.indent !== 4) { diag('error', l.n, 'P006', 'lines under an example are indented four spaces (the text of an input block, six)', l.indent + 1); continue; }
-      if (l.text.startsWith('request ') || l.text.startsWith('omit ')) {
+      if (/^(request|omit)(\s|$)/.test(l.text)) {
         if (ex.rawLine !== undefined) { diag('error', l.n, 'P022', 'a raw example is sent exactly as written: no request or omit lines', l.indent + 1); continue; }
-        if (l.text.startsWith('omit ')) { ex.omit.push(...ids(l.text.slice(5))); continue; }
-        const r = parseJSON(l.text.slice(8), l.n, 'request members', l.indent + 9);
+        if (l.text.startsWith('omit')) {
+          const names = ids(l.text.slice(4));
+          if (!names.length) diag('error', l.n, 'P011', 'omit <member>, ...: name what to leave out', l.indent + 1);
+          ex.omit.push(...names);
+          continue;
+        }
+        const r = parseJSON(l.text.slice(7).trim(), l.n, 'request members', l.indent + 9);
         if (r.ok) {
           if (r.value === null || typeof r.value !== 'object' || Array.isArray(r.value)) diag('error', l.n, 'P009', 'request members are a JSON object', l.indent + 9);
           else if (ex.request) diag('error', l.n, 'P052', 'an example takes one request line', l.indent + 1);
@@ -334,7 +342,7 @@ function parseInto(source, file, ast, diag) {
       const e = expectation(l.text, l.n, l.indent + 1);
       if (e) ex.expects.push(e);
     }
-    return bad ? null : ex;
+    return bad ? { dropped: ex } : ex;
   }
 
   // static checks on an implementation folder (evaluated by `duramen run`, not by the driver):
@@ -410,7 +418,8 @@ function parseInto(source, file, ast, diag) {
         break;
       }
       case 'oracle': {
-        if (ast.oracle) diag('error', s.line, 'P044', `a second oracle (the first is at line ${ast.oracle.line})`);
+        if (ast.oracleLine !== undefined) diag('error', s.line, 'P044', `a second oracle (the first is at line ${ast.oracleLine})`);
+        else ast.oracleLine = s.line;
         if (!s.rest) diag('error', s.line, 'P028', 'oracle <command>', s.restCol);
         const oracle = { command: s.rest, sources: [], line: s.line };
         for (const c of cs) {
@@ -544,7 +553,11 @@ function parseInto(source, file, ast, diag) {
           else if (c.kw === 'on') {
             if (!['any', 'posix', 'windows'].includes(c.rest)) diag('error', c.n, 'P033', 'on any | posix | windows', c.restCol);
             req.platform = c.rest;
-          } else if (c.kw === 'example') { const ex = example(c); if (ex) req.examples.push(ex); }
+          } else if (c.kw === 'example') {
+            const ex = example(c);
+            if (ex?.dropped) (req.dropped ??= []).push(ex.dropped); // its input files are still checked
+            else if (ex) req.examples.push(ex);
+          }
           else if (c.kw === 'table') req.examples.push(...tableRows(c, c.rest.trim(), 'table'));
           else if (c.kw === 'static') { const st = staticCheck(c); if (st) req.statics.push(st); }
         }

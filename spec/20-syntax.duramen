@@ -496,7 +496,7 @@ req SY-009 "Requirements, open items, decisions, sections and notes"
     expect result.diagnostics = ["s.duramen:4: error P033", "s.duramen:5: error P015", "s.duramen:7: error P050", "s.duramen:9: error P015", "s.duramen:11: error P015", "s.duramen:13: error P015"]
 
 req SY-010 "Examples"
-  decision D-005, D-011, D-014, D-015
+  decision D-005, D-011, D-014, D-015, D-016
   text
     An example is a request and what its response holds. `example <op> <JSON object>` is a
     request to the operation with that input; `example <op>` is one with no `input` member at
@@ -509,8 +509,9 @@ req SY-010 "Examples"
     dropped, but the lines under it MUST still be read, and their problems reported.
 
     The lines under an example are indented four spaces, except the text of an input block
-    (REQ-SY-011); any other line that is neither blank nor a comment MUST get P006. They are,
-    in any number and order:
+    (REQ-SY-011); any other line that is neither blank nor a comment MUST get P006. A line
+    whose first word is `expect`, `request`, `omit` or `input` is a line of that kind,
+    whatever follows the word. They are, in any number and order:
     - `expect <path> = <JSON>`: the response holds this value at the path (REQ-OR-003); a
       value that is not JSON, nothing included, MUST get P009. A path is the text up to the
       first white space, `=`, `≈` or `~`, and is not empty.
@@ -567,6 +568,20 @@ req SY-010 "Examples"
       duramen 0.1
       spec s 1
       req A "a"
+        example raw '{"id": "x"}'
+          omit
+          request
+          input
+        example f {}
+          request
+          input
+          omit ,
+    expect result.diagnostics = ["s.duramen:5: error P022", "s.duramen:6: error P022", "s.duramen:7: error P022", "s.duramen:9: error P009", "s.duramen:10: error P049", "s.duramen:11: error P011"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      req A "a"
         example f {}
           expect result ≈ 1 ± -1
           expect result ~ 1 +- x
@@ -586,7 +601,7 @@ req SY-010 "Examples"
     expect result.diagnostics = ["s.duramen:5: error P010", "s.duramen:6: error P010", "s.duramen:7: error P010", "s.duramen:8: error P009", "s.duramen:9: error P011", "s.duramen:10: error P011", "s.duramen:11: error P006", "s.duramen:12: error P006", "s.duramen:13: error P009", "s.duramen:14: error P051", "s.duramen:16: error P022", "s.duramen:17: error P022", "s.duramen:18: error P022"]
 
 req SY-011 "Texts in an example's input"
-  decision D-011, D-012, D-015
+  decision D-011, D-012, D-015, D-016
   text
     `input <path>` puts a text in the example's input at the path: names separated by dots,
     each a word (ASCII letters, digits, `_` and `-`) or a quoted string (`files."a.duramen"`),
@@ -599,8 +614,9 @@ req SY-011 "Texts in an example's input"
     text, so lines indented six spaces after it MUST get P006. Every other `input` line is
     `input <path>`. A path of any other form, a path through a value that is not an object, or
     an `input <path>` line with no text under it MUST get P049. A file that cannot be read, or
-    that is outside the folder of the record (REQ-RC-001), MUST get P048. REQ-SU-003 says how
-    such an input is sent.
+    that is outside the folder of the record (REQ-RC-001), MUST get P048, also under an
+    example that is dropped because its first line is malformed (REQ-SY-010). REQ-SU-003 says
+    how such an input is sent.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -655,9 +671,11 @@ req SY-011 "Texts in an example's input"
           input b from "t.txt"
             not its text
           input c from "unclosed
+        example f {
+          input d from "../outside.txt"
     input files."r/t.txt"
       t
-    expect result.diagnostics = ["r/s.duramen:5: error P048", "r/s.duramen:7: error P006", "r/s.duramen:8: error P049"]
+    expect result.diagnostics = ["r/s.duramen:5: error P048", "r/s.duramen:7: error P006", "r/s.duramen:8: error P049", "r/s.duramen:9: error P009", "r/s.duramen:10: error P048"]
   example check {"files": {"sub/data/t.txt": "hello,\r\nworld"}}
     input files."sub/s.duramen"
       duramen 0.1
@@ -673,7 +691,7 @@ req SY-011 "Texts in an example's input"
     expect result.diagnostics = []
 
 req SY-012 "Tables"
-  decision D-011, D-015
+  decision D-011, D-015, D-016
   text
     `table <op>` writes examples of one operation as rows: the lines under it that start with
     `|`, indented four spaces or more (a row indented three MUST get P006). Any other line
@@ -685,7 +703,8 @@ req SY-012 "Tables"
     one word, or with fewer than a header and one row MUST get P013, and then nothing else in
     the table is checked.
 
-    A header cell is the name of an input field (ASCII letters, digits, `_` and `-`), or an
+    A header names each column once, else P013. A header cell is the name of an input field
+    (ASCII letters, digits, `_` and `-`), or an
     expectation path: `result`, `audit`, `error` or `id`, alone or followed by `.` and the
     rest of the path (whose names may be empty, REQ-OR-003). A name may be followed by `±`
     (or `+-`) and a tolerance, which is the rest of the cell and is a JSON number of 0 or
@@ -695,8 +714,8 @@ req SY-012 "Tables"
     different number of cells from the header MUST get P014. An empty cell states nothing. A
     cell under an input field is that field's value, and a cell under an expectation path an
     expectation of that value (within the column's tolerance, if it has one), or of the
-    oracle's value when the cell is `?`. Every other cell is JSON, else P009; in a column with
-    a tolerance, a number, else P010.
+    oracle's value when the cell is `?`. Every other cell in a column with a tolerance is a
+    JSON number, else P010, and in any other column, JSON, else P009.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -761,7 +780,14 @@ req SY-012 "Tables"
         table f
           | x | result ± 1 2 | result.y+-0.5 |
           | 1 | 2            | 3             |
-    expect result.diagnostics = ["s.duramen:4: error P013", "s.duramen:7: error P013", "s.duramen:8: error P006", "s.duramen:11: error P013", "s.duramen:14: error P010", "s.duramen:17: error P010"]
+        table f
+          | x | x |
+          | 1 | 2 |
+        table f
+          | x | result ± 0.5 |
+          | 1 | 2.25 [       |
+          | { | ?            |
+    expect result.diagnostics = ["s.duramen:4: error P013", "s.duramen:7: error P013", "s.duramen:8: error P006", "s.duramen:11: error P013", "s.duramen:14: error P010", "s.duramen:17: error P010", "s.duramen:20: error P013", "s.duramen:24: error P010", "s.duramen:25: error P009"]
   example check {}
     input files."s.duramen"
       duramen 0.1

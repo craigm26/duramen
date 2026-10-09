@@ -169,7 +169,8 @@ export function loadRecord(path, { useLibrary = true } = {}) {
   // Example inputs taken from files (`input <path> from "<file>"`), relative to the file that
   // names them.
   for (const r of ast.items.filter((i) => i.type === 'req')) {
-    for (const ex of r.examples) {
+    // a dropped example (its first line was malformed) has its files checked, and nothing more
+    for (const ex of [...r.examples, ...(r.dropped ?? []).map((x) => ({ ...x, file: x.file ?? r.file }))]) {
       for (const f of ex.inputFiles ?? []) {
         let text;
         const fp = resolve(dirname(ex.file ?? r.file), f.file);
@@ -224,9 +225,9 @@ function merge(parts, path, isDir, diag) {
       if (ast.spec) diag('error', { file: a.file, line: a.spec.line }, 'P044', `a second spec statement (the first is in ${ast.spec.file}:${ast.spec.line})`);
       else ast.spec = tag(a.spec);
     }
-    if (a.oracle) {
-      if (ast.oracle) diag('error', { file: a.file, line: a.oracle.line }, 'P044', `a second oracle (the first is in ${ast.oracle.file}:${ast.oracle.line})`);
-      else ast.oracle = tag(a.oracle);
+    if (a.oracleLine !== undefined) { // an oracle statement, even one without a command (P028)
+      if (ast.oracleLine !== undefined) diag('error', { file: a.file, line: a.oracleLine }, 'P044', `a second oracle (the first is in ${ast.oracleFile}:${ast.oracleLine})`);
+      else { ast.oracleLine = a.oracleLine; ast.oracleFile = a.file; ast.oracle = a.oracle ? tag(a.oracle) : null; }
     }
     if (a.errorsLine !== undefined) {
       if (ast.errorsLine !== undefined) diag('error', { file: a.file, line: a.errorsLine }, 'P032', `errors is declared once (it is also in ${ast.errorsFile}:${ast.errorsLine})`);

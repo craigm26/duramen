@@ -145,3 +145,19 @@ decision D-015 "What the first Python build found unsaid"
     consecutive; the clauses of an `op` or `oracle` with a malformed first line are read, as
     every other statement's are; a header's tolerance is the rest of its cell; and a decision
     cited twice by one requirement is judged once.
+
+decision D-016 "Where two blind builds agreed against duramen"
+  source blind builds s04 (TypeScript) and s05 (Python) of duramen-core 0.5.0, compared with duramen on 4,500 mutated records
+  text
+    s04 and s05 each passed every case of the 0.5.0 suite, were fixed points, and answered all
+    600 records of the usual comparison as duramen did. On 3,000 more, with other seeds, they
+    differed from duramen on five kinds of record, and on four of the five they gave the same
+    answer as each other, in two languages, from one brief: an `omit`, `request` or `input`
+    line with nothing after the word; a second `oracle` after one with no command; a `from`
+    file under an example dropped for its first line; and a cell that is not a number in a
+    column with a tolerance. Where independent builds agree and the model does not, the
+    model is the suspect, and in each of these duramen was the one that had not followed this
+    record's own words. 0.6.0 pins them. The fifth showed something no one had decided: a
+    table header that names a column twice, which duramen accepted while writing a request
+    with a member twice; it is now P013. Their choices showed one more of the first kind: both
+    read the phrases of T005 across a line break, and duramen did not.

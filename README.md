@@ -86,12 +86,12 @@ The full list of checks, the syntax and the limits are in [DESIGN.md](DESIGN.md)
 
 ## duramen specified in duramen
 
-[`spec/`](spec/) is duramen-core 0.5.0: the core of the language (the statements of 0.1 other
+[`spec/`](spec/) is duramen-core 0.6.0: the core of the language (the statements of 0.1 other
 than `edge`) and two operations of the checker, `check` (a record's diagnostics) and `cases`
-(the suite generated from it), in 42 requirements and 156 examples. It is written in the core
+(the suite generated from it), in 42 requirements and 158 examples. It is written in the core
 language it specifies, so that a checker built from it can read it, and its oracle is duramen
 itself, through `duramen serve`, which takes a record as a map of file names to texts. Every
-expected value in it was typed by hand, and `duramen check spec/` runs all 156 through duramen
+expected value in it was typed by hand, and `duramen check spec/` runs all 158 through duramen
 in about three seconds.
 
 Writing it found behavior nobody had decided. Before it was written, duramen dropped some
@@ -128,9 +128,16 @@ Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
    (as text, three cases list their members in another order). Its one `clarify` came from
    the previous round: a sentence written to pin one behavior also said something duramen
    does not do ([s03's record](selfhost/s03-py.md)).
+7. **Two builds against one model.** s04 (TypeScript) and s05 (Python), built at the same time
+   from 0.5.0, passed all 159 cases, are fixed points, and answered every one of 600 mutated
+   records as duramen did. On 4,500 more, they read 9 records differently from duramen, and
+   on all 9 they gave each other's answer, in two languages. Where independent builds agree
+   and the model does not, the model is the suspect: in each case duramen had not done what
+   its own spec says, and 0.6.0 follows the builds ([s04](selfhost/s04-ts.md),
+   [s05](selfhost/s05-py.md)).
 
 Blind means the builders were not shown duramen's source; the spec they read describes duramen
-in detail, and three builds with one model are a small sample.
+in detail, and five builds with one model are a small sample.
 
 ## The heat-engine slice
 

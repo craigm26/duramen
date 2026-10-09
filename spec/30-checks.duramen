@@ -173,7 +173,8 @@ req CK-006 "Obligations live in requirements"
     rejected alternative of a decision (at the decision's line), an operation's `result` (at
     the `op` line), and each condition under `errors` (at its clause's line). The text of an
     open item holding such a word MUST get the warning T014 at the open item's line. A word is
-    whole when no letter, digit or `_` touches it, so `MUST-have` holds MUST. A word inside a
+    whole when no ASCII letter, ASCII digit or `_` touches it, so `MUST-have` and `MUSTé` hold
+    MUST. A word inside a
     quotation on one line, between `"` and `"`, `“` and `”`, or two backquotes, is not such a
     word (the lines of a condition are lines here too), and titles are not checked.
   example check {}
@@ -223,7 +224,10 @@ req CK-006 "Obligations live in requirements"
       note
         text
           A MUST-have.
-    expect result.diagnostics = ["s.duramen:4: error T004", "s.duramen:7: error T004"]
+      section S "s"
+        text
+          MUSTé
+    expect result.diagnostics = ["s.duramen:4: error T004", "s.duramen:7: error T004", "s.duramen:10: error T004"]
 
 req CK-007 "Open items are not tested"
   decision D-014
@@ -253,7 +257,8 @@ req CK-008 "The order of errors is stated once"
     (not next to a letter, digit, `_` or `-`), and holds one of the phrases "in this order", "in
     the order", "first that applies", "first match", "precede", "precedes", "preceded",
     "before", "after", "take precedence" and "takes precedence" (as whole words, in any letter
-    case), MUST get T005 at its `text` clause's line.
+    case, with any white space between the words of a phrase, a line break included), MUST get
+    T005 at its `text` clause's line.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -277,8 +282,13 @@ req CK-008 "The order of errors is stated once"
           too_big is checked first.
           After that, nothing.
         example f {}
+      req D "d"
+        text
+          too_big and too_small are checked in this
+          order.
+        example f {}
     input files."echo.mjs" from "fixtures/echo.mjs"
-    expect result.diagnostics = ["s.duramen:14: error T005"]
+    expect result.diagnostics = ["s.duramen:14: error T005", "s.duramen:23: error T005"]
   example check {}
     input files."s.duramen"
       duramen 0.1

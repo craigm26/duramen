@@ -31,10 +31,12 @@ node selfhost/agree.mjs selfhost/impl/s01-ts --mutants 600 --seed 1
 | [s01](s01-ts.md) (ts) | 0.2.0 | 142/142 | 141/153 at 0.3.0 | yes | 1,429 of 1,458 (15 records differ) | 19 | 1 | 1 | no |
 | [s02](s02-ts.md) (ts) | 0.3.0 | 153/153 | 152/157 at 0.4.0 | yes | 1,469 of 1,480 (6 records differ) | 33 | 12 | 0 | yes |
 | [s03](s03-py.md) (py) | 0.4.0 | 157/157 | 157/159 at 0.5.0 | yes, as JSON values | 1,469 of 1,488 (10 records differ) | 27 | 14 | 1 | no |
+| [s04](s04-ts.md) (ts) | 0.5.0 | 159/159 | 159/161 at 0.6.0 | yes, as JSON values | 1,492 of 1,492; on 4,500 more, 9 records differ | 34 | 29 | 0 | yes |
+| [s05](s05-py.md) (py) | 0.5.0 | 159/159 | 160/161 at 0.6.0 | yes, as JSON values | 1,492 of 1,492; on 4,500 more, the same 9 records, with s04's answers | 29 | 21 | 0 | yes |
 
 Each build is compared with the duramen of its own round: the fixed point and the agreement
 are measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a, 0.3.0
-at 66b0b61, 0.4.0 at ee98e4b). From s03 on, suites and answers are compared as JSON values,
+at 66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0). From s03 on, suites and answers are compared as JSON values,
 member order ignored, as the specification compares results; s01's and s02's were identical
 as text too.
 

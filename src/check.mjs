@@ -10,7 +10,8 @@ import { planProperty, propertyCase, runPropertyCases, showBindings } from './pr
 
 const OBLIGATION = /\b(MUST|MUST NOT|SHALL|SHALL NOT|REQUIRED)\b/;
 const STATUSES = ['observed', 'inferred', 'proposed', 'accepted', 'contested', 'superseded', 'rejected'];
-const ORDER_WORDS = /\b(in this order|in the order|first that applies|first match|precede[sd]?|before|after|takes? precedence)\b/i;
+// The words of a phrase may be apart by any white space, a line break included.
+const ORDER_WORDS = /\b(in\s+this\s+order|in\s+the\s+order|first\s+that\s+applies|first\s+match|precede[sd]?|before|after|takes?\s+precedence)\b/i;
 
 const v02 = (ast) => (ast.version ?? '0.1') >= '0.2';
 
