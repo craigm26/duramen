@@ -7,7 +7,18 @@ import { exampleId, pick } from './check.mjs';
 import { describeStatic } from './static.mjs';
 import { refsOf, ownMember } from './types.mjs';
 
-const code = (s) => '`' + String(s).replace(/`/g, 'ˋ') + '`';
+// A code span that shows its text exactly. CommonMark ends a span at the first run of backticks
+// as long as the one that opened it, so the fence is one backtick longer than the longest run
+// inside; and it strips one space from each end of a span that starts and ends with one, so a
+// text that holds a backtick, or starts and ends with a space, is padded with a space each side.
+// (Until round two, a backtick was written as U+02CB here, which changed what an example said.)
+const code = (s) => {
+  const t = String(s);
+  const longest = Math.max(0, ...(t.match(/`+/g) ?? []).map((run) => run.length));
+  const fence = '`'.repeat(longest + 1);
+  const pad = longest > 0 || (t.startsWith(' ') && t.endsWith(' ') && t.trim() !== '') ? ' ' : '';
+  return fence + pad + t + pad + fence;
+};
 const cell = (s) => String(s).replace(/\|/g, '\\|');
 // Values are shown with object members sorted (by UTF-16 code units). Expectations are compared
 // as parsed JSON, so member order means nothing there, and a sorted object cannot look like it

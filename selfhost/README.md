@@ -59,15 +59,26 @@ node selfhost/judges.mjs <0.7.0 spec folder> --answers selfhost/impl/s01-ts ... 
 | [s10b](s10b-ts.md) (ts, haiku 4.5) | 0.7.0 | 1/171 | | (does not start) | | 13 | | | no |
 | [s12](s12-ts.md) (ts) | 0.8.0 | 235/235 | 235/235 at 0.9.0 | yes, as text too | 10,066 of 10,068 (1 record differs); 37 probes, 17 differ (7 after 55ae953) | 27 | 16 | 4 | no |
 | [s13](s13-py.md) (py) | 0.8.0 | 235/235 | 235/235 at 0.9.0 | yes, as JSON values | 10,067 of 10,068 (1 record differs); 46 probes, 14 differ (9 after 55ae953) | 34 | 18 | 4 | no |
+| [s14](s14-ts.md) (ts) | 0.9.0 | 235/235 | 239/239 at 0.10.0 | yes, as text too | 10,068 of 10,068; round eight's 374 probes, 27 differ, 9 undeclared | 20 | 12 | 2 | no |
+| [s15](s15-py.md) (py) | 0.9.0 | 235/235 | 236/239 at 0.10.0 | yes, as JSON values | 10,067 of 10,068 (1 record differs); the same probes | 25 | 17 | 2 | no |
+| [s16](s16-ts.md) (ts, opus) | 0.9.0 | 235/235 | 238/239 at 0.10.0 | yes, as text too | 10,068 of 10,068; the same probes | 35 | 18 | 6 | no |
+| [s17](s17-ts.md) (ts) | 0.10.0 | 239/239 | 242/243 at 0.11.0 | yes, as text too | 10,090 of 10,092 (1 record, open); round nine's 397 probes, 32 differ, 13 undeclared | 25 | 14 | 4 | no |
+| [s18](s18-py.md) (py) | 0.10.0 | 239/239 | 242/243 at 0.11.0 | yes, as JSON values | 10,090 of 10,092 (the same record); the same probes | 28 | 16 | 4 | no |
+| [s19](s19-ts.md) (ts, opus) | 0.10.0 | 239/239 | 242/243 at 0.11.0 | yes, as JSON values | 10,090 of 10,092 (the same record); the same probes | 30 | 18 | 3 | no |
 
 A probe differs when its checkers do not all answer it alike: duramen and every build of the
-round (five checkers in round six, three in rounds five and seven), with duramen as the round
-found it.
+round (five checkers in round six, three in rounds five and seven, four in rounds eight to
+ten), with duramen as the round found it. From round eight, for [CONFIDENCE-2.md](../CONFIDENCE-2.md)'s
+claim 8, a round's probes are every probe file so far, and a difference is *declared* when an
+open item of the round's brief covers it; [`converge.mjs`](converge.mjs) runs a round's
+checkers, mutants and pairs, and [`rounds/`](rounds/) holds each round's reports.
 Each build is compared with the duramen of its own round: the fixed point and the agreement are
 measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a, 0.3.0 at
-66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0, 0.6.0 at 78ecd48, 0.7.0 at e39579d). s01 to s09
+66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0, 0.6.0 at 78ecd48, 0.7.0 at e39579d, 0.8.0 at c6d499d,
+0.9.0 at 92dfcec, 0.10.0 at fb8f843, 0.11.0 at 4ca0ab7). s01 to s09
 were built by `claude-sonnet-5-5`; s10, s10b and s11 by the models named, for
-[CONFIDENCE.md](../CONFIDENCE.md)'s claim 2. From s08 on, the rescored column counts the 44
+[CONFIDENCE.md](../CONFIDENCE.md)'s claim 2; from s14 on, each round is two `claude-sonnet-5-5`
+builds and one `claude-opus-5-5` build. From s08 on, the rescored column counts the 44
 cases of `judge`, an operation the earlier versions did not have. From s03 on, suites and answers
 are compared as JSON values, member order ignored, as the specification compares results; s01's
 and s02's were identical as text too.

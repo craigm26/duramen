@@ -10,12 +10,15 @@ had ended.
 
 | brief | what the builder got | SPEC.md |
 |---|---|---|
-| [A-rfc](briefs/A-rfc/) | the protocol, then RFC 9535 and RFC 9485 in full | 167,338 characters |
-| [B-markdown](briefs/B-markdown/) | the protocol, then a SHALL-and-scenario specification written from the two RFCs by a separate `claude-opus-5-5` session ([its instructions](briefs/B-markdown/AUTHOR-PROMPT.md)), and its decisions | 104,258 characters |
-| [C-duramen](briefs/C-duramen/) | what `duramen build` writes from [`jsonpath.duramen`](jsonpath.duramen) | 87,171 characters |
+| [A-rfc](briefs/A-rfc/) | the protocol, then RFC 9535 and RFC 9485 in full | 167,356 bytes |
+| [B-markdown](briefs/B-markdown/) | the protocol, then a SHALL-and-scenario specification written from the two RFCs by a separate `claude-opus-5-5` session ([its instructions](briefs/B-markdown/AUTHOR-PROMPT.md)), and its decisions | 104,552 bytes |
+| [C-duramen](briefs/C-duramen/) | what `duramen build` writes from [`jsonpath.duramen`](jsonpath.duramen) | 87,341 bytes |
 
 The protocol section ([`briefs/protocol.md`](briefs/protocol.md)) is the same in all three: how
-the driver is run, the request and response shapes, the error codes, the folder rules. Every
+the driver is run, the request and response shapes, the error codes, the folder rules. It is
+the driver protocol, operations and errors parts of C's Interface section and C's
+implementation-folder section, verbatim; the Interface section's Types and Properties parts,
+which list C's own test inputs, were left out. Every
 build went through `duramen regen --brief`, with the same prompt, sandbox, isolation and audit,
 and was scored afterwards by C's own suite as well.
 
@@ -25,6 +28,7 @@ and was scored afterwards by C's own suite as well.
 `claude-haiku-5-5` alike, passed 704 of the suite's 706 cases, and so did C's oracle. All 19
 failed the same two cases. On 6,000 generated requests, B's four sonnet builds agreed with each
 other on every one, C's on all but one request in three pairs, and A's on all but 11 in three.
+And C's sonnet builds alone inherited an error from duramen's renderer (below).
 
 | build | model | language | minutes | cost | compliance suite (706) | C's suite (738) | agrees with the oracle (6,000) | non-blank lines |
 |---|---|---|---|---|---|---|---|---|
@@ -34,7 +38,7 @@ other on every one, C's on all but one request in three pairs, and A's on all bu
 | [A-sonnet-1-ts](regen/A-sonnet-1-ts.md) | `claude-sonnet-5-5` | ts | 5.2 | $1.15 | 704 | 690 | 5,984 | 1,007 |
 | [A-sonnet-2-py](regen/A-sonnet-2-py.md) | `claude-sonnet-5-5` | py | 5.9 | $1.25 | 704 | 689 | 5,973 | 869 |
 | [A-sonnet-2-ts](regen/A-sonnet-2-ts.md) | `claude-sonnet-5-5` | ts | 6.8 | $1.46 | 704 | 688 | 5,984 | 952 |
-| [B-haiku-1-ts](regen/B-haiku-1-ts.md) | `claude-haiku-5-5` | ts | 16.2 | $1.15 | 704 | 693 | 6,000 | 1,257 |
+| [B-haiku-1-ts](regen/B-haiku-1-ts.md) (disqualified, below) | `claude-haiku-5-5` | ts | 16.2 | $1.15 | 704 | 693 | 6,000 | 1,257 |
 | [B-haiku-2-ts](regen/B-haiku-2-ts.md) | `claude-haiku-5-5` | ts | 13.1 | $0.96 | 704 | 693 | 6,000 | 1,189 |
 | [B-sonnet-1-py](regen/B-sonnet-1-py.md) | `claude-sonnet-5-5` | py | 4.8 | $0.99 | 704 | 693 | 6,000 | 854 |
 | [B-sonnet-1-ts](regen/B-sonnet-1-ts.md) | `claude-sonnet-5-5` | ts | 6.3 | $1.39 | 704 | 693 | 6,000 | 929 |
@@ -54,32 +58,41 @@ included). Lines are non-blank lines outside test files. The oracle is 679 non-b
 
 - **The two failed cases**, `functions, match, explicit caret` (`$[?match(@, '^ab.*')]`) and
   `explicit dollar` (`.*bc$`), expect `^` and `$` to anchor. RFC 9485's grammar makes both
-  ordinary characters (`NormalChar`), and its mapping to XSD regexps is the identity, where they
-  are literals; its mapping to ECMAScript (section 5.3) wraps the pattern without escaping
-  them, which makes them anchors there. The suite follows section 5.3. All three briefs read the
-  grammar: B and C say so in words and examples, and every A build chose it from the RFC.
-- **What the generated requests found and the suite does not test.** The A sonnet builds
-  accepted blank space inside the brackets of a singular query in a comparison (`@[ 1]`), and
-  A-sonnet-2-py also a dot before a bracket (`$.['A']`); RFC 9535's grammar has neither. B's
-  and C's briefs say so. C-sonnet-1-ts and C-haiku-2-ts accepted a tab inside a singular query's
-  brackets, which decision D-003 of their own brief rejects (its examples use spaces).
-- **C's own suite** is not a fair judge of A and B: 45 of its cases, which every A and B build
-  fails, are the order of an object's members, decision D-001 (code-point order), where the RFC
-  leaves the order to the implementation and the compliance suite accepts any. Three more,
-  which the A sonnet builds fail, are D-003's examples.
-- **C's brief had faults of duramen's making.** The renderer wrote a backtick in an example's
-  query as `ˋ` (U+02CB), so one example of C's brief was false (`$.ˋa` is a valid query);
-  every C build noticed it. The evidence table showed its first 8 of 43 rows, as the renderer
-  does by design, under the heading `EV-EV-RFC` (the record named it `EV-RFC`).
+  ordinary characters (`NormalChar`), and its semantics, normative in section 4, are XSD's,
+  where they are literals; its mapping to ECMAScript (section 5.3), which the RFC marks not
+  normative, wraps the pattern without escaping them, which makes them anchors there. The suite
+  follows section 5.3. B and C state the literal reading in words and examples, and every A
+  build chose it from the RFC.
+- **What the generated requests found and the suite does not test.** All four A sonnet builds
+  accepted blank space inside the brackets of a singular query used as a comparable or a
+  function's argument (`@[ 1]`), and A-sonnet-2-py also a dot before a bracket (`$.['A']`);
+  RFC 9535's grammar has neither, and B's and C's briefs say so. C-sonnet-1-ts and
+  C-haiku-2-ts accepted a tab inside a singular query's brackets, which decision D-003 of their
+  own brief rejects (its examples use spaces).
+- **C's own suite** is not a fair judge of B: the 45 of its cases that every A and B build
+  fails are the order of an object's members, decision D-001 (code-point order), where the RFC
+  leaves the order to the implementation and the compliance suite accepts any. The A builds'
+  other failures are the standard's: D-003's three examples (RFC 9535's grammar of singular
+  queries), `$.[0]` (A-sonnet-2-py), `count((@.a))` (A-haiku-2-ts), a request A-sonnet-2-ts
+  did not answer (`$[?constructor(@)]`), and A-sonnet-1-py's own tests failing.
+- **C's builds inherited a false example.** duramen's renderer wrote a backtick in an example's
+  query as `ˋ` (U+02CB), so C's brief said `$.ˋa` is invalid, where RFC 9535 allows the name.
+  Every C build noticed the contradiction; the four sonnet builds followed the example and
+  answer `invalid_query` for `$.ˋa` and `$.aˋ`, where the oracle, every A and B build and both
+  C haiku builds answer the node. Nothing above measures it. The evidence table also showed
+  its first 8 of 43 rows, as the renderer does by design, under the heading `EV-EV-RFC` (the
+  record named it `EV-RFC`).
 - **Audits.** No build imports anything but its language's standard library and its own files
   ([`imports.mjs`](imports.mjs)). B-sonnet-1-ts tried to write two test files one folder above
   its work folder, which the permission rules refused. B-haiku-1-ts read Claude Code's output
-  file for a command it had run in the background, which is outside its folder by path and held
-  only that command's output; it is counted.
-- **One change during the builds.** At 18:04:57 UTC `src/check.mjs` and `src/suite.mjs` changed
-  for claim 8's round nine; C-haiku-2-ts's run started at 18:05:02 and was scored by the
-  changed code. The jsonpath record's check output, brief and suite were compared byte for
-  byte before and after the change and are identical.
+  file for its own test command, which Claude Code had moved to the background after 120
+  seconds: the file held only that command's output, but it is outside the build's folder, so
+  by the rule of CONFIDENCE-2.md the build is disqualified. It is a haiku build, which no
+  criterion uses.
+- **Changes to duramen after the freeze.** `src/` changed for claim 8 at 18:04:57 UTC, during
+  the haiku builds (C-haiku-2-ts's run started at 18:05:02 and was scored by the changed
+  code), and at 18:40, after the last build. The jsonpath record's check output, brief and
+  suite are identical byte for byte at a9aba75, after the first change and after the second.
 
 ## Files
 
