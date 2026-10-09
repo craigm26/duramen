@@ -73,5 +73,7 @@ the tests. The others follow the same protocol and have not been run here.
   workflow on GitHub's runners, as this repository's
   [`duramen-template.yml`](../.github/workflows/duramen-template.yml) sets it up for the
   heat-engine slice: `check` and `run` on a push, and `check`, `run` and `diff` on a pull
-  request.
+  request. [`ci/github-pull-request-37907708284.log`](ci/github-pull-request-37907708284.log): the
+  same on a pull request after the template moved to `actions/checkout@v7` and
+  `actions/setup-node@v7`.
 - `test/mcp-hook.test.mjs` and `test/agent.test.mjs` in `npm test`.

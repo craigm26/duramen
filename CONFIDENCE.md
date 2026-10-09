@@ -283,7 +283,11 @@ transcripts are GitHub's whole job logs.
   ([run 37903423478](https://github.com/craigm26/duramen/actions/runs/37903423478)); the logs
   are kept in [`integrations/ci/`](integrations/ci/). The template's steps were first run only
   by hand in this container ([`local-run.txt`](integrations/ci/local-run.txt)); the independent
-  check pointed out that the workflow itself had not run, and these runs followed.
+  check pointed out that the workflow itself had not run, and these runs followed. After the
+  pull request's review, the template moved from `actions/checkout@v4` and `actions/setup-node@v4`,
+  which GitHub warned run on the deprecated Node.js 20, to v7 of both, and ran again
+  ([run 37907708284](https://github.com/craigm26/duramen/actions/runs/37907708284), its log
+  kept too).
 - **Claude desktop** has a configuration file ([`claude_desktop_config.json`](integrations/claude-desktop/claude_desktop_config.json))
   and was not tried. The criteria's test does not include it, so the title claims more than
   the test shows.
