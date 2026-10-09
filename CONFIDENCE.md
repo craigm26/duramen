@@ -106,80 +106,95 @@ services. duramen does not specify those.
 
 ## Results
 
-Run on 2026-10-09 (UTC). The criteria above are as committed in e519ba0; where a run departed
-from them, it says so.
+Run on 2026-10-09 (UTC). The criteria above are as committed in e519ba0, which reached GitHub
+by 03:48:48 UTC, when its CI run
+([37880980807](https://github.com/craigm26/duramen/actions/runs/37880980807)) started. The
+first builds started about 15 seconds later (their records' end times less their durations).
+Where a run departed from the criteria, it says so. An agent that had not seen the work then
+checked these results against the repository, rerunning what it could; what it found, and what
+changed, is [the last section](#the-independent-check).
 
 | claim | result |
 |---|---|
 | 1. The loop converges | **fails** |
-| 2. The specification, not one model, carries the behavior | **passes** (with a deviation in the named model) |
-| 3. A regenerated build can be the reference | **(a) and (b) pass, (c) fails**; run with a build that had failed claim 1 |
-| 4. The judge can be regenerated too | **passes** |
+| 2. The specification, not one model, carries the behavior | **passes**, with a deviation in the named model |
+| 3. A regenerated build can be the reference | **fails**: (a) and (b) pass, (c) does not; run with a build that had failed claim 1 |
+| 4. The judge can be regenerated too | **passes**, on every case that has an answer; the 3 protocol cases of a run are outside `judge` |
 | 5. A second domain: a robot command safety gate | **passes** |
-| 6. Usable from Claude Code, Claude desktop and CI | **passes** |
+| 6. Usable from Claude Code, Claude desktop and CI | **not yet decided**: the MCP server and the hook pass; the CI template has not yet run on a CI runner |
 
 ### 1. The loop converges: fails
 
 s08 (TypeScript) and s09 (Python) each passed every case of the 0.7.0 suite (171/171) and were
 fixed points (as JSON values). Each of the three other conditions failed:
 
-- **Mutated records.** s08 answered 9,945 of 9,948 requests as duramen did, and s09 9,947. The
-  4 requests that differed came from three records: a raw example's `input ... from` line
-  followed by a line indented six; a valid tolerance and then a malformed one for the same path;
-  and two decisions with one ID.
+- **Mutated records.** Each build got 9,948 requests: `check` and `cases` for each of 4,500
+  mutated records, and, in each of the three runs, for the suite's own 158 records. s08 answered
+  9,945 as duramen did, and s09 9,947. The 4 requests that differed were all about mutated
+  records, and about three of them: a raw example's `input ... from` line followed by a line
+  indented six, and two decisions with one ID (s08); a valid tolerance and then a malformed one
+  for the same path (s09).
 - **`clarify`.** Each build's triage found three. The worst was a sentence of REQ-SY-003 that
   contradicted an example of REQ-SY-007.
-- **Records written for their choices.** Of 72 such records, 18 were answered in more than one
-  way. Several were answered alike by both builds and differently by duramen. On some of those,
-  duramen was the one that was wrong: in JavaScript `.` matches no U+2028, and duramen's patterns
-  used it.
+- **Records written for their choices.** Of 72 such records, 15 were answered in more than one
+  way by duramen, s08 and s09, and 12 of those alike by both builds and differently by duramen.
+  (Counting s10's and s11's answers too, 18 were answered in more than one way.) On some of the
+  12, duramen was the one that was wrong: in JavaScript `.` matches no U+2028, and duramen's
+  patterns used it.
 
-Two more builds of 0.7.0 (claim 2) differed on two of the same three records and nowhere else
-among the mutants. Their 75 choices led to 103 more records, 26 of them answered in more than one way. The
-mutants, which explore near the suite's own records, have almost stopped finding differences;
-the builders' recorded choices, which point at corners the words leave open, have not. 0.8.0
-pins what the four builds found in 20 new examples. Where duramen was wrong, it changed (five
-readings). Where a build was, the words now say so ([D-018](spec/90-decisions.duramen); the run
-records are [`selfhost/s08-ts.md`](selfhost/s08-ts.md) to [`s11-ts.md`](selfhost/s11-ts.md)).
+Two more builds of 0.7.0 (claim 2) differed from duramen on two of the same three records and
+on no other mutant. Their 75 choices led to 103 more records, 26 of them answered in more than
+one way by duramen and the four builds. The mutants, which explore near the suite's own
+records, have almost stopped finding differences; the builders' recorded choices, which point
+at corners the words leave open, have not. 0.8.0 pins what the four builds found in 20 new
+examples. Where duramen was wrong, it changed (five readings). Where a build was, the words now
+say so ([D-018](spec/90-decisions.duramen); the run records are
+[`selfhost/s08-ts.md`](selfhost/s08-ts.md) to [`s11-ts.md`](selfhost/s11-ts.md)).
 
 ### 2. The specification, not one model, carries the behavior: passes
 
-| run | model | suite | fixed point | mutated records answered as duramen did |
+| run | model | suite | fixed point | of the 9,948 requests of claim 1, answered as duramen did |
 |---|---|---|---|---|
 | s11 | `claude-opus-5-5` | 171/171 | yes, as text too | 9,945 of 9,948 |
 | s10 | `claude-haiku-5-5` | 171/171 | yes, as text too | 9,945 of 9,948 |
 | s10b | `claude-haiku-4-5-20251001` | 1/171 | (the driver does not start) | |
-| L01 | Gemma 4 E2B, through llama.cpp, on Craig's PC | 0/209 of the heat-engine slice | | |
+| L01 | Gemma 4 E2B, through llama.cpp, on Craig's PC | none of the 209 cases of the heat-engine slice could run | | |
 
-s11 meets the criterion, and so does s10. The deviations:
+s11 meets the criterion, and so does s10. The deviations and caveats:
 
 - **The Haiku model.** The criteria named `claude-haiku-4-5`. s10 was launched with
   `--model haiku`, which the CLI resolved to `claude-haiku-5-5`. The named model was then run
   as s10b. Its `REGEN.json` starts the driver with a flag Node refuses for a file, so nothing
-  ran. As a diagnostic only, a copy started correctly passes 69 of 171.
+  ran. As a diagnostic only, a copy started correctly passes 69 of 171. That is one run.
 - **The local model.** It ran through llama.cpp's server, not Ollama; both speak the same
   OpenAI-compatible protocol (`lib/regen/agent.mjs`).
-- **L01.** It read part of the brief and wrote code that does not parse. It wrote no driver,
-  and called `finish` with the work undone. By the criteria, that means models of its size
-  cannot yet serve as builders, and it was not tried on duramen-core.
+- **L01.** It read part of the brief and wrote a driver that Node cannot run (an `await`
+  outside an async function, and one constant declared twice), with no `REGEN.json` to start
+  it, and called `finish` with the work undone. By the criteria, that means models of its size
+  cannot yet serve as builders, and it was not tried on duramen-core. Its transcript is kept on
+  Craig's PC, because it holds local paths; the record gives its sha256.
 - **A bug in the audit.** s10b's run exposed it: the audit could not accept a model given by
   its full ID. Fixed, and the run audited again (clean).
+- **s10's fixed point under load.** Alone, s10 is a fixed point, as text too. With seven other
+  runs on the same machine, its check of `spec/` passed the 10-second limit it sets its own
+  oracle (its choice C-20) and reported T020 and T021.
 
-### 3. A regenerated build can be the reference: (a) and (b) pass, (c) fails
+### 3. A regenerated build can be the reference: fails
 
 The criteria said to use s08, or the first build of claim 1 that passed claim 1. None did, so
-this ran with s08 anyway ([`selfhost/reference.mjs`](selfhost/reference.mjs)).
+this ran with s08 anyway ([`selfhost/reference.mjs`](selfhost/reference.mjs)). The claim passes
+only if (a), (b) and (c) all hold, and (c) does not.
 
-- **(a) passes.** `spec/`, with its oracle pointed at s08, checks with no errors: all 168
+- **(a) holds.** `spec/`, with its oracle pointed at s08, checks with no errors: all 168
   hand-typed examples agree with s08.
-- **(b) passes.** The suite s08 writes with itself as the oracle is duramen's, value for value.
+- **(b) holds.** The suite s08 writes with itself as the oracle is duramen's, value for value.
   It gave every case the same verdict as duramen's suite, for eleven builds: the seven of the
-  earlier rounds (147 to 167 of 171), s09, s10, s11, and s10b at 1/171. Once a build is
-  a fixed point its suite equals duramen's, so (b) follows from it. The new evidence here is
-  that the verdicts held across builds that fail cases, too.
-- **(c) fails.** With duramen out of the loop, s08 and s09 answered 9,944 of the 9,948
-  mutated-record requests alike. The 4 that differed are the three records of claim 1, all
-  traced. None was open or pinned in 0.7.0, so (c) fails as worded. 0.8.0 pins all three.
+  earlier rounds (147 to 167 of 171), s09, s10, s11, and s10b at 1/171. Once a build is a fixed
+  point its suite equals duramen's, so (b) follows from it. The new evidence here is that the
+  verdicts held across builds that fail cases, too.
+- **(c) does not hold.** With duramen out of the loop, s08 and s09 answered 9,944 of the 9,948
+  requests alike. The 4 that differed are about the three records of claim 1, all traced. None
+  was open or pinned in 0.7.0, which (c) requires. 0.8.0 pins all three.
 
 ### 4. The judge can be regenerated too: passes
 
@@ -192,11 +207,14 @@ duramen-core 0.8.0 adds `judge` (REQ-JU-001 to REQ-JU-004, D-019): a case and an
 | s12 | TypeScript | 235/235 | yes, as text too | 2,016 of 2,016 | 2,016 of 2,016 |
 | s13 | Python | 235/235 | yes, as JSON values | 2,016 of 2,016 | 2,016 of 2,016 |
 
-The answers are those of the twelve earlier builds (s01 to s11 and s10b) to every case of the
-0.7.0 suite, collected once as `duramen run` collects them. duramen passes 0 to 168 of each
-build's 168, so the judges had failures to agree on as well as passes. Both judges were built
-by `claude-sonnet-5-5` from the brief alone ([`selfhost/judges.mjs`](selfhost/judges.mjs);
-[s12](selfhost/s12-ts.md), [s13](selfhost/s13-py.md)).
+The answers are those of the twelve earlier builds (s01 to s11 and s10b) to the 168 example
+cases of the 0.7.0 suite, collected once as `duramen run` collects them. duramen passes 0 to
+168 of each build's 168, so the judges had failures to agree on as well as passes. A run's
+other 3 cases (its exit status, its bytes, one response per request) judge the whole stream,
+not one answer, and `judge` does not take them: that narrows the criteria's "every case", and
+is said here. Both judges were built by `claude-sonnet-5-5` from the brief alone
+([`selfhost/judges.mjs`](selfhost/judges.mjs); [s12](selfhost/s12-ts.md),
+[s13](selfhost/s13-py.md)).
 
 With claim 3, every part of the loop has now been done by a rebuilt program at least once.
 Builds wrote the suite (s08's equals duramen's), stood in as the oracle (every example agreed
@@ -205,54 +223,109 @@ loop with no duramen in it (a build as the oracle, its suite, a rebuilt judge, r
 fresh build) has not been run as one, and the runner that collects answers is still duramen's.
 
 Their triage found more of duramen's mistakes than theirs. duramen was fixed after the round,
-as the run records say. Among them: standard input decoded one 64 KiB read at a time, members
-named `__proto__`, and the order of input lines.
+in 55ae953, as the run records say. Among them: standard input decoded one 64 KiB read at a
+time, members named `__proto__`, and the order of input lines.
 
 ### 5. A second domain, a robot command safety gate: passes
 
 [`examples/rcan-gate/`](examples/rcan-gate/) specifies a gate for RCAN commands. It is a pure
 function: state and command in; decision, reason and next state out. It covers RCAN's roles and
 scopes, level of assurance, freshness and replay, the ESTOP and STOP latches, joint and speed
-limits, and per-scope confidence gates that block or hold for a person. The record has 20
-requirements, 197 examples, 4 properties, 12 decisions with their sources, and 4 open items.
+limits, and per-scope confidence gates that block or hold for a person. The record the builds
+were made from, 1.0.0, has 20 requirements, 197 examples, 4 properties, 12 decisions with their
+sources, and 4 open items.
 
 | condition | result |
 |---|---|
-| both builds pass the suite | g01 (TypeScript) and g02 (Python), by `claude-sonnet-5-5`: **209/209** each, 2.3 minutes each |
+| both builds pass the suite | g01 (TypeScript) and g02 (Python), by `claude-sonnet-5-5` in 2.3 minutes each: **209/209** each |
 | 2,000 generated requests answered alike, or every difference traced | **6,000 of 6,000** alike (three seeds of 2,000, the two builds and the oracle) |
-| every mutant `duramen mutate` leaves alive shown equivalent, or killed | 148 mutants. 138 were caught, 3 of them by examples added after the first run. The 10 that change no answer are each shown equivalent in [the gate's README](examples/rcan-gate/README.md) |
+| every mutant `duramen mutate` leaves alive shown equivalent, or killed | 148 mutants. 138 were caught, 3 of them by examples added after a first run of `duramen mutate`, whose output was not kept. The 10 that change no answer are each shown equivalent in [the gate's README](examples/rcan-gate/README.md) |
 
 - **A new duramen feature.** To pass, `duramen agree` needed a way to draw its requests from
-  narrower types than an operation's inputs. duramen gained `op … draw` for that, before the
-  builds were launched.
+  narrower types than an operation's inputs. duramen gained `op … draw` for that while the
+  record was written, before the builds were launched; it was committed afterwards, with the
+  round's other changes, in fe33f6d. It changes what `agree` sends, and nothing in the brief.
 - **What agreement cannot see.** The drawn times are round numbers. A gate that compares
   freshness by another expression passes all 2,000 requests; the suite's examples catch it.
-- **Size.** The record is 794 lines: 302 of examples, 210 of requirement text, and 131 of
-  decisions and open items. The oracle is 118 lines; the builds are 158 and 179.
+- **What a second sweep found.** [`sweep.mjs`](examples/rcan-gate/sweep.mjs), outside
+  `duramen mutate` and so outside the criteria, swaps each string literal of the oracle for
+  another of its family and deletes each early return. At 1.0.0 it left 12 of 117 mutants
+  alive. Six change only the label of a malformed member, which only ever becomes
+  `bad_request`. The other six raise the lowest role of a scope no example reached:
+  `discover`, `observer`, `training`, `config`, `authority` and `admin`. The record stated
+  those roles; nothing checked them. Record 1.1.0 adds 16 examples (`duramen diff`:
+  tightening). The sweep then leaves only the six labels, `duramen mutate` gives the same 148,
+  138 and 10, and both builds pass the 1.1.0 suite, 225/225
+  ([`sweep.txt`](examples/rcan-gate/sweep.txt)).
+- **Size.** Record 1.0.0 is 793 lines, 729 of them not blank: 259 of examples, 184 of
+  requirement text and 131 of decisions and open items. The oracle is 118 non-blank lines; the
+  builds are 158 and 179.
 - **What it found in RCAN's own sources.** rcan-ts refuses the scopes `constructor` and
   `__proto__` for every role, against its own rule for unknown scopes. Its SDKs and one
   changelog line disagree about a confidence equal to the minimum. Its documents disagree with
   each other about where `min_loa_for_control` applies.
 
-### 6. Usable from Claude Code, Claude desktop and CI: passes
+### 6. Usable from Claude Code, Claude desktop and CI: not yet decided
 
-Each ran end to end, with its transcript in [`integrations/`](integrations/):
+The transcripts are in [`integrations/`](integrations/). Each kept transcript is an extract of
+the raw stream: the lines that show the tool calls and their results.
 
-- **The MCP server.** `claude -p`, with `duramen mcp`, found and explained a planted T002.
-- **The hook.** It blocked an edit that broke an example, and told the agent why at once.
-- **CI.** The workflow's steps ran on the heat-engine slice.
+- **The MCP server: passes.** `claude -p`, with `duramen mcp`, found and explained a planted
+  T002.
+- **The hook: passes.** It blocked an edit that broke an example, and told the agent why at
+  once.
+- **CI: not yet run as CI.** The workflow's steps were run by hand in this container, on the
+  heat-engine slice ([`local-run.txt`](integrations/ci/local-run.txt)); the workflow itself had
+  not run on a CI runner. [`duramen-template.yml`](.github/workflows/duramen-template.yml) is
+  the template set up for the heat-engine slice, so that GitHub's runners run it; this claim
+  is decided when they have.
+- **Claude desktop** has a configuration file ([`claude_desktop_config.json`](integrations/claude-desktop/claude_desktop_config.json))
+  and was not tried. The criteria's test does not include it, so the title claims more than
+  the test shows.
 
 ### Against regenerative software, as listed above
 
 - **Builds that differ from duramen on records nobody wrote down, in ways no one can trace.**
   Each difference found was traced, to a builder's recorded choice or to a mutated example. But
   each round still found new ones: 44 of 175 records written for round six's choices were
-  answered in more than one way.
+  answered in more than one way by duramen and the four builds.
 - **A regenerated reference that judges differently from the hand-written one.** It did not
   happen (claim 3 (b)), and neither did a regenerated judge that judges differently (claim 4).
 - **A domain whose specification must restate the implementation line by line.** The gate's
-  prose (its requirements, sections and errors list) is longer than its oracle, 210 lines to
-  118. It states behavior, not code: two builders who never saw the oracle wrote 158 and 179
-  lines from it, in two languages. Whether that is a restatement is for the reader to judge
-  from the record.
+  prose (its requirements, sections and errors list) is longer than its oracle, 195 non-blank
+  lines to 118. It states behavior, not code: two builders who never saw the oracle wrote 158
+  and 179 non-blank lines from it, in two languages. Whether that is a restatement is for the reader to
+  judge from the record.
 
+## The independent check
+
+After the results above were first written, an agent that had not seen the work checked each
+of them against this repository: it rebuilt old versions in git worktrees and reran the
+suites, the fixed points, the agreement runs, the probes, the judges, the gate's suite,
+`agree` and `mutate`, and counted lines and cases. Every number it could rerun came out as
+written, except for these, which are corrected above and in the run records:
+
+| what it found | what changed |
+|---|---|
+| Claim 3's verdict did not follow its own criteria: (c) failed, so the claim fails | claim 3 is reported as failing; README.md no longer says "passes in part" |
+| s08's record said each build differed from duramen on three mutated records; they differed on one or two (s08 two, s09 one, s10 two, s11 two) | the sentence in [`selfhost/s08-ts.md`](selfhost/s08-ts.md) |
+| L01 was said to have written no driver; it wrote one Node cannot run, and no REGEN.json | claim 2, L01 |
+| The gate record was said to be 794 lines, and its parts were counted by no stated rule | 793 lines; the parts as non-blank lines |
+| The round-seven records said duramen had been fixed, in the commit before the fix (a1b7b16, then 55ae953) | the records now name 55ae953 |
+| s12's record called a choice `clarify` that s13's called already pinned, though it is a 0.9.0 proposal | both `clarify`; s13 has 4, and 18 already pinned |
+| Claim 1's 18 of 72 counted five checkers' answers; for duramen, s08 and s09 it is 15, and 12 alike in both builds | claim 1 gives both |
+| s13's record counted kept records with requests that were not kept (87, 29) | 46 records, 14 answered in more than one way; the other requests are described, not counted |
+| Claim 4 judged the 168 example cases of each build, not the 3 protocol cases of each run | said in claim 4 |
+| Claim 6's CI ran the template's steps by hand, not as a workflow | claim 6 is not decided until GitHub's runners have run it |
+| The gate README's second sweep of mutants (102 mutants, 6 alive, all label changes) had no script or output kept | rewritten and kept as [`sweep.mjs`](examples/rcan-gate/sweep.mjs) and [`sweep.txt`](examples/rcan-gate/sweep.txt), it makes 117 mutants and left 12 alive at 1.0.0: the six label changes, and six raised lowest roles no example reached, pinned in 1.1.0 |
+| "9,948 mutated-record requests" included 948 about the suite's own, unmutated records | claim 1 says what the requests were |
+| s10 is a fixed point only on a machine running nothing else | said in claim 2 and in s10's record |
+| s10b's and L01's records said their models cannot build; each is one run | both say one run |
+| `op … draw` came "before the builds were launched" by its files' times only; it was committed after them | claim 5 says when it was committed |
+| Claim 6's transcripts are extracts of the raw streams, and Claude desktop was never tried | said in claim 6 |
+
+It could not check what the repository does not hold: the builders' transcripts (the ledgers
+keep their sha256), L01's transcript on Craig's PC, and the first run of `duramen mutate` on the
+gate. It was not asked to read RCAN's sources. While these were corrected, one more mismatch
+turned up: the proposals for 0.9.0 in s12's and s13's records were cited by numbers from an
+older, longer list. The list is now numbered, and the citations match it.

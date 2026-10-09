@@ -26,6 +26,6 @@ turns:
 4. It called `finish`, saying the build was complete and all tests passed.
 
 The suite and the static checks are what caught it: the builder's own account of its work was
-wrong. A local model of about 2 billion effective parameters cannot build this slice from the
-brief; by the measure set in CONFIDENCE.md before the run (less than half the suite), models of
-its size cannot yet serve as builders here.
+wrong. In one run, a local model of about 2 billion effective parameters did not build this
+slice from the brief; by the measure set in CONFIDENCE.md before the run (less than half the
+suite), models of its size cannot yet serve as builders here.

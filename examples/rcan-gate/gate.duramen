@@ -3,10 +3,12 @@
 # rcan.dev (its source, github.com/RobotRegistryFoundation/rcan-spec, at 0f425ec) and the
 # TypeScript SDK rcan-ts at b563fb5. Where those disagree, or say nothing, a decision says which
 # reading this record takes and why. The oracle is oracle.mjs, written to this record.
+# Versions: g01 and g02 were built blind from 1.0.0. 1.1.0 adds 16 examples to REQ-GT-006, the
+# lowest role of scopes no example had reached, found by sweep.mjs (duramen diff: tightening).
 
 duramen 0.2
 
-spec rcan-gate 1.0.0
+spec rcan-gate 1.1.0
   title "A command gate for an RCAN robot: emergency stops, freshness, replay, roles, assurance, limits and confidence"
   text
     `rcan-gate` decides whether a robot may carry out a command. It is a pure function: the
@@ -438,6 +440,22 @@ req GT-006 "Roles and scopes"
     | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "constructor", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
     | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "__proto__", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
     | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "toString", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "status", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "discover", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "observer", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "teleop", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "teleop", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "ADMIN", "kind": "move", "scope": "training", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CONTRIBUTOR", "kind": "move", "scope": "training", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CONTRIBUTOR", "kind": "move", "scope": "training_data", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "ADMIN", "kind": "move", "scope": "config", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "ADMIN", "kind": "move", "scope": "authority", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CONTRIBUTOR", "kind": "move", "scope": "authority", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CREATOR", "kind": "move", "scope": "admin", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CREATOR", "kind": "move", "scope": "safety", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "M2M_PEER", "kind": "move", "scope": "safety", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CREATOR", "kind": "move", "scope": "estop", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "M2M_PEER", "kind": "move", "scope": "estop", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
     | {"now": 1000} | {"id": "s1", "timestamp": 1000, "role": "GUEST", "kind": "safety", "event": "STOP"} | "refuse" | "role" |
     | {"now": 1000} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "RESUME"} | "execute" | "resume" |
     | {"now": 1000, "estopped": true} | {"id": "c1", "timestamp": 1000, "role": "M2M_PEER", "kind": "safety", "event": "ESTOP_CLEAR"} | "refuse" | "role" |

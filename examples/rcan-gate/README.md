@@ -16,9 +16,10 @@ and sets the clock. The rules are RCAN's:
 - a command a model produced with too little confidence is blocked, or held for a person.
 
 The record was written for claim 5 of [`CONFIDENCE.md`](../../CONFIDENCE.md): a second domain,
-outside duramen's own, rebuilt blind and judged. It has 20 requirements, 197 examples, 4
-properties, 12 decisions and 4 open items. [`oracle.mjs`](oracle.mjs) is its reference model,
-written to the record, behind the driver [`driver.mjs`](driver.mjs).
+outside duramen's own, rebuilt blind and judged. The builds were made from version 1.0.0: 20
+requirements, 197 examples, 4 properties, 12 decisions and 4 open items. Version 1.1.0 adds 16
+examples (below). [`oracle.mjs`](oracle.mjs) is its reference model, written to the record,
+behind the driver [`driver.mjs`](driver.mjs).
 
 ```
 node bin/duramen.mjs check examples/rcan-gate/gate.duramen
@@ -26,16 +27,18 @@ node bin/duramen.mjs regen examples/rcan-gate/gate.duramen --lang ts --runs exam
 node bin/duramen.mjs run examples/rcan-gate/gate.duramen --impl examples/rcan-gate/regen/impl/g01-ts
 node bin/duramen.mjs agree examples/rcan-gate/gate.duramen --impl examples/rcan-gate/regen/impl/g01-ts --impl examples/rcan-gate/regen/impl/g02-py --oracle --samples 2000 --seed 1
 node bin/duramen.mjs mutate examples/rcan-gate/gate.duramen
+node examples/rcan-gate/sweep.mjs
 ```
 
 ## Results
 
 | | |
 |---|---|
-| Blind builds, from the brief only | [g01](regen/g01-ts.md) (TypeScript, 158 lines) and [g02](regen/g02-py.md) (Python, 179 lines), by `claude-sonnet-5-5`, 2.3 minutes each |
-| The suite | both **209/209** (197 examples, 4 properties, 5 static checks, 3 protocol cases) |
+| Blind builds, from the brief of 1.0.0 only | [g01](regen/g01-ts.md) (TypeScript, 158 non-blank lines) and [g02](regen/g02-py.md) (Python, 179), by `claude-sonnet-5-5`, 2.3 minutes each |
+| The suite of 1.0.0 | both **209/209** (197 examples, 4 properties, 5 static checks, 3 protocol cases) |
+| Rescored at 1.1.0 | both **225/225** (213 examples) |
 | `duramen agree`, the two builds and the oracle | **6,000 of 6,000** generated requests answered alike (three seeds of 2,000) |
-| `duramen mutate` on the oracle | 148 mutants: 138 caught, 10 that change no answer, all shown equivalent below |
+| `duramen mutate` on the oracle | 148 mutants: 138 caught, 10 that change no answer, all shown equivalent below (the same at 1.0.0 and 1.1.0) |
 | Choices recorded by the builders | 19: no `pin`, no `clarify`; 4 in the gaps the record leaves open, 12 already pinned, 3 quirks |
 
 Each build's audit counts one violation: a command naming `/tmp/x`, which the sandbox refused,
@@ -61,11 +64,23 @@ Each changes no answer to any request any check makes, and none could change one
 - **The defaults of `minLoaControl` and `minLoaSafety`, 1 to 0.** A command's level of assurance
   is 1, 2 or 3, so a minimum of 0 refuses nothing that a minimum of 1 does.
 
-A further sweep outside `duramen mutate` made 102 more mutants. It swapped each string literal
-for another of its family (roles, decisions, reasons, events, tiers, `onFail` values, kinds) and
-deleted each line that returns early from `decide`. 96 were caught. The 6 survivors change the
-label `stateProblem` or `commandProblem` returns for a malformed member, which only ever becomes
-`bad_request`.
+### A second sweep, and version 1.1.0
+
+[`sweep.mjs`](sweep.mjs) makes mutants `duramen mutate` does not: it swaps each string literal
+of the oracle for the next member of its family (roles, decisions, reasons, events, tiers,
+`onFail` values, kinds) and deletes each line that returns early from `decide`, 117 mutants in
+all, and checks the record against each. (A first sweep of this kind, reported here as 102
+mutants with 6 alive, kept no script or output; this one replaces it.)
+
+At 1.0.0 it left 12 alive. Six change the label `stateProblem` or `commandProblem` returns for
+a malformed member, which only ever becomes `bad_request`, so they change no answer. The other
+six raise the lowest role of a scope that no example reached: `discover` and `observer`
+(`GUEST` to `OPERATOR`), `training`, `config` and `authority` (`ADMIN` to `M2M_PEER`), and
+`admin` (`CREATOR` to `M2M_TRUSTED`). REQ-GT-006 states those roles in a table; nothing checked
+them. Version 1.1.0 adds 16 rows to REQ-GT-006's examples, the lowest role of each such scope
+and the role below it (`duramen diff`: tightening, so a new minor version). The sweep then
+leaves only the six labels ([`sweep.txt`](sweep.txt)). Both builds, made from 1.0.0, pass the
+1.1.0 suite: they had read the table right.
 
 ### What generated agreement cannot see
 

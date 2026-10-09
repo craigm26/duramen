@@ -9,7 +9,9 @@
 - Build: 1,953 non-blank lines of TypeScript, 102 tests of its own (`node --test`), all passing
 - duramen suite: **passed 171/171** (example 168/168, protocol 3/3); rescored at 0.8.0:
   **186/235** (the 44 cases of `judge`, and SY-001#7, SY-007#8, SY-010#7, SY-012#6, CK-005#2)
-- Fixed point: **yes, as text too** (168 cases, and both cross-checks)
+- Fixed point: **yes, as text too** (168 cases, and both cross-checks), on a machine running
+  nothing else. With seven other runs alongside, its check of `spec/` passed the 10-second limit
+  it gives its oracle (its C-20) and reported T020 and four T021, as an independent check found
 - Agreement on mutants at 0.7.0: three seeds of 1,500 mutants, 9,948 requests: **9,945 alike**;
   3 differ, on two records (below)
 - Clean run: **no** (2 clarify)

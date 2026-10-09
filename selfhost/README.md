@@ -57,9 +57,12 @@ node selfhost/judges.mjs <0.7.0 spec folder> --answers selfhost/impl/s01-ts ... 
 | [s10](s10-ts.md) (ts, haiku) | 0.7.0 | 171/171 | 186/235 at 0.8.0 | yes, as text too | 9,945 of 9,948 (2 records differ); 103 probes, 26 differ | 32 | 16 | 2 | no |
 | [s11](s11-ts.md) (ts, opus) | 0.7.0 | 171/171 | 183/235 at 0.8.0 | yes, as text too | 9,945 of 9,948 (2 records differ); the same probes | 43 | 10 | 11 | no |
 | [s10b](s10b-ts.md) (ts, haiku 4.5) | 0.7.0 | 1/171 | | (does not start) | | 13 | | | no |
-| [s12](s12-ts.md) (ts) | 0.8.0 | 235/235 | | yes, as text too | 10,066 of 10,068 (1 record differs); 37 probes, 17 differ | 27 | 16 | 4 | no |
-| [s13](s13-py.md) (py) | 0.8.0 | 235/235 | | yes, as JSON values | 10,067 of 10,068 (1 record differs); 46 probes, 14 differ | 34 | 19 | 3 | no |
+| [s12](s12-ts.md) (ts) | 0.8.0 | 235/235 | | yes, as text too | 10,066 of 10,068 (1 record differs); 37 probes, 17 differ (7 after 55ae953) | 27 | 16 | 4 | no |
+| [s13](s13-py.md) (py) | 0.8.0 | 235/235 | | yes, as JSON values | 10,067 of 10,068 (1 record differs); 46 probes, 14 differ (9 after 55ae953) | 34 | 18 | 4 | no |
 
+A probe differs when its checkers do not all answer it alike: duramen and every build of the
+round (five checkers in round six, three in rounds five and seven), with duramen as the round
+found it.
 Each build is compared with the duramen of its own round: the fixed point and the agreement are
 measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a, 0.3.0 at
 66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0, 0.6.0 at 78ecd48, 0.7.0 at e39579d). s01 to s09

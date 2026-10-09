@@ -24,36 +24,37 @@ builds, 2,016 answers ([`judges.mjs`](judges.mjs)). s12 gave every one the verdi
 ## CHOICES triage
 27 choices: pin 0, clarify 4, open 6, wrong 0, quirk 1; 16 already pinned. The records and
 requests written for them are [`probes/s12-s13.txt`](probes/s12-s13.txt) and the triage's own
-files; of 37 records, 17 were answered in more than one way by duramen, s12 and s13.
+files; of 37 records, 17 were answered in more than one way by duramen, s12 and s13, with
+duramen as the round found it (7 after 55ae953).
 
 | C-id | Builder's choice (short) | Triage | Spec reference / action (one line) |
 |---|---|---|---|
-| C-1 | Request files written to a temp folder, all of them; oracle run in its file's folder | already pinned | REQ-RQ-001 ("as if these files were the whole content of a folder"), REQ-OR-002 ("in the folder of the file that holds the oracle statement"), example OR-002#2; all agree on oracles in `build/`, `.tools/`, and outside the record (entry `r`, `../echo.mjs`). Related: a lone surrogate in a text is read three ways (proposal 11). |
+| C-1 | Request files written to a temp folder, all of them; oracle run in its file's folder | already pinned | REQ-RQ-001 ("as if these files were the whole content of a folder"), REQ-OR-002 ("in the folder of the file that holds the oracle statement"), example OR-002#2; all agree on oracles in `build/`, `.tools/`, and outside the record (entry `r`, `../echo.mjs`). Related: a lone surrogate in a text is read three ways (proposal 7). |
 | C-2 | Each oracle run stopped after 20 s (T020), output kept | open | OPEN-RQ-001. A 25 s oracle: s12 T020 + T021; D0 (30 s + 0.1 s per request line) and s13 (60 s) none. |
 | C-3 | `node` not on PATH: the oracle runs with the checker's own Node | open | Outside what the suite can observe (its oracles and runner need `node`). With PATH=/usr/bin:/bin, D0 and s13 give T020 + T021, s12 runs the example (no diagnostic). |
-| C-4 | `"entry": null` is present, so `bad_request` | already pinned | Errors item 3 ("when `entry` is present and is neither "." nor a relative path"), RQ-002#19-21; all agree on null, false, {}, "./a.duramen", "a.duramen/" (C-4a-e). An example is optional (proposal 12). |
+| C-4 | `"entry": null` is present, so `bad_request` | already pinned | Errors item 3 ("when `entry` is present and is neither "." nor a relative path"), RQ-002#19-21; all agree on null, false, {}, "./a.duramen", "a.duramen/" (C-4a-e). An example would pin it; none is proposed. |
 | C-5 | A string `kind` other than eq/approx is well-formed and never holds; another kind is `bad_request` | open | OPEN-JU-001. D0: `bad_request` for "foo" and "EQ", and evaluates "present"; s12 = s13: "checks.0" failed; kind 1 or missing: `bad_request` in all three. |
 | C-6 | `type` ... `evidence`, `returns`, `static` accepted, their lines ignored, no diagnostic | open | OPEN-RC-001. D0 reads them (P029, P015, P007, P016, P038, P043, P005; P006, P052, P027); s12 nothing, but T001 when a `static` is a requirement's only evaluation; s13 nothing, and counts `static`. |
-| C-7 | `..` above the request's folder in a `from` name: P048 | already pinned | REQ-SY-011 ("`..` goes up one folder"; P048 "a name that leaves the record's folder included"), example SY-011#4; all agree (`../t.txt`, `sub/../../t.txt`, `../../r/t.txt` from `r`). Related: all three accept `../r/t.txt` from `r`: clarify "leaves" (proposal 5). |
-| C-8 | A `from` name resolving to the empty path or a folder: P048 | already pinned | REQ-SY-011 ("empty parts and . are skipped"; "a folder ... included"), SY-011#6; all agree on "", ".", "./", "sub", "sub/", "/" (P048) and "sub/x.txt/" (read). Related: D0 alone refuses "/t.txt" and crashes on "t\q.txt" (proposals 8, 9). |
+| C-7 | `..` above the request's folder in a `from` name: P048 | already pinned | REQ-SY-011 ("`..` goes up one folder"; P048 "a name that leaves the record's folder included"), example SY-011#4; all agree (`../t.txt`, `sub/../../t.txt`, `../../r/t.txt` from `r`). Related: all three accept `../r/t.txt` from `r`: clarify "leaves" (proposal 8). |
+| C-8 | A `from` name resolving to the empty path or a folder: P048 | already pinned | REQ-SY-011 ("empty parts and . are skipped"; "a folder ... included"), SY-011#6; all agree on "", ".", "./", "sub", "sub/", "/" (P048) and "sub/x.txt/" (read). Related: D0 alone refused "/t.txt" and stopped with an internal error (P099) on "t\q.txt" (changed in 55ae953, under What the round found). |
 | C-9 | `≈` line split at each `±`/`+-` in turn; the first split giving two JSON numbers wins | quirk | Unobservable: a JSON number holds neither `±` nor `+-`, so at most one split gives two numbers (by their code, D0's pattern takes the last separator and s13 the first); 6 malformed and 3 well-formed lines read alike. |
 | C-10 | After the path, anything but `=`, `≈`, `~`, and an empty path: P011 | already pinned | REQ-SY-010 ("Any other line MUST get P011"; a path "is not empty"), SY-010#2 (`expect result`, `expect = 1`, `expect result =` P009); all agree on 7 lines. |
 | C-11 | Separator: starts and ends with `|`, only `|`, `-`, `:` and white space (`|`, `|   |` too) | already pinned | REQ-SY-012, examples SY-012#4 (`|   |`, `|`) and #6 (U+00A0, tab, U+3000); all agree (`||`, `|:|`, U+2028 and U+00A0, tabs inside rows). |
-| C-12 | `result ±` (nothing after the sign): P010, and the column has no tolerance | clarify | REQ-SY-012 ("± and a tolerance, which is the rest of the cell; anything else after the name makes the cell of no form") reads as P010 or P013 when the rest is empty; all agree on P010; s13 recorded the same doubt (its C-34). Proposal 4. |
+| C-12 | `result ±` (nothing after the sign): P010, and the column has no tolerance | clarify | REQ-SY-012 ("± and a tolerance, which is the rest of the cell; anything else after the name makes the cell of no form") reads as P010 or P013 when the rest is empty; all agree on P010; s13 recorded the same doubt (its C-34). Proposal 3. |
 | C-13 | `result`/`audit`/`error`/`id` columns are paths even when the op declares such a field; any other name is an input column, declared or not | clarify | REQ-SY-012 "also when the operation declares an input field of that name": both 0.8.0 builders read it as "even when" and say it reads two ways (s13 C-9); SY-012#6 passes either reading. All agree (T011; `cases`). Proposal 3. |
 | C-14 | `text Here.` gets P008, and the lines under it are still read | already pinned | REQ-SY-005 (P008 at the clause; P008 for a line under it indented three), REQ-SY-003 (a second `text` P052 "also when the first one got a problem of its own"), SY-003#6; all agree. |
 | C-15 | `on` with nothing after it: P033 | already pinned | REQ-SY-009 ("any other MUST get P033"), SY-009#2; all agree. |
 | C-16 | `superseded by <ID>` valid when any declaration of the ID exists; the ID is the rest, one word | already pinned | REQ-CK-009 ("exactly `superseded by <ID>`, naming a declared decision"; an ID declared twice "is one decision"), CK-009#1, #3; all agree on six spellings. |
 | C-17 | T005 counts distinct codes | already pinned | REQ-CK-008 ("names two or more of the codes declared there"), CK-008#1 req C; all agree (one code named twice, a code listed twice: none; two codes: T005). |
-| C-18 | T004: a quotation, to its closing mark on the line, becomes a space; an unclosed mark is ordinary | clarify | REQ-CK-006, three corners split three ways: `x`a`MUST` (s12 = s13 T004, D0 none), `MU`a`ST` (D0 T004, builds none), a rejected alternative whose string holds `\n` inside a quotation (D0 = s13 T004, s12 none). Proposal 2. |
+| C-18 | T004: a quotation, to its closing mark on the line, becomes a space; an unclosed mark is ordinary | clarify | REQ-CK-006, three corners split three ways: `x`a`MUST` (s12 = s13 T004, D0 none), `MU`a`ST` (D0 T004, builds none), a rejected alternative whose string holds `\n` inside a quotation (D0 = s13 T004, s12 none). Proposal 1. |
 | C-19 | Two requirements with one ID share responses by case ID | already pinned | REQ-OR-002 ("of two responses with one id, the first is the one"), REQ-CK-002; all agree (T007, T002). |
-| C-20 | T024 only when an example states no expectation at all | clarify | REQ-OR-007 "answers an example that states no expectation with an error" parses two ways: D0 = s12; s13 gives T024 to every example with no expectation about `error` (four more). Proposal 1. |
+| C-20 | T024 only when an example states no expectation at all | clarify | REQ-OR-007 "answers an example that states no expectation with an error" parses two ways: D0 = s12; s13 gives T024 to every example with no expectation about `error` (four more). Proposal 2. |
 | C-21 | `full` with `error` (even null): result and audit not compared; the answer needs an equal own `error` | already pinned | REQ-JU-004 ("its `result` and `audit` are then not compared"), JU-004#2-4; all agree (C-21a-e). |
 | C-22 | A tolerance applies only when both values are numbers | already pinned | REQ-JU-004 ("a number at a path that `tolerances` names"), JU-004 table row 3; all agree (C-22a-h). |
-| C-23 | Members are own data properties, so `__proto__` is a name like any other | already pinned | REQ-SY-007, SY-011, SY-012, CK-004, SU-003, SU-005 treat every name alike; s12 = s13 (and s08 to s11) against D0 on 8 records, and D0 sets members on Object.prototype. Proposal 7. |
-| C-24 | Lines end at LF; blank = spaces and tabs only; a last line without LF answered; answers as lines arrive | open | The brief's driver protocol ("whether other white space makes a line blank is open"), OPEN-SU-001; all agree (C-24a-d); D0 answers only at end of input. Related: D0 misreads a character across a 64 KiB read (proposal 6). |
+| C-23 | Members are own data properties, so `__proto__` is a name like any other | already pinned | REQ-SY-007, SY-011, SY-012, CK-004, SU-003, SU-005 treat every name alike; s12 = s13 (and s08 to s11) against D0 on 8 records, and D0 set members on Object.prototype (changed in 55ae953, under What the round found). |
+| C-24 | Lines end at LF; blank = spaces and tabs only; a last line without LF answered; answers as lines arrive | open | The brief's driver protocol ("whether other white space makes a line blank is open"), OPEN-SU-001; all agree (C-24a-d); D0 answers only at end of input. Related: D0 misread a character across a 64 KiB read (changed in 55ae953, under What the round found). |
 | C-25 | `internal_error` with the request's id, details on standard error | open | OPEN-RQ-004. JSON 20,000 deep: D0 `internal_error` with the id (judge), P099 (check); s12 `internal_error` with `"id": null` (judge: not what its C-25 says), with the id (check); s13 `bad_request`, P009. |
-| C-26 | A `#` line at indent 3 to 5 ends an input text; at 6 or more it is text, or a comment when no text is open | already pinned | REQ-SY-011 (the text runs to the first line neither blank nor indented six; comments at indent 0 or 2 are not lines; P006 after a `from` line "other than comments"), SY-011#6; all agree. Related: s12 alone gives a malformed `from` line text (proposal 10). |
+| C-26 | A `#` line at indent 3 to 5 ends an input text; at 6 or more it is text, or a comment when no text is open | already pinned | REQ-SY-011 (the text runs to the first line neither blank nor indented six; comments at indent 0 or 2 are not lines; P006 after a `from` line "other than comments"), SY-011#6; all agree. Related: s12 alone gives a malformed `from` line text (proposal 6). |
 | C-27 | `section`/`req`/`open`/`decision` with no ID or title: P005, clauses still read | already pinned | REQ-SY-003 ("The body of a statement MUST be read as clauses"), REQ-SY-006, D-015; all agree on 11 diagnostics; the ID is unobservable (P005 stops the checks). |
 
 ## What the round found
@@ -74,17 +75,21 @@ duramen. On records written for their choices, duramen was the one out of step:
   lines in order.
 - **A row ending in `\|`.** duramen took the escaped pipe for the row's closing one.
 
-duramen changed on each of these after the round, with tests; none touches a case of the 0.8.0
-suite. Where the words read two ways, they are proposals for 0.9.0:
-- quotations in T004 should separate the words around them (`MU`a`ST` holds no MUST, `x`a`MUST`
-  does);
-- REQ-OR-007's "an example that states no expectation" should say "no expectation at all"
-  (s13 gives T024 to examples whose expectations hold);
-- REQ-SY-012's "also when" should say "even when", and an empty tolerance after `±` gets P010;
-- REQ-SU-005 should write `audit` into `full` only when it is a string, since `judge` refuses
-  any other;
-- the decoding of oracle output that is not UTF-8, P014 and nothing else for a row of the wrong
-  width, and one depth for all brackets between input fields should be stated;
-- a malformed `input ... from` line still takes no text (s12 read the line after it as text);
-- lone surrogates in a record's texts, and JSON nested thousands deep, should be stated or left
-  open, since the three checkers answer them three ways.
+duramen changed on each of these after the round, in 55ae953, with tests; none touches a case of
+the 0.8.0 suite. The counts of records answered in more than one way above are with duramen as
+the round found it; rerun after 55ae953, 16 of the round's 83 records are (7 of s12's 37, 9 of
+s13's 46). Where the words read two ways, they are proposals for 0.9.0:
+1. quotations in T004 should separate the words around them (`MU`a`ST` holds no MUST, `x`a`MUST`
+   does);
+2. REQ-OR-007's "an example that states no expectation" should say "no expectation at all"
+   (s13 gives T024 to examples whose expectations hold);
+3. REQ-SY-012's "also when" should say "even when", and an empty tolerance after `±` gets P010;
+4. REQ-SU-005 should write `audit` into `full` only when it is a string, since `judge` refuses
+   any other;
+5. the decoding of oracle output that is not UTF-8, P014 and nothing else for a row of the wrong
+   width, and one depth for all brackets between input fields should be stated;
+6. a malformed `input ... from` line still takes no text (s12 read the line after it as text);
+7. lone surrogates in a record's texts, and JSON nested thousands deep, should be stated or left
+   open, since the three checkers answer them three ways;
+8. REQ-SY-011's "a name that leaves the record's folder" should say whether a name that leaves
+   and comes back in (`../r/t.txt` from `r`) leaves it; all three accept it.

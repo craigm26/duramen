@@ -1,0 +1,15 @@
+117 mutants of oracle.mjs, 111 caught, 6 not
+  swap roles: 16 made, 16 caught
+  swap events: 10 made, 10 caught
+  swap tiers: 4 made, 4 caught
+  swap reasons: 41 made, 35 caught
+  swap onFail: 3 made, 3 caught
+  swap kinds: 7 made, 7 caught
+  swap decisions: 19 made, 19 caught
+  delete early return: 17 made, 17 caught
+not caught: oracle.mjs:37 swap reasons: return 'limits' -> 'speed'
+not caught: oracle.mjs:39 swap reasons: return 'limits' -> 'speed'
+not caught: oracle.mjs:56 swap reasons: return 'role' -> 'loa'
+not caught: oracle.mjs:57 swap reasons: return 'loa' -> 'status'
+not caught: oracle.mjs:66 swap reasons: return 'speed' -> 'confidence'
+not caught: oracle.mjs:67 swap reasons: return 'confidence' -> 'ok'

@@ -9,6 +9,7 @@
   DECISIONS.md 53550d523a1f), with `lib/regen/prompt.ts.md`
 - Build: 158 non-blank lines of TypeScript, its tests passing (REQ-BU-002's static check)
 - duramen suite: **passed 209/209** (example 197/197, property 4/4, static 5/5, protocol 3/3)
+- Rescored at rcan-gate 1.1.0 (16 more examples of REQ-GT-006, after the round): **225/225**
 - Agreement with the oracle and g02 (`duramen agree --samples 2000`, seeds 1 to 3): **6,000 of
   6,000 requests answered alike**
 - Clean run: **yes** (no `clarify`; its isolation held: the one command outside the folder was

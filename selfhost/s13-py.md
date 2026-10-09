@@ -14,21 +14,23 @@
 - Agreement on mutants at 0.8.0: three seeds of 1,500 mutants, 10,068 requests: **10,067
   alike**; 1 differs: s13 gives the warning T024 to an example whose expectations hold (its
   C-11)
-- Clean run: **no** (3 clarify)
+- Clean run: **no** (4 clarify)
 
 ## As a judge (CONFIDENCE.md, claim 4)
 Every earlier build's answers to the 0.7.0 suite, collected once: s01 to s11 and s10b, 12
 builds, 2,016 answers ([`judges.mjs`](judges.mjs)). s13 gave every one the verdict `duramen run` gives, **2,016 of 2,016**, and named the same failed parts on every one.
 
 ## CHOICES triage
-34 choices: pin 4, clarify 3, open 8, wrong 0, quirk 0; 19 already pinned. Of 87 records,
-`judge` requests and byte streams written for them, 29 were answered in more than one way by
-duramen, s12 and s13 ([`probes/s12-s13.txt`](probes/s12-s13.txt) holds the records).
+34 choices: pin 4, clarify 4, open 8, wrong 0, quirk 0; 18 already pinned. Of the 46 records
+written for them ([`probes/s12-s13.txt`](probes/s12-s13.txt)), 14 were answered in more than one
+way by duramen, s12 and s13, with duramen as the round found it (9 after 55ae953). The `judge`
+requests and byte streams the triage sent to the drivers directly are described in the table;
+they were not kept.
 
 | C-id | Builder's choice (short) | Triage | Spec reference / action (one line) |
 |---|---|---|---|
 | C-1 | A request line is blank only when empty or spaces and tabs; a lone CR or other white space gets `bad_request` with `id` null; CRLF requests work | open | Brief, Driver protocol: "whether other white space makes a line blank is open" (the stream is OPEN-SU-001). Direct run: all three alike (CR, U+00A0, VT, FF, U+3000, BOM lines `bad_request`; ` \t ` none; two requests joined by a CR one `bad_request`; a last line without LF answered). |
-| C-2 | Bytes that are not UTF-8 in a request line read as U+FFFD | open | Not reachable by the suite (OPEN-SU-001). Direct run: all three alike (FF, ED A0 80, E2 82, C0 80, F4 90 80 80 give 1, 3, 1, 2, 4 U+FFFD; such a byte outside a string is `bad_request`). Related findings, not this choice: proposals 10 and 11. |
+| C-2 | Bytes that are not UTF-8 in a request line read as U+FFFD | open | Not reachable by the suite (OPEN-SU-001). Direct run: all three alike (FF, ED A0 80, E2 82, C0 80, F4 90 80 80 give 1, 3, 1, 2, 4 U+FFFD; such a byte outside a string is `bad_request`). Related findings, not this choice: proposals 5 and 7. |
 | C-3 | Output is ASCII, non-ASCII as `\u` escapes; numbers as ECMAScript writes them | already pinned | Brief, Driver protocol (standard output is UTF-8; results compared as parsed JSON) and REQ-SU-003 (`JSON.stringify`); the `protocol:bytes` case. No action. |
 | C-4 | `judge`: a check of another `kind` (a string) is well-formed and never holds; a missing or non-string `kind` is `bad_request` | open | OPEN-JU-001. The builds agree against D0: D0 answers `bad_request` to kind `"foo"` and evaluates `"present"`; s12 and s13 fail the check (J1 to J3). No kind, `1`, `null`: `bad_request` from all three. |
 | C-5 | `judge`: numbers too large for binary64 read as infinities and judged | open | OPEN-JU-002. The builds agree against D0, which refuses (`bad_request`) an `approx` value or `tol` and a tolerance of `1e400` (J4 to J7); `eq` values, results and unread members of `1e400` alike in all three. |
@@ -47,10 +49,10 @@ duramen, s12 and s13 ([`probes/s12-s13.txt`](probes/s12-s13.txt) holds the recor
 | C-18 | Oracle output read as UTF-8 with replacement, split at LF only; a line counts only if it is strict JSON | pin | REQ-OR-002 does not say how bytes that are not UTF-8 read; all three replace them as the WHATWG decoder does (FF, ED A0 80, E2 82 give 1, 3, 1 U+FFFD) and give T021 to NaN, a trailing comma, a BOM, a NUL, a trailing U+00A0. Pin the decoding. |
 | C-19 | A case is solo when raw or when `omit` names `id`; `omit op` or `omit input` alone is not | already pinned | REQ-OR-002, REQ-SU-003 example 1. All three alike. |
 | C-20 | `omit` of a member nobody sets: ignored, no diagnostic | already pinned | REQ-SU-003 (members named are left out; nothing is defined for an absent one), as the s04/s05 triage. All three alike. |
-| C-21 | `?` under an input field is P009; a row with another number of cells gets P014 and its cells are not read; a column named twice is P013 | pin | REQ-SY-012 gives P014 but not "and nothing else"; all three give P014 alone to `| { |` and `| 1 | 2 | { |` under two columns. Pin it (`?` and P013 already pinned). Related D0 defect: proposal 9. |
+| C-21 | `?` under an input field is P009; a row with another number of cells gets P014 and its cells are not read; a column named twice is P013 | pin | REQ-SY-012 gives P014 but not "and nothing else"; all three give P014 alone to `| { |` and `| 1 | 2 | { |` under two columns. Pin it (`?` and P013 already pinned). Related D0 defects are under What the round found. |
 | C-22 | `example raw '...'` must start and end with `'`, at least two characters; not checked as JSON; an empty line allowed | already pinned | REQ-SY-010 ("the text between the first and the last `'`"; example 2), as the s11 C-39 triage. All three alike (`''` T021; `'a'b'` and `'''` T024). |
 | C-23 | A `from` name that goes above the root, is a folder or nothing, or leaves the record's folder: P048; hidden and `build` files inside it are allowed | already pinned | REQ-SY-011 ("one of the request's files inside the folder of the record ..., a folder and a name that leaves the record's folder included"; examples 4 and 6). All three alike (`.h.txt`, `build/`, `node_modules/`, `.git/` read; a folder, `../x.txt`, `/etc/hostname`, `.` P048). |
-| C-24 | Names given twice in JSON: the last value wins at the first place; array-index names first | already pinned | REQ-SU-003 ("a member set again keeping its place"; index names first). All three alike (spec request, input lines, expected value; a request naming `id` and a file twice). Related D0 defect: proposal 8. |
+| C-24 | Names given twice in JSON: the last value wins at the first place; array-index names first | already pinned | REQ-SU-003 ("a member set again keeping its place"; index names first). All three alike (spec request, input lines, expected value; a request naming `id` and a file twice). Related D0 defects are under What the round found. |
 | C-25 | JSON nested deeper than the recursion limit (raised to 20000) is not JSON (P009, or `bad_request`) | open | OPEN-RQ-001 (size) and OPEN-RQ-004. Three answers at depth 5,000 and more (S2 to S6): D0 P099, s12 `internal_error`, s13 T020+T021 at 5,000 and P009 from 20,000; a `judge` answer 20,000 deep: s13 `bad_request` with `id` null, D0 and s12 judge it. |
 | C-26 | T005: ASCII case folding, any white space between words; codes counted once each; at the `text` clause's line, once | already pinned | REQ-CK-008 and its examples. All three alike (a code named twice; Kelvin-sign "taKe precedence" no T005; "TAKES PRECEDENCE" T005). |
 | C-27 | T004: a quotation on one line (`"`, `“…”`, backquotes) is replaced by a space | pin | REQ-CK-006's whole-word rule already makes `A"q"MUST` hold MUST (a quote touches it), but D0 deletes the quotation and joins the words: D0 T004 only at `"q"MUST"q"`, s12 and s13 at all four (#10; s09 to s11 with the builds, s08 with D0). Add the example; D0 changes. |
@@ -60,7 +62,7 @@ duramen, s12 and s13 ([`probes/s12-s13.txt`](probes/s12-s13.txt) holds the recor
 | C-31 | A line that gets P001 is dropped everywhere: no part of a text, condition or input text, and ends none | already pinned | REQ-SY-001 ("and is otherwise ignored") and REQ-SY-011. All three alike. |
 | C-32 | A comment at indent 0 starts nothing and ends nothing; blank lines inside a text kept, at its ends dropped | already pinned | REQ-SY-002 (a body runs to the next statement), REQ-SY-005, REQ-SY-011. All three alike (T004 for MUST after an indent-0 or an indent-2 comment). |
 | C-33 | P021 and P047 at line 1 of `.`, of a named folder, or of a file record (the file's folder is the record's folder) | already pinned | REQ-RC-003 and REQ-RC-004 and their examples. Direct run: all three alike (`sub/s.duramen:1` P021, `sub:1` P047 and P021, `.:1` P021). |
-| C-34 | A header cell `result ±` with nothing after the sign: a tolerance that is not a number, P010 | already pinned | REQ-SY-012 (the tolerance is the rest of the cell; not a JSON number, P010) and D-015. All three alike (`result ±`, `result.y +-`, `result.z±`: P010 three times). |
+| C-34 | A header cell `result ±` with nothing after the sign: a tolerance that is not a number, P010 | clarify | REQ-SY-012 ("± and a tolerance, which is the rest of the cell; anything else after the name makes the cell of no form") reads as P010 or P013 when the rest is empty; s12 recorded the same doubt (its C-12). All three alike (`result ±`, `result.y +-`, `result.z±`: P010 three times). Proposal 3. |
 
 ## What the round found
 The two builds agreed with each other, and against duramen, more often than either did with
@@ -80,17 +82,21 @@ duramen. On records written for their choices, duramen was the one out of step:
   lines in order.
 - **A row ending in `\|`.** duramen took the escaped pipe for the row's closing one.
 
-duramen changed on each of these after the round, with tests; none touches a case of the 0.8.0
-suite. Where the words read two ways, they are proposals for 0.9.0:
-- quotations in T004 should separate the words around them (`MU`a`ST` holds no MUST, `x`a`MUST`
-  does);
-- REQ-OR-007's "an example that states no expectation" should say "no expectation at all"
-  (s13 gives T024 to examples whose expectations hold);
-- REQ-SY-012's "also when" should say "even when", and an empty tolerance after `±` gets P010;
-- REQ-SU-005 should write `audit` into `full` only when it is a string, since `judge` refuses
-  any other;
-- the decoding of oracle output that is not UTF-8, P014 and nothing else for a row of the wrong
-  width, and one depth for all brackets between input fields should be stated;
-- a malformed `input ... from` line still takes no text (s12 read the line after it as text);
-- lone surrogates in a record's texts, and JSON nested thousands deep, should be stated or left
-  open, since the three checkers answer them three ways.
+duramen changed on each of these after the round, in 55ae953, with tests; none touches a case of
+the 0.8.0 suite. The counts of records answered in more than one way above are with duramen as
+the round found it; rerun after 55ae953, 16 of the round's 83 records are (7 of s12's 37, 9 of
+s13's 46). Where the words read two ways, they are proposals for 0.9.0:
+1. quotations in T004 should separate the words around them (`MU`a`ST` holds no MUST, `x`a`MUST`
+   does);
+2. REQ-OR-007's "an example that states no expectation" should say "no expectation at all"
+   (s13 gives T024 to examples whose expectations hold);
+3. REQ-SY-012's "also when" should say "even when", and an empty tolerance after `±` gets P010;
+4. REQ-SU-005 should write `audit` into `full` only when it is a string, since `judge` refuses
+   any other;
+5. the decoding of oracle output that is not UTF-8, P014 and nothing else for a row of the wrong
+   width, and one depth for all brackets between input fields should be stated;
+6. a malformed `input ... from` line still takes no text (s12 read the line after it as text);
+7. lone surrogates in a record's texts, and JSON nested thousands deep, should be stated or left
+   open, since the three checkers answer them three ways;
+8. REQ-SY-011's "a name that leaves the record's folder" should say whether a name that leaves
+   and comes back in (`../r/t.txt` from `r`) leaves it; all three accept it.

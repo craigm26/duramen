@@ -15,8 +15,9 @@ implementation's driver, and `duramen regen` runs one blind build from the brief
 duramen is specified in duramen: [`spec/`](spec/) is a record of the core language whose oracle
 is duramen itself, and a checker rebuilt blind from its brief is judged by its suite (below).
 [`CONFIDENCE.md`](CONFIDENCE.md) states six claims about regenerative software with duramen,
-with pass criteria written before the runs, and what the runs showed: four pass, one fails,
-and one passes in part.
+with pass criteria written before the runs, and what the runs showed: three pass, two fail,
+and one waits on a run of the CI template on GitHub's runners. An agent that had not seen the
+work checked the results against this repository; its corrections are listed there.
 
 Status: prototype, version 0.2.0. Node.js 22.18 or later, no dependencies.
 
@@ -166,7 +167,7 @@ Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
     gives, and named the same failed parts, every time. Their recorded choices led to records on
     which, this time, duramen was the one most often out of step: it decoded standard input one
     64 KiB read at a time, kept members in objects that inherit `__proto__`, and applied `from`
-    lines out of order. It was fixed after the round ([s12](selfhost/s12-ts.md),
+    lines out of order. It was fixed after the round, in 55ae953 ([s12](selfhost/s12-ts.md),
     [s13](selfhost/s13-py.md)).
 
 Blind means the builders were not shown duramen's source; the spec they read describes duramen
@@ -177,12 +178,13 @@ in detail, and these builds by three models of one family are a small sample.
 [`examples/rcan-gate/`](examples/rcan-gate/) specifies whether a robot that speaks RCAN may
 carry out a command: emergency stops that are never blocked, freshness and replay, roles and
 scopes, level of assurance, the stop latches, joint and speed limits, and confidence gates that
-block a command or hold it for a person. It has 20 requirements and 197 examples, and its
-decisions cite the RCAN documents and SDK each rule comes from. Two blind builds, TypeScript and
-Python, passed all 209 cases in 2.3 minutes each and answered 6,000 generated requests as the
-oracle did; every mutant of the oracle that no check catches is shown to change nothing.
-Writing it found disagreements in RCAN's own sources, listed in its
-[README](examples/rcan-gate/README.md).
+block a command or hold it for a person. Its decisions cite the RCAN documents and SDK each
+rule comes from. Two blind builds, TypeScript and Python, each written in 2.3 minutes from
+version 1.0.0 (20 requirements, 197 examples), passed all 209 cases and answered 6,000
+generated requests as the oracle did; every mutant of `duramen mutate` that no check catches
+is shown to change nothing. A second sweep of mutants found six scopes whose lowest role no
+example reached; 1.1.0 pins them in 16 examples, and both builds pass it. Writing the record
+found disagreements in RCAN's own sources, listed in its [README](examples/rcan-gate/README.md).
 
 ## The heat-engine slice
 
@@ -320,7 +322,7 @@ examples/heat-engine/        the slice, its oracle and evidence, the generated b
 examples/heat-engine/blind/  blind builds t01 to t05: prompts, the kit's tools, records, output
 examples/heat-engine/regen/  blind builds t06 and t07 with duramen regen
 examples/rcan/               the edge binding run against the RCAN SDKs
-examples/rcan-gate/          a robot command gate: the record, its oracle, two blind builds
+examples/rcan-gate/          a robot command gate: the record, its oracle, two blind builds, a sweep of mutants
 examples/history/            the incidents, one file each
 test/                        node --test
 ```

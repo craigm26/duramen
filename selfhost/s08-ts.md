@@ -71,7 +71,8 @@ operation, which duramen and s10 read as none and s08, s09 and s11 as its line's
 
 ## What this run taught
 Four builds of 0.7.0, by three models, wrote the same suite as duramen and agreed with it on
-all but three of 4,500 mutated records each; on those three, two or three builds stood on one
-side and duramen with the others on the other. The mutants have stopped finding much. The
+all but one or two of 4,500 mutated records each (s08 two, s09 one, s10 two, s11 two): three
+records in all. On two of them, three builds read the record one way, and duramen and the
+fourth build the other; on the third, s08 alone differed. The mutants have stopped finding much. The
 choices still do: 130 recorded choices led to 175 records, and 44 of them were answered in
 more than one way. More of those were duramen's mistakes than any build's.

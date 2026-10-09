@@ -19,8 +19,9 @@
 - Clean run: **no** (the build fails the suite; its 13 choices are listed, not triaged)
 
 ## What this run taught
-The model the criteria named cannot build duramen-core from this brief: its build did not
-start, and its code, started by hand, passes 66 of the 168 examples. The same model family one
+In one run, the model the criteria named did not build duramen-core from this brief: its build
+did not start, and its code, started by hand, passes 66 of the 168 examples. One run is one
+sample. The same model family one
 generation later (s10) passed every case from the same brief, 93 KB of SPEC.md.
 
 ## CHOICES triage
