@@ -1,0 +1,142 @@
+duramen 0.1
+
+section JU "Judging an answer"
+  text
+    The suite judges an implementation by sending each case's request line to it and comparing
+    the answer with the case. `judge` is that comparison, for one case and one answer: the
+    checks the case's example states, and the oracle's whole answer. Which response is a
+    case's answer, and the protocol cases on the stream itself, are open (OPEN-SU-001).
+
+req JU-001 "Verdicts"
+  decision D-019
+  text
+    `judge` takes `input.case`, a case as `cases` lists it (REQ-SU-002), of which only `checks`
+    and `full` are read, and `input.answer`, the implementation's answer to the case's request:
+    a JSON object, or `null` when it gave none. It MUST answer `{"pass": true}` when the answer
+    meets every check (REQ-JU-003) and the whole answer (REQ-JU-004), and otherwise
+    `{"pass": false, "failed": [<part>, ...]}`. The parts are `"answer"` alone, when the answer
+    is `null`; otherwise, in this order, `"checks.<n>"` for each check the answer does not meet,
+    `<n>` counting from 0 in the order of `checks`, then `"members"`, `"error"`, `"result"` and
+    `"audit"`, each when the answer does not meet that part of the whole answer.
+
+    The case and the answer MUST have these forms, or the request is a `bad_request`: `case` is
+    an object; its `checks` is an array of checks, each an object with a string `path` and a
+    `kind`, and with a `value` for `kind` `"eq"`, or with numbers `value` and `tol`, `tol` 0 or
+    more, for `kind` `"approx"`; its `full` is `null`, or an object with `members`, an array of
+    strings, and `tolerances`, an object whose values are numbers of 0 or more, and, when it
+    has `audit`, a string; and `answer` is an object or `null`. Checks of other kinds are open
+    (OPEN-JU-001).
+  example judge {"case": {"checks": [{"path": "result.x", "kind": "eq", "value": 1}], "full": {"members": ["id", "result"], "result": {"x": 1}, "tolerances": {}}}, "answer": {"id": "A#1", "result": {"x": 1}}}
+    expect result = {"pass": true}
+  example judge {"case": {"checks": [{"path": "result.x", "kind": "eq", "value": 1}], "full": {"members": ["id", "result"], "result": {"x": 1}, "tolerances": {}}}, "answer": null}
+    expect result = {"pass": false, "failed": ["answer"]}
+  example judge {"case": {"checks": [{"path": "result.x", "kind": "eq", "value": 1}, {"path": "result.y", "kind": "eq", "value": 2}, {"path": "id", "kind": "eq", "value": "A#1"}], "full": {"members": ["id", "result"], "result": {"x": 1, "y": 2}, "tolerances": {}}}, "answer": {"id": "A#1", "result": {"x": 5}, "note": 1}}
+    expect result = {"pass": false, "failed": ["checks.0", "checks.1", "members", "result"]}
+  example judge {"case": {"id": "A#1", "kind": "example", "line": "{}", "checks": [], "full": null, "more": 1}, "answer": {"id": "anything", "x": 1}}
+    expect result = {"pass": true}
+  table judge
+    | case                                                                                                  | answer        | error         |
+    | []                                                                                                    | null          | "bad_request" |
+    | {"checks": {}, "full": null}                                                                          | null          | "bad_request" |
+    | {"checks": [{"path": "result", "kind": "eq"}], "full": null}                                          | null          | "bad_request" |
+    | {"checks": [{"path": 1, "kind": "eq", "value": 1}], "full": null}                                     | null          | "bad_request" |
+    | {"checks": [{"path": "result", "kind": "approx", "value": "1", "tol": 0}], "full": null}              | null          | "bad_request" |
+    | {"checks": [{"path": "result", "kind": "approx", "value": 1, "tol": -1}], "full": null}               | null          | "bad_request" |
+    | {"checks": [{"path": "result", "kind": "approx", "value": 1}], "full": null}                          | null          | "bad_request" |
+    | {"checks": [1], "full": null}                                                                         | null          | "bad_request" |
+    | {"checks": []}                                                                                        | null          | "bad_request" |
+    | {"full": null}                                                                                        | null          | "bad_request" |
+    | {"checks": [], "full": []}                                                                            | null          | "bad_request" |
+    | {"checks": [], "full": {"members": "id", "tolerances": {}}}                                           | null          | "bad_request" |
+    | {"checks": [], "full": {"members": [1], "tolerances": {}}}                                            | null          | "bad_request" |
+    | {"checks": [], "full": {"members": ["id"]}}                                                           | null          | "bad_request" |
+    | {"checks": [], "full": {"members": ["id"], "tolerances": {"result": "1"}}}                            | null          | "bad_request" |
+    | {"checks": [], "full": {"members": ["id"], "tolerances": {"result": -1}}}                             | null          | "bad_request" |
+    | {"checks": [], "full": {"members": ["id", "audit"], "tolerances": {}, "audit": 1}}                    | null          | "bad_request" |
+    | {"checks": [], "full": null}                                                                          | []            | "bad_request" |
+    | {"checks": [], "full": null}                                                                          | "x"           | "bad_request" |
+  example judge {"case": {"checks": [], "full": null}}
+    expect error = "bad_request"
+  example judge
+    expect error = "bad_request"
+
+req JU-002 "Paths in an answer"
+  decision D-019
+  text
+    A check's `path` MUST be read in the answer as REQ-OR-003 reads a path in a response: names
+    separated by dots, each naming a member of an object or, written as JSON writes an integer
+    of 0 or more, an element of an array (so `01` and `-1` name nothing, and an array has no
+    member named `length`); a name may be empty; and after `audit`, the rest of the path is read
+    in the JSON value that the `audit` text holds, which is none when the text is not JSON or
+    holds a number too large to be finite. A path that names nothing has no value, and no check
+    on it holds.
+  example judge {"case": {"checks": [{"path": "result.a.0", "kind": "eq", "value": 5}, {"path": "result.a.01", "kind": "eq", "value": 6}, {"path": "result.a.length", "kind": "eq", "value": 2}, {"path": "result.b.", "kind": "eq", "value": 3}, {"path": "result.c.0", "kind": "eq", "value": 7}, {"path": "result.d.length", "kind": "eq", "value": 3}, {"path": "audit.k.1", "kind": "eq", "value": 2}, {"path": "audit", "kind": "eq", "value": "{\"k\": [1, 2]}"}, {"path": "result.a.-1", "kind": "eq", "value": 6}], "full": null}, "answer": {"id": "A#1", "result": {"a": [5, 6], "b": {"": 3}, "c": {"0": 7}, "d": "abc"}, "audit": "{\"k\": [1, 2]}"}}
+    expect result = {"pass": false, "failed": ["checks.1", "checks.2", "checks.5", "checks.8"]}
+  example judge {"case": {"checks": [{"path": "audit.k", "kind": "eq", "value": 1}, {"path": "audit", "kind": "eq", "value": "{\"k\": 1, \"big\": 1e400}"}], "full": null}, "answer": {"id": "A#1", "audit": "{\"k\": 1, \"big\": 1e400}"}}
+    expect result = {"pass": false, "failed": ["checks.0"]}
+  example judge {"case": {"checks": [{"path": "audit.k", "kind": "eq", "value": 1}, {"path": "result", "kind": "eq", "value": null}], "full": null}, "answer": {"id": "A#1", "audit": "k=1"}}
+    expect result = {"pass": false, "failed": ["checks.0", "checks.1"]}
+
+req JU-003 "Checks"
+  decision D-019
+  text
+    A check of `kind` `"eq"` MUST hold exactly when the answer has a value at its path that is
+    the check's `value` as a JSON value, compared as REQ-OR-003 compares values: object members
+    in any order, numbers as binary64 values (`1.0` is `1`, and `-0` is `0`), and nothing equal
+    across JSON types (`true` is not `1`, `"1"` is not `1`, and `{}` is not `[]`). A check of
+    `kind` `"approx"` MUST hold exactly when the value at its path is a number whose distance
+    from the check's `value`, the absolute value of their difference computed in binary64, is
+    not more than `tol`.
+  example judge {"case": {"checks": [{"path": "result.o", "kind": "eq", "value": {"a": 1, "b": [1, 2]}}, {"path": "result.z", "kind": "eq", "value": 0}, {"path": "result.t", "kind": "eq", "value": 1}, {"path": "result.n", "kind": "eq", "value": true}, {"path": "result.s", "kind": "eq", "value": 1}, {"path": "result.missing", "kind": "eq", "value": null}, {"path": "result.e", "kind": "eq", "value": []}, {"path": "result.l", "kind": "eq", "value": {}}, {"path": "result.p", "kind": "eq", "value": [1, 2]}, {"path": "result.w", "kind": "eq", "value": {"a": 1}}, {"path": "result.h", "kind": "approx", "value": 2, "tol": 0.5}, {"path": "result.i", "kind": "approx", "value": 2, "tol": 0.5}, {"path": "result.j", "kind": "approx", "value": 2, "tol": 0.5}, {"path": "result.k", "kind": "approx", "value": 2, "tol": 0.5}, {"path": "result.m", "kind": "approx", "value": 1.9, "tol": 0.1}, {"path": "result.u", "kind": "eq", "value": null}], "full": null}, "answer": {"id": "A#1", "result": {"o": {"b": [1, 2.0], "a": 1.0}, "z": -0, "t": true, "n": 1, "s": "1", "e": {}, "l": [], "p": [2, 1], "w": {"a": 1, "b": 2}, "h": 2.5, "i": 2.5000001, "j": "2", "k": 1.5, "m": 2, "u": null}}}
+    expect result = {"pass": false, "failed": ["checks.2", "checks.3", "checks.4", "checks.5", "checks.6", "checks.7", "checks.8", "checks.9", "checks.11", "checks.12", "checks.14"]}
+
+req JU-004 "The whole answer"
+  decision D-019
+  text
+    When the case's `full` is `null`, the answer has nothing more to meet. Otherwise:
+    - `members`: the names of the answer's members, sorted by UTF-16 code units, MUST be
+      exactly `full.members`, in its order.
+    - `error`: when `full` has an `error`, the answer MUST have an `error` that is the same JSON
+      value (REQ-JU-003); its `result` and `audit` are then not compared.
+    - `result`: when `full` has no `error` and has a `result`, the answer MUST have a `result`
+      that is the same JSON value, except that a number at a path that `tolerances` names may
+      be as far from the expected number as that tolerance (the distance as in REQ-JU-003). The
+      paths are `result` for the result itself and, below it, each member name and array index
+      joined on with a dot (`result.t`, `result.u.1`).
+    - `audit`: when `full` has no `error` and has an `audit`, the answer MUST have an `audit`
+      that is the same text, code unit for code unit.
+  example judge {"case": {"checks": [], "full": {"members": ["id", "result"], "result": 1, "tolerances": {}}}, "answer": {"result": 1, "id": "A#1"}}
+    expect result = {"pass": true}
+  example judge {"case": {"checks": [], "full": {"members": ["error", "id"], "error": "e", "tolerances": {}}}, "answer": {"id": "x", "error": "f", "result": 1}}
+    expect result = {"pass": false, "failed": ["members", "error"]}
+  example judge {"case": {"checks": [], "full": {"members": ["error", "id"], "error": {"code": 1, "at": [1]}, "tolerances": {}}}, "answer": {"id": "x", "error": {"at": [1.0], "code": 1}}}
+    expect result = {"pass": true}
+  example judge {"case": {"checks": [], "full": {"members": ["error", "id"], "error": null, "tolerances": {}}}, "answer": {"id": "x"}}
+    expect result = {"pass": false, "failed": ["members", "error"]}
+  table judge
+    | case                                                                                                                                       | answer                                                 | result.pass | result.failed         |
+    | {"checks": [], "full": {"members": ["id", "result"], "result": {"t": 1, "u": [1, 2]}, "tolerances": {"result.t": 0.5, "result.u.1": 0.1}}} | {"id": "A#1", "result": {"u": [1, 2.05], "t": 1.5}}    | true        |                       |
+    | {"checks": [], "full": {"members": ["id", "result"], "result": {"t": 1, "u": [1, 2]}, "tolerances": {"result.t": 0.5, "result.u.1": 0.1}}} | {"id": "A#1", "result": {"u": [1.01, 2], "t": 1}}      | false       | ["result"]            |
+    | {"checks": [], "full": {"members": ["id", "result"], "result": {"t": 1, "u": [1, 2]}, "tolerances": {"result.t": 0.5, "result.u.1": 0.1}}} | {"id": "A#1", "result": {"u": [1, 2], "t": "1"}}       | false       | ["result"]            |
+    | {"checks": [], "full": {"members": ["id", "result"], "result": {"t": 1, "u": [1, 2]}, "tolerances": {"result.t": 0.5, "result.u.1": 0.1}}} | {"id": "A#1", "result": {"u": [1, 2], "t": 1, "v": 0}} | false       | ["result"]            |
+    | {"checks": [], "full": {"members": ["id", "result"], "result": {"t": 1, "u": [1, 2]}, "tolerances": {"result.t": 0.5, "result.u.1": 0.1}}} | {"id": "A#1", "result": {"u": [1, 2, 3], "t": 1}}      | false       | ["result"]            |
+    | {"checks": [], "full": {"members": ["id", "result"], "result": {"t": 1, "u": [1, 2]}, "tolerances": {"result.t": 0.5, "result.u.1": 0.1}}} | {"id": "A#1"}                                          | false       | ["members", "result"] |
+    | {"checks": [], "full": {"members": ["id", "result"], "result": {"t": 1, "u": [1, 2]}, "tolerances": {"result.t": 0.5, "result.u.1": 0.1}}} | {"id": "A#1", "result": {"u": [1, 2], "t": 0.4}}       | false       | ["result"]            |
+  example judge {"case": {"checks": [], "full": {"members": ["id", "result"], "result": 10, "tolerances": {"result": 1}}}, "answer": {"id": "A#1", "result": 10.5}}
+    expect result = {"pass": true}
+  example judge {"case": {"checks": [], "full": {"members": ["audit", "id", "result"], "result": 1, "audit": "A", "tolerances": {}}}, "answer": {"id": "A#1", "result": 1, "audit": "A "}}
+    expect result = {"pass": false, "failed": ["audit"]}
+  example judge {"case": {"checks": [], "full": {"members": ["audit", "id", "result"], "result": 1, "audit": "A", "tolerances": {}}}, "answer": {"id": "A#1", "result": 1}}
+    expect result = {"pass": false, "failed": ["members", "audit"]}
+  example judge {"case": {"checks": [], "full": {"members": ["id"], "tolerances": {}}}, "answer": {"id": "x", "result": 1}}
+    expect result = {"pass": false, "failed": ["members"]}
+
+open JU-001 "Checks of other kinds"
+  text
+    Checks of kinds other than `eq` and `approx`, which the rest of the language adds (an edge
+    pack's refusals, and texts sent in base64), and the members they carry.
+
+open JU-002 "Numbers too large for binary64 in a judge request"
+  text
+    A `judge` request that holds a JSON number too large for binary64 (such as `1e400`) in its
+    case or its answer.

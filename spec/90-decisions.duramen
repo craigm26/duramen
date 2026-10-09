@@ -182,3 +182,45 @@ decision D-017 "What the fifth round's two builds found"
     said: a first once-only clause with a problem of its own still counts; an empty `contract`
     or `decision` clause is none; a tolerance's path is its first word; a raw example's `input`
     lines get P022 only; and a malformed status still says what its decision is, for T028.
+
+decision D-018 "What the sixth round's four builds found"
+  source blind builds s08 (TypeScript, claude-sonnet-5-5), s09 (Python, claude-sonnet-5-5), s10 (TypeScript, claude-haiku-5-5) and s11 (TypeScript, claude-opus-5-5) of duramen-core 0.7.0, compared with duramen on 4,500 mutated records each, and 175 records written for their 130 recorded choices
+  text
+    All four passed every case of the 0.7.0 suite and were fixed points. On the mutated
+    records each answered one to three requests otherwise than duramen, always on the same
+    three records. A raw example's `input ... from` line followed by a line indented six:
+    duramen gave P006, as did s09; s08, s10 and s11 read the line as the skipped text of a
+    raw example's `input` line. 0.8.0 keeps P006: a `from` line takes no text anywhere. A
+    valid tolerance, then a malformed one for the same path: duramen and s08 gave P018, s09,
+    s10 and s11 P052; the words were in conflict, REQ-SY-003 counting a malformed first
+    clause and REQ-SY-007's example not. 0.8.0 says a malformed field or tolerance claims no
+    name or path and gets nothing else, as all five already did for fields. Two decisions with
+    one ID: duramen gave T012 at both, s08 at the first; 0.8.0 keeps duramen's.
+
+    The records written for their choices found more, and this time duramen was wrong as
+    often as the builds. In JavaScript `.` matches no U+2028 or U+2029, and duramen's patterns
+    used it, so a title, a raw line, an expectation or a condition holding one got a problem
+    no build gave: duramen changes. So it does where the builds agreed against it on the
+    words: a closing bracket with no opening one is an ordinary character between input
+    fields; `=`, `≈` and `~` may stand in a table header's path; IDs are unique within each
+    kind, so a decision named `REQ-A` is no requirement; and an audit text holding a number
+    too large for binary64 holds no value, rather than one written into the suite as `null`.
+    Where duramen's reading was the purpose of a rule, the words now say it and the builds
+    change: T023 for every value stated for `error`, `≈` included; white space, not only
+    spaces, in a separator row; and a raw example names no operation. Twenty further readings
+    that all five shared, and no words stated, are now stated: where an input text ends around
+    comments, how a `from` name resolves, one diagnostic per `input` line, a version's whole
+    line, the oracle's lines split at LF, and the rest of the changes from 0.7.0.
+
+decision D-019 "The comparison is specified"
+  source CONFIDENCE.md, claim 4, and the comparison in duramen's suite runner, which this record had left open (OPEN-SU-001)
+  text
+    Until 0.8.0 a rebuilt checker could write the suite, but only duramen could run it: the
+    comparison of an answer with a case lived in duramen's code and nowhere else. Decision:
+    `judge` states it as an operation, with a verdict that names the parts that failed, so two
+    judges can be compared case by case and not only by their totals. Its rules are duramen's,
+    with one change: an `error` is compared as a JSON value, where duramen had compared it by
+    identity, so that an error that is an object could never match. The checks of the rest of
+    the language, and which response is a case's answer, stay open. Why: a regenerated judge
+    is the last piece of the loop that a specification can give to a builder.
+  rejected "A verdict of pass or fail alone: two judges that fail one case for different reasons would look alike."

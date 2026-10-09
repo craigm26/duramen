@@ -49,9 +49,12 @@ req OR-002 "How the oracle is run"
     its example by `id` (a line that is not a JSON object with a string `id`, or that holds a
     number too large to be finite (REQ-SY-013), matches nothing, and of two responses with one
     `id`, the first is the one); it runs the oracle so only when there is at least one such
-    line. An example that is raw, or that leaves out `id`, MUST be sent alone, in a run of the
-    oracle of its own, and its response is the one line that run writes (none when the run
-    writes no line, or more than one). The examples run are those of declared operations, and those that
+    line. The output is split into lines at LF: a CR before an LF is JSON white space, and a CR
+    alone ends no line; a line of white space only (REQ-SY-001) is no line. An example that is
+    raw, or that leaves out `id`, MUST be sent alone, in a run of the oracle of its own, and
+    its response is the one line that run writes, whatever its `id`, when that line is a JSON
+    object holding no number too large to be finite (none when the run writes no line, more
+    than one, or another one). The examples run are those of declared operations, and those that
     expect an error or are raw (REQ-CK-004), whatever else the checks of REQ-CK-001 to
     REQ-CK-009 find. REQ-SU-003 says how each request line is made.
   example check {}
@@ -100,21 +103,40 @@ req OR-002 "How the oracle is run"
           expect result.x = 2
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:6: error T001", "s.duramen:11: error T002"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input say? string
+      req A "a"
+        example raw '{"id": "r1", "op": "f", "input": {"say": " \u00a0\n{\"id\": \"elsewhere\", \"result\": 1}\n\t"}}'
+          expect result = 1
+        example raw '{"id": "r2", "op": "f", "input": {"say": "{\"id\": \"r2\", \"result\": 1}\r\n"}}'
+          expect result = 1
+        example raw '{"id": "r3", "op": "f", "input": {"say": "{\"result\": 1}\r{\"result\": 2}"}}'
+          expect result = ?
+        example raw '{"id": "r4", "op": "f", "input": {"say": "{\"result\": 1}\n[2]"}}'
+          expect result = ?
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:11: error T021", "s.duramen:13: error T021"]
 
 req OR-003 "Examples the oracle disagrees with"
-  decision D-009, D-014
+  decision D-009, D-014, D-018
   text
     For each expectation `expect <path> = <value>`, the oracle's response MUST hold an equal
     value at the path, else T002 at the expectation's line; for a table row, at the row's
     line, once for each expectation that fails. A path is names separated by dots: member
     names, and for arrays, indexes from 0 written as JSON writes integers (an array has no
-    member named `length`); `audit.<path>` reads the path in the JSON value
-    that the response's `audit` text holds. Two values are equal when they are the same JSON
-    value: object members in any order, and numbers by value, as IEEE 754 binary64 values, so
-    that `1.0` equals `1`. A name in a path may be empty: `result.x.` reads the member named
-    `""` of `result.x`. For
-    `expect <path> ≈ <number> ± <tolerance>`, the value at the path MUST be a number no
-    further from the number than the tolerance.
+    member named `length`); `audit.<path>` reads the path in the JSON value that the
+    response's `audit` text holds, and an `audit` text that is not JSON, or that holds a number
+    too large to be finite (REQ-SY-013), holds none. Two values are equal when they are the
+    same JSON value: object members in any order, and numbers by value, as IEEE 754 binary64
+    values, so that `1.0` equals `1`. A name in a path may be empty: `result.x.` reads the
+    member named `""` of `result.x`. For `expect <path> ≈ <number> ± <tolerance>`, the value at
+    the path MUST be a number no further from the number than the tolerance, the distance being
+    the absolute value of their difference computed in binary64.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -163,6 +185,24 @@ req OR-003 "Examples the oracle disagrees with"
           expect error = "e"
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:10: error T002"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json, x? json
+      req A "a"
+        example f {"answer": {"result": 1, "audit": "{\"a\": 1e400, \"b\": 1}"}}
+          expect audit.b = 1
+          expect audit.a = ?
+        example f {"x": 2}
+          expect result.x ≈ 1.9 ± 0.1
+          expect result.x ≈ 1.9 ± 0.10000000000000009
+        example f {"x": 1}
+          expect result.x ≈ -8.673617379884035e-19 ± 1
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:8: error T002", "s.duramen:9: error T025", "s.duramen:11: error T002"]
 
 req OR-004 "An oracle that fails"
   text
@@ -264,9 +304,10 @@ req OR-005 "Examples with no answer"
 
 req OR-006 "Examples the oracle cannot compute"
   text
-    A response holding `oracle_error` says that the oracle has no answer to the request, as for
-    behavior a specification leaves open. The example MUST get T022 at its line, and its
-    expectations are not checked.
+    A response holding `oracle_error`, whatever its value (`null` included) and whatever else
+    it holds, says that the oracle has no answer to the request, as for behavior a
+    specification leaves open. The example MUST get T022 at its line and nothing else: its
+    expectations are not checked, and it is not an unexpected error (REQ-OR-007).
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -280,11 +321,23 @@ req OR-006 "Examples the oracle cannot compute"
           expect result = ?
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:7: error T022"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+      req A "a"
+        example f {"answer": {"oracle_error": null, "error": "x"}}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:7: error T022"]
 
 req OR-007 "Errors nobody expected"
   text
-    When the oracle answers an example that states no expectation with an error, the example
-    MUST get the warning T024 at its line.
+    When the oracle answers an example that states no expectation with an error (a response
+    with an `error` member, whatever its value, `null` included), the example MUST get the
+    warning T024 at its line.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -300,6 +353,17 @@ req OR-007 "Errors nobody expected"
           expect error = "e"
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result = {"diagnostics": ["s.duramen:9: warning T024"], "errors": 0, "warnings": 1}
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+      req A "a"
+        example f {"answer": {"error": null}}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result = {"diagnostics": ["s.duramen:7: warning T024"], "errors": 0, "warnings": 1}
 
 req OR-008 "Values taken from the oracle"
   text

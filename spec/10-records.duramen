@@ -123,12 +123,14 @@ req RC-003 "Versions"
   decision D-011, D-014, D-015
   text
     Every file of a record MUST state the version of the language it is written in, with the
-    statement `duramen <version>`; the versions this checker reads are `0.1` and `0.2`. A file
-    that states none MUST get P020 at line 1. A version that is not one of these, or a second
-    `duramen` statement in one file, MUST get P023 at that statement's line, once (a second
-    statement's version is not judged again). When the files of
-    one record state different versions of those this checker reads, the record MUST get P047
-    at line 1 of its name (`.` for the folder that holds all the files).
+    statement `duramen <version>`, whose version is everything after the keyword; the versions
+    this checker reads are `0.1` and `0.2`. A file that states none MUST get P020 at line 1. A
+    version that is not one of these (`0.1 extra` included), or a second `duramen` statement in
+    one file, MUST get P023 at that statement's line, once (a second statement's version is not
+    judged again). A file's version is the one its first `duramen` statement states, and a
+    first statement that got P023 states none. When the files of one record state different
+    versions of those this checker reads, the record MUST get P047 at line 1 of its name (`.`
+    for the folder that holds all the files).
   example check {}
     input files."s.duramen"
       spec s 1
@@ -180,6 +182,21 @@ req RC-003 "Versions"
     input files."b.duramen"
       duramen 2
     expect result.diagnostics = ["b.duramen:1: error P023"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.1 extra
+      spec s 1
+    input files."b.duramen"
+      duramen 0.2
+    expect result.diagnostics = ["a.duramen:1: error P023"]
+  example check {}
+    input files."a.duramen"
+      duramen 0.3
+      duramen 0.2
+      spec s 1
+    input files."b.duramen"
+      duramen 0.1
+    expect result.diagnostics = ["a.duramen:1: error P023", "a.duramen:2: error P023"]
 
 req RC-004 "One spec, one oracle, one list of errors"
   decision D-015, D-016
@@ -342,5 +359,6 @@ open RC-001 "The rest of the language"
 
 open RC-002 "Where the version is stated"
   text
-    Whether the `duramen` statement may come after other statements in a file. (Every file in
-    these examples states it first.)
+    Whether the `duramen` statement may come after other statements in a file. (The examples
+    state it first, except one file in REQ-RC-006, whose first line gets P002 and whose second
+    states the version.)
