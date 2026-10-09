@@ -57,9 +57,15 @@ mcp-tape it was not. The language does not formalize behavior: requirement text 
 
 ## What `duramen check` enforces
 
-- Every requirement has at least one example or table row, and every example is run through
-  the oracle. A value the author typed must match (T002); a value written `?` is filled in from
-  the oracle, so it cannot be mistyped.
+- Every requirement has at least one evaluation (an example, a table row, a property, evidence
+  or a static check), and every example is run through the oracle. A value the author typed
+  must match (T002); a value written `?` is filled in from the oracle, so it cannot be mistyped.
+- The oracle is checked too (0.2): evidence from outside the spec (published tables, another
+  implementation's results, CSV or JSON Lines) must agree with it unless a decision waives a
+  row (T030); properties must hold for it on generated inputs (T031); its answers must have
+  the declared result types (T038); and a requirement whose every checked value is the
+  oracle's own is reported (T032). `duramen mutate` plants mistakes in the oracle and counts
+  the ones nothing catches.
 - The RFC 2119 keywords (uppercase MUST, SHALL, REQUIRED, and their negations) are rejected
   outside requirements and imported edge texts: in notes, sections, the spec's text,
   decisions, operation summaries and error conditions (T004), unless quoted; in open items
@@ -77,6 +83,49 @@ mcp-tape it was not. The language does not formalize behavior: requirement text 
 - `open` items are deliberately unspecified and can have no examples (T003).
 
 The full list of checks, the syntax and the limits are in [DESIGN.md](DESIGN.md).
+
+## duramen specified in duramen
+
+[`spec/`](spec/) is duramen-core 0.4.0: the core of the language (the statements of 0.1 other
+than `edge`) and two operations of the checker, `check` (a record's diagnostics) and `cases`
+(the suite generated from it), in 42 requirements and 154 examples. It is written in the core
+language it specifies, so that a checker built from it can read it, and its oracle is duramen
+itself, through `duramen serve`, which takes a record as a map of file names to texts. Every
+expected value in it was typed by hand, and `duramen check spec/` runs all 154 through duramen
+in about three seconds.
+
+Writing it found behavior nobody had decided. Before it was written, duramen dropped some
+lines without a word (a second line under a `title`, a line under a table that is not a row, an example line
+indented three spaces), let a second `spec` in one file replace the first, dropped `request`
+members it could not use, accepted hex numbers as tolerances, and could not read an input path
+with a space in a quoted name. Each is now an error, with an example.
+
+Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
+
+1. **A blind build from the brief.** `duramen regen spec/ --lang ts` gave the generated brief to
+   `claude -p` (`claude-sonnet-5-5`) in a sandbox. In 10.1 minutes it wrote a 1,414-line
+   checker in TypeScript, s01, which passed all 142 cases of the suite.
+2. **The fixed point.** Asked for the suite of `spec/` with itself as the record's oracle, s01
+   writes the same 139 cases, as JSON, that duramen writes: the rebuilt checker regenerates
+   the suite that judged it ([`fixedpoint.mjs`](selfhost/fixedpoint.mjs)).
+3. **Past the suite.** s01 recorded 19 choices the brief had left to it, and on 600 mutated
+   records it answered 15 differently from duramen ([`agree.mjs`](selfhost/agree.mjs)). One
+   choice was a defect in how duramen rendered the brief (two blank lines in an example shown
+   as one); most of the rest were places where the spec, or duramen itself, had never decided.
+   0.3.0 decides each, with an example, and in most of them duramen itself changed
+   ([s01's record](selfhost/s01-ts.md) says which reading won, and why).
+4. **The version.** `duramen diff` first called 0.2.0 to 0.3.0 "tightening". Two examples had
+   been replaced rather than edited, so no text showed that their behavior changed; `diff` now
+   runs the old version's dropped examples through the new oracle, and reports both as
+   breaking.
+5. **Again.** s02, built blind from 0.3.0, passed all 153 cases and is a fixed point too. Of its
+   33 choices, 12 were already decided and 6 deliberately open; it read 6 mutated records
+   differently from duramen (s01: 15), and two of those were bugs in duramen that no example
+   had reached: a request member named `"2"` was written before `id`, and `length` was read as
+   a member of an array. 0.4.0 pins what remained ([s02's record](selfhost/s02-ts.md)).
+
+Blind means the builders were not shown duramen's source; the spec they read describes duramen
+in detail, and two builds with one model are a small sample.
 
 ## The heat-engine slice
 

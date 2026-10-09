@@ -36,10 +36,12 @@ req OR-001 "A record with examples has an oracle"
     expect result.diagnostics = ["s.duramen:2: error T019", "s.duramen:5: error T001"]
 
 req OR-002 "How the oracle is run"
+  decision D-014
   text
     The oracle is the command after `oracle`, split into words at spaces and tabs, where a
     word may be quoted with `"…"` or `'…'` to hold spaces (inside `"…"`, `\"` stands for `"`
-    and every other backslash for itself). The checker MUST start it without a shell, in the
+    and every other backslash for itself); a command with a quote that is not closed cannot be
+    started (REQ-OR-004). The checker MUST start it without a shell, in the
     folder of the file that holds the `oracle` statement, as a driver: it writes one request
     line per example to the oracle's standard input, in record order, each ending with LF,
     closes it, and reads one JSON response per line from its standard output, matching each to
@@ -99,12 +101,13 @@ req OR-002 "How the oracle is run"
     expect result.diagnostics = ["s.duramen:6: error T001", "s.duramen:11: error T002"]
 
 req OR-003 "Examples the oracle disagrees with"
-  decision D-009
+  decision D-009, D-014
   text
     For each expectation `expect <path> = <value>`, the oracle's response MUST hold an equal
     value at the path, else T002 at the expectation's line; for a table row, at the row's
     line, once for each expectation that fails. A path is names separated by dots: member
-    names, and for arrays, indexes from 0; `audit.<path>` reads the path in the JSON value
+    names, and for arrays, indexes from 0 written as JSON writes integers (an array has no
+    member named `length`); `audit.<path>` reads the path in the JSON value
     that the response's `audit` text holds. Two values are equal when they are the same JSON
     value: object members in any order, and numbers by value, as IEEE 754 binary64 values, so
     that `1.0` equals `1`. A name in a path may be empty: `result.x.` reads the member named
@@ -137,8 +140,12 @@ req OR-003 "Examples the oracle disagrees with"
         example f {"x": {"": 1}}
           expect result.x. = 1
           expect result..x = 1
+        example f {"y": [7, 8]}
+          expect result.y.1 = 8
+          expect result.y.length = 2
+          expect result.y.01 = 8
     input files."echo.mjs" from "fixtures/echo.mjs"
-    expect result.diagnostics = ["s.duramen:11: error T002", "s.duramen:12: error T002", "s.duramen:13: error T002", "s.duramen:14: error T002", "s.duramen:18: error T002", "s.duramen:21: error T002", "s.duramen:21: error T002", "s.duramen:24: error T002"]
+    expect result.diagnostics = ["s.duramen:11: error T002", "s.duramen:12: error T002", "s.duramen:13: error T002", "s.duramen:14: error T002", "s.duramen:18: error T002", "s.duramen:21: error T002", "s.duramen:21: error T002", "s.duramen:24: error T002", "s.duramen:27: error T002", "s.duramen:28: error T002"]
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -208,6 +215,17 @@ req OR-004 "An oracle that fails"
       req A "a"
         example raw '{"id": "r", "op": "f"}'
     expect result.diagnostics = ["s.duramen:7: error T020", "s.duramen:7: error T021"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node "echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:3: error T020", "s.duramen:7: error T021"]
 
 req OR-005 "Examples with no answer"
   text

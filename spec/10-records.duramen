@@ -120,12 +120,13 @@ req RC-002 "The order of a record's files"
     expect result.diagnostics = ["｡.duramen:2: error P044"]
 
 req RC-003 "Versions"
-  decision D-011
+  decision D-011, D-014
   text
     Every file of a record MUST state the version of the language it is written in, with the
     statement `duramen <version>`; the versions this checker reads are `0.1` and `0.2`. A file
     that states none MUST get P020 at line 1. A version that is not one of these, or a second
-    `duramen` statement in one file, MUST get P023 at that statement's line. When the files of
+    `duramen` statement in one file, MUST get P023 at that statement's line, once: a second
+    statement is not read further. When the files of
     one record state different versions of those this checker reads, the record MUST get P047
     at line 1 of its name (`.` for the folder that holds all the files).
   example check {}
@@ -144,7 +145,8 @@ req RC-003 "Versions"
       duramen 0.1
       spec s 1
       duramen 0.1
-    expect result.diagnostics = ["s.duramen:3: error P023"]
+      duramen 9
+    expect result.diagnostics = ["s.duramen:3: error P023", "s.duramen:4: error P023"]
   example check {}
     input files."s.duramen"
       duramen

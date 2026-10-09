@@ -264,7 +264,7 @@ checked further (`spec/`, REQ-RC-005).
 | P014 | a table row with a different number of cells from the header |
 | P015 | a clause the statement does not take (the lines under it are ignored) |
 | P016 | `edge` not of the form `edge <name> [via <op> <field> [base64]]` |
-| P017 | an input field not of the form `<name>[?] <type>` |
+| P017 | an input field not of the form `<name>[?] <type>`, including an empty one |
 | P018 | `tolerance` not a path and a number of 0 or more |
 | P019 | an `errors` clause not of the form `<code> when <condition>` |
 | P020 | a file without a `duramen` statement |
@@ -297,9 +297,9 @@ checked further (`spec/`, REQ-RC-005).
 | P047 | files of one record that state different versions (of those duramen reads) |
 | P048 | an example input file that cannot be read, or is outside the record's folder |
 | P049 | an `input` path of no known form, through a value that is not an object, or with no text |
-| P050 | text after `note` or `errors`, which take none |
+| P050 | text after `note` or `errors`, which take none, or after `audit` other than `text` |
 | P051 | request members that try to set `id`, `op` or `input` |
-| P052 | a second clause of a kind a statement takes once (`text`, `title`, `source`, `status`, `on`, `result`, ...), or a second tolerance for one path |
+| P052 | a second clause of a kind a statement takes once (`text`, `title`, `source`, `status`, `on`, `result`, ...), a second tolerance for one path, a second input field of one name, or a second `request` line under an example |
 | P099 | an internal error in the parser (please report it) |
 
 | code | level | rule |
@@ -330,7 +330,7 @@ checked further (`spec/`, REQ-RC-005).
 | T024 | warning | the oracle answers an example that states no expectations with an error |
 | T025 | error | `expect <path> = ?` names a path the oracle's answer does not have |
 | T026 | error | two edges bound to the same op and field disagree on a shared pack input |
-| T027 | error | a decision status that is not one of the seven, or a supersession with no declared successor |
+| T027 | error | a decision status whose first word is not one of the seven (an empty status included), or a supersession with no declared successor |
 | T028 | error / warning | something rests on a contested, superseded or rejected decision / on one only observed, inferred or proposed |
 | T029 | error | an example's or evidence row's input does not have the op's declared types (0.2) |
 | T030 | error | an evidence row disagrees with the oracle and no decision waives it |

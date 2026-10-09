@@ -37,14 +37,15 @@ export function requestMembers(ast, opName, exampleRequest) {
   return { ...(op?.request ?? ast.spec?.request ?? {}), ...(exampleRequest ?? {}) };
 }
 
+// "id" and "op" first, then the request members, then "input" (as written), whatever the member
+// names: a JSON object would put a member named "2" before "id".
 function requestLine(ast, id, opName, rawInput, exampleRequest, omit = []) {
-  const members = { id, op: opName };
+  const parts = [['id', JSON.stringify(id)], ['op', JSON.stringify(opName)]];
   for (const [k, v] of Object.entries(requestMembers(ast, opName, exampleRequest))) {
-    if (!['id', 'op', 'input'].includes(k)) members[k] = v;
+    if (!['id', 'op', 'input'].includes(k)) parts.push([k, JSON.stringify(v)]);
   }
-  for (const k of omit) delete members[k];
-  const head = JSON.stringify(members);
-  return rawInput === null || omit.includes('input') ? head : `${head.slice(0, -1)}${head === '{}' ? '' : ','}"input":${rawInput}}`;
+  if (rawInput !== null) parts.push(['input', rawInput]);
+  return `{${parts.filter(([k]) => !omit.includes(k)).map(([k, v]) => `${JSON.stringify(k)}:${v}`).join(',')}}`;
 }
 
 // The request line for an example. The input is spliced in exactly as the spec wrote it.
@@ -64,6 +65,7 @@ export function pick(resp, path) {
   let v = resp;
   for (let i = 0; i < parts.length; i++) {
     if (v === null || typeof v !== 'object' || !Object.hasOwn(v, parts[i])) return { found: false };
+    if (Array.isArray(v) && !/^(0|[1-9]\d*)$/.test(parts[i])) return { found: false }; // an array has indexes, not `length`
     v = v[parts[i]];
     if (i === 0 && parts[0] === 'audit' && parts.length > 1) {
       if (typeof v !== 'string') return { found: false };
@@ -256,7 +258,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
   // Decisions have a lifecycle (the states are Chad Fowler's, from "The Specification Is Not a
   // Document"). Only an accepted decision, or one with no status, carries a requirement.
   for (const x of ast.decisions) {
-    if (!x.status) continue;
+    if (x.status === null) continue;
     const word = x.status.split(/\s+/)[0];
     if (!STATUSES.includes(word)) d('error', x, 'T027', `${x.id} has status "${word}"; use one of ${STATUSES.join(', ')}`);
     const by = x.status.match(/^superseded by (\S+)$/);
@@ -289,7 +291,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
     [ast.spec?.text, ast.spec ?? { line: 1 }, "the spec's text"],
     ...ast.decisions.flatMap((x) => [[x.text, x, `decision ${x.id}`], ...x.rejected.map((t) => [t, x, `decision ${x.id}`])]),
     ...ast.ops.map((o) => [o.summary, o, `op ${o.name}`]),
-    ...ast.errors.map((e) => [e.when, e, 'the errors list']),
+    ...ast.errors.map((e) => [e.whenLines ?? e.when, e, 'the errors list']),
     ...ast.evidence.map((ev) => [ev.text, ev, `evidence ${ev.id}`]),
     ...ast.properties.map((p) => [p.text, p, `property ${p.id}`]),
   ];

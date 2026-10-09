@@ -1,0 +1,6 @@
+  sandbox jecrjt: brief written, leak check ok; launching sonnet (ts)
+  builder exited with 0 after 10.9 min
+run s02: claude-sonnet-5-5 (ts), 33 turns, 10.9 min, $2.01
+  audit: 1 violations, init ok, 2 denied calls
+  suite: passed 153/153
+  build copied to selfhost/impl/s02-ts; 33 choices to triage in selfhost/s02-ts.md

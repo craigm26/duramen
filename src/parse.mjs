@@ -168,7 +168,7 @@ function parseInto(source, file, ast, diag) {
       if (!Number.isFinite(v) || !Number.isFinite(tol) || tol < 0) { diag('error', n, 'P010', 'expect <path> ≈ <number> ± <tolerance>: JSON numbers, and a tolerance of 0 or more', col); return null; }
       return { path: m[1], kind: 'approx', value: v, tol, line: n };
     }
-    m = text.match(/^expect\s+([^\s=≈~]+)\s*=\s*(.+)$/);
+    m = text.match(/^expect\s+([^\s=≈~]+)\s*=\s*(.*)$/);
     if (m) { const j = parseJSON(m[2], n, 'expected value', col + text.indexOf(m[2])); return j.ok ? { path: m[1], kind: 'eq', value: j.value, line: n } : null; }
     diag('error', n, 'P011', 'expect <path> = <json>, or expect <path> ≈ <number> ± <tolerance>', col);
     return null;
@@ -326,6 +326,7 @@ function parseInto(source, file, ast, diag) {
         const r = parseJSON(l.text.slice(8), l.n, 'request members', l.indent + 9);
         if (r.ok) {
           if (r.value === null || typeof r.value !== 'object' || Array.isArray(r.value)) diag('error', l.n, 'P009', 'request members are a JSON object', l.indent + 9);
+          else if (ex.request) diag('error', l.n, 'P052', 'an example takes one request line', l.indent + 1);
           else if (ownMembersOk(r.value, l.n, l.indent + 9)) ex.request = r.value;
         }
         continue;
@@ -390,8 +391,8 @@ function parseInto(source, file, ast, diag) {
     const textOf = () => { const c = cs.find((x) => x.kw === 'text'); return c ? prose(c) : ''; };
     switch (s.kw) {
       case 'duramen':
-        if (versionLine) diag('error', s.line, 'P023', `the version is stated twice (first at line ${versionLine})`);
-        else { versionLine = s.line; ast.version = s.rest; }
+        if (versionLine) { diag('error', s.line, 'P023', `the version is stated twice (first at line ${versionLine})`); break; }
+        versionLine = s.line; ast.version = s.rest;
         if (!VERSIONS.includes(s.rest)) diag('error', s.line, 'P023', `duramen ${s.rest} is not a version this tool reads (${VERSIONS.join(', ')})`, s.restCol);
         break;
       case 'spec': {
@@ -488,10 +489,11 @@ function parseInto(source, file, ast, diag) {
         for (const c of cs) {
           if (c.kw === 'request') { const j = requestObject(c); if (j) op.request = j; continue; }
           if (c.kw === 'input') {
-            // name[?] <type>, ... ; commas inside braces, brackets, parens or quotes do not split
-            for (const { text: f, at } of splitTop(c.rest)) {
+            // name[?] <type>, ... ; commas inside braces, brackets, parens or double quotes do not split
+            for (const { text: f, at } of splitTop(c.rest, { keepEmpty: true })) {
               const fm = f.match(/^([\w-]+)(\?)?\s+(.+)$/);
               if (!fm) { diag('error', c.n, 'P017', `input field "${f}": <name>[?] <type>`, c.restCol + at); continue; }
+              if (op.inputs.some((x) => x.name === fm[1])) { diag('error', c.n, 'P052', `${op.name} already has an input field ${fm[1]}`, c.restCol + at); continue; }
               const pt = parseType(fm[3]);
               op.inputs.push({ name: fm[1], optional: !!fm[2], type: fm[3], parsed: pt.error ? null : pt.type, typeError: pt.error ?? null, line: c.n, col: c.restCol + at });
             }
@@ -503,7 +505,10 @@ function parseInto(source, file, ast, diag) {
             if (!tm || !Number.isFinite(jsonNumber(tm[2])) || jsonNumber(tm[2]) < 0) diag('error', c.n, 'P018', 'tolerance <result path> <number of 0 or more>', c.restCol);
             else if (Object.hasOwn(op.tolerances, tm[1])) diag('error', c.n, 'P052', `${op.name} already has a tolerance for ${tm[1]}`, c.restCol);
             else op.tolerances[tm[1]] = jsonNumber(tm[2]);
-          } else if (c.kw === 'audit') op.audit = c.rest || 'text';
+          } else if (c.kw === 'audit') {
+            if (c.rest && c.rest !== 'text') diag('error', c.n, 'P050', 'audit, or audit text', c.restCol);
+            op.audit = 'text';
+          }
           else if (c.kw === 'result') op.summary = c.rest;
         }
         ast.ops.push(op);
@@ -517,14 +522,15 @@ function parseInto(source, file, ast, diag) {
         else ast.errorsLine = s.line;
         for (const c of cs) {
           const m = (c.kw + ' ' + c.rest).match(/^(\S+)\s+when\s+(.+)$/);
-          if (!m) { diag('error', c.n, 'P019', 'errors: one "<code> when <condition>" per line, first match wins', c.col); continue; }
+          if (!m) diag('error', c.n, 'P019', 'errors: one "<code> when <condition>" per line, first match wins', c.col);
           const more = [];
           for (const l of c.sub) {
             if (l.text === '') continue;
             if (l.indent < 4) { diag('error', l.n, 'P006', 'a condition continues on lines indented four spaces', l.indent + 1); continue; }
             more.push(l.text);
           }
-          ast.errors.push({ code: m[1], when: [m[2], ...more].join(' '), line: c.n });
+          // `when` reads as one sentence; `whenLines` keeps the lines, for checks that read a line at a time
+          if (m) ast.errors.push({ code: m[1], when: [m[2], ...more].join(' '), whenLines: [m[2], ...more].join('\n'), line: c.n });
         }
         break;
       }
@@ -682,18 +688,19 @@ function parseInto(source, file, ast, diag) {
   if (!versionLine) diag('error', 1, 'P020', 'every file states its version: "duramen <version>"');
 }
 
-// Split on commas that are not inside quotes, braces, brackets or parentheses.
-export function splitTop(text) {
+// Split on commas that are not inside double quotes, braces, brackets or parentheses. With
+// keepEmpty, empty parts are kept (a list with nothing, or nothing between two commas, has one).
+export function splitTop(text, { keepEmpty = false } = {}) {
   const out = [];
   let depth = 0, quote = null, start = 0;
   for (let i = 0; i < text.length; i++) {
     const c = text[i];
     if (quote) { if (c === '\\') i++; else if (c === quote) quote = null; continue; }
-    if (c === '"' || c === "'") quote = c;
+    if (c === '"') quote = c;
     else if ('{[('.includes(c)) depth++;
     else if ('}])'.includes(c)) depth--;
     else if (c === ',' && depth === 0) { out.push({ text: text.slice(start, i).trim(), at: start }); start = i + 1; }
   }
   out.push({ text: text.slice(start).trim(), at: start });
-  return out.filter((x) => x.text !== '');
+  return keepEmpty ? out : out.filter((x) => x.text !== '');
 }

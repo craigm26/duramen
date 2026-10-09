@@ -118,3 +118,16 @@ decision D-013 "One of each"
     statement, was accepted, and one of the two was silently ignored. Each is now an error
     (T007 for operations, P052 for clauses), so a record never holds two answers to one
     question.
+
+decision D-014 "What the second blind build found unsaid"
+  source blind build s02 of duramen-core 0.3.0 (its CHOICES.md), and a comparison of s02 with duramen on 600 mutated records
+  text
+    s02 passed every case of the 0.3.0 suite and was a fixed point too; it recorded 33 choices,
+    and answered 6 mutated records differently from duramen (s01 had answered 15 so). Most of
+    its choices were already decided; the rest were small corners: what white space is, a
+    title that is one quote, an empty `input` or `omit`, a field named twice, two `request`
+    lines, `audit json`, a status followed by a comma, an empty status, a quotation that spans
+    two lines of a condition, `length` on an array, and an oracle command with an unclosed
+    quote. Two were mistakes in duramen: a request member named "2" was written before `id`,
+    because a JSON object puts such names first; and a `duramen` statement that repeated the
+    version and named an unknown one was reported twice. 0.4.0 pins each.

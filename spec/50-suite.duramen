@@ -88,20 +88,21 @@ req SU-002 "One case per example"
     expect result.cases.2.platform = "windows"
 
 req SU-003 "Request lines"
-  decision D-010
+  decision D-010, D-014
   text
     A case's request line MUST be, for a raw example, its line exactly as written. Otherwise
     it is a JSON object written without spaces between members: `"id"` (the case's ID) and
     `"op"` first; then the request members, which are the operation's `request` members if it
-    has a `request` clause and the spec's otherwise, with the example's own on top (a member
-    the example sets again keeps its place), each value written as compact JSON; then
-    `"input"`, last. Members the example's `omit` names are left out, and an example written
+    has a `request` clause and the spec's otherwise, with the example's own on top, in the
+    order ECMAScript keeps the members of an object (names that are array indexes first, in
+    increasing order, then the others in the order written, a member set again keeping its
+    place), each value written as `JSON.stringify` writes it; then `"input"`, last. Members the example's `omit` names are left out, and an example written
     `example <op>` has no `input`.
 
     The input MUST be written exactly as the example wrote it: every character of its JSON
     text, spaces and the spelling of numbers included; for a table row, `{`, then
     `"<field>":<cell>` for each non-empty input cell in the order of the columns, separated by
-    commas, then `}`. An example with input lines (REQ-SY-011) instead sends the compact JSON
+    commas, then `}` (so a row with no input cell sends `{}`). An example with input lines (REQ-SY-011) instead sends the compact JSON
     of its input, as ECMAScript's `JSON.stringify` writes it: the members of the example's
     object in the order written, then the members its input lines add, in order, a member set
     again keeping its place.
@@ -127,6 +128,13 @@ req SU-003 "Request lines"
         example f {"x": 1}
           omit op, id
         example raw '{"id": "A#6",  "op": "f"}'
+        example f {"x": 1}
+          request {"b": {"z": 1, "10": 2, "9": 3}, "2": "two", "a": 1}
+          omit clock
+          omit trace
+        table f
+          | result |
+          | ?      |
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.cases.0 = {"id": "A#1", "kind": "example", "reqs": ["REQ-A"], "platform": "any", "line": "{\"id\":\"A#1\",\"op\":\"f\",\"clock\":\"c\",\"trace\":true,\"input\":{\"x\" : 2.50e0 }}", "checks": [], "full": {"members": ["id", "result"], "result": {"x": 2.5}, "tolerances": {}}}
     expect result.cases.1.line = "{\"id\":\"A#2\",\"op\":\"f\",\"clock\":\"c\",\"trace\":true}"
@@ -136,6 +144,8 @@ req SU-003 "Request lines"
     expect result.cases.4.solo = true
     expect result.cases.5.line = "{\"id\": \"A#6\",  \"op\": \"f\"}"
     expect result.cases.5.solo = true
+    expect result.cases.6.line = "{\"id\":\"A#7\",\"op\":\"f\",\"2\":\"two\",\"b\":{\"9\":3,\"10\":2,\"z\":1},\"a\":1,\"input\":{\"x\": 1}}"
+    expect result.cases.7.line = "{\"id\":\"A#8\",\"op\":\"f\",\"clock\":\"c\",\"trace\":true,\"input\":{}}"
   example cases {}
     input files."s.duramen"
       duramen 0.1

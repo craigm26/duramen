@@ -6,13 +6,15 @@ section SY "Reading a file"
     problem is not checked further (REQ-RC-005), so most of them need no oracle.
 
 req SY-001 "Lines"
-  decision D-004
+  decision D-004, D-014
   text
     A file MUST be read as UTF-8 text, with a byte order mark at its start ignored, and with CR
     LF and a lone CR each ending a line as LF does. White space at the end of a line MUST be
     ignored, and a line holding only white space is blank. A line's indent is the number of
     spaces it starts with; a line whose leading white space holds anything but spaces (a tab,
-    for instance) MUST get P001 and is otherwise ignored.
+    for instance) MUST get P001 and is otherwise ignored. White space, here and everywhere in
+    this document, is what ECMAScript's `\s` matches: tab, LF, U+000B, U+000C, CR, space,
+    U+00A0, U+1680, U+2000 to U+200A, U+2028, U+2029, U+202F, U+205F, U+3000 and U+FEFF.
   example check {"files": {"s.duramen": "\ufeffduramen 0.1\r\nspec s 1\rnote  \n  text\t\n    Some text.  \r\n"}}
     expect result.diagnostics = []
   example check {"files": {"s.duramen": "duramen 0.1\nspec s 1\n\tnote\n"}}
@@ -23,6 +25,8 @@ req SY-001 "Lines"
     expect result.diagnostics = ["s.duramen:3: error P001"]
   example check {"files": {"s.duramen": "  \t \nduramen 0.1\n\t\nspec s 1\n   \n"}}
     expect result.diagnostics = []
+  example check {"files": {"s.duramen": "duramen 0.1\u3000\nspec s 1\u2028\nnote\n\u205f text\n"}}
+    expect result.diagnostics = ["s.duramen:4: error P001"]
 
 req SY-002 "Statements and comments"
   text
@@ -246,14 +250,14 @@ req SY-005 "Text"
     expect result.diagnostics = ["s.duramen:3: error T004"]
 
 req SY-006 "Quoted strings, IDs and titles"
-  decision D-011
+  decision D-011, D-014
   text
     Where a quoted string is wanted, it MUST be a JSON string, quotes and escapes included;
     anything else MUST get P004. The statements `section`, `req`, `open` and `decision` take
     an ID, which is one word, and a quoted title, as in `req <ID> "<title>"`: the title is the
-    rest of the line after the ID and the white space after it, and MUST start and end with
-    `"`, else P005; a title that does start and end with `"` but is not a JSON string MUST get
-    P004.
+    rest of the line after the ID and the white space after it, and MUST be two characters or
+    more that start and end with `"`, else P005; a title that does start and end with `"` but is
+    not a JSON string MUST get P004.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -278,7 +282,8 @@ req SY-006 "Quoted strings, IDs and titles"
       spec s 1
       section S "unclosed
       section T "A" "B"
-    expect result.diagnostics = ["s.duramen:3: error P005", "s.duramen:4: error P004"]
+      section U "
+    expect result.diagnostics = ["s.duramen:3: error P005", "s.duramen:4: error P004", "s.duramen:5: error P005"]
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -305,18 +310,21 @@ req SY-006 "Quoted strings, IDs and titles"
     expect result.diagnostics = []
 
 req SY-007 "Operations"
-  decision D-013
+  decision D-013, D-014
   text
     `op <name>` declares an operation; the name is one word, else P031. Its clauses:
     - `input <field>, ...`: the fields of its input. A field is `<name> <type>`, or
-      `<name>? <type>` when it may be left out; a name is letters, digits, `_` and `-`, and in
-      the core language a type is any text, for people (OPEN-RC-001). Fields are separated by
-      commas that are not inside quotes, brackets, braces or parentheses. A field of any other
-      form MUST get P017.
+      `<name>? <type>` when it may be left out; a name is ASCII letters, digits, `_` and `-`,
+      and in the core language a type is any text, for people (OPEN-RC-001). Fields are
+      separated by commas that are not inside double quotes, brackets, braces or parentheses.
+      A field of any other form, including an empty one (an `input` clause with nothing, or
+      nothing between two commas), MUST get P017, and a second field of one name in an
+      operation P052. An operation may have several `input` clauses; their fields add up.
     - `result <text>`: a summary of the result, for people.
     - `tolerance <path> <number>`: how far a number at that path of the result may be from the
       oracle's (REQ-SU-005). Anything but a path and a JSON number of 0 or more MUST get P018.
     - `audit`, or `audit text`: responses to it also carry an `audit` text (REQ-SU-005).
+      Anything else after `audit` MUST get P050.
     - `request <JSON object>`: request members that replace the spec's for this operation,
       with P009 and P051 as for `spec` (REQ-SY-004).
   example check {}
@@ -351,7 +359,14 @@ req SY-007 "Operations"
         input a
         input a.b number
         input b?number
-    expect result.diagnostics = ["s.duramen:4: error P017", "s.duramen:5: error P017", "s.duramen:6: error P017"]
+        input
+        input c number, , d number,
+        input e 'x, y'
+        input c number
+        input é number
+      op g
+        audit json
+    expect result.diagnostics = ["s.duramen:4: error P017", "s.duramen:5: error P017", "s.duramen:6: error P017", "s.duramen:7: error P017", "s.duramen:8: error P017", "s.duramen:8: error P017", "s.duramen:9: error P017", "s.duramen:10: error P052", "s.duramen:11: error P017", "s.duramen:13: error P050"]
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -378,14 +393,14 @@ req SY-007 "Operations"
     expect result.diagnostics = ["s.duramen:4: error P009", "s.duramen:6: error P051", "s.duramen:10: error P052"]
 
 req SY-008 "The errors list"
-  decision D-011
+  decision D-011, D-014
   text
     `errors` takes nothing after its keyword, else P050. Its clauses list error codes in the
     order the checks for them run: each is `<code> when <condition>`, and the lines under a
     clause continue its condition: every one of them, including a line that starts with `#`,
     is part of the condition's text. They are indented four spaces or more; one indented three
     MUST get P006. A clause whose second word is not `when`, or that has nothing after `when`
-    on its own line, MUST get P019.
+    on its own line, MUST get P019, and the lines under it are still read.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -413,7 +428,9 @@ req SY-008 "The errors list"
         when x
         f when y
          and z
-    expect result.diagnostics = ["s.duramen:4: error P019", "s.duramen:5: error P019", "s.duramen:7: error P019", "s.duramen:9: error P006"]
+        g is
+         wrong
+    expect result.diagnostics = ["s.duramen:4: error P019", "s.duramen:5: error P019", "s.duramen:7: error P019", "s.duramen:9: error P006", "s.duramen:10: error P019", "s.duramen:11: error P006"]
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -473,7 +490,7 @@ req SY-009 "Requirements, open items, decisions, sections and notes"
     expect result.diagnostics = ["s.duramen:4: error P033", "s.duramen:5: error P015", "s.duramen:7: error P050", "s.duramen:9: error P015", "s.duramen:11: error P015", "s.duramen:13: error P015"]
 
 req SY-010 "Examples"
-  decision D-005, D-011
+  decision D-005, D-011, D-014
   text
     An example is a request and what its response holds. `example <op> <JSON object>` is a
     request to the operation with that input; `example <op>` is one with no `input` member at
@@ -489,15 +506,17 @@ req SY-010 "Examples"
     (REQ-SY-011); any other line that is neither blank nor a comment MUST get P006. They are,
     in any number and order:
     - `expect <path> = <JSON>`: the response holds this value at the path (REQ-OR-003); a
-      value that is not JSON MUST get P009. A path is the text up to the first white space,
-      `=`, `≈` or `~`.
+      value that is not JSON, nothing included, MUST get P009. A path is the text up to the
+      first white space, `=`, `≈` or `~`, and is not empty.
     - `expect <path> ≈ <number> ± <tolerance>`, or with `~` and `+-`: the response holds a
       number within the tolerance of this one. Both are JSON numbers and the tolerance is 0
       or more; a line with `≈` or `~` after the path that is not of this form MUST get P010.
     - `expect <path> = ?`: the response holds the oracle's value at the path (REQ-OR-008).
     - `request <JSON object>`: request members on top of the spec's or the operation's
-      (REQ-SU-003), with P009 and P051 as for `spec`.
-    - `omit <member>, ...`: request members left out (REQ-SU-003).
+      (REQ-SU-003), with P009 and P051 as for `spec`; an example takes one, and a second MUST
+      get P052.
+    - `omit <member>, ...`: request members left out (REQ-SU-003), names separated by commas
+      or white space; several `omit` lines add up. `omit` with no name MUST get P011.
     - `input <path>` and `input <path> from "<file>"` (REQ-SY-011).
     Any other line MUST get P011. A raw example takes no `request`, `omit` or `input` lines
     (P022).
@@ -528,7 +547,14 @@ req SY-010 "Examples"
           expect result ≈ 1
           expect result~1+-0.5
           expect result="~"
-    expect result.diagnostics = ["s.duramen:4: error P004", "s.duramen:5: error P004", "s.duramen:6: error P004", "s.duramen:7: error P004", "s.duramen:8: error P026", "s.duramen:9: error P012", "s.duramen:10: error P011", "s.duramen:11: error P006", "s.duramen:12: error P010"]
+          expect result =
+          expect = 1
+          request {"a": 1}
+          request {"b": 1}
+          omit
+          omit a, b c
+          omit d
+    expect result.diagnostics = ["s.duramen:4: error P004", "s.duramen:5: error P004", "s.duramen:6: error P004", "s.duramen:7: error P004", "s.duramen:8: error P026", "s.duramen:9: error P012", "s.duramen:10: error P011", "s.duramen:11: error P006", "s.duramen:12: error P010", "s.duramen:15: error P009", "s.duramen:16: error P011", "s.duramen:18: error P052", "s.duramen:19: error P011"]
   example check {}
     input files."s.duramen"
       duramen 0.1

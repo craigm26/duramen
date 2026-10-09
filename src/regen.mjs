@@ -91,7 +91,7 @@ export function auditTranscript(text, workDir, { identifiers = [], allowedDomain
       if (c.name === 'Bash') {
         const full = String(inp.command ?? '');
         // heredoc bodies and inline scripts are code the builder wrote, not paths it used
-        const cmd = full.replace(/<<-?\s*(['"]?)(\w+)\1([^\n]*)\n([\s\S]*?)\n\2(?=\n|$)/g, '<<$2$3').replace(/(\s-[ec]\s+)(['"])([\s\S]*?)\2(?=\s|$|;|&|\|)/g, '$1<script>');
+        const cmd = full.replace(/<<-?\s*(['"]?)(\w+)\1([^\n]*)\n([\s\S]*?)\n\2(?=\n|$)/g, '<<$2$3').replace(/(\s-[ec]\s+)("(?:[^"\\]|\\[\s\S])*"|'[^']*')/g, '$1<script>'); // a double-quoted script may hold \" and other escapes
         for (const t of cmd.split(/[\s;&|<>()'"=]+/).filter((x) => x && (/^(~|\$HOME|%USERPROFILE%|[a-zA-Z]:[\\/])/i.test(x) || x === '..' || /(^|[\\/])(\.\.|[\w.-]*\w[\w.-]*)[\\/]|[\\/][\w.-]*\w[\w.-]*$/.test(x)))) {
           if (/^https?:/i.test(t) || t === '/dev/null' || t.startsWith('-')) continue;
           const why = outside(t.replace(/,+$/, ''));
