@@ -12,6 +12,7 @@ node bin/duramen.mjs regen spec/ --lang ts --runs selfhost --run-id s02 --leak-t
 node bin/duramen.mjs run spec/ --impl selfhost/impl/s01-ts
 node selfhost/fixedpoint.mjs selfhost/impl/s01-ts
 node selfhost/agree.mjs selfhost/impl/s01-ts --mutants 600 --seed 1
+node selfhost/probe.mjs selfhost/probes/s06-s07.txt selfhost/impl/s06-ts selfhost/impl/s07-py --diff
 ```
 
 - **The suite** (`duramen run`): one case per example of `spec/`, and the three protocol cases.
@@ -25,6 +26,10 @@ node selfhost/agree.mjs selfhost/impl/s01-ts --mutants 600 --seed 1
   re-indented, cut short, a word or a character changed), and the answers that differ are
   grouped. A difference is a misreading, a place the specification is silent, or a mistake
   in duramen.
+- **Probes** ([`probe.mjs`](probe.mjs)), part of the triage: each choice a builder records in
+  `CHOICES.md` is tried on a record written to reach it ([`probes/`](probes/)), sent to
+  duramen and to the builds of the round. The mutants explore near the suite's records; the
+  choices point at the corners the brief left open.
 
 | run | brief | suite | rescored | fixed point | mutants answered alike | choices | already pinned | clarify | clean |
 |---|---|---|---|---|---|---|---|---|---|
@@ -33,12 +38,14 @@ node selfhost/agree.mjs selfhost/impl/s01-ts --mutants 600 --seed 1
 | [s03](s03-py.md) (py) | 0.4.0 | 157/157 | 157/159 at 0.5.0 | yes, as JSON values | 1,469 of 1,488 (10 records differ) | 27 | 14 | 1 | no |
 | [s04](s04-ts.md) (ts) | 0.5.0 | 159/159 | 159/161 at 0.6.0 | yes, as JSON values | 1,492 of 1,492; on 4,500 more, 9 records differ | 34 | 29 | 0 | yes |
 | [s05](s05-py.md) (py) | 0.5.0 | 159/159 | 160/161 at 0.6.0 | yes, as JSON values | 1,492 of 1,492; on 4,500 more, the same 9 records, with s04's answers | 29 | 21 | 0 | yes |
+| [s06](s06-ts.md) (ts) | 0.6.0 | 161/161 | 167/171 at 0.7.0 | yes, as JSON values | 9,888 of 9,888 (three seeds of 1,500); 49 probes, 8 differ | 23 | 12 | 0 | yes |
+| [s07](s07-py.md) (py) | 0.6.0 | 161/161 | 166/171 at 0.7.0 | yes, as JSON values | 9,888 of 9,888 (three seeds of 1,500); the same probes | 28 | 18 | 0 | yes |
 
-Each build is compared with the duramen of its own round: the fixed point and the agreement
-are measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a, 0.3.0
-at 66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0). From s03 on, suites and answers are compared as JSON values,
-member order ignored, as the specification compares results; s01's and s02's were identical
-as text too.
+Each build is compared with the duramen of its own round: the fixed point and the agreement are
+measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a, 0.3.0 at
+66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0, 0.6.0 at 78ecd48). From s03 on, suites and answers
+are compared as JSON values, member order ignored, as the specification compares results; s01's
+and s02's were identical as text too.
 
 The ledger is [`ledger.jsonl`](ledger.jsonl); the builds are in [`impl/`](impl/), copied out of
 their sandboxes unchanged. Blind means the builders were not shown duramen's source or earlier

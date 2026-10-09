@@ -57,7 +57,7 @@ req SY-002 "Statements and comments"
     expect result.diagnostics = ["s.duramen:1: error P003", "s.duramen:2: error P003"]
 
 req SY-003 "Clauses"
-  decision D-005, D-011, D-013
+  decision D-005, D-011, D-013, D-017
   text
     The body of a statement MUST be read as clauses. A line indented two spaces starts a
     clause, whose keyword is its first word, unless it starts with `#`, which makes it a
@@ -70,7 +70,9 @@ req SY-003 "Clauses"
     once by a statement: `title`, `contract`, `request` and `text` of `spec`; `result`,
     `audit` and `request` of `op`, and one `tolerance` per path; `text` and `on` of `req`;
     `source`, `status` and `text` of `decision`; and `text` of `section`, `open` and `note`. A
-    second one MUST get P052 at its line and is otherwise ignored, with the lines under it.
+    second one MUST get P052 at its line and is otherwise ignored, with the lines under it,
+    also when the first one got a problem of its own (unlike an example's `request` lines,
+    REQ-SY-010).
 
     Only `text`, `example` and `table` clauses, and the clauses of `errors`, take lines of
     their own; under any other clause, a line that is neither blank nor a comment (starting
@@ -142,6 +144,16 @@ req SY-003 "Clauses"
     input files."s.duramen"
       duramen 0.1
       spec s 1
+        title x
+        title "two"
+      op f
+        request [1]
+        request {}
+    expect result.diagnostics = ["s.duramen:3: error P004", "s.duramen:4: error P052", "s.duramen:6: error P009", "s.duramen:7: error P052"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
         title "A title"
           that goes on
         # A comment.
@@ -154,7 +166,8 @@ req SY-004 "The duramen, spec and oracle statements"
     `duramen <version>` takes no clauses. `spec <name> <version>` names the program and the
     version of this document: two words with nothing after them, else P021 at its line. It
     takes the clauses `title "<title>"` (a quoted string, REQ-SY-006), `text` (REQ-SY-005),
-    `contract <version>` (the version of what the program writes, for the brief), and
+    `contract <version>` (the version of what the program writes, for the brief; with nothing
+    after the keyword, it states none), and
     `request <JSON object>`, members every request carries (REQ-SU-003). A request value that
     is not JSON, or is JSON but not an object, MUST get P009, and one that sets `id`, `op` or
     `input` P051. `oracle <command>` names the command that runs the oracle (REQ-OR-002); with
@@ -312,7 +325,7 @@ req SY-006 "Quoted strings, IDs and titles"
     expect result.diagnostics = []
 
 req SY-007 "Operations"
-  decision D-013, D-014, D-015
+  decision D-013, D-014, D-015, D-017
   text
     `op <name>` declares an operation; the name is one word, else P031, and its clauses are
     still read. Its clauses:
@@ -325,7 +338,9 @@ req SY-007 "Operations"
       operation P052. An operation may have several `input` clauses; their fields add up.
     - `result <text>`: a summary of the result, for people.
     - `tolerance <path> <number>`: how far a number at that path of the result may be from the
-      oracle's (REQ-SU-005). Anything but a path and a JSON number of 0 or more MUST get P018.
+      oracle's (REQ-SU-005). The path is the clause's first word, whatever it holds, and the
+      number is the rest. Anything but a path and a JSON number of 0 or more (`-0` is 0) MUST
+      get P018.
     - `audit`, or `audit text`: responses to it also carry an `audit` text (REQ-SU-005).
       Anything else after `audit` MUST get P050.
     - `request <JSON object>`: request members that replace the spec's for this operation,
@@ -389,6 +404,15 @@ req SY-007 "Operations"
       duramen 0.1
       spec s 1
       op f
+        tolerance foo 0.1
+        tolerance result.x -0
+        tolerance result.y 1e400
+    expect result.diagnostics = ["s.duramen:6: error P018"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      op f
         request 5
       op g
         request {"input": 5}
@@ -447,9 +471,11 @@ req SY-008 "The errors list"
     expect result.diagnostics = ["s.duramen:4: error T004"]
 
 req SY-009 "Requirements, open items, decisions, sections and notes"
+  decision D-017
   text
     `req <ID> "<title>"` takes the clauses `text`, `decision <ID>, ...` (decisions it rests
-    on, separated by commas or spaces, in any number of clauses), `on <platform>`, `example`
+    on, separated by commas or spaces, in any number of clauses; one with nothing after the
+    keyword names none), `on <platform>`, `example`
     (REQ-SY-010) and `table` (REQ-SY-012). The platform is `any` (also without an `on`
     clause), `posix` or `windows`, the platforms whose implementations its examples judge
     (REQ-SU-002); any other MUST get P033. `open <ID> "<title>"` takes `text`, and takes
@@ -494,9 +520,19 @@ req SY-009 "Requirements, open items, decisions, sections and notes"
       open O "o"
         decision D
     expect result.diagnostics = ["s.duramen:4: error P033", "s.duramen:5: error P015", "s.duramen:7: error P050", "s.duramen:9: error P015", "s.duramen:11: error P015", "s.duramen:13: error P015"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+        contract
+      req A "a"
+        decision
+        text
+          Words.
+    expect result.diagnostics = ["s.duramen:4: error T001"]
 
 req SY-010 "Examples"
-  decision D-005, D-011, D-014, D-015, D-016
+  decision D-005, D-011, D-014, D-015, D-016, D-017
   text
     An example is a request and what its response holds. `example <op> <JSON object>` is a
     request to the operation with that input; `example <op>` is one with no `input` member at
@@ -522,12 +558,14 @@ req SY-010 "Examples"
     - `expect <path> = ?`: the response holds the oracle's value at the path (REQ-OR-008).
     - `request <JSON object>`: request members on top of the spec's or the operation's
       (REQ-SU-003), with P009 and P051 as for `spec`; an example takes one, and a `request`
-      line after one that was read MUST get P052 (one that got P009 or P051 was not read).
+      line after one that was read MUST get P052 and nothing else, whatever it holds (one
+      that got P009 or P051 was not read).
     - `omit <member>, ...`: request members left out (REQ-SU-003), names separated by commas
       or white space; several `omit` lines add up. `omit` with no name MUST get P011.
     - `input <path>` and `input <path> from "<file>"` (REQ-SY-011).
-    Any other line MUST get P011. A raw example takes no `request`, `omit` or `input` lines
-    (P022).
+    Any other line MUST get P011. A raw example takes no `request`, `omit` or `input` lines:
+    each MUST get P022 and nothing else (an `input` line's text is skipped, and its file is
+    not read).
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -599,6 +637,35 @@ req SY-010 "Examples"
           input files."a"
             text
     expect result.diagnostics = ["s.duramen:5: error P010", "s.duramen:6: error P010", "s.duramen:7: error P010", "s.duramen:8: error P009", "s.duramen:9: error P011", "s.duramen:10: error P011", "s.duramen:11: error P006", "s.duramen:12: error P006", "s.duramen:13: error P009", "s.duramen:14: error P051", "s.duramen:16: error P022", "s.duramen:17: error P022", "s.duramen:18: error P022"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      op f
+      req A "a"
+        text
+          T.
+        example f {}
+          request {"a": 1}
+          request [2]
+          request {"id": 3}
+          request {"b": 4}
+    expect result.diagnostics = ["s.duramen:9: error P052", "s.duramen:10: error P052", "s.duramen:11: error P052"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      op f
+      req A "a"
+        text
+          T.
+        example raw '{"id":"1","op":"f"}'
+          input files."a" from "nofile"
+          input files."b"
+            hello
+        example raw x
+          input files."c" from "nofile"
+    expect result.diagnostics = ["s.duramen:8: error P022", "s.duramen:9: error P022", "s.duramen:11: error P004", "s.duramen:12: error P022"]
 
 req SY-011 "Texts in an example's input"
   decision D-011, D-012, D-015, D-016
@@ -691,7 +758,7 @@ req SY-011 "Texts in an example's input"
     expect result.diagnostics = []
 
 req SY-012 "Tables"
-  decision D-011, D-015, D-016
+  decision D-011, D-015, D-016, D-017
   text
     `table <op>` writes examples of one operation as rows: the lines under it that start with
     `|`, indented four spaces or more (a row indented three MUST get P006). Any other line
@@ -709,8 +776,10 @@ req SY-012 "Tables"
     rest of the path (whose names may be empty, REQ-OR-003). A name may be followed by `±`
     (or `+-`) and a tolerance, which is the rest of the cell and is a JSON number of 0 or
     more, else P010; a tolerance after an input field MUST get P010 too; and a column whose
-    tolerance gets P010 has none. A header with a cell of any other form MUST get P013, and
-    then nothing else in the table is checked. Every other row is an example: one with a
+    tolerance gets P010 has none. The header's cells are read from the left: the first cell
+    of any other form, or that names a column again, MUST get P013, and then nothing else in
+    the table is checked, though a tolerance problem in a cell before it is still reported.
+    Every other row is an example: one with a
     different number of cells from the header MUST get P014. An empty cell states nothing. A
     cell under an input field is that field's value, and a cell under an expectation path an
     expectation of that value (within the column's tolerance, if it has one), or of the
@@ -805,3 +874,65 @@ req SY-012 "Tables"
           | 2 | 2        |
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = []
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      op f
+        input a int
+      req A "a"
+        text
+          T.
+        table f
+          | a ± 1 | b! | result ± x |
+          | 1 | 2 | 3 |
+    expect result.diagnostics = ["s.duramen:9: error P010", "s.duramen:9: error P013"]
+
+req SY-013 "Numbers too large for binary64"
+  decision D-017
+  text
+    JSON in a record (an example's input, request members, an expectation's value, a table's
+    cells) holds its numbers as IEEE 754 binary64 values, the values REQ-OR-003 compares. A
+    number too large to be finite as one, such as `1e400`, cannot be written back into a
+    request line or a suite (REQ-SU-003, REQ-SU-004), so JSON that holds one MUST get P009,
+    and such a number MUST get P010 where REQ-SY-010 and REQ-SY-012 want a number, and P018
+    in a `tolerance` clause. A raw example is sent as it is written, so it can send one.
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+        request {"x": 1e400}
+      op f
+        input a int
+      req A "a"
+        text
+          T.
+        example f {"a": 1e400}
+        example f {"a": 1}
+          expect result.a = [1, -1e400]
+          request {"y": 1e999}
+        table f
+          | a | result |
+          | 1e999 | 1 |
+        example raw '{"id":"r","op":"f","input":{"a":1e400}}'
+    expect result.diagnostics = ["s.duramen:3: error P009", "s.duramen:9: error P009", "s.duramen:11: error P009", "s.duramen:12: error P009", "s.duramen:15: error P009"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      op f
+        input a int
+        tolerance result.x 1e400
+      req A "a"
+        text
+          T.
+        example f {"a": 1}
+          expect result ≈ 1e400 ± 1
+          expect result ≈ 1 ± 1e400
+        table f
+          | a | result ± 1e400 |
+          | 1 | 2 |
+        table f
+          | a | result ± 1 |
+          | 1 | 1e400 |
+    expect result.diagnostics = ["s.duramen:5: error P018", "s.duramen:10: error P010", "s.duramen:11: error P010", "s.duramen:13: error P010", "s.duramen:17: error P010"]

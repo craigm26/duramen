@@ -335,7 +335,8 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
   const out = { diagnostics: ds, oracle: null, corroboration: corr, properties: [] };
   if (!ast.oracle || !runOracle) return out;
   const cwd = dirname(ast.oracle.file ?? ast.file);
-  const runOpts = { cwd, ...(timeoutMs ? { timeoutMs } : {}), ...(processEnv ? { env: processEnv } : {}) };
+  // A response line holding a number too large to be finite matches nothing (REQ-OR-002).
+  const runOpts = { cwd, finite: true, ...(timeoutMs ? { timeoutMs } : {}), ...(processEnv ? { env: processEnv } : {}) };
 
   // Run every example, evidence row and bound pack item through the oracle in one batch;
   // examples whose response cannot be matched by id each get a run of their own.

@@ -67,9 +67,18 @@ function killTree(child) {
   }
 }
 
+// True when every number in a JSON value is finite: JSON can write a number too large for a
+// binary64 value (1e400), which parses as Infinity and cannot be written back.
+export function allFinite(v) {
+  if (typeof v === 'number') return Number.isFinite(v);
+  if (v && typeof v === 'object') return Object.values(v).every(allFinite);
+  return true;
+}
+
 // Parse response bytes into lines. Blank lines are skipped. Each non-blank line is either an
 // object (kept, and indexed by its string id) or a bad line (kept as undefined in `list`).
-export function parseResponses(stdout) {
+// With `finite`, a line holding a number too large to be finite is a bad line too.
+export function parseResponses(stdout, { finite = false } = {}) {
   const responses = new Map();
   const list = [];
   const order = [];
@@ -79,6 +88,7 @@ export function parseResponses(stdout) {
     if (line.trim() === '') continue;
     let o;
     try { o = JSON.parse(line); } catch { list.push(undefined); order.push(undefined); bad.push(line); continue; }
+    if (finite && !allFinite(o)) { list.push(undefined); order.push(undefined); bad.push(line); continue; }
     if (o && typeof o === 'object' && !Array.isArray(o)) {
       list.push(o);
       order.push(typeof o.id === 'string' ? o.id : null);
@@ -99,7 +109,7 @@ export function runDriver(command, lines, opts = {}) {
   const o = { ...DEFAULTS, ...opts };
   const budget = o.timeoutMs + o.perLineMs * lines.length;
   const parsed = parseCommand(command);
-  const finish = (base, stdout = Buffer.alloc(0), stderr = '') => ({ ...base, ...parseResponses(stdout), stdout, stderr });
+  const finish = (base, stdout = Buffer.alloc(0), stderr = '') => ({ ...base, ...parseResponses(stdout, { finite: !!o.finite }), stdout, stderr });
   if (parsed.error) return Promise.resolve(finish({ ok: false, code: null, signal: null, error: `bad driver command ${JSON.stringify(showCommand(command))}: ${parsed.error}`, timedOut: false, truncated: false }));
   const [prog, ...args] = parsed.words;
   return new Promise((resolve) => {

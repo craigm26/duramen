@@ -1,0 +1,1 @@
+{"driver": {"default": "python3 duramen_driver.py", "win32": "py -3 duramen_driver.py"}}

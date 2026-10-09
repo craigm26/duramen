@@ -256,16 +256,16 @@ checked further (`spec/`, REQ-RC-005).
 | P006 | a line that belongs to nothing: no clause above it, under a clause that takes no lines, under an example or a table or an error condition at the wrong indent, or not a row under a table |
 | P007 | a clause not indented two spaces |
 | P008 | `text` with something after the keyword, or a line in it indented three spaces |
-| P009 | not valid JSON, or request members that are not a JSON object |
-| P010 | an approximate expectation or tolerance column without JSON numbers and a tolerance of 0 or more |
+| P009 | not valid JSON, JSON holding a number too large for binary64 (`1e400`), or request members that are not a JSON object |
+| P010 | an approximate expectation or tolerance column without finite JSON numbers and a tolerance of 0 or more |
 | P011 | a line under an example that is none of `expect`, `request`, `omit`, `input` |
 | P012 | an example with no op, or an input that is not a JSON object |
-| P013 | a table without one op, a header and a row, or with an empty header cell |
+| P013 | a table without one op, a header and a row, or whose header has a cell of no known form or names a column twice (cells are read from the left; tolerance problems before that cell are still P010) |
 | P014 | a table row with a different number of cells from the header |
 | P015 | a clause the statement does not take (the lines under it are ignored) |
 | P016 | `edge` not of the form `edge <name> [via <op> <field> [base64]]` |
 | P017 | an input field not of the form `<name>[?] <type>`, including an empty one |
-| P018 | `tolerance` not a path and a number of 0 or more |
+| P018 | `tolerance` not a path and a finite number of 0 or more |
 | P019 | an `errors` clause not of the form `<code> when <condition>` |
 | P020 | a file without a `duramen` statement |
 | P021 | `spec` not of the form `spec <name> <version>`, or a record without one |
@@ -324,7 +324,7 @@ checked further (`spec/`, REQ-RC-005).
 | T018 | info | an edge not bound to any op (its text is in the brief; no pack cases) |
 | T019 | error / info | no oracle, with examples to run / with only edge packs |
 | T020 | error | the oracle failed to run |
-| T021 | error | the oracle gave no response for an example or a pack item |
+| T021 | error | the oracle gave no response for an example or a pack item (a response line holding a number too large for binary64 is none) |
 | T022 | error | the oracle could not compute an example or a pack item (it says so instead of crashing) |
 | T023 | error | an example expects an error code that `errors` does not declare |
 | T024 | warning | the oracle answers an example that states no expectations with an error |

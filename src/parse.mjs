@@ -5,6 +5,7 @@
 // has a file, a line and a column.
 import { parseType } from './types.mjs';
 import { parseExpr, namesOf, unknownFunctions } from './expr.mjs';
+import { allFinite } from './driver.mjs';
 
 export const VERSIONS = ['0.1', '0.2'];
 const TOP = new Set(['duramen', 'spec', 'oracle', 'type', 'edge', 'edgedef', 'section', 'op', 'errors', 'req', 'property', 'evidence', 'open', 'decision', 'note']);
@@ -122,12 +123,17 @@ function parseInto(source, file, ast, diag) {
   };
   const contLines = (c) => c.sub.filter((l) => l.text !== '' && !l.text.startsWith('#'));
 
+  // JSON as a record takes it: numbers are binary64 values, and one too large to be finite
+  // (1e400) cannot be written back, so it is not taken (P009; `example raw` can send one).
   function parseJSON(s, n, what, col = 1) {
-    try { return { ok: true, value: JSON.parse(s) }; } catch (e) {
+    let value;
+    try { value = JSON.parse(s); } catch (e) {
       const at = e.message.match(/position (\d+)/);
       diag('error', n, 'P009', `${what} is not valid JSON: ${e.message}`, col + (at ? Number(at[1]) : 0));
       return { ok: false };
     }
+    if (!allFinite(value)) { diag('error', n, 'P009', `${what} holds a number too large for a binary64 value (to send one, write the request with example raw)`, col); return { ok: false }; }
+    return { ok: true, value };
   }
   // `request <json object>` under spec or op: members every request carries.
   function requestObject(c) {
@@ -189,18 +195,17 @@ function parseInto(source, file, ast, diag) {
       if (!/^\|(?:[\s|:-]*\|)?$/.test(l.text)) rows.push(l);
     }
     if (!op || /\s/.test(op) || rows.length < 2) { diag('error', c.n, 'P013', 'table <op>, then a header row and at least one row', c.restCol); return []; }
-    const header = cells(rows[0]).map((h) => {
-      const hm = h.match(/^(\S+?)\s*(?:(?:±|\+-)\s*(.*))?$/);
-      return hm && (isExpectPath(hm[1]) ? !/[=≈~]/.test(hm[1]) : /^[\w-]+$/.test(hm[1])) ? { name: hm[1], tol: hm[2] === undefined ? null : jsonNumber(hm[2]) } : null;
-    });
-    if (header.some((h) => h === null)) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
-    if (new Set(header.map((h) => h.name)).size < header.length) { diag('error', rows[0].n, 'P013', 'a header names each column once', rows[0].indent + 1); return []; }
-    for (const h of header) {
-      if (h.tol === null) continue;
-      if (!isExpectPath(h.name)) diag('error', rows[0].n, 'P010', `column "${h.name}": only an expectation column takes a tolerance`, rows[0].indent + 1);
-      else if (!(Number.isFinite(h.tol) && h.tol >= 0)) diag('error', rows[0].n, 'P010', `column "${h.name}": a tolerance is a number of 0 or more`, rows[0].indent + 1);
-      else continue;
-      h.tol = null; // reported; the column has no tolerance
+    // The header's cells are read from the left. The first one of no known form, or that names a
+    // column again, is P013 and ends the table; a tolerance problem in a cell before it is P010.
+    const header = [];
+    for (const cell of cells(rows[0])) {
+      const hm = cell.match(/^(\S+?)\s*(?:(?:±|\+-)\s*(.*))?$/);
+      if (!hm || !(isExpectPath(hm[1]) ? !/[=≈~]/.test(hm[1]) : /^[\w-]+$/.test(hm[1]))) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
+      if (header.some((h) => h.name === hm[1])) { diag('error', rows[0].n, 'P013', 'a header names each column once', rows[0].indent + 1); return []; }
+      const h = { name: hm[1], tol: hm[2] === undefined ? null : jsonNumber(hm[2]) };
+      if (h.tol !== null && !isExpectPath(h.name)) { diag('error', rows[0].n, 'P010', `column "${h.name}": only an expectation column takes a tolerance`, rows[0].indent + 1); h.tol = null; }
+      else if (h.tol !== null && !(Number.isFinite(h.tol) && h.tol >= 0)) { diag('error', rows[0].n, 'P010', `column "${h.name}": a tolerance is a number of 0 or more`, rows[0].indent + 1); h.tol = null; }
+      header.push(h); // a column whose tolerance was reported has none
     }
     const out = [];
     for (const l of rows.slice(1)) {
@@ -331,10 +336,11 @@ function parseInto(source, file, ast, diag) {
           ex.omit.push(...names);
           continue;
         }
+        // A request line after one that was read is P052 and nothing else: its value is not read.
+        if (ex.request) { diag('error', l.n, 'P052', 'an example takes one request line', l.indent + 1); continue; }
         const r = parseJSON(l.text.slice(7).trim(), l.n, 'request members', l.indent + 9);
         if (r.ok) {
           if (r.value === null || typeof r.value !== 'object' || Array.isArray(r.value)) diag('error', l.n, 'P009', 'request members are a JSON object', l.indent + 9);
-          else if (ex.request) diag('error', l.n, 'P052', 'an example takes one request line', l.indent + 1);
           else if (ownMembersOk(r.value, l.n, l.indent + 9)) ex.request = r.value;
         }
         continue;

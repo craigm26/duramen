@@ -86,12 +86,12 @@ The full list of checks, the syntax and the limits are in [DESIGN.md](DESIGN.md)
 
 ## duramen specified in duramen
 
-[`spec/`](spec/) is duramen-core 0.6.0: the core of the language (the statements of 0.1 other
+[`spec/`](spec/) is duramen-core 0.7.0: the core of the language (the statements of 0.1 other
 than `edge`) and two operations of the checker, `check` (a record's diagnostics) and `cases`
-(the suite generated from it), in 42 requirements and 158 examples. It is written in the core
+(the suite generated from it), in 43 requirements and 168 examples. It is written in the core
 language it specifies, so that a checker built from it can read it, and its oracle is duramen
 itself, through `duramen serve`, which takes a record as a map of file names to texts. Every
-expected value in it was typed by hand, and `duramen check spec/` runs all 158 through duramen
+expected value in it was typed by hand, and `duramen check spec/` runs all 168 through duramen
 in about three seconds.
 
 Writing it found behavior nobody had decided. Before it was written, duramen dropped some
@@ -135,9 +135,18 @@ Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
    and the model does not, the model is the suspect: in each case duramen had not done what
    its own spec says, and 0.6.0 follows the builds ([s04](selfhost/s04-ts.md),
    [s05](selfhost/s05-py.md)).
+8. **Past the mutants.** s06 (TypeScript) and s07 (Python), built from 0.6.0, passed all 161
+   cases, are fixed points, and answered all 9,888 requests about 4,500 mutated records as
+   duramen did. Their recorded choices, each tried on a record written to reach it
+   ([`probe.mjs`](selfhost/probe.mjs)), still found four kinds of difference: twice both
+   builds against duramen again (a table header's cells read from the left, and numbers too
+   large for binary64), once three readings of one line, and once a deliberate gap. On the
+   numbers no checker was right: for an expectation of `1e999`, duramen and s06 wrote `null`
+   into the suite and s07 could not answer. 0.7.0 refuses such numbers wherever a record holds
+   JSON ([s06](selfhost/s06-ts.md), [s07](selfhost/s07-py.md)).
 
 Blind means the builders were not shown duramen's source; the spec they read describes duramen
-in detail, and five builds with one model are a small sample.
+in detail, and seven builds with one model are a small sample.
 
 ## The heat-engine slice
 
@@ -268,7 +277,7 @@ src/mutate.mjs, agree.mjs, diff.mjs, regen.mjs, serve.mjs   the other commands
 lib/edges/                   the edge library, as edgedef records
 lib/regen/                   the generic builder prompts for duramen regen
 spec/                        duramen-core, specified in duramen
-selfhost/                    blind builds of duramen-core, and the fixed-point and agreement tests
+selfhost/                    blind builds of duramen-core, the fixed-point and agreement tests, and the probes
 examples/heat-engine/        the slice, its oracle and evidence, the generated build, mutants.mjs
 examples/heat-engine/blind/  blind builds t01 to t05: prompts, the kit's tools, records, output
 examples/heat-engine/regen/  blind builds t06 and t07 with duramen regen

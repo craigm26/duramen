@@ -307,7 +307,7 @@ req CK-008 "The order of errors is stated once"
     expect result.diagnostics = []
 
 req CK-009 "Decisions"
-  decision D-008, D-014, D-015
+  decision D-008, D-014, D-015, D-017
   text
     A decision that no requirement cites MUST get the warning T012, and one without a `source`
     the warning T013, at its line. A `source` clause with nothing after it counts as none. A
@@ -318,7 +318,10 @@ req CK-009 "Decisions"
     A `status` clause with nothing after it is a status with no word. A decision without a status counts
     as accepted. A requirement that cites a contested, superseded or rejected decision MUST get
     T028 at its line for each such decision, and one that cites an observed, inferred or
-    proposed decision the warning T028 for each; a decision cited twice is judged once.
+    proposed decision the warning T028 for each; a decision cited twice is judged once. For
+    T028, a decision is what the first word of its status says, also when the status gets
+    T027 (`superseded  by D-2`, with two spaces, is superseded), and one whose first word is
+    none of the seven counts as accepted.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -368,3 +371,18 @@ req CK-009 "Decisions"
         example f {}
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:6: error T027", "s.duramen:9: warning T013", "s.duramen:9: error T027"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      req A "a"
+        decision D, E
+        text
+          T.
+      decision D "d"
+        source x
+        status superseded  by E
+      decision E "e"
+        source x
+        status Accepted
+    expect result.diagnostics = ["s.duramen:3: error T001", "s.duramen:3: error T028", "s.duramen:7: error T027", "s.duramen:10: error T027"]

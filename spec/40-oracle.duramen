@@ -36,7 +36,7 @@ req OR-001 "A record with examples has an oracle"
     expect result.diagnostics = ["s.duramen:2: error T019", "s.duramen:5: error T001"]
 
 req OR-002 "How the oracle is run"
-  decision D-014, D-015
+  decision D-014, D-015, D-017
   text
     The oracle is the command after `oracle`, split into words at spaces and tabs, where a
     word may be quoted with `"…"` or `'…'` to hold spaces (inside `"…"`, `\"` stands for `"`
@@ -46,12 +46,12 @@ req OR-002 "How the oracle is run"
     folder of the file that holds the `oracle` statement, as a driver: it writes one request
     line per example to the oracle's standard input, in record order, each ending with LF,
     closes it, and reads one JSON response per line from its standard output, matching each to
-    its example by `id` (a line that is not a JSON object with a string `id` matches nothing,
-    and of two responses with one `id`, the first is the one); it runs the oracle so only when
-    there is at least one such line. An
-    example that is raw, or that leaves out `id`, MUST be sent alone, in a run of the oracle of
-    its own, and its response is the one line that run writes (none when the run writes no
-    line, or more than one). The examples run are those of declared operations, and those that
+    its example by `id` (a line that is not a JSON object with a string `id`, or that holds a
+    number too large to be finite (REQ-SY-013), matches nothing, and of two responses with one
+    `id`, the first is the one); it runs the oracle so only when there is at least one such
+    line. An example that is raw, or that leaves out `id`, MUST be sent alone, in a run of the
+    oracle of its own, and its response is the one line that run writes (none when the run
+    writes no line, or more than one). The examples run are those of declared operations, and those that
     expect an error or are raw (REQ-CK-004), whatever else the checks of REQ-CK-001 to
     REQ-CK-009 find. REQ-SU-003 says how each request line is made.
   example check {}
@@ -229,8 +229,11 @@ req OR-004 "An oracle that fails"
     expect result.diagnostics = ["s.duramen:3: error T020", "s.duramen:7: error T021"]
 
 req OR-005 "Examples with no answer"
+  decision D-017
   text
-    An example run through the oracle that gets no response MUST get T021 at its line.
+    An example run through the oracle that gets no response MUST get T021 at its line. A
+    response line that holds a number too large to be finite is not one (REQ-OR-002): it
+    could not be written into the suite.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -244,6 +247,20 @@ req OR-005 "Examples with no answer"
         example raw '{"id": "r", "op": "f", "input": {"silent": true}}'
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:7: error T021", "s.duramen:9: error T021"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input say string
+      req A "a"
+        example f {"say": "{\"id\":\"A#1\",\"result\":1e400}"}
+          expect result = ?
+        example f {"say": "{\"id\":\"A#2\",\"result\":1e300}"}
+          expect result = ?
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:7: error T021"]
 
 req OR-006 "Examples the oracle cannot compute"
   text
