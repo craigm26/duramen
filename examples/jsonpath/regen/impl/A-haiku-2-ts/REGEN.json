@@ -1,0 +1,6 @@
+{
+  "lang": "ts",
+  "build": "",
+  "test": "node --test json.test.ts iregexp.test.ts query.test.ts evaluate.test.ts protocol.test.ts driver.test.ts repo.test.ts",
+  "driver": "node driver.ts"
+}

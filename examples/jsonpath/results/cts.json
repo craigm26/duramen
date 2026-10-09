@@ -1,0 +1,404 @@
+{
+ "cases": 706,
+ "builds": [
+  {
+   "name": "A-haiku-1-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "A-haiku-2-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "A-sonnet-1-py",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "A-sonnet-1-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "A-sonnet-2-py",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "A-sonnet-2-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "B-haiku-1-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "B-haiku-2-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "B-sonnet-1-py",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "B-sonnet-1-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "B-sonnet-2-py",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "B-sonnet-2-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "C-haiku-1-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "C-haiku-2-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "C-sonnet-1-py",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "C-sonnet-1-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "C-sonnet-2-py",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "C-sonnet-2-ts",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  },
+  {
+   "name": "oracle",
+   "passed": 704,
+   "failed": 2,
+   "retried": 0,
+   "byCategory": {
+    "functions": 2
+   },
+   "failures": [
+    {
+     "name": "functions, match, explicit caret",
+     "category": "functions",
+     "why": "got [] at []"
+    },
+    {
+     "name": "functions, match, explicit dollar",
+     "category": "functions",
+     "why": "got [] at []"
+    }
+   ]
+  }
+ ]
+}

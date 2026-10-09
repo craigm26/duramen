@@ -1,0 +1,10 @@
+{
+  "name": "jsonpath",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JSONPath (RFC 9535) query driver, built from SPEC.md",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"**/*.test.ts\""
+  }
+}

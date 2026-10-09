@@ -155,4 +155,71 @@ services.
 
 ## Results
 
-Not yet run.
+### 7. The language, not only the builder, carries the behavior: fails
+
+All 18 builds ran on 2026-10-09 between 17:33 and 18:18 UTC, after the briefs were frozen in
+a9aba75. The compliance suite was cloned at the pinned commit at 18:19, after the last build
+ended. Every build, its run record and both reports are in
+[`examples/jsonpath/`](examples/jsonpath/README.md).
+
+| criterion | A (the RFCs) | B (markdown) | C (duramen) | holds? |
+|---|---|---|---|---|
+| 1. each C build passes at least 95% of the 706 cases | | | 704 each (99.7%) | yes |
+| 2. mean failed cases, sonnet builds: C at most half of A and of B | 2.00 | 2.00 | 2.00 | **no** |
+| 3. mean agreement over six pairs, sonnet builds: C at least A and B | 99.908% | 100.000% | 99.992% | **no** |
+
+- **The suite saw no difference at all.** All 18 builds, of all three briefs and both models,
+  passed 704 of 706 cases, and so did C's oracle. All 19 failed the same two cases,
+  `functions, match, explicit caret` and `explicit dollar`, which expect `^` and `$` to anchor
+  a pattern. RFC 9485's grammar makes them ordinary characters, as XSD does; its mapping to
+  ECMAScript (section 5.3) leaves them unescaped, which makes them anchors there. The suite
+  follows section 5.3, and every brief, and every builder of A, read the grammar.
+- **On the 6,000 generated requests**, B's four sonnet builds agreed on every request; C's
+  agreed on all but one, in the three pairs with C-sonnet-1-ts; A's on all but 11, in the three
+  pairs with A-sonnet-2-py. The A sonnet builds accepted blank space inside the brackets of a
+  singular query in a comparison (`@[ 1]`), and A-sonnet-2-py a dot before a bracket
+  (`$.['A']`), which RFC 9535's grammar rejects and both written briefs state. C-sonnet-1-ts
+  and C-haiku-2-ts accepted a tab inside such brackets, which C's own decision D-003 rejects;
+  its examples show only spaces. The compliance suite tests none of these.
+
+**Reported, with no threshold:**
+- `claude-haiku-5-5`: all six builds 704 of 706. The A pair and the B pair agreed on all 6,000
+  requests, the C pair on 5,999 (the tab, again).
+- No builder from outside Anthropic took part: there was no access before the first build.
+- The oracle: 704 of 706, the same two cases.
+- C's own suite (738 cases): every C build 738; every B build 693; the A builds 688 to 693. The
+  45 cases every A and B build fails are the order of an object's members, C's decision D-001
+  (code-point order), where the RFC leaves the order to the implementation and the compliance
+  suite accepts any; the A sonnet builds also fail D-003's three examples. C's suite measures C's
+  decisions, not the standard.
+- Sizes: SPEC.md of A 167,338 characters, of B 104,258, of C 87,171 (DECISIONS.md: A none, B
+  4,455 bytes, C 5,192). Record C is 1,509 lines; its oracle is 679 non-blank lines. The sonnet
+  builds are 762 to 1,078 non-blank lines outside their tests (C 762 to 908, B 783 to 1,078, A
+  846 to 1,007), the haiku builds 1,033 to 1,307. C's oracle is about three quarters the size of
+  a typical build: about as long, which this file named as counting against.
+- Time to write: A, none beyond the protocol section. B, 14.3 minutes, one session. C, its
+  oracle and its evidence: within the 45 minutes between the commit of these criteria (16:48
+  UTC) and the freeze (17:33), which also covered B's author run and the tooling.
+- Builds took 4.5 to 6.8 minutes each (sonnet) and 13 to 16 (haiku), at $0.77 to $1.46.
+- Audits: no build imports anything but its standard library and its own files. B-sonnet-1-ts
+  tried to write two test files one folder above its work folder, which the permission rules
+  refused. B-haiku-1-ts read Claude Code's own output file for a command it had run in the
+  background: outside its folder by path, holding only that command's output; it is counted.
+- Faults in C's brief, all of duramen's making: its renderer wrote a backtick inside an
+  example's query as `ˋ` (U+02CB), which made one example false (every C build noticed), and
+  showed the evidence table's first 8 of 43 rows under the name `EV-EV-RFC`.
+- One change during the builds: at 18:04:57 `src/check.mjs` and `src/suite.mjs` changed for claim
+  8's round nine, and C-haiku-2-ts's run, started at 18:05:02, was scored by the changed code.
+  The jsonpath record's check output, brief and suite are identical byte for byte before and
+  after the change.
+
+**What it says.** On JSONPath, duramen added nothing that the compliance suite can see, over
+the standard's own text or over a careful markdown specification: the outcome this file named
+as counting against the language, both ways. "Claude builds well from a clear spec" explains it,
+and for this builder even the RFC alone is nearly enough. JSONPath may be the hardest place for
+a brief to show its worth: RFC 9535 dates from February 2024, the compliance suite is public,
+and the models have most likely seen both and many implementations ("blind" means not shown,
+not never seen). The one measure that separated the briefs is agreement on generated requests,
+where the RFC alone left two corners of its grammar to the builder and both written briefs
+closed them; there C did not do better than B. Four builds per brief is a small sample, but no
+sample size turns 2.00, 2.00 and 2.00 into a large effect.

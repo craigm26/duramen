@@ -1,0 +1,6 @@
+  sandbox namjci: brief written, leak check ok; launching claude-haiku-5-5 (ts)
+  builder exited with 0 after 13.2 min
+run C-haiku-2: claude-haiku-5-5 (ts), 39 turns, 13.2 min, $0.77
+  audit: 0 violations, init ok, 1 denied calls
+  suite: passed 738/738
+  build copied to examples/jsonpath/regen/impl/C-haiku-2-ts; 19 choices to triage in examples/jsonpath/regen/C-haiku-2-ts.md
