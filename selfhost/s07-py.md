@@ -16,7 +16,7 @@
   order differs)
 - Agreement on mutants at 0.6.0: three seeds of 1,500 mutants, 9,888 requests: **all answered
   alike**
-- Choices tried on records written for them: see [s06's record](s06-ts.md); the records are in
+- Records written for its choices and s06's: see [s06's record](s06-ts.md); the records are in
   [`probes/s06-s07.txt`](probes/s06-s07.txt)
 - Clean run: **yes** (no `clarify`)
 
@@ -34,7 +34,7 @@
 | C-19 | Oracle time limit (30 s), folder and environment | open | Already OPEN-RQ-001 (the folder is REQ-OR-002's) |
 | C-24 | Numbers too large for binary64 written as `Infinity` | pin | REQ-SY-013: refused wherever a record holds JSON, and an oracle's answer holding one is no answer (REQ-OR-002) |
 | C-25 | White-space-only lines in the driver stream | open | Already open |
-| C-26 | A malformed status and T028 | pin | REQ-CK-009: the status's first word says what the decision is, also with T027 (all three's reading) |
+| C-26 | A malformed status and T028 | pin | REQ-CK-009: the status's first word says what the decision is, also with T027 (all three's behavior; s07's note says such a decision is not judged for T028, but on the probe records it is) |
 | C-5 to C-8, C-11 to C-18, C-20 to C-23, C-27, C-28 | (18 choices) | already pinned | None |
 
 ## What this run taught

@@ -136,14 +136,15 @@ Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
    its own spec says, and 0.6.0 follows the builds ([s04](selfhost/s04-ts.md),
    [s05](selfhost/s05-py.md)).
 8. **Past the mutants.** s06 (TypeScript) and s07 (Python), built from 0.6.0, passed all 161
-   cases, are fixed points, and answered all 9,888 requests about 4,500 mutated records as
-   duramen did. Their recorded choices, each tried on a record written to reach it
-   ([`probe.mjs`](selfhost/probe.mjs)), still found four kinds of difference: twice both
-   builds against duramen again (a table header's cells read from the left, and numbers too
-   large for binary64), once three readings of one line, and once a deliberate gap. On the
-   numbers no checker was right: for an expectation of `1e999`, duramen and s06 wrote `null`
-   into the suite and s07 could not answer. 0.7.0 refuses such numbers wherever a record holds
-   JSON ([s06](selfhost/s06-ts.md), [s07](selfhost/s07-py.md)).
+   cases, are fixed points, and answered every request about 4,500 mutated records, and about
+   the records they were made from, as duramen did. 49 records written for their recorded
+   choices ([`probe.mjs`](selfhost/probe.mjs)) still found four kinds of difference. Three
+   times both builds read a record alike and duramen otherwise: a table header's cells, read
+   from the left; numbers too large for binary64 after `≈` or as tolerances; and the `returns`
+   and `static` clauses, a deliberate gap. The fourth, a malformed second `request` line, was
+   read three ways. On the numbers no checker was right: for an expectation of `1e999`,
+   duramen and s06 wrote `null` into the suite and s07 could not answer. 0.7.0 refuses such
+   numbers wherever a record holds JSON ([s06](selfhost/s06-ts.md), [s07](selfhost/s07-py.md)).
 
 Blind means the builders were not shown duramen's source; the spec they read describes duramen
 in detail, and seven builds with one model are a small sample.

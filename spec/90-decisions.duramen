@@ -163,21 +163,22 @@ decision D-016 "Where two blind builds agreed against duramen"
     read the phrases of T005 across a line break, and duramen did not.
 
 decision D-017 "What the fifth round's two builds found"
-  source blind builds s06 (TypeScript) and s07 (Python) of duramen-core 0.6.0, their CHOICES.md, and records written to test each choice against duramen
+  source blind builds s06 (TypeScript) and s07 (Python) of duramen-core 0.6.0, their CHOICES.md, and records written to test their choices against duramen
   text
     s06 and s07 each passed every case of the 0.6.0 suite, were fixed points, and answered all
-    4,500 mutated records of three seeds as duramen did. Their choices, each tried on a record
-    written for it, found what the mutants had not. Twice both builds read a record alike and
-    duramen otherwise: a table header with a tolerance after an input field and then a cell of
-    no known form, where duramen reported only P013 and the builds read the cells from the
-    left; and a number too large for binary64, such as `1e400`, after `≈` or as a tolerance,
-    which duramen refused (P010, P018) and the builds took. On the second the builds followed
-    the words, and the words were incomplete: such a number cannot be written into a request or
-    a suite (duramen wrote `null` for it, s07 could not write it at all), so 0.7.0 refuses it
-    wherever a record holds JSON, and an oracle's answer that holds one is no answer. Once the
-    three read a record three ways: a malformed second `request` line under an example, which
-    this record already gave P052; s06 gave it that alone, and 0.7.0 says it gets nothing else.
-    The rest were things all three did and nothing said: a first once-only clause with a
-    problem of its own still counts; an empty `contract` or `decision` clause is none; a
-    tolerance's path is its first word; a raw example's `input` lines get P022 only; and a
-    malformed status still says what its decision is, for T028.
+    4,500 mutated records of three seeds as duramen did. Records written for their choices
+    found what the mutants had not. Three times both builds read a record alike and duramen
+    otherwise: a table header with a tolerance after an input field and then a cell of no known
+    form, where duramen reported only P013 and the builds read the cells from the left; a
+    number too large for binary64, such as `1e400`, after `≈` or as a tolerance, which duramen
+    refused (P010, P018) and the builds took; and the `returns` and `static` clauses, which are
+    open (OPEN-RC-001) and which duramen reads as the rest of the language does. On the numbers
+    the builds followed the words, and the words were incomplete: such a number cannot be
+    written into a request or a suite (duramen and s06 wrote `null` for it, and s07 could not
+    write it at all), so 0.7.0 refuses it wherever a record holds JSON, and an oracle's answer
+    that holds one is no answer. Once the three read a record three ways: a malformed second
+    `request` line under an example, which this record already gave P052; s06 gave it that
+    alone, and 0.7.0 says it gets nothing else. The rest were things all three did and nothing
+    said: a first once-only clause with a problem of its own still counts; an empty `contract`
+    or `decision` clause is none; a tolerance's path is its first word; a raw example's `input`
+    lines get P022 only; and a malformed status still says what its decision is, for T028.

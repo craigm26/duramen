@@ -26,10 +26,11 @@ node selfhost/probe.mjs selfhost/probes/s06-s07.txt selfhost/impl/s06-ts selfhos
   re-indented, cut short, a word or a character changed), and the answers that differ are
   grouped. A difference is a misreading, a place the specification is silent, or a mistake
   in duramen.
-- **Probes** ([`probe.mjs`](probe.mjs)), part of the triage: each choice a builder records in
-  `CHOICES.md` is tried on a record written to reach it ([`probes/`](probes/)), sent to
+- **Probes** ([`probe.mjs`](probe.mjs)), part of the triage: the choices builders record in
+  `CHOICES.md` are tried on records written to reach them ([`probes/`](probes/)), sent to
   duramen and to the builds of the round. The mutants explore near the suite's records; the
-  choices point at the corners the brief left open.
+  choices point at the corners the brief left open. (The counts in the table are against the
+  duramen of the build's round; the same records at a later version give later counts.)
 
 | run | brief | suite | rescored | fixed point | mutants answered alike | choices | already pinned | clarify | clean |
 |---|---|---|---|---|---|---|---|---|---|

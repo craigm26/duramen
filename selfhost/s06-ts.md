@@ -15,8 +15,8 @@
   order differs)
 - Agreement on mutants at 0.6.0: three seeds of 1,500 mutants, 9,888 requests: **all answered
   alike**
-- Choices tried on records written for them ([`probes/s06-s07.txt`](probes/s06-s07.txt), with
-  s07's): 49 records, 8 answered differently by duramen 0.6.0, s06 and s07 (below)
+- Records written for its choices and s07's ([`probes/s06-s07.txt`](probes/s06-s07.txt)): 49,
+  of which 8 were answered differently by duramen 0.6.0, s06 and s07 (below)
 - Clean run: **yes** (no `clarify`)
 
 ## CHOICES triage
@@ -38,8 +38,8 @@
 | C-3, C-6, C-9, C-10, C-12 to C-15, C-17 to C-19, C-23 | (12 choices) | already pinned | None |
 
 ## Silent divergences
-The mutants found none at 0.6.0. The choices, each tried on a record written for it, found
-these (s07's choices included):
+The mutants found none at 0.6.0. The records written for the two builds' choices found
+these:
 
 | What differed | duramen 0.6.0 | s06 | s07 | 0.7.0 |
 |---|---|---|---|---|
@@ -51,9 +51,9 @@ these (s07's choices included):
 
 ## What this run taught
 At 0.6.0 the mutants of the suite's records no longer told the builds from duramen: 9,888
-requests, all answered alike. The builders' recorded choices still did. Each choice names a
-corner the brief left to the builder, and a record written to reach it found four kinds of
-difference the mutants had not, two of them with both builds on one side and duramen on the
-other. The numbers too large for binary64 were the one where no checker was right: the brief
+requests, all answered alike. The builders' recorded choices still did. A choice names a
+corner the brief left to the builder, and records written to reach those corners found four
+kinds of difference the mutants had not, three of them with both builds on one side and
+duramen on the other (one in a deliberate gap). The numbers too large for binary64 were the one where no checker was right: the brief
 said nothing about them, the builds took them where duramen refused them, and for an
 expectation of `1e999` duramen and s06 wrote `null` into the suite while s07 could not answer.
