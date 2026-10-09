@@ -1,0 +1,8665 @@
+{
+ "round": 10,
+ "duramen": "as round ten found it (git 4ca0ab7, duramen-core 0.11.0)",
+ "checkers": [
+  "duramen",
+  "s20-ts",
+  "s21-py",
+  "s22-ts"
+ ],
+ "files": [
+  {
+   "file": "selfhost/probes/s06-s07.txt",
+   "records": 49,
+   "differ": 1,
+   "probes": [
+    {
+     "name": "s06 C-4a: title malformed then title",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "0",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P004",
+        "a.duramen:4: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-4b: op request malformed then request",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "1",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P009",
+        "a.duramen:5: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-4c: spec request with id then request",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "2",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P051",
+        "a.duramen:4: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-4d: on mars then on posix",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "3",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P033",
+        "a.duramen:5: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-5: empty title contract decision source status",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "4",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P004"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-6: input fields malformed and repeated",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "5",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P017",
+        "a.duramen:4: error P017",
+        "a.duramen:5: error P052"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-7: tolerance paths and numbers",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "6",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P018",
+        "a.duramen:8: error P018",
+        "a.duramen:9: error P018"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-8: header with several bad cells",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "7",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P010",
+        "a.duramen:9: error P013"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-8b: header two bad cells only",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "8",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P013"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-8c: header bad tolerance after bad cell",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "9",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P013"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-10: question mark in an input column",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "10",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error P009"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-11: raw dropped with input from missing",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "11",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P004",
+        "a.duramen:8: error P022",
+        "a.duramen:9: error P022"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-11b: raw with input from missing",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "12",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P022"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-11c: raw with input text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "13",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P022"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-12: from paths",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "14",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P048",
+        "a.duramen:9: error P048",
+        "a.duramen:12: error P048"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-13: input through non-objects",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "15",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P049",
+        "a.duramen:12: error P049"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-14: expect forms",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "16",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error P011",
+        "a.duramen:12: error P010",
+        "a.duramen:13: error P009"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-15: raw forms",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "17",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P004",
+        "a.duramen:9: error P004",
+        "a.duramen:10: error P004"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-17: table row with empty error cell",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "18",
+      "result": {
+       "diagnostics": [
+        "a.duramen:11: warning T024",
+        "a.duramen:12: error T023"
+       ],
+       "errors": 1,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s06 C-17b: example with other expectation gets an error",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "19",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T002",
+        "a.duramen:11: warning T024"
+       ],
+       "errors": 1,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s06 C-18a: T023 error value not a string",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "20",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-18b: duplicate decision ids",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "21",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:3: error T028",
+        "a.duramen:10: error T007"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-18c: superseded double space and case",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "22",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:3: error T028",
+        "a.duramen:7: error T027",
+        "a.duramen:10: error T027"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-2: returns and static clauses",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "23",
+       "result": {
+        "diagnostics": [
+         "a.duramen:6: error P027"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "23",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P015",
+         "a.duramen:6: error P015"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "23"
+      },
+      "s22-ts": {
+       "id": "23",
+       "result": {
+        "diagnostics": [
+         "a.duramen:5: error T001"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s07 C-3: duramen not first",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "24",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-5: on with nothing and two words",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "25",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P033",
+        "a.duramen:8: error P033"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-6: no ID",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "26",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P005",
+        "a.duramen:6: error P005",
+        "a.duramen:9: error P005",
+        "a.duramen:10: error P005",
+        "a.duramen:11: error P005"
+       ],
+       "errors": 5,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-3: comment at indent 0 inside a text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "27",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-3b: comment at indent 2 inside a text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "28",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-10: malformed second request",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "29",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P052",
+        "a.duramen:10: error P052",
+        "a.duramen:11: error P052"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-16: row with two bad cells and a short row",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "30",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error P009",
+        "a.duramen:10: error P009",
+        "a.duramen:11: error P014",
+        "a.duramen:12: error P014"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-20: two oracles, which one runs",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "31",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P044"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-20b: two ops of one name, which input fields",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "32",
+      "result": {
+       "diagnostics": [
+        "a.duramen:2: error T019",
+        "a.duramen:5: error T007",
+        "a.duramen:12: error T010",
+        "a.duramen:12: warning T011"
+       ],
+       "errors": 3,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s07 C-27: T019 with an example that is not run",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "33",
+      "result": {
+       "diagnostics": [
+        "a.duramen:2: error T019",
+        "a.duramen:6: error T009"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-23: MUST in result and in an errors condition",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "34",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004",
+        "a.duramen:6: error T004"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-7: P001 line inside an input text",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "35",
+      "result": {
+       "errors": 1,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s07 C-7check: P001 line inside an input text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "36",
+      "result": {
+       "diagnostics": [
+        "a.duramen:11: error P001"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-8: one-space line inside an input text",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "37",
+      "result": {
+       "errors": 1,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s07 C-8check: one-space line inside an input text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "38",
+      "result": {
+       "diagnostics": [
+        "a.duramen:11: error P007"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-20: numbers in checks",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "39",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"a\": 9007199254740993, \"b\": 1.0, \"d\": -0, \"e\": 1E2}}",
+         "checks": [
+          {
+           "path": "result.a",
+           "kind": "eq",
+           "value": 9007199254740992
+          },
+          {
+           "path": "result.b",
+           "kind": "eq",
+           "value": 1
+          },
+          {
+           "path": "result.d",
+           "kind": "eq",
+           "value": 0
+          },
+          {
+           "path": "result.e",
+           "kind": "eq",
+           "value": 100
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "a": 9007199254740992,
+           "b": 1,
+           "d": 0,
+           "e": 100
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s07 C-24: infinity in checks",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "40",
+      "result": {
+       "errors": 2,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s07 C-24check: infinity in checks",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "41",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P009",
+        "a.duramen:10: error P010"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-18c-D: superseded double space only",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "42",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:3: error T028",
+        "a.duramen:7: error T027"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-18c-E: Accepted only",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "43",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:7: error T027"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s06 C-18c-G: no word status",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "44",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:7: error T027"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-24, s06 C-20 (numbers 1): tolerance clause, header and cell overflow",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "45",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P018",
+        "a.duramen:10: error P010",
+        "a.duramen:14: error P010"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s07 C-24, s06 C-20 (numbers 2): eq 1e999 against an oracle that writes 1e999",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "46",
+      "result": {
+       "errors": 1,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s07 C-24, s06 C-20 (numbers 3): request member 1e999",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "47",
+      "result": {
+       "errors": 2,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s07 C-24, s06 C-20 (numbers 5): oracle writes 1e999 for a show expectation",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "48",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error T021",
+        "a.duramen:10: error T021"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "file": "selfhost/probes/s08-s09.txt",
+   "records": 72,
+   "differ": 2,
+   "probes": [
+    {
+     "name": "s08 C-1: a valid tolerance, then malformed ones for its path (known item 4)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "0",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P018",
+        "a.duramen:6: error P018",
+        "a.duramen:7: error P018",
+        "a.duramen:8: error P052"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-1: malformed tolerance, then two valid ones for its path (s09 C-7)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "1",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P018",
+        "a.duramen:6: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-1: a malformed input field does not claim its name either (related)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "2",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P017",
+        "a.duramen:5: error P017",
+        "a.duramen:6: error P052"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-2: a word after the version (s09 C-5)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "3",
+      "result": {
+       "diagnostics": [
+        "a.duramen:1: error P023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-2: two spaces, or a tab, after the keyword",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "4",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-2: tabs between the words of statements, clauses and lines (related)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "5",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-2: a second duramen statement naming another version (s09 C-5, C-6)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "6",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-6: P047 with four files, two versions",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "7",
+      "result": {
+       "diagnostics": [
+        ".:1: error P047"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-6: a version with a word after it takes no part in P047",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "8",
+      "result": {
+       "diagnostics": [
+        "b.duramen:1: error P023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-3: statements with no ID, or no space before the title (s09 C-4)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "9",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P005",
+        "a.duramen:6: error P005",
+        "a.duramen:9: error P005",
+        "a.duramen:10: error P005",
+        "a.duramen:11: error P005",
+        "a.duramen:12: error P005"
+       ],
+       "errors": 6,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-4: single-quoted raw lines (s09 C-19)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "10",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P004",
+        "a.duramen:12: error P004"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-4: empty and blank raw lines sent to the oracle",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "11",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error T021",
+        "a.duramen:9: error T021",
+        "a.duramen:10: error T021"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-4: a raw line with spaces inside its quotes (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "12",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "  {\"id\": \"r\", \"op\": \"f\", \"input\": {\"x\": 1}}  ",
+         "solo": true,
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s08 C-5: statements of the rest of the language with bodies (s09 C-1; OPEN-RC-001)",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "13",
+       "result": {
+        "diagnostics": [
+         "a.duramen:3: error P029",
+         "a.duramen:4: error P007",
+         "a.duramen:5: error P006",
+         "a.duramen:6: error P005",
+         "a.duramen:6: error P043",
+         "a.duramen:6: error P043"
+        ],
+        "errors": 6,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "13",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "13"
+      },
+      "s22-ts": {
+       "id": "13",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s08 C-6: comment at indent 0 inside an input text (s09 C-2) (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "14",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"a\\nb\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "a\nb\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "a\nb\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s08 C-6: comments at indent 0, 2, 4 and 5 inside input texts (s09 C-2, C-15)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "15",
+      "result": {
+       "diagnostics": [
+        "a.duramen:19: error P006",
+        "a.duramen:23: error P006"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-6: comments at indent 0 and 2 inside input texts (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "16",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"a\\nb\\n\",\"u\":\"a\\nb\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "a\nb\n",
+            "u": "a\nb\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "a\nb\n",
+           "u": "a\nb\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s08 C-6: comment at indent 0 inside a text that holds MUST",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "17",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-6: comment at indent 0 between a statement and its clause",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "18",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P004"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-7: P001 lines in an unknown statement, an ignored clause, an open item's example, input texts (s09 C-28)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "19",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P002",
+        "a.duramen:4: error P001",
+        "a.duramen:6: error P015",
+        "a.duramen:7: error P001",
+        "a.duramen:12: error P001",
+        "a.duramen:18: error P001",
+        "a.duramen:20: error P049",
+        "a.duramen:21: error P001"
+       ],
+       "errors": 8,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-9: an oracle that exits 0 without reading its input (broken pipe)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "20",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-10: the operation of a raw example, for full (s09 C-25) (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "21",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\": \"r1\", \"op\": \"f\", \"input\": {\"answer\": {\"result\": {\"t\": 1}, \"audit\": \"A\"}}}",
+         "solo": true,
+         "checks": [],
+         "full": {
+          "members": [
+           "audit",
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": 1
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\": \"r2\", \"op\": \"g\", \"input\": {\"answer\": {\"result\": {\"t\": 1}, \"audit\": \"A\"}}}",
+         "solo": true,
+         "checks": [],
+         "full": {
+          "members": [
+           "audit",
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": 1
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#3",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\": \"r3\", \"input\": {\"answer\": {\"result\": 1}}}",
+         "solo": true,
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": 1,
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s08 C-10: raw examples answered with an error and no expectation (T024)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "22",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: warning T024",
+        "a.duramen:9: warning T024"
+       ],
+       "errors": 0,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s08 C-11: ? under an input field",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "23",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error P009"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-12: error expectations that are not strings, approximate, or table cells (s09 C-10, C-11)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "24",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error T023",
+        "a.duramen:14: error T023",
+        "a.duramen:16: error T023",
+        "a.duramen:20: error T023",
+        "a.duramen:21: error T023",
+        "a.duramen:28: error T009",
+        "a.duramen:31: warning T024"
+       ],
+       "errors": 6,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s08 C-13: which problem an input line reports",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "25",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P048",
+        "a.duramen:8: error P049",
+        "a.duramen:9: error P049",
+        "a.duramen:10: error P049",
+        "a.duramen:11: error P049",
+        "a.duramen:13: error P048",
+        "a.duramen:14: error P006"
+       ],
+       "errors": 7,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-14: # lines indented three under each kind of clause",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "26",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P008",
+        "a.duramen:11: error P006"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-14: # lines indented three under an example and a table only",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "27",
+      "result": {
+       "diagnostics": [
+        "a.duramen:2: error T019"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-15: the one line a solo run writes (s09 C-22)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "28",
+      "result": {
+       "diagnostics": [
+        "a.duramen:18: error T021",
+        "a.duramen:20: error T021",
+        "a.duramen:26: error T021",
+        "a.duramen:31: error T021"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-23: response lines of a batch run",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "29",
+      "result": {
+       "diagnostics": [
+        "a.duramen:13: error T021",
+        "a.duramen:16: error T021"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-16: empty contract, source, status and on as first once-only clauses",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "30",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P052",
+        "a.duramen:7: error P052",
+        "a.duramen:9: error P052",
+        "a.duramen:11: error P033",
+        "a.duramen:12: error P052"
+       ],
+       "errors": 5,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-17: header cells id and result-x when the op declares fields of those names (s09 C-13)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "31",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-17: header cells id and result-x when the op declares fields of those names (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "32",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"result-x\":1}}",
+         "checks": [
+          {
+           "path": "id",
+           "kind": "eq",
+           "value": "A#1"
+          },
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "result-x": 1
+           }
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "result-x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s08 C-17: forms of header cells (s09 C-13)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "33",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error P010",
+        "a.duramen:15: error P013",
+        "a.duramen:18: error P010",
+        "a.duramen:21: error P010"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-18: whole words for T005 (codes and phrases)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "34",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T005",
+        "a.duramen:14: error T005",
+        "a.duramen:18: error T005",
+        "a.duramen:26: error T005",
+        "a.duramen:30: error T005",
+        "a.duramen:35: error T005",
+        "a.duramen:43: error T005"
+       ],
+       "errors": 7,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-3: indent-1 lines under an unknown statement, an ignored clause and a second clause",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "35",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P002",
+        "a.duramen:6: error P015",
+        "a.duramen:7: error P007",
+        "a.duramen:10: error P052",
+        "a.duramen:11: error P007",
+        "a.duramen:12: error P023",
+        "a.duramen:13: error P007"
+       ],
+       "errors": 7,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-8: an audit clause with a problem, then a second one",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "36",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P050",
+         "a.duramen:5: error P052",
+         "a.duramen:7: error P050"
+        ],
+        "errors": 3,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "36",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P050",
+         "a.duramen:5: error P052",
+         "a.duramen:7: error P050"
+        ],
+        "errors": 3,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P050",
+         "a.duramen:5: error P052",
+         "a.duramen:7: error P050"
+        ],
+        "errors": 3,
+        "warnings": 0
+       },
+       "id": "36"
+      },
+      "s22-ts": {
+       "id": "36",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P050",
+         "a.duramen:7: error P050"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s09 C-9: forms of expect lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "37",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P010",
+        "a.duramen:10: error P010",
+        "a.duramen:12: error P009",
+        "a.duramen:13: error P010",
+        "a.duramen:14: error P010",
+        "a.duramen:15: error P009",
+        "a.duramen:16: error P010"
+       ],
+       "errors": 7,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-12: ? in a column with a tolerance (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "38",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\":1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1,
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-14: rows indented more than four, and | alone (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "39",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\":1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"x\":2}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 2,
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 2
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-15: input texts of blank lines and # lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "40",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-15: input texts of blank lines and # lines (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "41",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"\\n# not a comment\\n\",\"u\":\"x\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "\n# not a comment\n",
+            "u": "x\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "\n# not a comment\n",
+           "u": "x\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-16: from file names: trailing slash, dot parts, a folder, the record itself, a BOM",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "42",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error P048"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-16: the text of from files, written into the request line (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "43",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"b\":\"hello\\n\",\"c\":\"\ufeffbom\\n\",\"d\":\"hello\\n\",\"h\":\"\u00e9\ud83d\ude00\u2028\\u001b[0m\\u000b\\\"\\\\\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "b": "hello\n",
+            "c": "\ufeffbom\n",
+            "d": "hello\n",
+            "h": "\u00e9\ud83d\ude00\u2028\u001b[0m\u000b\"\\\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "b": "hello\n",
+           "c": "\ufeffbom\n",
+           "d": "hello\n",
+           "h": "\u00e9\ud83d\ude00\u2028\u001b[0m\u000b\"\\\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-16: a from file named with a trailing slash (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "44",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"a\":\"hello\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "a": "hello\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "a": "hello\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-17: input lines under dropped examples",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "45",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error P012",
+        "a.duramen:9: error P049",
+        "a.duramen:11: error P049",
+        "a.duramen:12: error P009"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-17: input lines under example f with no JSON (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "46",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"x\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "x\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "x\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-18: a raw example's from line with a line indented six under it (known item 2)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "47",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P022",
+        "a.duramen:9: error P006",
+        "a.duramen:10: error P022"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-24: oracle_error of any value",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "48",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T022",
+        "a.duramen:11: error T022",
+        "a.duramen:13: error T022"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-26: omit op: not solo, and the example's op for full (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "49",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"input\":{\"x\": 1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {
+           "result.x": 0.5
+          }
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-27: numbers and strings written into request lines (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "50",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"big\":1e+21,\"small\":1e-7,\"int\":100000000000000000000,\"neg0\":0,\"exact\":9007199254740992,\"frac\":1.5,\"e\":100,\"s\":\"\u00e9\u2028\",\"input\":{\"n\":[1e+21,1e-7,0,9007199254740992,1,5e-324,1.7976931348623157e+308,1.23e-18,0.1],\"t\":\"x\\n\"}}",
+         "checks": [
+          {
+           "path": "result.n.0",
+           "kind": "eq",
+           "value": 1e+21
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "n": [
+            1e+21,
+            1e-07,
+            0,
+            9007199254740992,
+            1,
+            5e-324,
+            1.7976931348623157e+308,
+            1.23e-18,
+            0.1
+           ],
+           "t": "x\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-31: quotations for T004, and rejected alternatives as decoded text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "51",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004",
+        "a.duramen:6: error T004",
+        "a.duramen:9: error T004",
+        "a.duramen:15: warning T012",
+        "a.duramen:18: error T004",
+        "a.duramen:18: warning T012"
+       ],
+       "errors": 4,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s09 C-33: examples of an open item, and T019",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "52",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error T003",
+        "a.duramen:5: error T003"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-34: an ID used three times",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "53",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error T007",
+        "a.duramen:10: error T007"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-34: a decision named like a requirement, and one like an open item",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "54",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-34: two ops of one name: which input fields",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "55",
+      "result": {
+       "diagnostics": [
+        "a.duramen:2: error T019",
+        "a.duramen:5: error T007",
+        "a.duramen:12: error T010",
+        "a.duramen:12: warning T011"
+       ],
+       "errors": 3,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s08 C-1: a valid tolerance, then one whose number is a word (known item 4, as stated)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "56",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P018"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-12: an approximate error expectation under an undeclared op, and an error column with a tolerance (s09 C-10, C-11)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "57",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error T023",
+        "a.duramen:15: error T023"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-12: an approximate error expectation only",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "58",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error T023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-15: lines of U+001C or U+0085 in a solo run's output (s09 C-22)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "59",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T021",
+        "a.duramen:12: error T021",
+        "a.duramen:15: error T021"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-23: a line of U+0085 among a batch run's responses",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "60",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-28: lines of U+001C or U+0085 in a record (white space is ECMAScript's \\s)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "61",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P002",
+        "a.duramen:4: error P002",
+        "a.duramen:5: error P002"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-28: U+0085 at the end of a line and as indent in a record",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "62",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-17: header paths holding ~ or \u2248 (s09 C-13)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "63",
+      "result": {
+       "diagnostics": [
+        "a.duramen:2: error T019"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-28: U+2028 inside a line of a record is not a line end",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "64",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P050"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-4: a raw line holding U+2028 (written, and as a JSON escape) (s09 C-19)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "65",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-6: lines indented one space inside an input text (s09 C-3, C-15)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "66",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error P007",
+        "a.duramen:14: error P007"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s09 C-15: a line of a tab only inside an input text (cases)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "67",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"a\\n\\n\\nb\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "a\n\n\nb\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "a\n\n\nb\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s09 C-17: from lines under a dropped example",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "68",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error P012",
+        "a.duramen:8: error P049",
+        "a.duramen:9: error P048"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-4: U+2028 inside a title, an example's JSON, an expectation, an input path and a table (s09 C-19, C-28)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "69",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-4: U+2028 in a single-quoted raw line only (s09 C-19)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "70",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s08 C-4: U+2028 in an errors condition and an input field's type, and U+2029 in a title (s09 C-28)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "71",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "file": "selfhost/probes/s10-s11.txt",
+   "records": 103,
+   "differ": 4,
+   "probes": [
+    {
+     "name": "s10 C-4 (s11 C-5): rest-of-language statements, malformed",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "0",
+       "result": {
+        "diagnostics": [
+         "a.duramen:3: error P029",
+         "a.duramen:4: error P016",
+         "a.duramen:5: error P038",
+         "a.duramen:5: error P038",
+         "a.duramen:6: error P043",
+         "a.duramen:6: error P043",
+         "a.duramen:7: error P005"
+        ],
+        "errors": 7,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "0",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "0"
+      },
+      "s22-ts": {
+       "id": "0",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s10 C-5 (s11 C-5): returns and static clauses, with lines under them",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "1",
+       "result": {
+        "diagnostics": [
+         "a.duramen:5: error P006",
+         "a.duramen:7: error P027"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "1",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P015",
+         "a.duramen:7: error P015"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "1"
+      },
+      "s22-ts": {
+       "id": "1",
+       "result": {
+        "diagnostics": [
+         "a.duramen:6: error T001"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s11 C-5: a well-formed static check in place of an example",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "2",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error T037"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "2",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P015"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "2"
+      },
+      "s22-ts": {
+       "id": "2",
+       "result": {
+        "diagnostics": [
+         "a.duramen:3: error T001"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s10 C-6a: tab-indented and one-space lines under an unknown statement",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "3",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P002",
+        "a.duramen:4: error P001"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-6b: tab-indented line under a clause the statement does not take",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "4",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P015",
+        "a.duramen:5: error P001"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-6c: tab-indented line under an open item's example",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "5",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P001"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-7 (s11 C-6): comment at indent 0 inside a text, a condition and a table",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "6",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-6 (s10 C-7): comment at indent 0 inside an input text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "7",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-6 (s10 C-7): comment at indent 0 inside an input text, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "8",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"a\\nb\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "a\nb\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "a\nb\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s10 C-8: a word after the version",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "9",
+      "result": {
+       "diagnostics": [
+        "a.duramen:1: error P023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-9 (s11 C-35): a second duramen statement with the other readable version, one file",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "10",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-9 (s11 C-35): first statements agree, a second statement differs",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "11",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-9 (s11 C-35): first statement unknown, second readable, other file differs",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "12",
+      "result": {
+       "diagnostics": [
+        "a.duramen:1: error P023",
+        "a.duramen:3: error P023"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-10: words separated by U+00A0 and U+3000 in duramen and spec",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "13",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-11 (s11 C-8): statements with no ID",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "14",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P005",
+        "a.duramen:6: error P005",
+        "a.duramen:9: error P005",
+        "a.duramen:10: error P005",
+        "a.duramen:11: error P005"
+       ],
+       "errors": 5,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-12 (s11 C-38): on with nothing after it",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "15",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P033"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-14 (s11 C-11): malformed then valid tolerance for one path [known 1]",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "16",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P018"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-14 (s11 C-11): valid then malformed tolerance for one path [known 4]",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "17",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P018"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-15: input fields malformed and repeated",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "18",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P017",
+        "a.duramen:4: error P017",
+        "a.duramen:5: error P052"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-17: example whose first word is JSON (no input)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "19",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T009",
+        "a.duramen:8: error T009"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-17: example whose first word starts a JSON object",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "20",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P009"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-18: dropped example, input path through a text set by an earlier input line",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "21",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P012",
+        "a.duramen:7: error P049"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-18: dropped example (number too large), input path through its member",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "22",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P009"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-19 (s11 C-20): solo run writes a blank line, then its answer",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "23",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-19 (s11 C-20): solo run writes a line of U+00A0, then its answer",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "24",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-19 (s11 C-20): solo runs answered with no id, another id, a number id",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "25",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-19 (s11 C-20): solo runs that write a non-object, a non-JSON line, or two lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "26",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T021",
+        "a.duramen:8: error T021",
+        "a.duramen:9: error T021"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-22: tables with a two-word op and no op, with lines that are not rows",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "27",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P013",
+         "a.duramen:6: error P006",
+         "a.duramen:7: error P006",
+         "a.duramen:8: error P013",
+         "a.duramen:10: error P006"
+        ],
+        "errors": 5,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "27",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P013",
+         "a.duramen:8: error P013"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P013",
+         "a.duramen:6: error P006",
+         "a.duramen:7: error P006",
+         "a.duramen:8: error P013",
+         "a.duramen:10: error P006"
+        ],
+        "errors": 5,
+        "warnings": 0
+       },
+       "id": "27"
+      },
+      "s22-ts": {
+       "id": "27",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P013",
+         "a.duramen:6: error P006",
+         "a.duramen:7: error P006",
+         "a.duramen:8: error P013",
+         "a.duramen:10: error P006"
+        ],
+        "errors": 5,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s10 C-23: a column named twice, once with a tolerance",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "28",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P013"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-23 (s11 C-18): tolerances written without a space, and +- after a space",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "29",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-18: a header path holding +- before its \u00b1",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "30",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P010"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-18: a column id when the op declares an input field id",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "31",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-24: input text with blank lines at the start, in the middle (of spaces) and at the end",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "32",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"\\na\\n\\nb\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "\na\n\nb\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "\na\n\nb\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s10 C-24: input line followed only by blank lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "33",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-25 (s11 C-12): from input with a malformed path and a missing file",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "34",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-25 (s11 C-12): from input through a non-object, file missing",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "35",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P048"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-25 (s11 C-12): from input through a non-object, file present",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "36",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-12: from input with a malformed path and a file outside the record",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "37",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-12: input line with a malformed path and no text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "38",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-12: input line through a non-object and no text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "39",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-27: undeclared op expecting an error takes the spec's request members",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "40",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"g\",\"k\":1,\"input\":{\"answer\": {\"error\": \"e\"}}}",
+         "checks": [
+          {
+           "path": "error",
+           "kind": "eq",
+           "value": "e"
+          }
+         ],
+         "full": {
+          "members": [
+           "error",
+           "id"
+          ],
+          "error": "e",
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s10 C-28: T024 when the only expectations are = ?, id, \u2248, or a row's cells are empty",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "41",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T025",
+        "a.duramen:14: error T002",
+        "a.duramen:17: warning T024"
+       ],
+       "errors": 2,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s10 C-29 (s11 C-26): quotations: unpaired, overlapping, escaped in a rejected alternative",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "42",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004",
+        "a.duramen:9: warning T012"
+       ],
+       "errors": 1,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s11 C-26 (s10 C-29): a word between double backquotes",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "43",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-30 (s11 C-25): T005, a code touching \u00e9",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "44",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T005"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-30 (s11 C-25): T005, a phrase touching \u00e9",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "45",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T005"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-30 (s11 C-25): T005, a phrase touching -",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "46",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T005"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-30 (s11 C-25): T005, one code named twice",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "47",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-32: error expectations whose values are not strings",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "48",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T023",
+        "a.duramen:12: error T023"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-3: duramen statement after spec",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "49",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-3: duramen statement after an unknown statement (as REQ-RC-006 example 1)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "50",
+      "result": {
+       "diagnostics": [
+        "a.duramen:1: error P002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-4: a file name that starts with a non-ASCII letter and a colon",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "51",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-4: a name whose second part starts with a letter and a colon",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "52",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-7: # lines indented three under text and under an errors clause",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "53",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error P008",
+        "a.duramen:9: error P006"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-9: # lines indented three, five and six under an example and a table",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "54",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-10: a # line indented six after an input from line",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "55",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-10: a raw example's from line followed by a line indented six [known 2]",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "56",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P022",
+        "a.duramen:9: error P006"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-13: example with no input object, and input lines",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "57",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"x\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "x\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "x\n"
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"t\":\"y\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "y\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "y\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s11 C-14: example inputs that are not objects, holding a number too large",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "58",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P009",
+        "a.duramen:5: error P009",
+        "a.duramen:6: error P012"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-14: request members that set id or are not an object, holding a number too large",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "59",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P009",
+        "a.duramen:5: error P009"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-15: input fields after an unmatched closing bracket",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "60",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P052"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-15: input fields with an escaped quote inside double quotes",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "61",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-16: T023 for an error column cell and a value that is not a string",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "62",
+      "result": {
+       "diagnostics": [
+        "a.duramen:11: error T023",
+        "a.duramen:13: error T023"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-16: T023 for an approximate error expectation",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "63",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-17: an undeclared op whose only error expectation is = ? (line and row)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "64",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-19: cells with U+00A0 and U+3000 around them",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "65",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-19: a separator row holding U+00A0",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "66",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-21: answers holding oracle_error, one with error and no expectation",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "67",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T022",
+        "a.duramen:8: error T022"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-22: the oracle writes two answers on one line, split by a lone CR",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "68",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T021",
+        "a.duramen:9: error T021"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-22: the oracle ends an answer with CR LF",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "69",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-24: the whole answer of a raw example of an op with an audit and a tolerance",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "70",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}",
+         "solo": true,
+         "checks": [],
+         "full": {
+          "members": [
+           "audit",
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s11 C-27: a cited decision declared twice, first contested, second accepted",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "71",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:3: error T028",
+        "a.duramen:10: error T007"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-27: a cited decision declared twice, first accepted, second contested",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "72",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:10: error T007"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-27: superseded by an ID that is declared twice",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "73",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:3: error T028",
+        "a.duramen:12: error T007"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-28: a from file that starts with a byte order mark",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "74",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"\ufeffhello\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "\ufeffhello\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "\ufeffhello\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s11 C-29: raw lines holding U+2028 and U+2029",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "75",
+      "result": {
+       "diagnostics": [
+        "a.duramen:2: error T019"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-30: approximate comparisons where binary64 subtraction rounds",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "76",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-32: an error code listed twice",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "77",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-36: audit paths when the audit text is not JSON",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "78",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T002",
+        "a.duramen:10: error T025"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-36: an audit text holding a number too large, check",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "79",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T025",
+        "a.duramen:10: error T002"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-36: an audit text holding a number too large, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "80",
+      "result": {
+       "errors": 2,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s11 C-37: an answer whose error is null, for an example with no expectation",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "81",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: warning T024"
+       ],
+       "errors": 0,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s11 C-37: an answer whose error is null, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "82",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"answer\": {\"error\": null}}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "error",
+           "id"
+          ],
+          "error": null,
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s11 C-39: empty raw lines, and a raw line of spaces",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "83",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error T021",
+        "a.duramen:7: error T021",
+        "a.duramen:8: error T021"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-39: a text clause with no lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "84",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-40: a file named .duramen, a file named build.duramen, a folder named node_modules",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "85",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-41: U+2028 and U+2029 inside and at the end of lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "86",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-42: empty title, rejected, result, contract and oracle source",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "87",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P004",
+        "a.duramen:11: error P004"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-10 (related): omit and decision lists separated by U+00A0",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "88",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {},
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s11 C-29 (related): U+2028 inside a quoted title",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "89",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-29 (related): U+2028 inside a string of an example's input",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "90",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-29 (related): U+2028 inside a string of an expected value",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "91",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-29 (related): U+2028 inside a quoted name of an input path",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "92",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-29 (related): U+2029 inside a rejected alternative and a spec request",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "93",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: warning T012"
+       ],
+       "errors": 0,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s11 C-19 (related): a separator row holding tabs",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "94",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-16 (related): an error column with a tolerance",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "95",
+      "result": {
+       "diagnostics": [
+        "a.duramen:11: error T023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-36 (related): an audit text holding a number too large, not read by any expectation",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "96",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": \"{\\\"a\\\": 1e400}\"}}}",
+         "checks": [
+          {
+           "path": "audit",
+           "kind": "eq",
+           "value": "{\"a\": 1e400}"
+          }
+         ],
+         "full": {
+          "members": [
+           "audit",
+           "id",
+           "result"
+          ],
+          "result": 1,
+          "audit": "{\"a\": 1e400}",
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s11 C-24 (related): the whole answer of a raw example whose line names op twice",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "97",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"r\",\"op\":\"f\",\"op\":\"g\"}",
+         "solo": true,
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {},
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s11 C-29 (related): U+2028 inside an errors condition",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "98",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-29 (related): U+2028 as the white space of an approximate expectation",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "99",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-19 (s11 C-20): a solo run whose one line holds a number too large",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "100",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T021"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s11 C-21 (related): an answer whose oracle_error is null",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "101",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T022"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s10 C-6 (related): a tab-indented line inside an input text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "102",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error P001"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "file": "selfhost/probes/s12-s13.txt",
+   "records": 83,
+   "differ": 8,
+   "probes": [
+    {
+     "name": "s12 C-1: an oracle in a folder named build, which holds no record file",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "0",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-1: an oracle in a folder whose name starts with a dot",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "1",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-6: rest-of-language statements with bodies, malformed",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "2",
+       "result": {
+        "diagnostics": [
+         "a.duramen:3: error P029",
+         "a.duramen:4: error P015",
+         "a.duramen:5: error P007",
+         "a.duramen:6: error P016",
+         "a.duramen:7: error P038",
+         "a.duramen:7: error P038",
+         "a.duramen:8: error P043",
+         "a.duramen:8: error P043",
+         "a.duramen:11: error P005"
+        ],
+        "errors": 9,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "2",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "2"
+      },
+      "s22-ts": {
+       "id": "2",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s12 C-6: two returns clauses, and lines under returns and static",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "3",
+       "result": {
+        "diagnostics": [
+         "a.duramen:5: error P006",
+         "a.duramen:6: error P052",
+         "a.duramen:8: error P027",
+         "a.duramen:9: error P006"
+        ],
+        "errors": 4,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "3",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P015",
+         "a.duramen:6: error P015",
+         "a.duramen:8: error P015"
+        ],
+        "errors": 3,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "3"
+      },
+      "s22-ts": {
+       "id": "3",
+       "result": {
+        "diagnostics": [
+         "a.duramen:7: error T001"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s12 C-6: a well-formed static check in place of an example (duramen 0.2)",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "4",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "4",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P015"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "4"
+      },
+      "s22-ts": {
+       "id": "4",
+       "result": {
+        "diagnostics": [
+         "a.duramen:3: error T001"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s12 C-7: .. above the request's folder, with the file present there",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "5",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P048",
+        "a.duramen:9: error P048"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-8: from names that resolve to the record's folder or to a folder",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "6",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P048",
+        "a.duramen:9: error P048",
+        "a.duramen:11: error P048",
+        "a.duramen:13: error P048",
+        "a.duramen:15: error P048",
+        "a.duramen:17: error P048"
+       ],
+       "errors": 6,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-8 (related): a from name that starts with /, naming a request file",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "7",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-9: approximate expectations with two separators",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "8",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P010",
+        "a.duramen:9: error P010",
+        "a.duramen:10: error P010",
+        "a.duramen:11: error P010",
+        "a.duramen:12: error P010",
+        "a.duramen:13: error P010"
+       ],
+       "errors": 6,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-9: approximate expectations where a sign touches the separator, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "9",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\": 1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "approx",
+           "value": 1,
+           "tol": 0
+          },
+          {
+           "path": "result.x",
+           "kind": "approx",
+           "value": 1,
+           "tol": 0.5
+          },
+          {
+           "path": "result.x",
+           "kind": "approx",
+           "value": -1,
+           "tol": 2
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s12 C-10: expect lines whose path is followed by neither =, \u2248 nor ~",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "10",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P011",
+        "a.duramen:6: error P011",
+        "a.duramen:7: error P009",
+        "a.duramen:8: error P011",
+        "a.duramen:9: error P011",
+        "a.duramen:10: error P010",
+        "a.duramen:11: error P011"
+       ],
+       "errors": 7,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-11: separator rows of other shapes, before, between and after rows",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "11",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-12: header cells with a separator and no tolerance after it",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "12",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P010",
+        "a.duramen:10: error P010",
+        "a.duramen:13: error P010"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-13: a column for an input field the op does not declare",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "13",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: warning T011"
+       ],
+       "errors": 0,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s12 C-13: columns named id and result when the op declares fields of those names, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "14",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\":1}}",
+         "checks": [
+          {
+           "path": "id",
+           "kind": "eq",
+           "value": "A#1"
+          },
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1,
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s12 C-14: a text clause with words after its keyword, lines under it, and a second text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "15",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P008",
+        "a.duramen:5: error P008",
+        "a.duramen:7: error P052"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-15: on with nothing after it",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "16",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P033"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-16: superseded by an ID declared twice, by itself, by a requirement's ID, and other spellings",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "17",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error T028",
+        "a.duramen:6: error T028",
+        "a.duramen:6: error T028",
+        "a.duramen:6: error T028",
+        "a.duramen:6: error T028",
+        "a.duramen:6: error T028",
+        "a.duramen:12: warning T012",
+        "a.duramen:14: error T007",
+        "a.duramen:14: warning T012",
+        "a.duramen:16: error T027",
+        "a.duramen:19: error T027",
+        "a.duramen:25: error T027",
+        "a.duramen:28: error T027"
+       ],
+       "errors": 11,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s12 C-17: T005, one code named twice, and a code listed twice under errors",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "18",
+      "result": {
+       "diagnostics": [
+        "a.duramen:15: error T005"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-18: quotations touching a word, and a quotation across a line break inside a rejected alternative",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "19",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004",
+        "a.duramen:9: error T004",
+        "a.duramen:12: error T004",
+        "a.duramen:12: warning T012"
+       ],
+       "errors": 3,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s12 C-19: two requirements with one ID, whose examples get one case ID",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "20",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T007",
+        "a.duramen:11: error T002"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-20: T024 for examples whose only expectations are about something else than error",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "21",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: warning T024",
+        "a.duramen:18: warning T024"
+       ],
+       "errors": 0,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s12 C-26: # lines indented three to six inside and after an input text, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "22",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"a\\n# indented six: text\\n\",\"u\":\"b\\n\",\"v\":\"c\\n\",\"w\":\"w\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "t": "a\n# indented six: text\n",
+            "u": "b\n",
+            "v": "c\n",
+            "w": "w\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "t": "a\n# indented six: text\n",
+           "u": "b\n",
+           "v": "c\n",
+           "w": "w\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s12 C-26: a line indented six after a # line at indent four ended the text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "23",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error P006"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-26 (related): lines indented six after from lines whose path or tail is malformed",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "24",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P049",
+        "a.duramen:8: error P006",
+        "a.duramen:9: error P049",
+        "a.duramen:11: error P049",
+        "a.duramen:12: error P006"
+       ],
+       "errors": 5,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-26 (related): under a raw example, a from line with a malformed path, then a line indented six",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "25",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P022",
+        "a.duramen:9: error P006"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-8 (related): a from name that is a quoted string but not a JSON string (an unknown escape)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "26",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-11 (related): tabs inside rows and a separator",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "27",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-27: statements with no ID or title still read their clauses",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "28",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P005",
+        "a.duramen:4: error P015",
+        "a.duramen:5: error P008",
+        "a.duramen:6: error P012",
+        "a.duramen:7: error P005",
+        "a.duramen:8: error P015",
+        "a.duramen:11: error P005",
+        "a.duramen:13: error P052",
+        "a.duramen:14: error P004",
+        "a.duramen:15: error P005",
+        "a.duramen:17: error P008"
+       ],
+       "errors": 11,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-23: required fields named like members every JavaScript object inherits",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "29",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T010",
+        "a.duramen:7: error T010",
+        "a.duramen:10: error T010",
+        "a.duramen:10: error T010"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-23: two tolerances for the path __proto__",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "30",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P052"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-23: a tolerance for the path __proto__, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "31",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\": 1}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {
+           "__proto__": 1
+          }
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s12 C-23: an input line and a table column for the field __proto__, undeclared",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "32",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: warning T011",
+        "a.duramen:12: warning T011"
+       ],
+       "errors": 0,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s12 C-23: an input line for the field __proto__, declared, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "33",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"__proto__\":\"text\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "__proto__": "text\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "__proto__": "text\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s12 C-23: a column __proto__ holding an object, and a required field it does not send",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "34",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T010"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-23: an input path through __proto__, and an op that requires the member it names (last but one: duramen sets it on Object.prototype)",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "35",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error T010"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s12 C-23: an input path through __proto__, the suite (last)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "36",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"a\":{\"__proto__\":{\"polluted\":\"text\\n\"}}}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "a": {
+             "__proto__": {
+              "polluted": "text\n"
+             }
+            }
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "a": {
+            "__proto__": {
+             "polluted": "text\n"
+            }
+           }
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s13 C-7: rest-of-language statements with malformed bodies",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "37",
+       "result": {
+        "diagnostics": [
+         "a.duramen:3: error P029",
+         "a.duramen:4: error P015",
+         "a.duramen:5: error P016",
+         "a.duramen:6: error P038",
+         "a.duramen:6: error P038",
+         "a.duramen:7: error P043",
+         "a.duramen:7: error P043",
+         "a.duramen:8: error P005"
+        ],
+        "errors": 8,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "37",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "37"
+      },
+      "s22-ts": {
+       "id": "37",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s13 C-7: returns and static clauses, with lines under them",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "38",
+       "result": {
+        "diagnostics": [
+         "a.duramen:5: error P006",
+         "a.duramen:7: error P027"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "38",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P015",
+         "a.duramen:7: error P015"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "38"
+      },
+      "s22-ts": {
+       "id": "38",
+       "result": {
+        "diagnostics": [
+         "a.duramen:6: error T001"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s13 C-7: a well-formed static check in place of an example (duramen 0.1)",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "39",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error T037"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "39",
+       "result": {
+        "diagnostics": [
+         "a.duramen:4: error P015"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "39"
+      },
+      "s22-ts": {
+       "id": "39",
+       "result": {
+        "diagnostics": [
+         "a.duramen:3: error T001"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s13 C-7: a well-formed static check under duramen 0.2, the suite",
+     "op": "cases",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "40",
+       "result": {
+        "errors": 0,
+        "cases": [
+         {
+          "id": "static:A#1",
+          "kind": "static",
+          "reqs": [
+           "REQ-A"
+          ],
+          "platform": "any",
+          "static": {
+           "kind": "exists",
+           "globs": [
+            "x"
+           ]
+          }
+         }
+        ]
+       }
+      },
+      "s20-ts": {
+       "id": "40",
+       "result": {
+        "errors": 1,
+        "cases": []
+       }
+      },
+      "s21-py": {
+       "result": {
+        "errors": 0,
+        "cases": []
+       },
+       "id": "40"
+      },
+      "s22-ts": {
+       "id": "40",
+       "result": {
+        "errors": 1,
+        "cases": []
+       }
+      }
+     }
+    },
+    {
+     "name": "s13 C-7: duramen 0.2, an input of the wrong declared type",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "41",
+       "result": {
+        "diagnostics": [
+         "a.duramen:6: warning T032",
+         "a.duramen:7: error T029"
+        ],
+        "errors": 1,
+        "warnings": 1
+       }
+      },
+      "s20-ts": {
+       "id": "41",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "41"
+      },
+      "s22-ts": {
+       "id": "41",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s13 C-8: section, req, open and decision with nothing after the keyword",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "42",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P005",
+        "a.duramen:4: error P005",
+        "a.duramen:7: error P005",
+        "a.duramen:10: error P005"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-8: an ID with no title, a title with no ID, a quoted ID",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "43",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P005",
+        "a.duramen:4: error P005"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-9: columns id and result when the op declares input fields id and result",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "44",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-9: columns id and result when the op declares them, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "45",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{}}",
+         "checks": [
+          {
+           "path": "id",
+           "kind": "eq",
+           "value": "A#1"
+          },
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {}
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {},
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s13 C-10: input fields after a mixed pair (], the name repeated",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "46",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P052"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-10: input fields after [x) and {x), a required field after them",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "47",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T010",
+        "a.duramen:10: error T010"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-10 (related): field types that start with U+001C and U+0085",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "48",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-11: error answers to examples whose expectations hold and are not about error",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "49",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-12: # lines indented four, five and six inside input texts",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "50",
+      "result": {
+       "diagnostics": [
+        "a.duramen:11: error P006",
+        "a.duramen:15: error P006"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-12: a # line indented six inside an input text, and one indented four after it",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "51",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-13: input lines followed only by blank lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "52",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P049",
+        "a.duramen:13: error P049",
+        "a.duramen:16: error P049"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-14: expect lines with no operator after the path",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "53",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P011",
+        "a.duramen:6: error P011",
+        "a.duramen:7: error P011",
+        "a.duramen:8: error P011",
+        "a.duramen:9: error P011",
+        "a.duramen:10: error P009"
+       ],
+       "errors": 6,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-15: approximate expectations of odd shapes",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "54",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P010",
+        "a.duramen:7: error P010",
+        "a.duramen:8: error P010",
+        "a.duramen:9: error P010",
+        "a.duramen:10: error P010",
+        "a.duramen:12: error P010",
+        "a.duramen:13: error P010"
+       ],
+       "errors": 7,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-16: superseded by itself, by a tab, with a word after, by a requirement",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "55",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T001",
+        "a.duramen:3: error T028",
+        "a.duramen:3: error T028",
+        "a.duramen:3: error T028",
+        "a.duramen:3: error T028",
+        "a.duramen:10: error T027",
+        "a.duramen:13: error T027",
+        "a.duramen:16: error T027"
+       ],
+       "errors": 8,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-18: oracle lines with NaN, a trailing comma, a BOM, stray bytes, a NUL, a trailing U+00A0",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "56",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T021",
+        "a.duramen:8: error T021",
+        "a.duramen:9: error T021",
+        "a.duramen:16: error T021",
+        "a.duramen:17: error T021"
+       ],
+       "errors": 5,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-18: oracle lines with stray bytes, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "57",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"k\": \"ff\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": "\ufffd",
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": "\ufffd",
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"k\": \"cesu\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": "\ufffd\ufffd\ufffd",
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": "\ufffd\ufffd\ufffd",
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#3",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#3\",\"op\":\"f\",\"input\":{\"k\": \"trunc\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": "\ufffd",
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": "\ufffd",
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s13 C-19 (C-20, C-24): omit op, omit input, omit names nobody sets, members set twice, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "58",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"a\":3,\"b\":2,\"input\":{\"x\": 1}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"f\",\"a\":3,\"b\":2}",
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {},
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#3",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#3\",\"op\":\"f\",\"a\":3,\"b\":2,\"input\":{\"x\": 1}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#4",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#4\",\"op\":\"f\",\"a\":3,\"b\":2,\"input\":{\"x\":2,\"y\":\"t\\n\"}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 2,
+           "y": "t\n"
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#5",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#5\",\"op\":\"f\",\"2\":0,\"a\":3,\"b\":2,\"c\":2,\"input\":{\"x\": 1}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "x": 1
+           }
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s13 C-21: rows with the wrong number of cells holding cells that are not JSON, and ? under an input",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "59",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error P014",
+        "a.duramen:7: error P014",
+        "a.duramen:8: error P009"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-21 (related): a header and a row that end with an escaped pipe",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "60",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-21 (related): a row that ends with an escaped pipe, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "61",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"answer\":{\"result\": {\"x|\": 1, \"x\\\\\": 1}}}}",
+         "checks": [
+          {
+           "path": "result.x|",
+           "kind": "eq",
+           "value": 1,
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x|": 1,
+           "x\\": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s13 C-22: raw lines '', a quote inside quotes, and three quotes",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "62",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T021",
+        "a.duramen:8: warning T024",
+        "a.duramen:9: warning T024"
+       ],
+       "errors": 1,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s13 C-23: from files that are hidden, or under build, node_modules or .git",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "63",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-23: from names that are a folder, leave the request, are absolute, or are the folder itself",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "64",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P048",
+        "a.duramen:9: error P048",
+        "a.duramen:10: error P048",
+        "a.duramen:11: error P048"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-26: T005, a code listed and named twice, a Kelvin sign, capitals",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "65",
+      "result": {
+       "diagnostics": [
+        "a.duramen:19: error T005"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-27: obligation words touching a quotation",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "66",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004",
+        "a.duramen:6: error T004",
+        "a.duramen:9: error T004",
+        "a.duramen:12: error T004"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-28: the suite of a record whose only diagnostic is the warning T024",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "67",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"answer\": {\"error\": \"e\"}}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "error",
+           "id"
+          ],
+          "error": "e",
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s13 C-28: the suite of a record with T021",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "68",
+      "result": {
+       "errors": 1,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s13 C-29: the whole answer when the audit is a number, null or an object, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "69",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": 5}}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "audit",
+           "id",
+           "result"
+          ],
+          "result": 1,
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": null}}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "audit",
+           "id",
+           "result"
+          ],
+          "result": 1,
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#3",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#3\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": {\"a\": 1}}}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "audit",
+           "id",
+           "result"
+          ],
+          "result": 1,
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s13 C-29: a path under an audit that is not a string",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "70",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-30: the duramen statement after spec and op",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "71",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-31: a tab-indented line inside an input text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "72",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error P001"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-31: a tab-indented line inside a condition and a text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "73",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P001",
+        "a.duramen:10: error P001"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-32: a comment at indent 0 inside a text, then an obligation word",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "74",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-32: a comment at indent 0 inside a condition, a text and a table",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "75",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-32: a comment at indent 2 inside a text, then an obligation word",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "76",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-34: header cells with an empty tolerance",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "77",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P010",
+        "a.duramen:5: error P010",
+        "a.duramen:5: error P010"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-24 (related): a from line, then a text line, the suite (member order)",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "78",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"b\":\"file\\n\",\"a\":\"text\\n\"}}",
+         "checks": [],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "b": "file\n",
+           "a": "text\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s13 C-24 (related): a from line sets a text, then a text line goes through it",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "79",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-24 (related): a from line, then a text line for the same member",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "80",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-24 (related): a text line, then a from line for the same member",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "81",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s13 C-2 (related): a raw line holding a lone surrogate (an escape in the record), the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "82",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"r\",\"op\":\"f\",\"input\":{\"x\":\"\ud800\"}}",
+         "solo": true,
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "x": "\ufffd"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": "\ufffd"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "file": "selfhost/probes/s14-s16.txt",
+   "records": 67,
+   "differ": 4,
+   "probes": [
+    {
+     "name": "s14 C-2, s15 C-10, s16 C-9: an oracle that answers after 25 seconds",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "0",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-3, s15 C-16, s16 C-17: a request line that is a CR alone",
+     "op": "raw",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "exit": 0,
+       "lines": [
+        {
+         "id": null,
+         "error": "bad_request"
+        },
+        {
+         "id": "after",
+         "result": {
+          "diagnostics": [],
+          "errors": 0,
+          "warnings": 0
+         }
+        }
+       ]
+      },
+      "s20-ts": {
+       "exit": 0,
+       "lines": [
+        {
+         "id": null,
+         "error": "bad_request"
+        },
+        {
+         "id": "after",
+         "result": {
+          "diagnostics": [],
+          "errors": 0,
+          "warnings": 0
+         }
+        }
+       ]
+      },
+      "s21-py": {
+       "exit": 0,
+       "lines": [
+        {
+         "result": {
+          "diagnostics": [],
+          "errors": 0,
+          "warnings": 0
+         },
+         "id": "after"
+        }
+       ]
+      },
+      "s22-ts": {
+       "exit": 0,
+       "lines": [
+        {
+         "id": "after",
+         "result": {
+          "diagnostics": [],
+          "errors": 0,
+          "warnings": 0
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s14 C-3, s15 C-16, s16 C-17: a request line that is a vertical tab",
+     "op": "raw",
+     "same": true,
+     "answer": {
+      "exit": 0,
+      "lines": [
+       {
+        "id": null,
+        "error": "bad_request"
+       },
+       {
+        "id": "after",
+        "result": {
+         "diagnostics": [],
+         "errors": 0,
+         "warnings": 0
+        }
+       }
+      ]
+     }
+    },
+    {
+     "name": "s14 C-3, s15 C-16, s16 C-17: a request line that is a form feed",
+     "op": "raw",
+     "same": true,
+     "answer": {
+      "exit": 0,
+      "lines": [
+       {
+        "id": null,
+        "error": "bad_request"
+       },
+       {
+        "id": "after",
+        "result": {
+         "diagnostics": [],
+         "errors": 0,
+         "warnings": 0
+        }
+       }
+      ]
+     }
+    },
+    {
+     "name": "s14 C-3, s15 C-16, s16 C-17: a request line that is U+00A0",
+     "op": "raw",
+     "same": true,
+     "answer": {
+      "exit": 0,
+      "lines": [
+       {
+        "id": null,
+        "error": "bad_request"
+       },
+       {
+        "id": "after",
+        "result": {
+         "diagnostics": [],
+         "errors": 0,
+         "warnings": 0
+        }
+       }
+      ]
+     }
+    },
+    {
+     "name": "s14 C-3, s15 C-16, s16 C-17: a request line that is U+2028",
+     "op": "raw",
+     "same": true,
+     "answer": {
+      "exit": 0,
+      "lines": [
+       {
+        "id": null,
+        "error": "bad_request"
+       },
+       {
+        "id": "after",
+        "result": {
+         "diagnostics": [],
+         "errors": 0,
+         "warnings": 0
+        }
+       }
+      ]
+     }
+    },
+    {
+     "name": "s14 C-3, s15 C-16, s16 C-17: request lines of spaces and tabs, and a request ending in CR",
+     "op": "raw",
+     "same": true,
+     "answer": {
+      "exit": 0,
+      "lines": [
+       {
+        "id": "cr",
+        "result": {
+         "diagnostics": [],
+         "errors": 0,
+         "warnings": 0
+        }
+       }
+      ]
+     }
+    },
+    {
+     "name": "s15 C-21: IDs and titles of odd forms",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "7",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P004",
+        "a.duramen:5: error P005",
+        "a.duramen:6: error P004",
+        "a.duramen:7: error P005",
+        "a.duramen:10: error P004"
+       ],
+       "errors": 5,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-2, s15 C-3: a comment at indent 2 between an example and its lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "8",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-2: a line indented one space inside a text, then an obligation word",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "9",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error P007"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-24: lines starting with # indented three under a text and under errors",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "10",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P006",
+        "a.duramen:9: error P008"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-24: a line starting with # indented three under an example and under a table",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "11",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-9, s16 C-26: input lines whose path holds the word from",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "12",
+      "result": {
+       "diagnostics": [
+        "a.duramen:15: error P049",
+        "a.duramen:18: error P049"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-10, s16 C-6: a from name that leaves the record's folder and comes back",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "13",
+      "result": {
+       "diagnostics": [
+        "r/a.duramen:2: error T019"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-10, s16 C-6: a from name that leaves the record's folder for a file beside it",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "14",
+      "result": {
+       "diagnostics": [
+        "r/a.duramen:7: error P048"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-11, s15 C-12: a cell holding a backslash before an escaped pipe",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "15",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P009"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-11, s15 C-12: a cell holding two backslashes before an escaped pipe, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "16",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\":\"a\\\\|b\"}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": "a\\|b",
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": "a\\|b"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s16 C-5: a row with two cells that are not JSON, and one with a cell that is not a number under a tolerance",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "17",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P009",
+        "a.duramen:9: error P009",
+        "a.duramen:10: error P010",
+        "a.duramen:11: error P009",
+        "a.duramen:11: error P010"
+       ],
+       "errors": 5,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-8: ? under an input field",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "18",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error P009"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-12: a tolerance after an input field, then rows",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "19",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P010"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-13: an oracle command with a backslash inside double quotes",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "20",
+      "error": "bad_request"
+     }
+    },
+    {
+     "name": "s14 C-13: an oracle command with a backslash inside single quotes, and words joined to quotes",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "21",
+      "error": "bad_request"
+     }
+    },
+    {
+     "name": "s14 C-13: an oracle command of white space only",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "22",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P028"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-15, s15 C-15, s16 C-11: judge, a check of an unknown kind",
+     "op": "judge",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "23",
+       "error": "bad_request"
+      },
+      "s20-ts": {
+       "id": "23",
+       "result": {
+        "pass": false,
+        "failed": [
+         "checks.0"
+        ]
+       }
+      },
+      "s21-py": {
+       "result": {
+        "pass": false,
+        "failed": [
+         "checks.0"
+        ]
+       },
+       "id": "23"
+      },
+      "s22-ts": {
+       "id": "23",
+       "result": {
+        "pass": false,
+        "failed": [
+         "checks.0"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "name": "s14 C-15, s15 C-15, s16 C-11: judge, a check whose kind is not a string",
+     "op": "judge",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "24",
+       "error": "bad_request"
+      },
+      "s20-ts": {
+       "id": "24",
+       "error": "bad_request"
+      },
+      "s21-py": {
+       "result": {
+        "pass": false,
+        "failed": [
+         "checks.0"
+        ]
+       },
+       "id": "24"
+      },
+      "s22-ts": {
+       "id": "24",
+       "result": {
+        "pass": false,
+        "failed": [
+         "checks.0"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "name": "s14 C-15, s15 C-15, s16 C-11: judge, a check with no kind",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "25",
+      "error": "bad_request"
+     }
+    },
+    {
+     "name": "s15 C-15: judge, a case with no full member",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "26",
+      "error": "bad_request"
+     }
+    },
+    {
+     "name": "s16 C-31: judge, tolerances that are an array",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "27",
+      "error": "bad_request"
+     }
+    },
+    {
+     "name": "s14 C-16: judge, a tolerance at a path where the answer holds an object",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "28",
+      "result": {
+       "pass": false,
+       "failed": [
+        "result"
+       ]
+      }
+     }
+    },
+    {
+     "name": "s14 C-16: judge, a tolerance at a path where the answer holds a string, and one within it",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "29",
+      "result": {
+       "pass": false,
+       "failed": [
+        "result"
+       ]
+      }
+     }
+    },
+    {
+     "name": "s14 C-16: judge, a tolerance for a member name holding a dot",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "30",
+      "result": {
+       "pass": true
+      }
+     }
+    },
+    {
+     "name": "s15 C-24: judge, full.members not in sorted order",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "31",
+      "result": {
+       "pass": false,
+       "failed": [
+        "members"
+       ]
+      }
+     }
+    },
+    {
+     "name": "s15 C-24: judge, member names that sort differently by code units and by code points",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "32",
+      "result": {
+       "pass": true
+      }
+     }
+    },
+    {
+     "name": "s14 C-18, s16 C-14: a spec request and an operation request, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "33",
+      "result": {
+       "errors": 1,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s16 C-14: two operations of one name, the second with a request and a tolerance, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "34",
+      "result": {
+       "errors": 1,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s14 C-19, s15 C-11, s16 C-10: a request file whose name no file system can hold, with an oracle",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "35",
+       "error": "internal_error"
+      },
+      "s20-ts": {
+       "id": "35",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "35"
+      },
+      "s22-ts": {
+       "id": "35",
+       "error": "internal_error"
+      }
+     }
+    },
+    {
+     "name": "s14 C-20: expect lines with no white space around the operator",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "36",
+      "result": {
+       "diagnostics": [
+        "a.duramen:12: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-4: an empty source and an empty status, each then given again",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "37",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P052",
+        "a.duramen:7: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-4: an empty on, then another on",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "38",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P033",
+        "a.duramen:8: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-4: an empty contract, then another contract",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "39",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P052"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-6, s16 C-25: raw examples of odd single-quote forms",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "40",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P004",
+        "a.duramen:8: error P004"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-9: an error answer to an example whose only expectation is about error.code",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "41",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-9: an error answer to an example whose only expectation is about the result",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "42",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-28: expect error = ? and expect error \u2248 for an undeclared operation, and a ? in an error column",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "43",
+      "result": {
+       "diagnostics": [
+        "a.duramen:10: error T023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-13: an errors condition on two lines, with a quotation across the line break and MUST after it",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "44",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error T004"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-22, s16 C-30: obligation words inside curly quotes, backquotes, an unclosed mark, and a rejected alternative",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "45",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error T004",
+        "a.duramen:6: warning T012"
+       ],
+       "errors": 1,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s15 C-22: an unclosed quotation mark before MUST",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "46",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-23: phrases of T005 with other white space, and codes touched by letters outside ASCII",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "47",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error T001",
+        "a.duramen:7: error T005",
+        "a.duramen:9: error T001",
+        "a.duramen:10: error T005",
+        "a.duramen:12: error T001",
+        "a.duramen:13: error T005",
+        "a.duramen:15: error T001",
+        "a.duramen:16: error T005"
+       ],
+       "errors": 8,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-3: a tab-indented line in the body of an unknown statement and under an ignored clause",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "48",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P002",
+        "a.duramen:4: error P001",
+        "a.duramen:6: error P015",
+        "a.duramen:7: error P001"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-4: a comment indented two before the first statement",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "49",
+      "result": {
+       "diagnostics": [
+        "a.duramen:1: error P003"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-4: a comment indented one before the first statement",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "50",
+      "result": {
+       "diagnostics": [
+        "a.duramen:1: error P003"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-23: a duramen statement with three spaces before its version, and one with a tab",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "51",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-29: a decision declared twice, each with no source and a malformed status",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "52",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: warning T013",
+        "a.duramen:3: error T027",
+        "a.duramen:7: error T007",
+        "a.duramen:7: warning T013",
+        "a.duramen:7: error T027",
+        "a.duramen:11: error T001"
+       ],
+       "errors": 4,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s16 C-34: tolerances written -0, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "53",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\": 1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "approx",
+           "value": 1,
+           "tol": 0
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {
+           "result.x": 0
+          }
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"x\":1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "approx",
+           "value": 1,
+           "tol": 0
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {
+           "result.x": 0
+          }
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s15 C-14: numbers in a spec request, an example with input lines, and a table row, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "54",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"big\":9007199254740992,\"small\":5e-324,\"one\":1,\"minus\":0,\"exp\":1e+21,\"input\":{\"x\": 9007199254740993}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 9007199254740992,
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 9007199254740992
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"f\",\"big\":9007199254740992,\"small\":5e-324,\"one\":1,\"minus\":0,\"exp\":1e+21,\"input\":{\"x\":1.2345678901234568e+29,\"y\":1.5,\"t\":\"text\\n\"}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1.2345678901234568e+29,
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1.2345678901234568e+29,
+           "y": 1.5,
+           "t": "text\n"
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#3",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#3\",\"op\":\"f\",\"big\":9007199254740992,\"small\":5e-324,\"one\":1,\"minus\":0,\"exp\":1e+21,\"input\":{\"x\":1.0e0}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1,
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s15 C-18: a malformed request clause on an operation, then a second one, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "55",
+      "result": {
+       "errors": 2,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s15 C-19: a file whose only duramen statement states an unknown version",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "56",
+      "result": {
+       "diagnostics": [
+        "a.duramen:1: error P023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s15 C-20: a requirement whose only example is dropped",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "57",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P012"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-7, s16 C-8: two requirements with one ID whose examples disagree, and an oracle that answers twice",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "58",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T007",
+        "a.duramen:11: error T002"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-16: a raw example whose solo run writes nothing, and one that writes two lines",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "59",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T021",
+        "a.duramen:9: error T021"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s16 C-18: superseded by itself, and by itself with two spaces",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "60",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: warning T012",
+        "a.duramen:8: warning T012",
+        "a.duramen:8: error T027"
+       ],
+       "errors": 1,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s16 C-21, s16 C-22: duramen 0.2 after other statements, and a second duramen statement",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "61",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error P023"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-13 (again: the names above are not relative paths): an oracle command with joined quoted parts",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "62",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-13 (again): an oracle command with an escaped quote inside double quotes, and an empty word",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "63",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-13 (again): an oracle command whose double quote is closed only by an escaped one",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "64",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T020",
+        "a.duramen:7: error T021"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s14 C-18, s16 C-14 (again, without an undeclared operation): a spec request and an operation request, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "65",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"v\":3,\"input\":{\"x\": 1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"g\",\"v\":1,\"w\":5,\"z\":6,\"input\":{\"x\": 1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s16 C-14 (again, as a check): two operations of one name, the example sends a field only the second declares",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "66",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error T007",
+        "a.duramen:9: warning T011"
+       ],
+       "errors": 1,
+       "warnings": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "file": "selfhost/probes/s17-s19.txt",
+   "records": 23,
+   "differ": 2,
+   "probes": [
+    {
+     "name": "s17 C-10, s18 C-20: a rejected alternative with a quotation across a lone CR, and across CR LF",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "0",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error T004",
+        "a.duramen:3: warning T012",
+        "a.duramen:6: error T004",
+        "a.duramen:6: warning T012"
+       ],
+       "errors": 2,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s17 C-11, s18 C-13, s19 C-14: input fields after an opening parenthesis and a closing brace",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "1",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T010"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s17 C-11, s18 C-13, s19 C-14: input fields after an opening bracket and a closing parenthesis, the name repeated",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "2",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P052"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s17 C-13: an input line whose path is empty before from",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "3",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P049"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s17 C-14, s19 C-8: lines indented one space in the body of an unknown statement, and under an unknown clause",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "4",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P002",
+        "a.duramen:6: error P015",
+        "a.duramen:7: error P007"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s17 C-14, s19 C-8: a line indented one space in the body of a statement of the rest of the language",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "5",
+       "result": {
+        "diagnostics": [
+         "a.duramen:3: error P029",
+         "a.duramen:4: error P007"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "5",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       },
+       "id": "5"
+      },
+      "s22-ts": {
+       "id": "5",
+       "result": {
+        "diagnostics": [],
+        "errors": 0,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s17 C-15: an empty raw example in single quotes",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "6",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T021"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s17 C-18: an example that leaves out op, in the batch, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "7",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"input\":{\"x\": 1}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 1
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 1
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s17 C-21: where a table's problems are reported",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "8",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P013",
+        "a.duramen:11: error P013",
+        "a.duramen:14: error P010",
+        "a.duramen:14: error P013"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s17 C-23, s18 C-15: judge, a tolerance and a value too large for binary64",
+     "op": "raw",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "exit": 0,
+       "lines": [
+        {
+         "id": "j",
+         "error": "bad_request"
+        }
+       ]
+      },
+      "s20-ts": {
+       "exit": 0,
+       "lines": [
+        {
+         "id": "j",
+         "result": {
+          "pass": true
+         }
+        }
+       ]
+      },
+      "s21-py": {
+       "exit": 0,
+       "lines": [
+        {
+         "result": {
+          "pass": true
+         },
+         "id": "j"
+        }
+       ]
+      },
+      "s22-ts": {
+       "exit": 0,
+       "lines": [
+        {
+         "id": "j",
+         "result": {
+          "pass": true
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s18 C-6: a column named result when the operation declares an input field result",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "10",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s18 C-6: columns named id and error when the operation declares those input fields, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "11",
+      "result": {
+       "errors": 1,
+       "cases": []
+      }
+     }
+    },
+    {
+     "name": "s18 C-21: T005 with codes named in capitals",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "12",
+      "result": {
+       "diagnostics": [
+        "a.duramen:6: error T001"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s18 C-27: judge, full with an error that is null, answered with and without an error",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "13",
+      "result": {
+       "pass": false,
+       "failed": [
+        "members",
+        "error"
+       ]
+      }
+     }
+    },
+    {
+     "name": "s18 C-27: judge, full with an error that is null, answered with one",
+     "op": "judge",
+     "same": true,
+     "answer": {
+      "id": "14",
+      "result": {
+       "pass": true
+      }
+     }
+    },
+    {
+     "name": "s18 C-28: superseded by with a word after the ID, and with a tab",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "15",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: warning T012",
+        "a.duramen:3: error T027",
+        "a.duramen:6: warning T012",
+        "a.duramen:6: error T027"
+       ],
+       "errors": 2,
+       "warnings": 2
+      }
+     }
+    },
+    {
+     "name": "s19 C-7: a tab-indented line before the first statement",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "16",
+      "result": {
+       "diagnostics": [
+        "a.duramen:1: error P001"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s19 C-12: a from name that climbs above the request's files and comes back",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "17",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P048",
+        "a.duramen:9: error P048",
+        "a.duramen:11: error P048"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s19 C-16: spec, op and table words separated by U+00A0 and U+3000",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "18",
+      "result": {
+       "diagnostics": [
+        "a.duramen:4: error P031",
+        "a.duramen:7: error P013"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s19 C-17: T010 and T011 for an example that leaves out its input",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "19",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T010",
+        "a.duramen:7: warning T011"
+       ],
+       "errors": 1,
+       "warnings": 1
+      }
+     }
+    },
+    {
+     "name": "s19 C-18: an audit path through an audit that is not a string",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "20",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T002"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s19 C-24: an example whose JSON input is followed by more text",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "21",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error P009",
+        "a.duramen:8: error P009"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s19 C-25: a title with nothing after it, and an empty title string",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "22",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P004",
+        "a.duramen:4: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "file": "selfhost/probes/s20-s22.txt",
+   "records": 13,
+   "differ": 1,
+   "probes": [
+    {
+     "name": "s20 C-11: table lines starting with # after their indent, and rows indented more than four",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "0",
+      "result": {
+       "diagnostics": [],
+       "errors": 0,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s20 C-16: obligation words in a spec's title and contract and in a decision's source",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "1",
+      "result": {
+       "diagnostics": [
+        "a.duramen:9: error T001"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s20 C-20: a second field of one name, in a clause that also holds a malformed field",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "2",
+      "result": {
+       "diagnostics": [
+        "a.duramen:5: error P017",
+        "a.duramen:5: error P052"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s20 C-21: statements whose first word has a colon or a capital",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "3",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P002",
+        "a.duramen:6: error P002"
+       ],
+       "errors": 2,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s21 C-2: integers beyond 2^53 and other spellings in a request member and in input lines, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "4",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"big\":12345678901234567000,\"e\":100,\"input\":{\"x\":12345678901234567000,\"t\":\"text\\n\"}}",
+         "checks": [
+          {
+           "path": "result.x",
+           "kind": "eq",
+           "value": 12345678901234567000,
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "x": 12345678901234567000,
+           "t": "text\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "s21 C-8: a header cell that repeats a name and has a bad tolerance",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "5",
+      "result": {
+       "diagnostics": [
+        "a.duramen:8: error P013"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s21 C-10: a table with an error column whose cell is empty, for an undeclared operation",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "6",
+      "result": {
+       "diagnostics": [
+        "a.duramen:11: error T009"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s21 C-16: expect = ? for an example the oracle does not answer",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "7",
+      "result": {
+       "diagnostics": [
+        "a.duramen:7: error T021"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s21 C-24: lines under a malformed clause and under a malformed example",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "8",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P004",
+        "a.duramen:4: error P006",
+        "a.duramen:8: error P006",
+        "a.duramen:10: error P012"
+       ],
+       "errors": 4,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s22 C-16: a requirement whose only examples are table rows, in a record with no oracle",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "9",
+      "result": {
+       "diagnostics": [
+        "a.duramen:2: error T019"
+       ],
+       "errors": 1,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s22 C-24: two audit clauses on one operation, two source clauses on a decision, and two rejected",
+     "op": "check",
+     "same": false,
+     "answers": {
+      "duramen": {
+       "id": "10",
+       "result": {
+        "diagnostics": [
+         "a.duramen:6: error P052",
+         "a.duramen:9: error P052"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s20-ts": {
+       "id": "10",
+       "result": {
+        "diagnostics": [
+         "a.duramen:6: error P052",
+         "a.duramen:9: error P052"
+        ],
+        "errors": 2,
+        "warnings": 0
+       }
+      },
+      "s21-py": {
+       "result": {
+        "diagnostics": [
+         "a.duramen:6: error P052",
+         "a.duramen:9: error P052"
+        ],
+        "errors": 2,
+        "warnings": 0
+       },
+       "id": "10"
+      },
+      "s22-ts": {
+       "id": "10",
+       "result": {
+        "diagnostics": [
+         "a.duramen:9: error P052"
+        ],
+        "errors": 1,
+        "warnings": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "s22 C-22: a second spec, oracle and errors statement",
+     "op": "check",
+     "same": true,
+     "answer": {
+      "id": "11",
+      "result": {
+       "diagnostics": [
+        "a.duramen:3: error P044",
+        "a.duramen:5: error P044",
+        "a.duramen:8: error P032"
+       ],
+       "errors": 3,
+       "warnings": 0
+      }
+     }
+    },
+    {
+     "name": "s22 C-25: __proto__ as a request member, an input field and an input line, the suite",
+     "op": "cases",
+     "same": true,
+     "answer": {
+      "id": "12",
+      "result": {
+       "errors": 0,
+       "cases": [
+        {
+         "id": "A#1",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#1\",\"op\":\"f\",\"__proto__\":{\"x\":1},\"input\":{\"__proto__\": 1}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "__proto__": 1
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "__proto__": 1
+          },
+          "tolerances": {}
+         }
+        },
+        {
+         "id": "A#2",
+         "kind": "example",
+         "reqs": [
+          "REQ-A"
+         ],
+         "platform": "any",
+         "line": "{\"id\":\"A#2\",\"op\":\"f\",\"__proto__\":{\"x\":1},\"input\":{\"__proto__\":\"text\\n\"}}",
+         "checks": [
+          {
+           "path": "result",
+           "kind": "eq",
+           "value": {
+            "__proto__": "text\n"
+           },
+           "from": "oracle"
+          }
+         ],
+         "full": {
+          "members": [
+           "id",
+           "result"
+          ],
+          "result": {
+           "__proto__": "text\n"
+          },
+          "tolerances": {}
+         }
+        }
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

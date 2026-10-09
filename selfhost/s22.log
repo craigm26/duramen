@@ -1,0 +1,6 @@
+  sandbox vipsna: brief written, leak check ok; launching claude-opus-5-5 (ts)
+  builder exited with 0 after 15.9 min
+run s22: claude-opus-5-5 (ts), 43 turns, 15.9 min, $4.27
+  audit: 1 violations, init ok, 2 denied calls
+  suite: passed 243/243
+  build copied to selfhost/impl/s22-ts; 26 choices to triage in selfhost/s22-ts.md
