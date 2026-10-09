@@ -62,7 +62,7 @@ req SY-002 "Statements and comments"
     expect result.diagnostics = ["s.duramen:1: error P003", "s.duramen:2: error P003"]
 
 req SY-003 "Clauses"
-  decision D-005, D-011, D-013, D-017, D-018
+  decision D-005, D-011, D-013, D-017, D-018, D-023
   text
     The body of a statement MUST be read as clauses. A line indented two spaces starts a
     clause, whose keyword is its first word, unless it starts with `#`, which makes it a
@@ -108,6 +108,14 @@ req SY-003 "Clauses"
         text
           Text.
     expect result.diagnostics = ["s.duramen:4: error P006"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      op f
+        audit
+        audit text
+    expect result.diagnostics = ["s.duramen:5: error P052"]
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -732,7 +740,7 @@ req SY-010 "Examples"
     expect result.diagnostics = ["s.duramen:8: error P022", "s.duramen:9: error P006", "s.duramen:10: error P012", "s.duramen:13: error P049"]
 
 req SY-011 "Texts in an example's input"
-  decision D-011, D-012, D-015, D-016, D-018
+  decision D-011, D-012, D-015, D-016, D-018, D-023
   text
     `input <path>` puts a text in the example's input at the path: names separated by dots,
     each a word (ASCII letters, digits, `_` and `-`) or a quoted string (`files."a.duramen"`),
@@ -742,8 +750,8 @@ req SY-011 "Texts in an example's input"
     (those at the start are kept), and every line ends with LF. A comment at indent 0 or 2
     (REQ-SY-002, REQ-SY-003), a line indented one space (P007) and a line that gets P001 are
     not lines of the example: they neither end the text nor belong to it. An `input` line that
-    ends with `from` and a quoted string, `input <path> from "<file>"`, puts there the whole
-    text of a file instead, as given (a byte order mark included); it takes no text, so lines
+    ends with `from` and a quoted string, `input <path> from "<file>"`, with white space of any
+    length before `from` and after it, puts there the whole text of a file instead, as given (a byte order mark included); it takes no text, so lines
     indented six spaces after it, other than comments, MUST get P006. The file's name is read
     from the folder of the file the example is in, split at `/`: empty parts and `.` are
     skipped, `..` goes up one folder, and a backslash is an ordinary character. Every other
@@ -852,9 +860,22 @@ req SY-011 "Texts in an example's input"
           input t from "sub"
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:17: error P049", "s.duramen:18: error P048", "s.duramen:19: error P049", "s.duramen:20: error P048"]
+  example check {"files": {"t.txt": "t\n"}}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input b? json
+      req A "a"
+        example f {}
+          input b  from "t.txt"
+          expect result.b = "t\n"
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = []
 
 req SY-012 "Tables"
-  decision D-011, D-015, D-016, D-017, D-018, D-022
+  decision D-011, D-015, D-016, D-017, D-018, D-022, D-023
   text
     `table <op>` writes examples of one operation as rows: the lines under it that start with
     `|`, indented four spaces or more (a row indented three MUST get P006). Any other line
@@ -864,7 +885,8 @@ req SY-012 "Tables"
     `|`, `-`, `:` and white space, which starts and ends with `|`, is a separator and is skipped
     wherever it is. The first other row is the header. A table without an op, with an op of more than
     one word, or with fewer than a header and one row MUST get P013, and then nothing else in
-    the table is checked.
+    the table is checked, except that a line under it that is no row, and neither blank nor a
+    comment, still gets P006.
 
     A header names each column once, else P013. A header cell is a name, which runs to the
     first white space, `±` or `+-`, optionally followed by `±` (or `+-`) and a tolerance,
@@ -1002,6 +1024,16 @@ req SY-012 "Tables"
           | 1 |
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:9: error T002"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      req A "a"
+        table f g
+          not a row
+          | x |
+          | 1 |
+    expect result.diagnostics = ["s.duramen:4: error P013", "s.duramen:5: error P006"]
 
 req SY-013 "Numbers too large for binary64"
   decision D-017

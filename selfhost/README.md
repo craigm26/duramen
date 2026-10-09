@@ -65,9 +65,9 @@ node selfhost/judges.mjs <0.7.0 spec folder> --answers selfhost/impl/s01-ts ... 
 | [s17](s17-ts.md) (ts) | 0.10.0 | 239/239 | 242/243 at 0.11.0 | yes, as text too | 10,090 of 10,092 (1 record, open); round nine's 397 probes, 32 differ, 13 undeclared | 25 | 14 | 4 | no |
 | [s18](s18-py.md) (py) | 0.10.0 | 239/239 | 242/243 at 0.11.0 | yes, as JSON values | 10,090 of 10,092 (the same record); the same probes | 28 | 16 | 4 | no |
 | [s19](s19-ts.md) (ts, opus) | 0.10.0 | 239/239 | 242/243 at 0.11.0 | yes, as JSON values | 10,090 of 10,092 (the same record); the same probes | 30 | 18 | 3 | no |
-| [s20](s20-ts.md) (ts) | 0.11.0 | 243/243 | | yes, as JSON values | 10,106 of 10,116 (5 records differ, 1 of them open); round ten's 410 probes, 22 differ, 3 undeclared | 22 | 14 | 1 | no |
-| [s21](s21-py.md) (py) | 0.11.0 | 243/243 | | yes, as JSON values | 10,112 of 10,116 (2 records, 1 open); the same probes | 25 | 20 | 0 | no |
-| [s22](s22-ts.md) (ts, opus) | 0.11.0 | 243/243 | | yes, as JSON values | 10,110 of 10,116 (3 records, 1 open); the same probes | 26 | 15 | 1 | no |
+| [s20](s20-ts.md) (ts) | 0.11.0 | 243/243 | 245/246 at 0.12.0 | yes, as JSON values | 10,106 of 10,116 (5 records differ, 1 of them open); round ten's 410 probes, 22 differ, 3 undeclared | 22 | 14 | 1 | no |
+| [s21](s21-py.md) (py) | 0.11.0 | 243/243 | 245/246 at 0.12.0 | yes, as JSON values | 10,112 of 10,116 (2 records, 1 open); the same probes | 25 | 20 | 0 | no |
+| [s22](s22-ts.md) (ts, opus) | 0.11.0 | 243/243 | 245/246 at 0.12.0 | yes, as JSON values | 10,110 of 10,116 (3 records, 1 open); the same probes | 26 | 15 | 1 | no |
 
 A probe differs when its checkers do not all answer it alike: duramen and every build of the
 round (five checkers in round six, three in rounds five and seven, four in rounds eight to

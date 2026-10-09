@@ -274,3 +274,16 @@ decision D-022 "What the ninth round's three builds found"
     D-018 had already said such a name is like any other; an example now shows it. A rejected
     alternative holding a lone CR: all three builds ended a line there, as REQ-SY-001 ends
     lines, and duramen did not, so its quotation ran on; duramen changes.
+
+decision D-023 "What the tenth round's three builds found"
+  source blind builds s20 (TypeScript, claude-sonnet-5-5), s21 (Python, claude-sonnet-5-5) and s22 (TypeScript, claude-opus-5-5) of duramen-core 0.11.0, compared with duramen on 4,500 mutated records each and on 410 records written for recorded choices, this round's and every earlier round's
+  text
+    All three passed every case of the 0.11.0 suite and were fixed points. Three readings
+    split them where no open item did, each on few records. s22 let a second `audit` clause
+    of an operation pass, reading the once-only clauses of REQ-SY-003 as a list that leaves it
+    out, where the list names it; an example now shows it. s20 read "nothing else in the table
+    is checked", after P013, as covering the P006 a line that is no row gets; duramen and the
+    other two did not, and the words now say so. s21 took the path of `input b  from "t.txt"`,
+    with two spaces before `from`, to end in a space, where the others read the file; the
+    words now allow white space of any length there. This version was written after the last
+    round of CONFIDENCE-2.md's claim 8, and no build has been made from it.
