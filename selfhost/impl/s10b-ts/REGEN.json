@@ -1,0 +1,3 @@
+{
+  "driver": "node --input-type=module driver.ts"
+}

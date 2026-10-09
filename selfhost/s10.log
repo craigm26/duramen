@@ -1,0 +1,6 @@
+  sandbox zphqgw: brief written, leak check ok; launching haiku (ts)
+  builder exited with 0 after 27.3 min
+run s10: claude-haiku-5-5 (ts), 90 turns, 27.3 min, $1.43
+  audit: 0 violations, init ok, 1 denied calls
+  suite: passed 171/171
+  build copied to selfhost/impl/s10-ts; 32 choices to triage in selfhost/s10-ts.md

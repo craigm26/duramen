@@ -1,0 +1,2166 @@
+# Records written to try the choices of s10 (TypeScript, claude-haiku-5-5) and s11 (TypeScript, claude-opus-5-5), builds of duramen-core 0.7.0,
+# on duramen and on the four builds of the round (s08, s09, s10, s11). Read by
+# selfhost/probe.mjs: each "=== " section is one record (a.duramen, and the files after "--- "
+# lines); "@op cases" asks for the suite instead of the diagnostics. The oracle echo.mjs is
+# spec/fixtures/echo.mjs. Some records hold invisible characters (tab, U+00A0, U+FEFF, U+000B,
+# U+2028, U+2029) as themselves; written by the triage of round six (selfhost/s08-ts.md).
+=== s10 C-4 (s11 C-5): rest-of-language statements, malformed
+duramen 0.1
+spec s 1
+type x
+edge
+property P "p"
+evidence E "e"
+edgedef
+=== s10 C-5 (s11 C-5): returns and static clauses, with lines under them
+duramen 0.1
+spec s 1
+op f
+  returns object
+    more
+req A "a"
+  static
+  text
+    T.
+=== s11 C-5: a well-formed static check in place of an example
+duramen 0.1
+spec s 1
+req A "a"
+  static file "x" exists
+  text
+    T.
+=== s10 C-6a: tab-indented and one-space lines under an unknown statement
+duramen 0.1
+spec s 1
+frobnicate
+	x
+ y
+=== s10 C-6b: tab-indented line under a clause the statement does not take
+duramen 0.1
+spec s 1
+note
+  colour blue
+	  y
+  text
+    T.
+=== s10 C-6c: tab-indented line under an open item's example
+duramen 0.1
+spec s 1
+open O "o"
+  example f {}
+	    z
+  text
+    T.
+=== s10 C-7 (s11 C-6): comment at indent 0 inside a text, a condition and a table
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+errors
+  e when one
+# comment
+    two
+note
+  text
+    a
+# comment
+    b
+req A "a"
+  table f
+    | x | result.x |
+# comment
+    | 1 | 1 |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-6 (s10 C-7): comment at indent 0 inside an input text
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? string
+req A "a"
+  example f {}
+    input t
+      a
+# comment
+      b
+    expect result.t = "a\nb\n"
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-6 (s10 C-7): comment at indent 0 inside an input text, the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? string
+req A "a"
+  example f {}
+    input t
+      a
+# comment
+      b
+    expect result = ?
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-8: a word after the version
+duramen 0.1 extra
+spec s 1
+=== s10 C-9 (s11 C-35): a second duramen statement with the other readable version, one file
+duramen 0.1
+spec s 1
+duramen 0.2
+=== s10 C-9 (s11 C-35): first statements agree, a second statement differs
+duramen 0.2
+spec s 1
+duramen 0.1
+--- b.duramen
+duramen 0.2
+=== s10 C-9 (s11 C-35): first statement unknown, second readable, other file differs
+duramen 0.3
+spec s 1
+duramen 0.2
+--- b.duramen
+duramen 0.1
+=== s10 C-10: words separated by U+00A0 and U+3000 in duramen and spec
+duramen 0.1
+spec s　1
+=== s10 C-11 (s11 C-8): statements with no ID
+duramen 0.1
+spec s 1
+req "title"
+  text
+    T.
+req
+  text
+    T.
+section
+open X
+decision
+=== s10 C-12 (s11 C-38): on with nothing after it
+duramen 0.1
+spec s 1
+req A "a"
+  on
+  text
+    T.
+=== s10 C-14 (s11 C-11): malformed then valid tolerance for one path [known 1]
+duramen 0.1
+spec s 1
+op f
+  tolerance result.x
+  tolerance result.x 1
+=== s10 C-14 (s11 C-11): valid then malformed tolerance for one path [known 4]
+duramen 0.1
+spec s 1
+op f
+  tolerance result.x 1
+  tolerance result.x result
+=== s10 C-15: input fields malformed and repeated
+duramen 0.1
+spec s 1
+op f
+  input a, x! int, d int
+  input a int, d int
+=== s10 C-17: example whose first word is JSON (no input)
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example {}
+  example [1]
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-17: example whose first word starts a JSON object
+duramen 0.1
+spec s 1
+op f
+req A "a"
+  example {"x": 1}
+=== s10 C-18: dropped example, input path through a text set by an earlier input line
+duramen 0.1
+spec s 1
+req A "a"
+  example f [1]
+    input a
+      t
+    input a.b
+      u
+=== s10 C-18: dropped example (number too large), input path through its member
+duramen 0.1
+spec s 1
+req A "a"
+  example f {"a": 1, "b": 1e400}
+    input a.c
+      t
+=== s10 C-19 (s11 C-20): solo run writes a blank line, then its answer
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input say? string
+req A "a"
+  example raw '{"id":"r","op":"f","input":{"say":"\n{\"id\":\"r\",\"result\":1}"}}'
+    expect result = 1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-19 (s11 C-20): solo run writes a line of U+00A0, then its answer
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input say? string
+req A "a"
+  example raw '{"id":"r","op":"f","input":{"say":"\u00a0\n{\"id\":\"r\",\"result\":1}"}}'
+    expect result = 1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-19 (s11 C-20): solo runs answered with no id, another id, a number id
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input say? string
+req A "a"
+  example raw '{"id":"r","op":"f","input":{"say":"{\"result\":1}"}}'
+    expect result = 1
+  example raw '{"id":"r","op":"f","input":{"say":"{\"id\":\"zz\",\"result\":1}"}}'
+    expect result = 1
+  example f {"say": "{\"id\":7,\"result\":1}"}
+    omit id
+    expect result = 1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-19 (s11 C-20): solo runs that write a non-object, a non-JSON line, or two lines
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input say? string
+req A "a"
+  example raw '{"id":"r","op":"f","input":{"say":"[1]"}}'
+  example raw '{"id":"r","op":"f","input":{"say":"not json"}}'
+  example raw '{"id":"r","op":"f","input":{"say":"{\"id\":\"r\",\"result\":1}\nnot json"}}'
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-22: tables with a two-word op and no op, with lines that are not rows
+duramen 0.1
+spec s 1
+req A "a"
+  table f g
+    | x |
+    x | 1
+   | 1 |
+  table
+    | x |
+    y
+=== s10 C-23: a column named twice, once with a tolerance
+duramen 0.1
+spec s 1
+op f
+  input x int
+req A "a"
+  text
+    T.
+  table f
+    | x | result.x ± 1 | result.x |
+    | 1 | 1 | 1 |
+=== s10 C-23 (s11 C-18): tolerances written without a space, and +- after a space
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x±0.5 | result.y +-0.5 |
+    | 1 | 1.2 | |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-18: a header path holding +- before its ±
+duramen 0.1
+spec s 1
+op f
+  input x int
+req A "a"
+  text
+    T.
+  table f
+    | x | result.a+-b ± 1 |
+    | 1 | 1 |
+=== s11 C-18: a column id when the op declares an input field id
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input id? string, x? json
+req A "a"
+  table f
+    | id | x | result.x |
+    | "zz" | 1 | 1 |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-24: input text with blank lines at the start, in the middle (of spaces) and at the end
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? string
+req A "a"
+  example f {}
+    input t
+
+      a
+        
+      b
+
+    expect result = ?
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-24: input line followed only by blank lines
+duramen 0.1
+spec s 1
+req A "a"
+  example f {}
+    input t
+
+
+    expect result = 1
+=== s10 C-25 (s11 C-12): from input with a malformed path and a missing file
+duramen 0.1
+spec s 1
+req A "a"
+  example f {}
+    input a..b from "missing.txt"
+=== s10 C-25 (s11 C-12): from input through a non-object, file missing
+duramen 0.1
+spec s 1
+req A "a"
+  example f {"a": 1}
+    input a.b from "missing.txt"
+=== s10 C-25 (s11 C-12): from input through a non-object, file present
+duramen 0.1
+spec s 1
+req A "a"
+  example f {"a": 1}
+    input a.b from "t.txt"
+--- t.txt
+hello
+=== s11 C-12: from input with a malformed path and a file outside the record
+duramen 0.1
+spec s 1
+req A "a"
+  example f {}
+    input a. from "../x.txt"
+=== s11 C-12: input line with a malformed path and no text
+duramen 0.1
+spec s 1
+req A "a"
+  example f {}
+    input a..b
+    expect result = 1
+=== s11 C-12: input line through a non-object and no text
+duramen 0.1
+spec s 1
+req A "a"
+  example f {"a": 1}
+    input a.b
+    expect result = 1
+=== s10 C-27: undeclared op expecting an error takes the spec's request members
+@op cases
+duramen 0.1
+spec s 1
+  request {"k": 1}
+oracle node echo.mjs
+op f
+  input answer? json
+  request {"m": 2}
+errors
+  e when never
+req A "a"
+  example g {"answer": {"error": "e"}}
+    expect error = "e"
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-28: T024 when the only expectations are = ?, id, ≈, or a row's cells are empty
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+errors
+  e when never
+req A "a"
+  example f {"answer": {"error": "e"}}
+    expect result = ?
+  example f {"answer": {"error": "e"}}
+    expect id = "A#2"
+  example f {"answer": {"error": "e"}}
+    expect result ≈ 1 ± 1
+  table f
+    | answer | result |
+    | {"error": "e"} | |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-29 (s11 C-26): quotations: unpaired, overlapping, escaped in a rejected alternative
+duramen 0.1
+spec s 1
+note
+  text
+    An "unpaired MUST here.
+note
+  text
+    A “curly "MUST” here" too.
+decision D "d"
+  source s
+  rejected "He said \"MUST\" here."
+=== s11 C-26 (s10 C-29): a word between double backquotes
+duramen 0.1
+spec s 1
+note
+  text
+    Two ``MUST`` backquotes.
+=== s10 C-30 (s11 C-25): T005, a code touching é
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+errors
+  too_big when x > 9
+  too_small when x < 0
+req A "a"
+  text
+    too_bigé is checked before too_small.
+  example f {}
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-30 (s11 C-25): T005, a phrase touching é
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+errors
+  too_big when x > 9
+  too_small when x < 0
+req A "a"
+  text
+    too_big and too_small: éafter that, nothing.
+  example f {}
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-30 (s11 C-25): T005, a phrase touching -
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+errors
+  too_big when x > 9
+  too_small when x < 0
+req A "a"
+  text
+    too_big and too_small, before-hand.
+  example f {}
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-30 (s11 C-25): T005, one code named twice
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+errors
+  too_big when x > 9
+  too_small when x < 0
+req A "a"
+  text
+    too_big and too_big come before nothing.
+  example f {}
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-32: error expectations whose values are not strings
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+errors
+  e when never
+req A "a"
+  example f {"answer": {"error": null}}
+    expect error = null
+  example f {"answer": {"error": ["e"]}}
+    expect error = ["e"]
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-3: duramen statement after spec
+spec s 1
+duramen 0.1
+=== s11 C-3: duramen statement after an unknown statement (as REQ-RC-006 example 1)
+frobnicate
+duramen 0.1
+--- b.duramen
+duramen 0.1
+spec s 1
+=== s11 C-4: a file name that starts with a non-ASCII letter and a colon
+--- é:a.duramen
+duramen 0.1
+spec s 1
+=== s11 C-4: a name whose second part starts with a letter and a colon
+--- sub/c:a.duramen
+duramen 0.1
+spec s 1
+=== s11 C-7: # lines indented three under text and under an errors clause
+duramen 0.1
+spec s 1
+note
+  text
+    a
+   # three
+errors
+  e when x
+   # three
+=== s11 C-9: # lines indented three, five and six under an example and a table
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {}
+   # three
+     # five
+      # six
+    expect result = {}
+  table f
+   # three
+    | x |
+     # five
+    | 1 |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-10: a # line indented six after an input from line
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? string
+req A "a"
+  example f {}
+    input t from "t.txt"
+      # six
+    expect result.t = "hello\n"
+--- t.txt
+hello
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-10: a raw example's from line followed by a line indented six [known 2]
+duramen 0.1
+spec s 1
+op f
+req A "a"
+  text
+    T.
+  example raw '{"id":"1","op":"f"}'
+    input files."a" from "t.txt"
+      six
+--- t.txt
+hello
+=== s11 C-13: example with no input object, and input lines
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? string
+req A "a"
+  example f
+    input t
+      x
+    expect result = ?
+  example f
+    input t from "t.txt"
+    expect result = ?
+--- t.txt
+y
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-14: example inputs that are not objects, holding a number too large
+duramen 0.1
+spec s 1
+req A "a"
+  example f [1e400]
+  example f 1e400
+  example f "x"
+=== s11 C-14: request members that set id or are not an object, holding a number too large
+duramen 0.1
+spec s 1
+  request {"id": 1e400}
+op f
+  request [1e400]
+=== s11 C-15: input fields after an unmatched closing bracket
+duramen 0.1
+spec s 1
+op f
+  input a x], b y
+  input b z
+=== s11 C-15: input fields with an escaped quote inside double quotes
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input c "a\", b" x, d y
+req A "a"
+  example f {"c": 1, "d": 1}
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-16: T023 for an error column cell and a value that is not a string
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+errors
+  e when never
+req A "a"
+  table f
+    | answer | error |
+    | {"error": "nope"} | "nope" |
+  example f {"answer": {"error": 5}}
+    expect error = 5
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-16: T023 for an approximate error expectation
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+errors
+  e when never
+req A "a"
+  example f {"answer": {"error": 1}}
+    expect error ≈ 1 ± 0
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-17: an undeclared op whose only error expectation is = ? (line and row)
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+errors
+  e when never
+req A "a"
+  example g {"answer": {"error": "e"}}
+    expect error = ?
+  table g
+    | answer | error |
+    | {"error": "e"} | ? |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-19: cells with U+00A0 and U+3000 around them
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x　|
+    | 1 |　1　|
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-19: a separator row holding U+00A0
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x |
+    | --- | --- |
+    | 1 | 1 |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-21: answers holding oracle_error, one with error and no expectation
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+req A "a"
+  example f {"answer": {"oracle_error": "open", "error": "e"}}
+  example f {"answer": {"oracle_error": "open"}}
+    expect result.x = ?
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-22: the oracle writes two answers on one line, split by a lone CR
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input say? string, silent? boolean
+req A "a"
+  example f {"say": "{\"id\":\"A#1\",\"result\":1}\r{\"id\":\"A#2\",\"result\":2}"}
+    expect result = 1
+  example f {"silent": true}
+    expect result = 2
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-22: the oracle ends an answer with CR LF
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input say? string
+req A "a"
+  example f {"say": "{\"id\":\"A#1\",\"result\":1}\r"}
+    expect result = 1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-24: the whole answer of a raw example of an op with an audit and a tolerance
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+  audit
+  tolerance result.t 0.5
+req A "a"
+  example raw '{"id":"r","op":"f","input":{"answer":{"result":{"t":1},"audit":"A"}}}'
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-27: a cited decision declared twice, first contested, second accepted
+duramen 0.1
+spec s 1
+req A "a"
+  decision D
+  text
+    T.
+decision D "first"
+  source x
+  status contested
+decision D "second"
+  source x
+  status accepted
+=== s11 C-27: a cited decision declared twice, first accepted, second contested
+duramen 0.1
+spec s 1
+req A "a"
+  decision D
+  text
+    T.
+decision D "first"
+  source x
+  status accepted
+decision D "second"
+  source x
+  status contested
+=== s11 C-27: superseded by an ID that is declared twice
+duramen 0.1
+spec s 1
+req A "a"
+  decision D, E
+  text
+    T.
+decision D "d"
+  source x
+  status superseded by E
+decision E "e1"
+  source x
+decision E "e2"
+  source x
+  status rejected
+=== s11 C-28: a from file that starts with a byte order mark
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? string
+req A "a"
+  example f {}
+    input t from "t.txt"
+    expect result = ?
+--- t.txt
+﻿hello
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-29: raw lines holding U+2028 and U+2029
+duramen 0.1
+spec s 1
+req A "a"
+  example raw "a\u2028b"
+  example raw "a b"
+  example raw 'c d'
+=== s11 C-30: approximate comparisons where binary64 subtraction rounds
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x ≈ -8.673617379884035e-19 ± 1
+  example f {"x": 2}
+    expect result.x ≈ 1.9 ± 0.1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-32: an error code listed twice
+duramen 0.1
+spec s 1
+errors
+  e when one
+  e when two
+=== s11 C-36: audit paths when the audit text is not JSON
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+  audit
+req A "a"
+  example f {"answer": {"result": 1, "audit": "not json"}}
+    expect audit.x = 1
+    expect audit.y = ?
+    expect audit = "not json"
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-36: an audit text holding a number too large, check
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+  audit
+req A "a"
+  example f {"answer": {"result": 1, "audit": "{\"a\": 1e400, \"b\": 1}"}}
+    expect audit.a = ?
+    expect audit.b = 1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-36: an audit text holding a number too large, the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+  audit
+req A "a"
+  example f {"answer": {"result": 1, "audit": "{\"a\": 1e400, \"b\": 1}"}}
+    expect audit.a = ?
+    expect audit.b = 1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-37: an answer whose error is null, for an example with no expectation
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+req A "a"
+  example f {"answer": {"error": null}}
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-37: an answer whose error is null, the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+req A "a"
+  example f {"answer": {"error": null}}
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-39: empty raw lines, and a raw line of spaces
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+req A "a"
+  example raw ''
+  example raw ""
+  example raw '   '
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-39: a text clause with no lines
+duramen 0.1
+spec s 1
+note
+  text
+=== s11 C-40: a file named .duramen, a file named build.duramen, a folder named node_modules
+duramen 0.1
+spec s 1
+--- .duramen
+frobnicate
+--- build.duramen
+duramen 0.1
+--- node_modules/x.duramen
+frobnicate
+=== s11 C-41: U+2028 and U+2029 inside and at the end of lines
+duramen 0.1 
+spec s 1
+note 
+  text 
+    a b
+=== s11 C-42: empty title, rejected, result, contract and oracle source
+duramen 0.1
+spec s 1
+  title
+  contract
+oracle node x.mjs
+  source
+op f
+  result
+decision D "d"
+  source s
+  rejected
+=== s10 C-10 (related): omit and decision lists separated by U+00A0
+@op cases
+duramen 0.1
+spec s 1
+  request {"a": 1, "b": 2}
+oracle node echo.mjs
+op f
+  input x? json
+decision D-1 "one"
+  source s
+decision D-2 "two"
+  source s
+req A "a"
+  decision D-1 D-2
+  example f {}
+    omit a b
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-29 (related): U+2028 inside a quoted title
+duramen 0.1
+spec s 1
+section S "a b"
+=== s11 C-29 (related): U+2028 inside a string of an example's input
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": "a b"}
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-29 (related): U+2028 inside a string of an expected value
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": "a\u2028b"}
+    expect result.x = "a b"
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-29 (related): U+2028 inside a quoted name of an input path
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input files? object
+req A "a"
+  example f {}
+    input files."a b"
+      x
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-29 (related): U+2029 inside a rejected alternative and a spec request
+duramen 0.1
+spec s 1
+  request {"k": "a b"}
+decision D "d"
+  source s
+  rejected "a b"
+=== s11 C-19 (related): a separator row holding tabs
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x |
+    |	---	|	---	|
+    | 1 | 1 |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-16 (related): an error column with a tolerance
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+errors
+  e when never
+req A "a"
+  table f
+    | answer | error ± 0 |
+    | {"error": 1} | 1 |
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-36 (related): an audit text holding a number too large, not read by any expectation
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+  audit
+req A "a"
+  example f {"answer": {"result": 1, "audit": "{\"a\": 1e400}"}}
+    expect audit = "{\"a\": 1e400}"
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-24 (related): the whole answer of a raw example whose line names op twice
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+  audit
+  tolerance result.t 0.5
+req A "a"
+  example raw '{"id":"r","op":"f","op":"g"}'
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-29 (related): U+2028 inside an errors condition
+duramen 0.1
+spec s 1
+errors
+  e when a b
+=== s11 C-29 (related): U+2028 as the white space of an approximate expectation
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x ≈ 1 ± 1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-19 (s11 C-20): a solo run whose one line holds a number too large
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input say? string
+req A "a"
+  example raw '{"id":"r","op":"f","input":{"say":"{\"id\":\"r\",\"result\":1e400}"}}'
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s11 C-21 (related): an answer whose oracle_error is null
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+req A "a"
+  example f {"answer": {"oracle_error": null, "result": 1}}
+    expect result = 1
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;
+=== s10 C-6 (related): a tab-indented line inside an input text
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? string
+req A "a"
+  example f {}
+    input t
+      a
+	b
+      c
+    expect result = ?
+--- echo.mjs
+// A tiny oracle for the example records in this specification. It speaks the driver protocol
+// and answers each request with its input as the result, unless the input says otherwise:
+//   "answer": {...}   answer with these members instead (and the request's id)
+//   "line": true      answer with the request line, as received, as the result
+//   "silent": true    write no answer to this request
+//   "exit": <n>       answer as usual, and exit with status n at the end of input
+//   "say": "<text>"   write this text as the answer line, exactly
+import { createInterface } from 'node:readline';
+
+let status = 0;
+for await (const line of createInterface({ input: process.stdin })) {
+  if (line.trim() === '') continue;
+  let req;
+  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }
+  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};
+  if (Number.isInteger(input.exit)) status = input.exit;
+  if (input.silent === true) continue;
+  if (typeof input.say === 'string') { console.log(input.say); continue; }
+  const result = input.line === true ? { result: line } : { result: input };
+  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));
+}
+process.exitCode = status;

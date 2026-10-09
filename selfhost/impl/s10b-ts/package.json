@@ -1,0 +1,12 @@
+{
+  "name": "duramen-core",
+  "version": "0.7.0",
+  "type": "module",
+  "main": "driver.ts",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "test": "node --test --test-name-pattern='.*' *.test.ts"
+  }
+}
