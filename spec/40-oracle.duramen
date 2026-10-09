@@ -36,12 +36,13 @@ req OR-001 "A record with examples has an oracle"
     expect result.diagnostics = ["s.duramen:2: error T019", "s.duramen:5: error T001"]
 
 req OR-002 "How the oracle is run"
-  decision D-014
+  decision D-014, D-015
   text
     The oracle is the command after `oracle`, split into words at spaces and tabs, where a
     word may be quoted with `"…"` or `'…'` to hold spaces (inside `"…"`, `\"` stands for `"`
-    and every other backslash for itself); a command with a quote that is not closed cannot be
-    started (REQ-OR-004). The checker MUST start it without a shell, in the
+    and every other backslash for itself; a quote may start inside a word, and the parts join,
+    and `""` is an empty word); a command with a quote that is not closed cannot be started
+    (REQ-OR-004). The checker MUST start it without a shell, in the
     folder of the file that holds the `oracle` statement, as a driver: it writes one request
     line per example to the oracle's standard input, in record order, each ending with LF,
     closes it, and reads one JSON response per line from its standard output, matching each to

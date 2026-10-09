@@ -275,10 +275,10 @@ checked further (`spec/`, REQ-RC-005).
 | P025 | an expression that does not parse, or an unknown function |
 | P026 | a raw request line with a line break |
 | P027 | a `static` clause of no known form |
-| P028 | `oracle` without a command |
+| P028 | `oracle` without a command (its clauses are still read) |
 | P029 | `type` not of the form `type <name> = <type>` |
 | P030 | an `edgedef` item of no known form |
-| P031 | `op` without exactly one name |
+| P031 | `op` without exactly one name (its clauses are still read) |
 | P032 | a second `errors` list in a record |
 | P033 | `on` other than `any`, `posix`, `windows` |
 | P034 | `samples` or `seed` not a whole number in range |

@@ -62,6 +62,9 @@ function mutate(seed, others, rng) {
   return { from: seed.from, mutation: `${name}: ${done.join(', ')}`, files, entry: seed.entry };
 }
 
+// JSON values compare with member order ignored, as the specification compares results.
+const canon = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.fromEntries(Object.keys(x).sort().map((key) => [key, x[key]])) : x));
+
 async function answers(driver, requests, chunk = 40) {
   const out = new Map();
   for (let k = 0; k < requests.length; k += chunk) {
@@ -103,7 +106,7 @@ async function main(argv) {
   let same = 0;
   for (const q of requests) {
     const ra = a.get(q.id), rb = b.get(q.id);
-    if (JSON.stringify(ra) === JSON.stringify(rb)) { same++; continue; }
+    if (canon(ra) === canon(rb)) { same++; continue; }
     const sig = signature(ra, rb, q.op);
     const k = q.id.split(':')[0];
     const m = k.startsWith('seed') ? { from: all[Number(k.slice(4))].from, mutation: '(unmutated)', files: all[Number(k.slice(4))].files } : mutants[Number(k)];

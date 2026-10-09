@@ -120,13 +120,13 @@ req RC-002 "The order of a record's files"
     expect result.diagnostics = ["｡.duramen:2: error P044"]
 
 req RC-003 "Versions"
-  decision D-011, D-014
+  decision D-011, D-014, D-015
   text
     Every file of a record MUST state the version of the language it is written in, with the
     statement `duramen <version>`; the versions this checker reads are `0.1` and `0.2`. A file
     that states none MUST get P020 at line 1. A version that is not one of these, or a second
-    `duramen` statement in one file, MUST get P023 at that statement's line, once: a second
-    statement is not read further. When the files of
+    `duramen` statement in one file, MUST get P023 at that statement's line, once (a second
+    statement's version is not judged again). When the files of
     one record state different versions of those this checker reads, the record MUST get P047
     at line 1 of its name (`.` for the folder that holds all the files).
   example check {}
@@ -182,11 +182,14 @@ req RC-003 "Versions"
     expect result.diagnostics = ["b.duramen:1: error P023"]
 
 req RC-004 "One spec, one oracle, one list of errors"
+  decision D-015
   text
     A record MUST have exactly one `spec` statement; without one it MUST get P021 at line 1 of
     its name (for a folder record, `.` or the folder's name; for a file record, the file's).
     A second `spec` or `oracle` statement, in the same file or another, MUST get P044, and a
-    second `errors` statement P032, at that statement's line.
+    second `errors` statement P032, at that statement's line. A second statement of any of
+    these kinds, a second `duramen` statement included, is still read like a first, and its
+    own problems reported; it has no other effect.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -243,6 +246,19 @@ req RC-004 "One spec, one oracle, one list of errors"
       errors
       errors
     expect result.diagnostics = ["s.duramen:4: error P032"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      duramen 0.1
+        title "t"
+      spec s
+      oracle
+        source o.mjs
+          more
+      errors x
+        e if
+    expect result.diagnostics = ["s.duramen:3: error P023", "s.duramen:4: error P015", "s.duramen:5: error P021", "s.duramen:5: error P044", "s.duramen:6: error P028", "s.duramen:8: error P006", "s.duramen:9: error P050", "s.duramen:10: error P019"]
 
 req RC-005 "Problems found while reading stop the check"
   decision D-003

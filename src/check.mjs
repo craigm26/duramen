@@ -201,7 +201,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
     if (r.examples.length === 0 && r.statics.length === 0 && !ast.properties.some((p) => p.supports.includes(r.id)) && !ast.evidence.some((ev) => ev.supports.includes(r.id))) {
       d('error', r, 'T001', `${r.id} has no example, table row, static check, property or evidence: every requirement needs an evaluation`);
     }
-    for (const id of r.decisions) if (!decisionIds.has(id)) d('error', r, 'T008', `${r.id} cites ${id}, which is not declared`);
+    for (const id of new Set(r.decisions)) if (!decisionIds.has(id)) d('error', r, 'T008', `${r.id} cites ${id}, which is not declared`);
     if (r.statics.length && !newer) d('error', r.statics[0], 'T037', 'static checks need duramen 0.2');
     for (const ex of r.examples) {
       const op = ast.ops.find((o) => o.name === ex.op);
@@ -271,7 +271,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
     ...ast.evidence.map((ev) => [ev, `evidence ${ev.id}`]),
   ];
   for (const [r, who] of resting) {
-    for (const id of r.decisions) {
+    for (const id of new Set(r.decisions)) { // a decision cited twice is judged once
       const word = ast.decisions.find((y) => y.id === id)?.status?.split(/\s+/)[0];
       if (['contested', 'superseded', 'rejected'].includes(word)) d('error', r, 'T028', `${who} rests on ${id}, which is ${word}`);
       else if (['observed', 'inferred', 'proposed'].includes(word)) d('warning', r, 'T028', `${who} rests on ${id}, which is only ${word}, not accepted`);

@@ -18,8 +18,8 @@ node selfhost/agree.mjs selfhost/impl/s01-ts --mutants 600 --seed 1
 - **The fixed point** ([`fixedpoint.mjs`](fixedpoint.mjs)): the build and duramen are each
   asked for the suite of `spec/`, sent as files in a `cases` request, with the record's oracle
   pointed at one or the other. The build is a fixed point when, with itself as the oracle, it
-  writes the same suite, case for case and as JSON, as duramen writes with duramen as the
-  oracle: the suite that judged it.
+  writes the same suite, case for case, as duramen writes with duramen as the oracle: the
+  suite that judged it.
 - **Agreement** ([`agree.mjs`](agree.mjs)): the build and duramen answer `check` and `cases`
   for mutants of the records the suite sends (lines deleted, duplicated, swapped,
   re-indented, cut short, a word or a character changed), and the answers that differ are
@@ -30,6 +30,13 @@ node selfhost/agree.mjs selfhost/impl/s01-ts --mutants 600 --seed 1
 |---|---|---|---|---|---|---|---|---|---|
 | [s01](s01-ts.md) (ts) | 0.2.0 | 142/142 | 141/153 at 0.3.0 | yes | 1,429 of 1,458 (15 records differ) | 19 | 1 | 1 | no |
 | [s02](s02-ts.md) (ts) | 0.3.0 | 153/153 | 152/157 at 0.4.0 | yes | 1,469 of 1,480 (6 records differ) | 33 | 12 | 0 | yes |
+| [s03](s03-py.md) (py) | 0.4.0 | 157/157 | 157/159 at 0.5.0 | yes, as JSON values | 1,469 of 1,488 (10 records differ) | 27 | 14 | 1 | no |
+
+Each build is compared with the duramen of its own round: the fixed point and the agreement
+are measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a, 0.3.0
+at 66b0b61, 0.4.0 at ee98e4b). From s03 on, suites and answers are compared as JSON values,
+member order ignored, as the specification compares results; s01's and s02's were identical
+as text too.
 
 The ledger is [`ledger.jsonl`](ledger.jsonl); the builds are in [`impl/`](impl/), copied out of
 their sandboxes unchanged. Blind means the builders were not shown duramen's source or earlier

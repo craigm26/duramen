@@ -83,9 +83,10 @@ req CK-002 "IDs are unique"
     expect result.diagnostics = ["b.duramen:2: error T007", "b.duramen:4: error T007"]
 
 req CK-003 "Cited decisions are declared"
+  decision D-015
   text
     Every decision a requirement cites MUST be declared; each one that is not MUST get T008 at
-    the requirement's line.
+    the requirement's line, once however many times the requirement cites it.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -97,6 +98,7 @@ req CK-003 "Cited decisions are declared"
         source s
       req A "a"
         decision D-1 D-2, D-3
+        decision D-2
         example f {}
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:8: error T008", "s.duramen:8: error T008"]
@@ -295,7 +297,7 @@ req CK-008 "The order of errors is stated once"
     expect result.diagnostics = []
 
 req CK-009 "Decisions"
-  decision D-008, D-014
+  decision D-008, D-014, D-015
   text
     A decision that no requirement cites MUST get the warning T012, and one without a `source`
     the warning T013, at its line. A `source` clause with nothing after it counts as none. A
@@ -305,8 +307,8 @@ req CK-009 "Decisions"
     exactly `superseded by <ID>`, naming a declared decision; else T027 at the decision's line.
     A `status` clause with nothing after it is a status with no word. A decision without a status counts
     as accepted. A requirement that cites a contested, superseded or rejected decision MUST get
-    T028 at its line for each, and one that cites an observed, inferred or proposed decision
-    the warning T028 for each.
+    T028 at its line for each such decision, and one that cites an observed, inferred or
+    proposed decision the warning T028 for each; a decision cited twice is judged once.
   example check {}
     input files."s.duramen"
       duramen 0.1

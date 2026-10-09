@@ -131,3 +131,17 @@ decision D-014 "What the second blind build found unsaid"
     quote. Two were mistakes in duramen: a request member named "2" was written before `id`,
     because a JSON object puts such names first; and a `duramen` statement that repeated the
     version and named an unknown one was reported twice. 0.4.0 pins each.
+
+decision D-015 "What the first Python build found unsaid"
+  source blind build s03 of duramen-core 0.4.0 in Python (its CHOICES.md), and a comparison of s03 with duramen on 600 mutated records
+  text
+    s03, the first build in another language, passed every case of the 0.4.0 suite and was a
+    fixed point when suites are compared as JSON values, the way this record compares
+    results; as text, three of its cases list their members in another order. It found one
+    sentence of this record that said more than duramen does: 0.4.0 said a second `duramen`
+    statement "is not read further", and s03 took that to cover its body too, where duramen
+    reads it, as it reads a second `spec` or `oracle` (which a record split across files
+    could not avoid). 0.5.0 says so. The rest were corners: the lines of an input text are
+    consecutive; the clauses of an `op` or `oracle` with a malformed first line are read, as
+    every other statement's are; a header's tolerance is the rest of its cell; and a decision
+    cited twice by one requirement is judged once.

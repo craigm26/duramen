@@ -14,7 +14,9 @@
 //
 // The fixed point is C(D1, D1) == C(D0, D0): the rebuilt checker, reading the specification it
 // was built from and using itself as that specification's model, writes the same suite, case
-// for case and byte for byte as JSON, as the one that judged it.
+// for case, as the one that judged it. Suites are compared as JSON values, as the specification
+// compares results (member order does not matter); whether they are also the same text is
+// reported beside.
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, resolve, relative, isAbsolute } from 'node:path';
 import { runDriver, implDriver, parseCommand } from '../src/driver.mjs';
@@ -72,6 +74,9 @@ export async function casesOf(driver, files, timeoutMs = 600_000) {
   return { result: resp.result, run: r };
 }
 
+// JSON text with object members sorted, so that equal values give equal text.
+const canon = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x) ? Object.fromEntries(Object.keys(x).sort().map((key) => [key, x[key]])) : x));
+
 // Where two suites differ: case IDs, then the first member that differs in each case.
 export function compareSuites(a, b) {
   const out = [];
@@ -85,7 +90,7 @@ export function compareSuites(a, b) {
     const cb = ib.get(id);
     if (!cb) continue;
     for (const k of new Set([...Object.keys(ca), ...Object.keys(cb)])) {
-      if (JSON.stringify(ca[k]) !== JSON.stringify(cb[k])) out.push(`${id}.${k}: ${JSON.stringify(ca[k])?.slice(0, 160)} vs ${JSON.stringify(cb[k])?.slice(0, 160)}`);
+      if (canon(ca[k]) !== canon(cb[k])) out.push(`${id}.${k}: ${JSON.stringify(ca[k])?.slice(0, 160)} vs ${JSON.stringify(cb[k])?.slice(0, 160)}`);
     }
   }
   return out;
@@ -111,9 +116,10 @@ async function main(argv) {
   for (const key of ['C(D1, D1)', 'C(D1, D0)', 'C(D0, D1)']) {
     const r = suites[key];
     const diffs = r.error || !base ? [r.error ?? 'no base suite'] : compareSuites(base, r.result);
-    report.comparisons[key] = { same: diffs.length === 0, differences: diffs.length, first: diffs.slice(0, 20) };
+    const sameText = !r.error && !!base && JSON.stringify(base) === JSON.stringify(r.result);
+    report.comparisons[key] = { same: diffs.length === 0, sameText, differences: diffs.length, first: diffs.slice(0, 20) };
     if (!json) {
-      console.log(`\n${key} vs C(D0, D0): ${diffs.length ? `${diffs.length} differences` : 'identical'}`);
+      console.log(`\n${key} vs C(D0, D0): ${diffs.length ? `${diffs.length} differences` : `identical${sameText ? ', as text too' : ' as JSON values (the text differs in member order)'}`}`);
       for (const x of diffs.slice(0, 20)) console.log(`  ${x}`);
       if (diffs.length > 20) console.log(`  ... and ${diffs.length - 20} more`);
     }

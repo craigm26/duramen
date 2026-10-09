@@ -190,7 +190,7 @@ function parseInto(source, file, ast, diag) {
     }
     if (!op || /\s/.test(op) || rows.length < 2) { diag('error', c.n, 'P013', 'table <op>, then a header row and at least one row', c.restCol); return []; }
     const header = cells(rows[0]).map((h) => {
-      const hm = h.match(/^(\S+)(?:\s*(?:±|\+-)\s*(\S+))?$/);
+      const hm = h.match(/^(\S+?)\s*(?:(?:±|\+-)\s*(.*))?$/);
       return hm && (isExpectPath(hm[1]) ? !/[=≈~]/.test(hm[1]) : /^[\w-]+$/.test(hm[1])) ? { name: hm[1], tol: hm[2] === undefined ? null : jsonNumber(hm[2]) } : null;
     });
     if (header.some((h) => h === null)) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
@@ -411,12 +411,12 @@ function parseInto(source, file, ast, diag) {
       }
       case 'oracle': {
         if (ast.oracle) diag('error', s.line, 'P044', `a second oracle (the first is at line ${ast.oracle.line})`);
-        if (!s.rest) { diag('error', s.line, 'P028', 'oracle <command>', s.restCol); break; }
+        if (!s.rest) diag('error', s.line, 'P028', 'oracle <command>', s.restCol);
         const oracle = { command: s.rest, sources: [], line: s.line };
         for (const c of cs) {
           if (c.kw === 'source') oracle.sources.push(...ids(c.rest));
         }
-        ast.oracle ??= oracle;
+        if (s.rest) ast.oracle ??= oracle;
         break;
       }
       case 'type': {
@@ -484,8 +484,9 @@ function parseInto(source, file, ast, diag) {
         break;
       }
       case 'op': {
-        if (!/^\S+$/.test(s.rest)) { diag('error', s.line, 'P031', 'op <name>', s.restCol); break; }
-        const op = { name: s.rest, inputs: [], returns: null, returnsText: null, tolerances: {}, audit: null, summary: '', request: null, line: s.line };
+        // a malformed first line is reported, and the clauses are still read
+        if (!/^\S+$/.test(s.rest)) diag('error', s.line, 'P031', 'op <name>', s.restCol);
+        const op = { name: /^\S+$/.test(s.rest) ? s.rest : '?', inputs: [], returns: null, returnsText: null, tolerances: {}, audit: null, summary: '', request: null, line: s.line };
         for (const c of cs) {
           if (c.kw === 'request') { const j = requestObject(c); if (j) op.request = j; continue; }
           if (c.kw === 'input') {
