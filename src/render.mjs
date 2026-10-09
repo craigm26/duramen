@@ -5,7 +5,7 @@
 import { basename } from 'node:path';
 import { exampleId, pick } from './check.mjs';
 import { describeStatic } from './static.mjs';
-import { refsOf } from './types.mjs';
+import { refsOf, ownMember } from './types.mjs';
 
 const code = (s) => '`' + String(s).replace(/`/g, 'ˋ') + '`';
 const cell = (s) => String(s).replace(/\|/g, '\\|');
@@ -33,7 +33,7 @@ function rowsTable(rows, respOf) {
     const resp = respOf(x);
     const shown = (e) => { const p = resp ? pick(resp, e.path) : { found: false }; return p.found ? code(val(p.value)) : '(no oracle answer)'; };
     const cells = [
-      ...inCols.map((c) => (c in x.input ? code(x.rawFields?.[c] ?? val(x.input[c])) : '')),
+      ...inCols.map((c) => (Object.hasOwn(x.input, c) ? code(x.rawFields?.[c] ?? val(x.input[c])) : '')),
       ...exCols.map((p) => { const e = x.expects.find((y) => y.path === p); return !e ? '' : e.kind === 'show' ? shown(e) : e.kind === 'approx' ? `${code(e.value)} ± ${e.tol}` : code(val(e.value)); }),
     ];
     out.push(`| ${cells.map(cell).join(' | ')} |`);
@@ -48,7 +48,7 @@ function renderBlockExample(ex, resp, k, files) {
   const rest = structuredClone(ex.input);
   for (const path of ex.inputBlocks) {
     let o = rest;
-    for (const key of path.slice(0, -1)) o = o?.[key];
+    for (const key of path.slice(0, -1)) o = ownMember(o, key);
     if (o) delete o[path[path.length - 1]];
   }
   const drop = (o) => { if (o && typeof o === 'object' && !Array.isArray(o)) for (const key of Object.keys(o)) { drop(o[key]); if (o[key] && typeof o[key] === 'object' && !Array.isArray(o[key]) && !Object.keys(o[key]).length) delete o[key]; } };
@@ -56,7 +56,7 @@ function renderBlockExample(ex, resp, k, files) {
   const out = ['', `Example ${k + 1}: ${code(ex.op)} with input ${code(val(rest))}${ex.inputBlocks.length ? ' and these texts' : ''}:`];
   for (const path of ex.inputBlocks) {
     let v = ex.input;
-    for (const key of path) v = v?.[key];
+    for (const key of path) v = ownMember(v, key);
     // A text taken from a file is shown once, under Files at the end of this document.
     const from = ex.inputFrom?.[JSON.stringify(path)];
     if (from !== undefined && files) {

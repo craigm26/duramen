@@ -3,7 +3,7 @@
 // expectations (`expect`), table rows (`|`) and other continuation lines are indented four.
 // The parser never throws on bad input: it returns { ast, diagnostics }, and every diagnostic
 // has a file, a line and a column.
-import { parseType } from './types.mjs';
+import { parseType, setOwn } from './types.mjs';
 import { parseExpr, namesOf, unknownFunctions } from './expr.mjs';
 import { allFinite } from './driver.mjs';
 
@@ -34,6 +34,34 @@ const CLAUSES = {
 // Only these clauses take lines of their own (and the clauses of `errors`, which continue).
 const TAKES_LINES = new Set(['text', 'example', 'table']);
 export const EVIDENCE_KINDS = ['published', 'derived', 'computed', 'measured', 'implementation', 'incident'];
+
+// Put a text at a path in an example's input, with objects created on the way where there are
+// none. Returns null, or the name on the path whose value is not an object (the input is then
+// unchanged). Only the input's own members are walked and written: a name such as __proto__ is a
+// member like any other. `file` names the file the text came from (`input <path> from`).
+export function putInput(ex, path, text, file) {
+  if (ex.noInput) { ex.noInput = false; ex.input = {}; }
+  let o = ex.input;
+  for (const key of path.slice(0, -1)) {
+    if (!Object.hasOwn(o, key)) setOwn(o, key, {});
+    const v = o[key];
+    if (v === null || typeof v !== 'object' || Array.isArray(v)) return key;
+    o = v;
+  }
+  setOwn(o, path[path.length - 1], text);
+  ex.raw = JSON.stringify(ex.input);
+  // The texts the input holds, for the brief: one put at a path replaces those at or under it.
+  const under = (p) => p.length >= path.length && path.every((k, i) => p[i] === k);
+  for (const p of (ex.inputBlocks ?? []).filter(under)) delete ex.inputFrom?.[JSON.stringify(p)];
+  ex.inputBlocks = [...(ex.inputBlocks ?? []).filter((p) => !under(p)), path];
+  if (file !== undefined) (ex.inputFrom ??= {})[JSON.stringify(path)] = file;
+  return null;
+}
+
+// The cells of a table row: the texts between its `|` characters, where `\|` is a `|` in a cell,
+// and the white space around each is not part of it. The `|` that ends a row may be left out, so
+// a final `\|` is a `|` in the last cell.
+export const rowCells = (text) => text.replace(/^\|/, '').replace(/(?<!\\)\|$/, '').split(/(?<!\\)\|/).map((x) => x.trim().replace(/\\\|/g, '|'));
 
 export function parse(source, file = '<input>') {
   const diagnostics = [];
@@ -182,7 +210,7 @@ function parseInto(source, file, ast, diag) {
 
   // Markdown-style table rows: header cells name input fields or expectation paths (a path may
   // carry "± <tolerance>"); an empty cell states nothing; `?` asks the oracle.
-  const cells = (l) => l.text.replace(/^\|/, '').replace(/\|$/, '').split(/(?<!\\)\|/).map((x) => x.trim().replace(/\\\|/g, '|'));
+  const cells = (l) => rowCells(l.text);
   const isExpectPath = (name) => /^(result|audit|error|id)(\.|$)/.test(name);
   function tableRows(c, op, from) {
     // Rows are the lines that start with |, indented four spaces or more; a separator row (only
@@ -224,10 +252,10 @@ function parseInto(source, file, ast, diag) {
         if (isExpectPath(h.name)) {
           if (h.tol !== null && typeof j.value !== 'number') { diag('error', l.n, 'P010', `cell "${h.name}": a column with a tolerance holds numbers`, l.indent + 1); ok = false; return; }
           ex.expects.push(h.tol !== null ? { path: h.name, kind: 'approx', value: j.value, tol: h.tol, line: l.n } : { path: h.name, kind: 'eq', value: j.value, line: l.n });
-        } else { ex.input[h.name] = j.value; rawFields.push(`${JSON.stringify(h.name)}:${vals[i]}`); }
+        } else { setOwn(ex.input, h.name, j.value); rawFields.push(`${JSON.stringify(h.name)}:${vals[i]}`); }
       });
       ex.raw = `{${rawFields.join(',')}}`;
-      ex.rawFields = Object.fromEntries(header.map((h, i) => [h.name, vals[i]]).filter(([k, v]) => v !== '' && k in ex.input));
+      ex.rawFields = Object.fromEntries(header.map((h, i) => [h.name, vals[i]]).filter(([k, v]) => v !== '' && Object.hasOwn(ex.input, k)));
       if (ok) out.push(ex);
     }
     return out;
@@ -261,19 +289,11 @@ function parseInto(source, file, ast, diag) {
     }
     return out.length ? out : null;
   }
-  // Put text at a path in the example's input; the request is then written as JSON.stringify of
-  // the input, so the input's own spelling is not kept.
+  // Put text at a path in the example's input (putInput); the request is then written as
+  // JSON.stringify of the input, so the input's own spelling is not kept.
   function setInput(ex, path, text, n) {
-    if (ex.noInput) { ex.noInput = false; ex.input = {}; }
-    let o = ex.input;
-    for (const key of path.slice(0, -1)) {
-      if (o[key] === undefined) o[key] = {};
-      if (o[key] === null || typeof o[key] !== 'object' || Array.isArray(o[key])) { diag('error', n, 'P049', `input ${path.join('.')}: ${key} is not an object`); return; }
-      o = o[key];
-    }
-    o[path[path.length - 1]] = text;
-    ex.raw = JSON.stringify(ex.input);
-    (ex.inputBlocks ??= []).push(path);
+    const key = putInput(ex, path, text);
+    if (key !== null) diag('error', n, 'P049', `input ${path.join('.')}: ${key} is not an object`);
   }
 
   function example(c) {
@@ -312,7 +332,11 @@ function parseInto(source, file, ast, diag) {
       if (l.text === '' || l.text.startsWith('#')) continue;
       // A line whose first word is input, request or omit is a line of that kind, whatever follows.
       if (l.indent === 4 && /^input(\s|$)/.test(l.text)) {
-        const im = l.text.match(/^input\s+(.+?)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/s) ?? [l.text, '', undefined];
+        let im = l.text.match(/^input\s+(.+?)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/s) ?? [l.text, '', undefined];
+        // `from` and a quoted string that is not a JSON string do not end the line: it is then
+        // `input <path>`, and that path is of no form (REQ-SY-011).
+        let fromName;
+        if (im[2] !== undefined) { try { fromName = JSON.parse(im[2]); } catch { im = [l.text, l.text.replace(/^input\s+/, ''), undefined]; } }
         // The text of a block is taken first, so that a bad input line does not make its text
         // look like lines of the example.
         const block = [];
@@ -323,9 +347,12 @@ function parseInto(source, file, ast, diag) {
         if (ex.rawLine !== undefined) { diag('error', l.n, 'P022', 'a raw example is sent exactly as written: no input lines', l.indent + 1); continue; }
         const path = inputPath(im[1]);
         if (!path) { diag('error', l.n, 'P049', 'input <path>: names separated by dots, each a word or a "quoted string"', l.indent + 7); continue; }
-        if (im[2]) { (ex.inputFiles ??= []).push({ path, file: JSON.parse(im[2]), line: l.n }); continue; }
+        // Input lines apply in order. A `from` line needs the record's files, so it and every
+        // input line after it wait for them (loadRecord applies them).
+        if (im[2]) { (ex.inputLater ??= []).push({ path, file: fromName, line: l.n }); continue; }
         if (!block.length) { diag('error', l.n, 'P049', 'input <path> needs its text on the next lines, indented six spaces', l.indent + 1); continue; }
-        setInput(ex, path, block.join('\n') + '\n', l.n);
+        if (ex.inputLater) ex.inputLater.push({ path, text: block.join('\n') + '\n', line: l.n });
+        else setInput(ex, path, block.join('\n') + '\n', l.n);
         continue;
       }
       if (l.indent !== 4) { diag('error', l.n, 'P006', 'lines under an example are indented four spaces (the text of an input block, six)', l.indent + 1); continue; }
@@ -530,7 +557,7 @@ function parseInto(source, file, ast, diag) {
             const tm = c.rest.match(/^(\S+)\s+(\S+)$/);
             if (!tm || !Number.isFinite(jsonNumber(tm[2])) || jsonNumber(tm[2]) < 0) diag('error', c.n, 'P018', 'tolerance <result path> <number of 0 or more>', c.restCol);
             else if (Object.hasOwn(op.tolerances, tm[1])) diag('error', c.n, 'P052', `${op.name} already has a tolerance for ${tm[1]}`, c.restCol);
-            else op.tolerances[tm[1]] = jsonNumber(tm[2]);
+            else setOwn(op.tolerances, tm[1], jsonNumber(tm[2]));
           } else if (c.kw === 'audit') {
             if (c.rest && c.rest !== 'text') diag('error', c.n, 'P050', 'audit, or audit text', c.restCol);
             op.audit = 'text';

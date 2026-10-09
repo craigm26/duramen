@@ -132,6 +132,17 @@ export function parseType(src) {
   }
 }
 
+// Give `o` its own member `k`, defined rather than assigned, as JSON.parse makes members: a
+// member named __proto__ is then a member, not the object's prototype. Names in records and
+// requests are written this way.
+export function setOwn(o, k, v) {
+  Object.defineProperty(o, k, { value: v, enumerable: true, writable: true, configurable: true });
+  return o;
+}
+
+// The member `k` of `o` when `o` is an object holding it as its own; else undefined.
+export const ownMember = (o, k) => (o !== null && typeof o === 'object' && Object.hasOwn(o, k) ? o[k] : undefined);
+
 // Names a type refers to (for "unknown type" and cycle checks).
 export function refsOf(t, out = new Set()) {
   if (!t) return out;
@@ -274,8 +285,7 @@ export function genType(t, rng, env = new Map(), depth = 0) {
         if (f.optional && rng.next() < 0.5) continue;
         const g = genType(f.type, rng, env, depth + 1);
         if (g.error) return g;
-        // defined, not assigned: a member named __proto__ is then a member, as JSON.parse makes it
-        Object.defineProperty(o, f.name, { value: g.value, enumerable: true, writable: true, configurable: true });
+        setOwn(o, f.name, g.value);
       }
       return { value: o };
     }

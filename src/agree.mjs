@@ -3,7 +3,7 @@
 // two builds agree with each other and not with the oracle, the oracle is the suspect. Every
 // disagreement is either a bug in someone, or behavior the spec leaves open; triage turns it
 // into a pinned example or an open item.
-import { genType, makeRng, seedOf } from './types.mjs';
+import { genType, makeRng, seedOf, setOwn } from './types.mjs';
 import { typeEnv, requestMembers } from './check.mjs';
 import { runDriver } from './driver.mjs';
 import { answerDiffers } from './suite.mjs';
@@ -26,12 +26,12 @@ export function agreeRequests(ast, { samples = 50, seed = 1 } = {}) {
         if (f.optional && rng.next() < 0.3) continue;
         const g = genType(drawType(op, f), rng, env);
         if (g.error) { error = g.error; break; }
-        input[f.name] = g.value;
+        setOwn(input, f.name, g.value);
       }
       if (error) { skipped.push({ op: op.name, why: error }); break; }
       const id = `agree:${op.name}#${k}`;
       const members = { id, op: op.name };
-      for (const [m, v] of Object.entries(requestMembers(ast, op.name))) if (!['id', 'op', 'input'].includes(m)) members[m] = v;
+      for (const [m, v] of Object.entries(requestMembers(ast, op.name))) if (!['id', 'op', 'input'].includes(m)) setOwn(members, m, v);
       members.input = input;
       out.push({ id, op: op.name, input, line: JSON.stringify(members) });
     }

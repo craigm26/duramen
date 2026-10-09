@@ -7,7 +7,7 @@
 // every sample's first call in one driver run, then every second call, and so on. That suits
 // drivers that answer only after the end of their input.
 import { evaluate, parseExpr, isUndefined, showValue } from './expr.mjs';
-import { genType, genJSON, makeRng, seedOf } from './types.mjs';
+import { genType, genJSON, makeRng, seedOf, setOwn } from './types.mjs';
 
 export const propSeed = (pr) => (pr.seed ?? seedOf(pr.id)) >>> 0;
 
@@ -29,7 +29,7 @@ export function planProperty(pr, typeEnv) {
     for (const v of pr.vars) {
       const g = draw(v.gen, rng, typeEnv);
       if (g.error) return { samples, error: `${v.name}: ${g.error}`, drawn, accepted: samples.length };
-      bindings[v.name] = g.value;
+      setOwn(bindings, v.name, g.value);
     }
     const env = new Map(Object.entries(bindings));
     let ok = true;
@@ -84,7 +84,7 @@ export async function runPropertyCases(cases, send) {
         if (JSON.stringify(input) === undefined || hasNonFinite(input)) { p.broken[si] = `${call.name}'s input is not JSON: ${showValue(input)}`; return; }
         const id = `${p.pc.id}#${si + 1}.${call.name}`;
         const members = { id, op: call.op };
-        for (const [k, v] of Object.entries(call.members ?? {})) if (!['id', 'op', 'input'].includes(k)) members[k] = v;
+        for (const [k, v] of Object.entries(call.members ?? {})) if (!['id', 'op', 'input'].includes(k)) setOwn(members, k, v);
         members.input = input;
         const line = JSON.stringify(members);
         lines.push(line);

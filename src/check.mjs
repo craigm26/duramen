@@ -202,7 +202,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
     if (!op || !newer) return [];
     const out = [];
     for (const f of op.inputs) {
-      if (!f.parsed || !(f.name in input)) continue;
+      if (!f.parsed || !Object.hasOwn(input, f.name)) continue;
       const why = checkType(f.parsed, input[f.name], env, `.${f.name}`);
       if (why) out.push(why);
     }
@@ -226,7 +226,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
         continue;
       }
       if (!op) { d('error', ex, 'T009', `unknown op "${ex.op}"`); continue; }
-      for (const f of op.inputs) if (!f.optional && !(f.name in ex.input)) d('error', ex, 'T010', `${ex.op} input is missing required field "${f.name}"`);
+      for (const f of op.inputs) if (!f.optional && !Object.hasOwn(ex.input, f.name)) d('error', ex, 'T010', `${ex.op} input is missing required field "${f.name}"`);
       for (const k of Object.keys(ex.input)) if (!op.inputs.some((f) => f.name === k)) d('warning', ex, 'T011', `${ex.op} has no input field "${k}"`);
       for (const why of inputProblems(ex.op, ex.input)) d('error', ex, 'T029', `${r.id}: the input does not have ${ex.op}'s declared types (${why}); an example of a bad input says which error it expects`);
     }
@@ -254,7 +254,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
     for (const row of ev.rows ?? []) {
       const op = ast.ops.find((o) => o.name === row.op);
       if (!op) continue;
-      for (const f of op.inputs) if (!f.optional && !(f.name in row.input)) d('error', { file: ev.file, line: row.line }, 'T010', `evidence ${ev.id} row ${row.rowId}: ${row.op} input is missing required field "${f.name}"`);
+      for (const f of op.inputs) if (!f.optional && !Object.hasOwn(row.input, f.name)) d('error', { file: ev.file, line: row.line }, 'T010', `evidence ${ev.id} row ${row.rowId}: ${row.op} input is missing required field "${f.name}"`);
       for (const why of inputProblems(row.op, row.input)) d('error', { file: ev.file, line: row.line }, 'T029', `evidence ${ev.id} row ${row.rowId}: the input does not have ${row.op}'s declared types (${why})`);
     }
   }

@@ -115,8 +115,10 @@ export async function handle(req) {
 // Read every request, then answer them in order (the protocol allows answering after the end of
 // input). Never throws: a request that cannot be handled gets an error response.
 export async function serve(stdin = process.stdin, write = (s) => process.stdout.write(s)) {
-  let text = '';
-  for await (const chunk of stdin) text += chunk;
+  // The bytes are decoded once, at the end: a character can be split across two chunks.
+  const chunks = [];
+  for await (const chunk of stdin) chunks.push(typeof chunk === 'string' ? Buffer.from(chunk, 'utf8') : chunk);
+  const text = Buffer.concat(chunks).toString('utf8');
   const lines = text.split('\n');
   if (lines.length && lines[lines.length - 1] === '') lines.pop();
   for (const line of lines) {

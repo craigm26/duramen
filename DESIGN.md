@@ -203,7 +203,7 @@ note
 | `expect <path> = ?` | the oracle's value, shown in the brief and checked by the suite |
 | `request`, `omit` under an example | add request members on top of the spec's or op's; leave members out (`id`, `op`, `input`, `clock`, ...) |
 | `input <path>` under an example | a text (the lines below, indented six) at that path of the input, such as `files."a.duramen"`; the input is then sent as compact JSON |
-| `input <path> from "<file>"` | the text of a file next to the record instead; the brief shows such a file once, under Files |
+| `input <path> from "<file>"` | the text of a file next to the record instead; the brief shows such a file once, under Files. The name is read from the example's folder, split at `/` (empty parts and `.` skipped, `..` one folder up), and input lines apply in order, `from` lines among them |
 | table cells | inputs and expectations as JSON; `?` as above; an empty cell states nothing |
 | `static …` (0.2) | a check on the implementation folder itself rather than through the driver |
 | `property` (0.2) | a statement checked on generated inputs, for the oracle by `check` and for implementations by the suite |
