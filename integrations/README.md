@@ -63,5 +63,12 @@ the tests. The others follow the same protocol and have not been run here.
 - [`claude-code/e2e/hook-edit.jsonl`](claude-code/e2e/hook-edit.jsonl): `claude -p` with the hook
   edits the expected sum to 5 and is told, at once, that the example now disagrees with the
   oracle.
-- [`ci/local-run.txt`](ci/local-run.txt): the workflow's steps run on the heat-engine slice.
+- [`ci/local-run.txt`](ci/local-run.txt): the workflow's steps, run by hand on the heat-engine
+  slice.
+- [`ci/github-push-37903296525.log`](ci/github-push-37903296525.log) and
+  [`ci/github-pull-request-37903423478.log`](ci/github-pull-request-37903423478.log): the
+  workflow on GitHub's runners, as this repository's
+  [`duramen-template.yml`](../.github/workflows/duramen-template.yml) sets it up for the
+  heat-engine slice: `check` and `run` on a push, and `check`, `run` and `diff` on a pull
+  request.
 - `test/mcp-hook.test.mjs` and `test/agent.test.mjs` in `npm test`.

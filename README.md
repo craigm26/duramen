@@ -15,9 +15,9 @@ implementation's driver, and `duramen regen` runs one blind build from the brief
 duramen is specified in duramen: [`spec/`](spec/) is a record of the core language whose oracle
 is duramen itself, and a checker rebuilt blind from its brief is judged by its suite (below).
 [`CONFIDENCE.md`](CONFIDENCE.md) states six claims about regenerative software with duramen,
-with pass criteria written before the runs, and what the runs showed: three pass, two fail,
-and one waits on a run of the CI template on GitHub's runners. An agent that had not seen the
-work checked the results against this repository; its corrections are listed there.
+with pass criteria written before the runs, and what the runs showed: four pass and two fail.
+An agent that had not seen the work checked the results against this repository; its
+corrections are listed there.
 
 Status: prototype, version 0.2.0. Node.js 22.18 or later, no dependencies.
 

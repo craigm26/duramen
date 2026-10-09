@@ -121,7 +121,7 @@ changed, is [the last section](#the-independent-check).
 | 3. A regenerated build can be the reference | **fails**: (a) and (b) pass, (c) does not; run with a build that had failed claim 1 |
 | 4. The judge can be regenerated too | **passes**, on every case that has an answer; the 3 protocol cases of a run are outside `judge` |
 | 5. A second domain: a robot command safety gate | **passes** |
-| 6. Usable from Claude Code, Claude desktop and CI | **not yet decided**: the MCP server and the hook pass; the CI template has not yet run on a CI runner |
+| 6. Usable from Claude Code, Claude desktop and CI | **passes**: the MCP server, the hook, and the CI template on GitHub's runners; Claude desktop was not tried |
 
 ### 1. The loop converges: fails
 
@@ -265,20 +265,25 @@ sources, and 4 open items.
   changelog line disagree about a confidence equal to the minimum. Its documents disagree with
   each other about where `min_loa_for_control` applies.
 
-### 6. Usable from Claude Code, Claude desktop and CI: not yet decided
+### 6. Usable from Claude Code, Claude desktop and CI: passes
 
-The transcripts are in [`integrations/`](integrations/). Each kept transcript is an extract of
-the raw stream: the lines that show the tool calls and their results.
+The transcripts are in [`integrations/`](integrations/). The two Claude Code transcripts are
+extracts of the raw streams: the lines that show the tool calls and their results. The CI
+transcripts are GitHub's whole job logs.
 
 - **The MCP server: passes.** `claude -p`, with `duramen mcp`, found and explained a planted
   T002.
 - **The hook: passes.** It blocked an edit that broke an example, and told the agent why at
   once.
-- **CI: not yet run as CI.** The workflow's steps were run by hand in this container, on the
-  heat-engine slice ([`local-run.txt`](integrations/ci/local-run.txt)); the workflow itself had
-  not run on a CI runner. [`duramen-template.yml`](.github/workflows/duramen-template.yml) is
-  the template set up for the heat-engine slice, so that GitHub's runners run it; this claim
-  is decided when they have.
+- **CI: passes.** [`duramen-template.yml`](.github/workflows/duramen-template.yml) is the
+  template with its two paths set to the heat-engine slice and one blind build of it. On
+  GitHub's runners it ran `check` and `run` (209/209) on the push of the branch
+  ([run 37903296525](https://github.com/craigm26/duramen/actions/runs/37903296525)), and
+  `check`, `run` and `diff` on its pull request
+  ([run 37903423478](https://github.com/craigm26/duramen/actions/runs/37903423478)); the logs
+  are kept in [`integrations/ci/`](integrations/ci/). The template's steps were first run only
+  by hand in this container ([`local-run.txt`](integrations/ci/local-run.txt)); the independent
+  check pointed out that the workflow itself had not run, and these runs followed.
 - **Claude desktop** has a configuration file ([`claude_desktop_config.json`](integrations/claude-desktop/claude_desktop_config.json))
   and was not tried. The criteria's test does not include it, so the title claims more than
   the test shows.
@@ -316,7 +321,7 @@ written, except for these, which are corrected above and in the run records:
 | Claim 1's 18 of 72 counted five checkers' answers; for duramen, s08 and s09 it is 15, and 12 alike in both builds | claim 1 gives both |
 | s13's record counted kept records with requests that were not kept (87, 29) | 46 records, 14 answered in more than one way; the other requests are described, not counted |
 | Claim 4 judged the 168 example cases of each build, not the 3 protocol cases of each run | said in claim 4 |
-| Claim 6's CI ran the template's steps by hand, not as a workflow | claim 6 is not decided until GitHub's runners have run it |
+| Claim 6's CI ran the template's steps by hand, not as a workflow | the template then ran on GitHub's runners, on a push and on the pull request; claim 6 passes on those runs |
 | The gate README's second sweep of mutants (102 mutants, 6 alive, all label changes) had no script or output kept | rewritten and kept as [`sweep.mjs`](examples/rcan-gate/sweep.mjs) and [`sweep.txt`](examples/rcan-gate/sweep.txt), it makes 117 mutants and left 12 alive at 1.0.0: the six label changes, and six raised lowest roles no example reached, pinned in 1.1.0 |
 | "9,948 mutated-record requests" included 948 about the suite's own, unmutated records | claim 1 says what the requests were |
 | s10 is a fixed point only on a machine running nothing else | said in claim 2 and in s10's record |
