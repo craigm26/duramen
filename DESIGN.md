@@ -386,6 +386,35 @@ regen-heat-engine's REQ-CJ-001 to REQ-CJ-004. Edge texts are normative and may u
 | `duramen regen <record> --lang ts\|py` | one blind build, end to end: brief, sandbox, leak check, builder (`claude -p`, allow-listed environment, file and shell tools only), transcript audit, score, ledger |
 | `duramen serve` | duramen as a driver (`check`, `cases`, `judge`), the oracle of `spec/` |
 
+## Node.js versions
+
+duramen needs Node.js 22.18 or later. Every run in this repository used Node.js 22 (22.22.0 in
+the container where the rounds ran). Two things change from Node.js 24 on:
+
+- **readline also ends lines at U+2028 and U+2029.** JSON leaves those characters raw inside
+  strings, so a program that reads its requests with readline splits a request that holds one.
+  duramen reads its own lines (`streamLines` in `src/driver.mjs`, for `duramen mcp`), and so do
+  the oracles here (`spec/fixtures/echo.mjs`, D-020, and `examples/rcan-gate/driver.mjs`).
+  Three of the builds kept here read requests with readline (s10, s10b and g01); on Node.js 24
+  they would answer such a request wrongly. Their suites ran on Node.js 22.
+- **JSON.parse misreads some escaped keys.** In V8 13 and 14 (Node.js 24.21 and 26.11, the
+  versions tried), after an object whose keys end in a key that is one backslash, JSON.parse
+  can read a later object with the same keys before it as having a backslash where it has an
+  escaped one-character key (`\"`, `\n`, `\u0041`, ...):
+
+  ```
+  JSON.parse('{"p":0,"\\\\":0}');
+  Object.keys(JSON.parse('{"p":0,"\\"":0}'));   // Node.js 22: ["p", "\""]; Node.js 24 and 26: ["p", "\\"]
+  ```
+
+  duramen reads all JSON with JSON.parse and does not work around this. It checks for the bug
+  when it starts (`jsonParseMisreadsKeys`) and says so on standard error when the engine has
+  it. Answers can then be wrong for JSON whose objects hold a key that is one backslash. The
+  heat-engine slice has one: property CJ-P1 draws random JSON and fails on such a sample, so on
+  those engines the tests that need the slice to check clean are skipped, saying why.
+
+CI runs the tests on Node.js 22 and 24.
+
 ## What 0.2 does not do
 
 - **The oracle is still hand-written.** Evidence, properties and `mutate` check it from

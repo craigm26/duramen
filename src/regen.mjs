@@ -9,6 +9,10 @@
 // of the caller's session or credentials), only file and shell tools, shell commands limited to
 // the language's toolchain, no web or MCP tools. Blind means the builder was not shown the
 // reference or earlier builds; it does not mean the model never saw similar code in training.
+// The rules limit which commands run, not what they read: `node` and `python` can read any file
+// the user can, so the work folder is not a sandbox. The audit reports the paths a builder named
+// in its tool calls and commands, not those inside an inline script or a file it ran; what the
+// builder was shown rests on its transcript.
 //
 // The audit and the leak check are adapted from the regen kit's audit-transcript.mjs and
 // leak-check.mjs (MIT, Copyright (c) 2026 craigm26).

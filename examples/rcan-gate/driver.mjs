@@ -1,6 +1,5 @@
 // The driver protocol in front of oracle.mjs: one JSON request per line on standard input, one
 // response per non-blank line on standard output, in order.
-import { createInterface } from 'node:readline';
 import { decide, stateProblem, commandProblem } from './oracle.mjs';
 
 const answer = (req) => {
@@ -12,7 +11,13 @@ const answer = (req) => {
   return { id: req.id, result: decide(input.state, input.command) };
 };
 
-for await (const line of createInterface({ input: process.stdin, crlfDelay: Infinity })) {
+// A line ends at LF, CR LF or CR. The input is read whole and split here, because from Node 24
+// readline also ends lines at U+2028 and U+2029, which a request may hold inside a string.
+const chunks = [];
+for await (const chunk of process.stdin) chunks.push(chunk);
+const lines = Buffer.concat(chunks).toString('utf8').split(/\r\n|\n|\r/);
+if (lines[lines.length - 1] === '') lines.pop();
+for (const line of lines) {
   if (line.trim() === '') continue;
   let req;
   try { req = JSON.parse(line); } catch { req = undefined; }

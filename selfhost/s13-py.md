@@ -11,6 +11,7 @@
   included
 - Fixed point: **yes, as JSON values** (232 cases, and both cross-checks; as text, member order
   differs)
+- Rescored at 0.9.0 (the echo fixture's new text, D-020): **235/235**, and a fixed point
 - Agreement on mutants at 0.8.0: three seeds of 1,500 mutants, 10,068 requests: **10,067
   alike**; 1 differs: s13 gives the warning T024 to an example whose expectations hold (its
   C-11)
@@ -85,7 +86,8 @@ duramen. On records written for their choices, duramen was the one out of step:
 duramen changed on each of these after the round, in 55ae953, with tests; none touches a case of
 the 0.8.0 suite. The counts of records answered in more than one way above are with duramen as
 the round found it; rerun after 55ae953, 16 of the round's 83 records are (7 of s12's 37, 9 of
-s13's 46). Where the words read two ways, they are proposals for 0.9.0:
+s13's 46). Where the words read two ways, they are proposals for the version after 0.9.0 (which
+changed only the echo fixture, D-020):
 1. quotations in T004 should separate the words around them (`MU`a`ST` holds no MUST, `x`a`MUST`
    does);
 2. REQ-OR-007's "an example that states no expectation" should say "no expectation at all"

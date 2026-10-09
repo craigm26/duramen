@@ -8,8 +8,8 @@
 // starts the driver an implementation's REGEN.json names, as `duramen run` does.
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
-import { createInterface } from 'node:readline';
 import { validFiles, withRecord } from './serve.mjs';
+import { streamLines } from './driver.mjs';
 import { loadRecord } from './record.mjs';
 import { check } from './check.mjs';
 import { renderSpec, renderDecisions } from './render.mjs';
@@ -142,7 +142,7 @@ export async function handle(msg, { version } = {}) {
 export async function mcpServe(input = process.stdin, write = (s) => process.stdout.write(s), version = '0') {
   console.log = (...a) => process.stderr.write(a.join(' ') + '\n');
   const pending = new Set();
-  for await (const line of createInterface({ input, crlfDelay: Infinity })) {
+  for await (const line of streamLines(input)) {
     if (!line.trim()) continue;
     let msg;
     try { msg = JSON.parse(line); } catch { write(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } }) + '\n'); continue; }

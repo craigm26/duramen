@@ -75,6 +75,37 @@ export function allFinite(v) {
   return true;
 }
 
+// Whether this JavaScript engine's JSON.parse misreads escaped keys. V8 13 and 14 (Node.js 24
+// and 26) do: once an object has been made, by JSON.parse or as a literal, whose next key after
+// some keys is one backslash, JSON.parse reads an object with the same keys before it, in the same
+// order, as having a backslash where it has any escaped one-character key (\", \n, \u0041,
+// ...). After JSON.parse('{"p":0,"\\\\":0}'), JSON.parse('{"p":0,"\\"":0}') has
+// the keys "p" and "\\". The probe's first key is a name no record uses, so the probe itself
+// changes nothing else.
+export function jsonParseMisreadsKeys() {
+  const p = `duramen.probe.${process.pid}.${Date.now()}`;
+  JSON.parse(`{${JSON.stringify(p)}:0,"\\\\":0}`);
+  return Object.keys(JSON.parse(`{${JSON.stringify(p)}:0,"\\"":0}`))[1] !== '"';
+}
+
+// The lines of a stream as they arrive: a line ends at LF, and a CR before the LF is dropped.
+// Bytes are decoded across chunks, and U+2028 and U+2029 are characters like any other (Node's
+// readline ends lines at them from Node 24 on). A last line without LF is a line too.
+export async function* streamLines(stream) {
+  const decoder = new TextDecoder('utf-8');
+  let rest = '';
+  for await (const chunk of stream) {
+    rest += typeof chunk === 'string' ? chunk : decoder.decode(chunk, { stream: true });
+    let at;
+    while ((at = rest.indexOf('\n')) >= 0) {
+      yield rest.slice(0, at).replace(/\r$/, '');
+      rest = rest.slice(at + 1);
+    }
+  }
+  rest += decoder.decode();
+  if (rest !== '') yield rest.replace(/\r$/, '');
+}
+
 // Parse response bytes into lines. Blank lines are skipped. Each non-blank line is either an
 // object (kept, and indexed by its string id) or a bad line (kept as undefined in `list`).
 // With `finite`, a line holding a number too large to be finite is a bad line too.

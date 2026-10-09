@@ -6,7 +6,7 @@ section SY "Reading a file"
     problem is not checked further (REQ-RC-005), so most of them need no oracle.
 
 req SY-001 "Lines"
-  decision D-004, D-014, D-018
+  decision D-004, D-014, D-018, D-020
   text
     A file MUST be read as UTF-8 text, with a byte order mark at its start ignored, and with CR
     LF and a lone CR each ending a line as LF does. White space at the end of a line MUST be

@@ -108,3 +108,17 @@ test('regen: a builder that ignores SIGTERM is killed after --max-minutes', { sk
     assert.ok(Date.now() - t0 < 5000);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+test('transcripts: places a builder named outside its work folder, inline scripts and written files included', async () => {
+  const { scanTranscript } = await import('../selfhost/transcripts.mjs');
+  const use = (name, input) => JSON.stringify({ type: 'assistant', message: { content: [{ type: 'tool_use', name, input }] } });
+  const text = [
+    use('Read', { file_path: '/sb/abc/w/SPEC.md' }),
+    use('Bash', { command: 'node -e "console.log(require(\'fs\').readFileSync(\'/home/someone/x.mjs\', \'utf8\'))"' }),
+    use('Bash', { command: 'cat ../meta/transcript.jsonl' }),
+    use('Write', { file_path: '/sb/abc/w/a.mjs', content: "import { readFileSync } from 'node:fs';\nreadFileSync('/etc/hosts');\n" }),
+    use('Bash', { command: 'node --test' }),
+  ].join('\n');
+  const hits = scanTranscript(text, '/sb/abc/w', '/sb/abc');
+  assert.deepEqual(hits.map((h) => [h.line, h.tool]), [[2, 'Bash'], [3, 'Bash'], [4, 'Write']]);
+});

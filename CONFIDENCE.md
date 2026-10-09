@@ -317,7 +317,7 @@ written, except for these, which are corrected above and in the run records:
 | L01 was said to have written no driver; it wrote one Node cannot run, and no REGEN.json | claim 2, L01 |
 | The gate record was said to be 794 lines, and its parts were counted by no stated rule | 793 lines; the parts as non-blank lines |
 | The round-seven records said duramen had been fixed, in the commit before the fix (a1b7b16, then 55ae953) | the records now name 55ae953 |
-| s12's record called a choice `clarify` that s13's called already pinned, though it is a 0.9.0 proposal | both `clarify`; s13 has 4, and 18 already pinned |
+| s12's record called a choice `clarify` that s13's called already pinned, though it is a proposal for the next version | both `clarify`; s13 has 4, and 18 already pinned |
 | Claim 1's 18 of 72 counted five checkers' answers; for duramen, s08 and s09 it is 15, and 12 alike in both builds | claim 1 gives both |
 | s13's record counted kept records with requests that were not kept (87, 29) | 46 records, 14 answered in more than one way; the other requests are described, not counted |
 | Claim 4 judged the 168 example cases of each build, not the 3 protocol cases of each run | said in claim 4 |
@@ -332,5 +332,32 @@ written, except for these, which are corrected above and in the run records:
 It could not check what the repository does not hold: the builders' transcripts (the ledgers
 keep their sha256), L01's transcript on Craig's PC, and the first run of `duramen mutate` on the
 gate. It was not asked to read RCAN's sources. While these were corrected, one more mismatch
-turned up: the proposals for 0.9.0 in s12's and s13's records were cited by numbers from an
+turned up: the proposals for the next version in s12's and s13's records were cited by numbers from an
 older, longer list. The list is now numbered, and the citations match it.
+
+## The pull request's review
+
+An automated review of [pull request #2](https://github.com/craigm26/duramen/pull/2) then found
+two more problems. Both were real.
+
+- **Node.js 24 and later.** Their readline also ends a line at U+2028 and U+2029, which JSON
+  leaves raw in strings. `spec/`'s echo fixture read requests with readline, so on those
+  versions REQ-SY-001's example of those characters failed for every checker. The fixture now
+  splits lines itself ([D-020](spec/90-decisions.duramen)). No example's answer changed, but
+  each example carries the fixture's text, so `duramen diff` calls the change tightening and
+  duramen-core is 0.9.0; s12 and s13 pass it, 235/235, and are fixed points. `duramen mcp` and
+  the gate's driver split their own lines too. Running the tests on Node.js 24 then found a
+  bug in V8's JSON.parse, which can misread an escaped key after an object with a key that is
+  one backslash ([DESIGN.md](DESIGN.md#nodejs-versions)). duramen warns when it runs on an
+  engine with it. Every result above ran on Node.js 22, which has neither problem.
+- **What "blind" rests on.** The builders' tools allow `node` and `python`, which can read
+  whatever the user can: the work folder confines file names, not code, and the audit does not
+  read inside inline scripts. That nothing outside the folder was read rests on the transcripts.
+  [`selfhost/transcripts.mjs`](selfhost/transcripts.mjs) reads all of them: every command with
+  its inline scripts and here-documents, every file written, every path read. Over the sixteen
+  kept transcripts of the Claude builders (s01 to s13, s10b, g01 and g02), it finds three
+  commands that named `/tmp`, which Claude Code's permission rules refused, and otherwise only
+  code and test data that mention paths. The transcripts are not in this repository, since they
+  hold local paths; the ledgers keep their sha256. L01's transcript, on Craig's PC, was audited
+  there by `duramen regen` and not read this way.
+

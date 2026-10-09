@@ -41,8 +41,10 @@ node examples/rcan-gate/sweep.mjs
 | `duramen mutate` on the oracle | 148 mutants: 138 caught, 10 that change no answer, all shown equivalent below (the same at 1.0.0 and 1.1.0) |
 | Choices recorded by the builders | 19: no `pin`, no `clarify`; 4 in the gaps the record leaves open, 12 already pinned, 3 quirks |
 
-Each build's audit counts one violation: a command naming `/tmp/x`, which the sandbox refused,
-so nothing ran outside the work folder.
+Each build's audit counts one violation: a command naming `/tmp/x`, which Claude Code's
+permission rules refused, so it did not run. Those rules limit which commands run, not what an
+allowed `node` or `python` reads; that the builds read nothing outside their folders rests on
+their transcripts.
 
 On two corners the record leaves open, the answers differ. With `1e400` in a member nobody
 names, g01 and the oracle echo it as `null`, and g02 refuses the line (OPEN-OP-001). A line

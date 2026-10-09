@@ -19,7 +19,8 @@ with pass criteria written before the runs, and what the runs showed: four pass 
 An agent that had not seen the work checked the results against this repository; its
 corrections are listed there.
 
-Status: prototype, version 0.2.0. Node.js 22.18 or later, no dependencies.
+Status: prototype, version 0.2.0. Node.js 22.18 or later (Node.js 24 and later have a JSON.parse
+bug that duramen warns of: [DESIGN.md](DESIGN.md#nodejs-versions)), no dependencies.
 
 ```
 node bin/duramen.mjs check examples/heat-engine
@@ -168,10 +169,14 @@ Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
     which, this time, duramen was the one most often out of step: it decoded standard input one
     64 KiB read at a time, kept members in objects that inherit `__proto__`, and applied `from`
     lines out of order. It was fixed after the round, in 55ae953 ([s12](selfhost/s12-ts.md),
-    [s13](selfhost/s13-py.md)).
+    [s13](selfhost/s13-py.md)). 0.9.0 changes only the fixture that the examples' records use as
+    their oracle, which Node.js 24 broke ([D-020](spec/90-decisions.duramen)); s12 and s13 pass
+    it.
 
 Blind means the builders were not shown duramen's source; the spec they read describes duramen
-in detail, and these builds by three models of one family are a small sample.
+in detail, and these builds by three models of one family are a small sample. Their tools
+could have read it (`node` and `python` read any file the user can); their transcripts show
+that none did ([`selfhost/transcripts.mjs`](selfhost/transcripts.mjs), CONFIDENCE.md).
 
 ## A second domain: a robot command gate
 

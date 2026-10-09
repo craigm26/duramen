@@ -41,7 +41,10 @@ record adds one line of context.
 
 `lib/regen/agent.mjs` gives the model six tools (`list_files`, `read_file`, `write_file`,
 `edit_file` confined to the work folder; `run`, for one command of the language's toolchain;
-`finish`) and writes a transcript that `duramen regen` audits. Endpoints:
+`finish`) and writes a transcript that `duramen regen` audits. The tools confine file names,
+not code: `run` starts `node` or `python`, which can read and write whatever the user running
+`duramen regen` can. Run a model you do not trust in a container or as a user that holds
+nothing it should not see; the same holds for the Claude Code builder. Endpoints:
 
 | Server | `--agent` |
 |---|---|

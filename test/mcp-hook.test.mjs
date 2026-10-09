@@ -13,6 +13,7 @@ function mcp(messages) {
   return new Promise((done, fail) => {
     const child = spawn(process.execPath, [BIN, 'mcp'], { stdio: ['pipe', 'pipe', 'pipe'] });
     let out = '';
+    child.stdout.setEncoding('utf8');
     child.stdout.on('data', (d) => { out += d; });
     child.on('error', fail);
     child.on('close', () => {
@@ -79,6 +80,15 @@ test('mcp: brief and cases of a record that checks clean', async () => {
   const cases = a.get(2).result.content[0].text.split('\n');
   assert.equal(cases[0], '1 cases');
   assert.deepEqual(JSON.parse(cases[1]).checks, [{ path: 'result', kind: 'eq', value: 2, from: 'oracle' }]);
+});
+
+test('mcp: a message holding U+2028 or U+2029 is one message', async () => {
+  // JSON leaves these characters raw in strings; from Node 24, readline would end a line there.
+  const files = { 'a.duramen': 'duramen 0.1\nspec a 1\nnote\n  text\n    One\u2028two\u2029three.\n' };
+  const answers = await mcp([call(1, 'check', { files })]);
+  assert.equal(answers.size, 1);
+  assert.equal(answers.get(1).error, undefined);
+  assert.match(answers.get(1).result.content[0].text, /0 errors/);
 });
 
 test('hook: a .duramen edit is checked, its problems block, other files pass through', async () => {

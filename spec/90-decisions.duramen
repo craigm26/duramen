@@ -224,3 +224,16 @@ decision D-019 "The comparison is specified"
     the language, and which response is a case's answer, stay open. Why: a regenerated judge
     is the last piece of the loop that a specification can give to a builder.
   rejected "A verdict of pass or fail alone: two judges that fail one case for different reasons would look alike."
+
+decision D-020 "The echo fixture splits its own lines"
+  source Node.js 24 and later, whose readline also ends a line at U+2028 and U+2029; found by an automated review of the pull request that brought 0.8.0
+  text
+    `fixtures/echo.mjs`, the oracle of the records inside this record's examples, read its
+    input with Node's readline. From Node.js 24, readline also ends a line at U+2028 and
+    U+2029, which JSON leaves raw inside strings, so a request holding one reached the fixture
+    as two lines, and REQ-SY-001's example of those characters failed there for every checker.
+    Decision: the fixture reads its input whole and ends a line at LF, CR LF or CR, as readline
+    did before. No example's answer changes. Each example that carries the fixture holds its
+    text, so their requests change, `duramen diff` calls the record tighter, and its version
+    is 0.9.0.
+  rejected "Keep the fixture and require Node.js 22: the record would fail on the current Node.js for a reason that is not duramen's."
