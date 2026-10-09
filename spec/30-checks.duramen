@@ -211,7 +211,7 @@ req CK-005 "Expected errors are declared"
     expect result.diagnostics = ["s.duramen:10: error T023", "s.duramen:13: error T023"]
 
 req CK-006 "Obligations live in requirements"
-  decision D-006, D-014, D-021
+  decision D-006, D-014, D-021, D-022
   text
     The words MUST, MUST NOT, SHALL, SHALL NOT and REQUIRED, in capitals and as whole words,
     state obligations, and obligations belong in requirements, where they have an ID and
@@ -223,7 +223,8 @@ req CK-006 "Obligations live in requirements"
     whole when no ASCII letter, ASCII digit or `_` touches it, so `MUST-have` and `MUSTé` hold
     MUST. A word inside a quotation on one line, between `"` and `"`, `“` and `”`, or a pair
     of backquotes, is not such a word (the lines of a condition, and of a rejected alternative
-    once its JSON string is read, are lines here too), and titles are not checked;
+    once its JSON string is read, are lines here too, ended at LF, CR LF or a lone CR as in
+    REQ-SY-001), and titles are not checked;
     ``` ``MUST`` ``` is MUST between two empty quotations. A quotation is not part of the words
     around it: ``` x`a`MUST ``` holds MUST, and ``` MU`a`ST ``` holds no word.
   example check {}
@@ -304,6 +305,16 @@ req CK-006 "Obligations live in requirements"
           Fine.
         rejected "\"It\nMUST\" be"
     expect result.diagnostics = ["s.duramen:3: error T004", "s.duramen:9: error T004", "s.duramen:12: error T004", "s.duramen:12: warning T012"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      decision D-1 "d"
+        source s
+        text
+          Fine.
+        rejected "\"It\rMUST\" be"
+    expect result.diagnostics = ["s.duramen:3: error T004", "s.duramen:3: warning T012"]
 
 req CK-007 "Open items are not tested"
   decision D-014

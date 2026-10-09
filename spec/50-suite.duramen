@@ -213,7 +213,7 @@ req SU-004 "Checks"
     expect result.cases.1.checks = [{"path": "result.x", "kind": "approx", "value": 2.25, "tol": 0.5}]
 
 req SU-005 "The oracle's whole answer"
-  decision D-018, D-021
+  decision D-018, D-021, D-022
   text
     A case's `full` MUST be the oracle's whole answer to its request, as an object with:
     `members`, the names of the response's members, sorted by UTF-16 code units; `error`, the
@@ -262,6 +262,19 @@ req SU-005 "The oracle's whole answer"
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.cases.0.full = {"members": ["audit", "id", "result"], "result": 1, "tolerances": {}}
     expect result.cases.1.full = {"members": ["audit", "id", "result"], "result": 1, "tolerances": {}}
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+        tolerance __proto__ 1
+        tolerance result.constructor 2
+      req A "a"
+        example f {"x": 1}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.cases.0.full.tolerances = {"__proto__": 1, "result.constructor": 2}
   example cases {}
     input files."s.duramen"
       duramen 0.1

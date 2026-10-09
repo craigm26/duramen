@@ -330,7 +330,7 @@ req SY-006 "Quoted strings, IDs and titles"
     expect result.diagnostics = []
 
 req SY-007 "Operations"
-  decision D-013, D-014, D-015, D-017, D-018
+  decision D-013, D-014, D-015, D-017, D-018, D-022
   text
     `op <name>` declares an operation; the name is one word, else P031, and its clauses are
     still read. Its clauses:
@@ -338,8 +338,9 @@ req SY-007 "Operations"
       `<name>? <type>` when it may be left out; a name is ASCII letters, digits, `_` and `-`,
       and in the core language a type is any text, for people (OPEN-RC-001). Fields are
       separated by commas that are not inside double quotes (where a backslash keeps the
-      character after it inside) or inside brackets, braces or parentheses; a closing bracket,
-      brace or parenthesis with no opening one before it is an ordinary character. A field of
+      character after it inside) or inside brackets, braces or parentheses, which are counted
+      together: a closing one of any of the three kinds closes the latest one opened, of
+      whatever kind, and one with none open is an ordinary character. A field of
       any other form, including an empty one (an `input` clause with nothing, or nothing
       between two commas), MUST get P017 and nothing else: it claims no name. A second
       well-formed field of one name in an operation MUST get P052. An operation may have
@@ -443,6 +444,18 @@ req SY-007 "Operations"
         tolerance result.x result
         tolerance result.x 2
     expect result.diagnostics = ["s.duramen:5: error P052", "s.duramen:9: error P018", "s.duramen:10: error P052"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input a (x}, b json
+      req A "a"
+        example f {"b": 1}
+          expect result.b = 1
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:7: error T010"]
 
 req SY-008 "The errors list"
   decision D-011, D-014
@@ -841,7 +854,7 @@ req SY-011 "Texts in an example's input"
     expect result.diagnostics = ["s.duramen:17: error P049", "s.duramen:18: error P048", "s.duramen:19: error P049", "s.duramen:20: error P048"]
 
 req SY-012 "Tables"
-  decision D-011, D-015, D-016, D-017, D-018
+  decision D-011, D-015, D-016, D-017, D-018, D-022
   text
     `table <op>` writes examples of one operation as rows: the lines under it that start with
     `|`, indented four spaces or more (a row indented three MUST get P006). Any other line
@@ -858,7 +871,7 @@ req SY-012 "Tables"
     which is the rest of the cell; anything else after the name makes the cell of no form. A
     name is an expectation path when it is `result`, `audit`, `error` or `id`, alone or
     followed by `.` and the rest of the path (whose names may be empty, REQ-OR-003, and may
-    hold `=`, `≈` and `~`, which end a path only in an `expect` line), also when the operation
+    hold `=`, `≈` and `~`, which end a path only in an `expect` line), even when the operation
     declares an input field of that name; any other name of ASCII letters, digits, `_` and `-`
     is the name of an input field. A tolerance is a JSON number of 0 or more, else P010; a
     tolerance after an input field MUST get P010 too; and a column whose tolerance gets P010
@@ -976,6 +989,19 @@ req SY-012 "Tables"
   example check {"files": {"s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json, id? json\nreq A \"a\"\n  table f\n    | answer | result.k=1 | result.k~2 ± 0.5 | id |\n    |\u00a0---\t|---|:-:|\u3000|\n    | {\"result\": {\"k=1\": 1, \"k~2\": 2.25}} | 1 | 2 | \"A#1\" |\n  table f\n    | answer | result.a b |\n    | 1 | 2 |\n"}}
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:12: error P013"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input result? json
+      req A "a"
+        table f
+          | result |
+          | 1 |
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:9: error T002"]
 
 req SY-013 "Numbers too large for binary64"
   decision D-017
