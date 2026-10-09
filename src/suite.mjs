@@ -31,9 +31,12 @@ function sameResult(a, b, tolerances, path = 'result') {
 
 const members = (resp) => Object.keys(resp).sort();
 
-const fullAnswer = (resp, op) => (resp && !('oracle_error' in resp)
-  ? { members: members(resp), error: resp.error, result: resp.result, audit: op?.audit && typeof resp.audit === 'string' ? resp.audit : undefined, tolerances: op?.tolerances ?? {} }
-  : null);
+// The whole answer to one request, as a case's `full` holds it (REQ-SU-005): the suite, `duramen
+// agree` and `duramen mutate` all compare answers through it. An audit is kept only when the
+// operation declares one and the response's `audit` is a string, as `judge` takes no other.
+export const wholeAnswer = (resp, op) => ({ members: members(resp), error: resp.error, result: resp.result, audit: op?.audit && typeof resp.audit === 'string' ? resp.audit : undefined, tolerances: op?.tolerances ?? {} });
+
+const fullAnswer = (resp, op) => (resp && !('oracle_error' in resp) ? wholeAnswer(resp, op) : null);
 
 export function generateCases(ast, oracle, propertyRuns = []) {
   const cases = [];

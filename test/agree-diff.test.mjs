@@ -84,3 +84,33 @@ req A "a"
     assert.equal(r.version.ok, false); // 1.0.0 -> 1.1.0 is too small for a breaking change
   });
 });
+
+test('agree: an audit that is not a string is no part of the answer, in either order (REQ-SU-005)', async () => {
+  const AUDITED = (audit) => `import { readFileSync } from 'node:fs';
+for (const line of readFileSync(0, 'utf8').split('\\n')) {
+  if (!line.trim()) continue;
+  const r = JSON.parse(line);
+  console.log(JSON.stringify({ id: r.id, result: { sum: r.input.a + r.input.b }, audit: ${JSON.stringify(audit)} }));
+}`;
+  const spec = src(`
+duramen 0.2
+spec calc 1.0.0
+oracle node calc.mjs
+op add
+  input a integer in 0 .. 5, b integer in 0 .. 5
+  audit
+req ADD-1 "Adds"
+  example add {"a": 1, "b": 2}
+    expect result.sum = 3
+`);
+  await withFiles({ 'calc.mjs': AUDITED('x'), 'calc.duramen': spec, 'five/calc.mjs': AUDITED(5), 'six/calc.mjs': AUDITED(6), 'text/calc.mjs': AUDITED('y') }, async (dir) => {
+    const { ast } = loadRecord(join(dir, 'calc.duramen'));
+    const at = (name) => ({ name, command: 'node calc.mjs', cwd: join(dir, name) });
+    assert.deepEqual((await agree(ast, [at('five'), at('six')], { samples: 5 })).disagreements, []);
+    for (const order of [[at('five'), at('text')], [at('text'), at('five')]]) {
+      const r = await agree(ast, order, { samples: 5 });
+      assert.equal(r.disagreements.length, 5);
+      assert.equal(r.disagreements[0].groups.length, 2);
+    }
+  });
+});

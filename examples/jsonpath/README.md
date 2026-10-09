@@ -63,6 +63,11 @@ included). Lines are non-blank lines outside test files. The oracle is 679 non-b
   normative, wraps the pattern without escaping them, which makes them anchors there. The suite
   follows section 5.3. B and C state the literal reading in words and examples, and every A
   build chose it from the RFC.
+- **Valid and invalid queries.** [`generate.mjs`](generate.mjs) builds some invalid queries on
+  purpose before it mutates a quarter of them (its header says so), and 3,312 of the 6,000
+  requests are invalid queries by the oracle. On the other 2,688, every sonnet build of every
+  brief gave the oracle's answer to every request; all the disagreement is about which
+  malformed queries to reject.
 - **What the generated requests found and the suite does not test.** All four A sonnet builds
   accepted blank space inside the brackets of a singular query used as a comparable or a
   function's argument (`@[ 1]`), and A-sonnet-2-py also a dot before a bracket (`$.['A']`);

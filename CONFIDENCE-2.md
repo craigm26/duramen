@@ -184,6 +184,15 @@ ended. Every build, its run record and both reports are in
   grammar rejects both, and both written briefs say so. C-sonnet-1-ts and C-haiku-2-ts accepted a tab inside such brackets,
   which C's own decision D-003 rejects; its examples show only spaces. The compliance suite
   tests none of these.
+- **What the generated requests measure.** The generator, pinned with these criteria, builds
+  invalid queries on purpose before its mutation step too (its header says so: blank space where
+  the grammar forbids it, names that are no shorthand, spellings of numbers and patterns that are
+  not valid), which this file's description of it above leaves out; 3,312 of the 6,000 requests
+  are invalid queries by the oracle. On the other 2,688, every sonnet build of every brief gave
+  the oracle's answer to every request. All of the disagreement is about which malformed
+  queries to reject. Criterion 3 as registered is over all 6,000; over the valid queries alone
+  it would hold (100% for A, B and C), which changes no verdict, since criterion 2 does not hold
+  either way (found by an automated review of the pull request).
 - **C's builds inherited a false example.** duramen's renderer wrote a backtick inside an
   example's query as `ˋ` (U+02CB), so C's brief said that `$.ˋa` is not a valid query, where
   RFC 9535 allows that name. All six C builds noticed that the example and the rule disagree;
@@ -243,8 +252,9 @@ as counting against the language, both ways. "Claude builds well from a clear sp
 and for this builder even the RFC alone is nearly enough. JSONPath may be the hardest place for
 a brief to show its worth: RFC 9535 dates from February 2024, the compliance suite is public,
 and the models have most likely seen both and many implementations ("blind" means not shown,
-not never seen). Where the briefs did differ, the A builds misread two corners of RFC 9535's
-grammar that both written briefs spell out, which the generated requests and C's suite caught
+not never seen). On every valid query the 12 sonnet builds answered alike. Where the briefs did
+differ, about malformed queries, the A builds misread two corners of RFC 9535's grammar that
+both written briefs spell out, which the generated requests and C's suite caught
 and the compliance suite does not test; there C did no better than B. And C alone carried an
 error into its builds, from duramen's own renderer. Four builds per brief is a small sample,
 but no sample size turns 2.00, 2.00 and 2.00 into a large effect.
