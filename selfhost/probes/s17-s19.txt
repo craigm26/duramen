@@ -1,0 +1,237 @@
+# Records and requests written to try the choices of round nine's builds: s17 (TypeScript,
+# claude-sonnet-5-5), s18 (Python, claude-sonnet-5-5) and s19 (TypeScript, claude-opus-5-5),
+# all from duramen-core 0.10.0. Read by selfhost/probe.mjs (see s14-s16.txt for the format).
+# Round nine's probes are this file and the five earlier ones, sent to duramen and to every
+# checker of the round.
+
+=== s17 C-10, s18 C-20: a rejected alternative with a quotation across a lone CR, and across CR LF
+duramen 0.1
+spec s 1
+decision D-1 "d"
+  source s
+  rejected "\"It\rMUST\" be"
+decision D-2 "e"
+  source s
+  rejected "\"It\r\nMUST\" be"
+
+=== s17 C-11, s18 C-13, s19 C-14: input fields after an opening parenthesis and a closing brace
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input a (x}, b json
+req A "a"
+  example f {"b": 1}
+    expect result.b = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s17 C-11, s18 C-13, s19 C-14: input fields after an opening bracket and a closing parenthesis, the name repeated
+duramen 0.1
+spec s 1
+op f
+  input a [x), a json
+
+=== s17 C-13: an input line whose path is empty before from
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {}
+    input from "t.txt"
+    expect result = {}
+--- echo.mjs from spec/fixtures/echo.mjs
+--- t.txt
+T
+
+=== s17 C-14, s19 C-8: lines indented one space in the body of an unknown statement, and under an unknown clause
+duramen 0.1
+spec s 1
+thing x
+ one space
+note
+  other
+ one space
+
+=== s17 C-14, s19 C-8: a line indented one space in the body of a statement of the rest of the language
+duramen 0.1
+spec s 1
+type t
+ one space
+
+=== s17 C-15: an empty raw example in single quotes
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example raw ''
+    expect result = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s17 C-18: an example that leaves out op, in the batch, the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    omit op
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s17 C-21: where a table's problems are reported
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f g
+    | x | result.x |
+    | 1 | 1 |
+  table f
+    | x | x |
+    | 1 | 1 |
+  table f
+    | x | result.x ± -1 | nope! |
+    | 1 | 1 | 1 |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s17 C-23, s18 C-15: judge, a tolerance and a value too large for binary64
+@raw
+"{\"id\":\"j\",\"op\":\"judge\",\"input\":{\"case\":{\"checks\":[{\"path\":\"result\",\"kind\":\"approx\",\"value\":1e400,\"tol\":1e400}],\"full\":null},\"answer\":{\"id\":\"x\",\"result\":1}}}"
+
+=== s18 C-6: a column named result when the operation declares an input field result
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input result? json
+req A "a"
+  table f
+    | result |
+    | 1 |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s18 C-6: columns named id and error when the operation declares those input fields, the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input id? json, error? json
+req A "a"
+  table f
+    | id | error |
+    | "A#1" | ? |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s18 C-21: T005 with codes named in capitals
+duramen 0.1
+spec s 1
+errors
+  a when one
+  b when two
+req R "r"
+  text
+    A is reported before B.
+
+=== s18 C-27: judge, full with an error that is null, answered with and without an error
+@op judge
+@input {"case": {"checks": [], "full": {"members": ["error", "id"], "error": null, "tolerances": {}}}, "answer": {"id": "x"}}
+
+=== s18 C-27: judge, full with an error that is null, answered with one
+@op judge
+@input {"case": {"checks": [], "full": {"members": ["error", "id"], "error": null, "tolerances": {}}}, "answer": {"id": "x", "error": null}}
+
+=== s18 C-28: superseded by with a word after the ID, and with a tab
+duramen 0.1
+spec s 1
+decision D-1 "d"
+  source s
+  status superseded by D-2 now
+decision D-2 "e"
+  source s
+  status superseded	by D-1
+
+=== s19 C-7: a tab-indented line before the first statement
+	# a comment
+duramen 0.1
+spec s 1
+
+=== s19 C-12: a from name that climbs above the request's files and comes back
+duramen 0.1
+spec s 1
+op f
+  input x? json
+req A "a"
+  example f {}
+    input x from "../t.txt"
+  example f {}
+    input x from "sub/../../t.txt"
+  example f {}
+    input x from "../sub/../t.txt"
+--- t.txt
+T
+
+=== s19 C-16: spec, op and table words separated by U+00A0 and U+3000
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f g
+  input x? json
+req A "a"
+  table f　g
+    | x | result.x |
+    | 1 | 1 |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s19 C-17: T010 and T011 for an example that leaves out its input
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x number
+req A "a"
+  example f {"y": 1}
+    omit input
+    expect result = ?
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s19 C-18: an audit path through an audit that is not a string
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+  audit
+req A "a"
+  example f {"answer": {"result": 1, "audit": {"x": 1}}}
+    expect audit.x = 1
+  example f {"answer": {"result": 1, "audit": "{\"x\": 1}"}}
+    expect audit.x = 1
+  example f {"answer": {"result": 1, "audit": {"x": 1}}}
+    expect audit = {"x": 1}
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s19 C-24: an example whose JSON input is followed by more text
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {} extra
+  example f {"x": 1} {"y": 2}
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s19 C-25: a title with nothing after it, and an empty title string
+duramen 0.1
+spec s 1
+  title
+  title ""

@@ -1,0 +1,705 @@
+{
+ "round": "round9",
+ "mutantsPerSeed": 1500,
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "builds": [
+  {
+   "name": "s17-ts",
+   "dir": "selfhost/impl/s17-ts",
+   "suite": {
+    "passed": 239,
+    "total": 239
+   },
+   "fixedPoint": true,
+   "fixedPointText": true,
+   "checker": true,
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3364,
+     "same": 3362,
+     "records": 1
+    },
+    {
+     "seed": 3,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    }
+   ]
+  },
+  {
+   "name": "s18-py",
+   "dir": "selfhost/impl/s18-py",
+   "suite": {
+    "passed": 239,
+    "total": 239
+   },
+   "fixedPoint": true,
+   "fixedPointText": false,
+   "checker": true,
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3364,
+     "same": 3362,
+     "records": 1
+    },
+    {
+     "seed": 3,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    }
+   ]
+  },
+  {
+   "name": "s19-ts",
+   "dir": "selfhost/impl/s19-ts",
+   "suite": {
+    "passed": 239,
+    "total": 239
+   },
+   "fixedPoint": true,
+   "fixedPointText": false,
+   "checker": true,
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3364,
+     "same": 3362,
+     "records": 1
+    },
+    {
+     "seed": 3,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    }
+   ]
+  }
+ ],
+ "checkers": [
+  "s17-ts",
+  "s18-py",
+  "s19-ts"
+ ],
+ "splits": {
+  "records": 1,
+  "mutated": 1,
+  "unmutated": 0,
+  "list": [
+   {
+    "record": "2/660",
+    "by": [
+     "s17-ts",
+     "s18-py",
+     "s19-ts"
+    ]
+   }
+  ]
+ },
+ "pairs": [
+  {
+   "a": "s17-ts",
+   "b": "s18-py",
+   "records": [],
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 3,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    }
+   ]
+  },
+  {
+   "a": "s17-ts",
+   "b": "s19-ts",
+   "records": [],
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 3,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    }
+   ]
+  },
+  {
+   "a": "s18-py",
+   "b": "s19-ts",
+   "records": [],
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    },
+    {
+     "seed": 3,
+     "requests": 3364,
+     "same": 3364,
+     "records": 0
+    }
+   ]
+  }
+ ],
+ "detail": {
+  "builds": [
+   {
+    "name": "s17-ts",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3364,
+      "same": 3362,
+      "differ": 2,
+      "records": [
+       "2/660"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error T034, warning T032, error T029, error T029 | D1 -",
+        "count": 1,
+        "examples": [
+         {
+          "id": "660:check",
+          "from": "REQ-SU-005#2",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\nreq A \"a\"\n  example f {\"answer\": {\"result\": 1, \"audit\": 5}}\n  example f {\"answer\": {\"result\": 1, \"audit\": null}}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "660:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error T034",
+             "s.duramen:7: warning T032",
+             "s.duramen:8: error T029",
+             "s.duramen:9: error T029"
+            ],
+            "errors": 3,
+            "warnings": 1
+           }
+          },
+          "d1": {
+           "id": "660:check",
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 3 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "660:cases",
+          "from": "REQ-SU-005#2",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\nreq A \"a\"\n  example f {\"answer\": {\"result\": 1, \"audit\": 5}}\n  example f {\"answer\": {\"result\": 1, \"audit\": null}}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "660:cases",
+           "result": {
+            "errors": 3,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "660:cases",
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": 5}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "result": 1,
+               "tolerances": {}
+              }
+             },
+             {
+              "id": "A#2",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": null}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "result": 1,
+               "tolerances": {}
+              }
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     }
+    ]
+   },
+   {
+    "name": "s18-py",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3364,
+      "same": 3362,
+      "differ": 2,
+      "records": [
+       "2/660"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error T034, warning T032, error T029, error T029 | D1 -",
+        "count": 1,
+        "examples": [
+         {
+          "id": "660:check",
+          "from": "REQ-SU-005#2",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\nreq A \"a\"\n  example f {\"answer\": {\"result\": 1, \"audit\": 5}}\n  example f {\"answer\": {\"result\": 1, \"audit\": null}}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "660:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error T034",
+             "s.duramen:7: warning T032",
+             "s.duramen:8: error T029",
+             "s.duramen:9: error T029"
+            ],
+            "errors": 3,
+            "warnings": 1
+           }
+          },
+          "d1": {
+           "id": "660:check",
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 3 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "660:cases",
+          "from": "REQ-SU-005#2",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\nreq A \"a\"\n  example f {\"answer\": {\"result\": 1, \"audit\": 5}}\n  example f {\"answer\": {\"result\": 1, \"audit\": null}}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "660:cases",
+           "result": {
+            "errors": 3,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "660:cases",
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": 5}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "tolerances": {},
+               "result": 1
+              }
+             },
+             {
+              "id": "A#2",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": null}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "tolerances": {},
+               "result": 1
+              }
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     }
+    ]
+   },
+   {
+    "name": "s19-ts",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3364,
+      "same": 3362,
+      "differ": 2,
+      "records": [
+       "2/660"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error T034, warning T032, error T029, error T029 | D1 -",
+        "count": 1,
+        "examples": [
+         {
+          "id": "660:check",
+          "from": "REQ-SU-005#2",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\nreq A \"a\"\n  example f {\"answer\": {\"result\": 1, \"audit\": 5}}\n  example f {\"answer\": {\"result\": 1, \"audit\": null}}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "660:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error T034",
+             "s.duramen:7: warning T032",
+             "s.duramen:8: error T029",
+             "s.duramen:9: error T029"
+            ],
+            "errors": 3,
+            "warnings": 1
+           }
+          },
+          "d1": {
+           "id": "660:check",
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 3 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "660:cases",
+          "from": "REQ-SU-005#2",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\nreq A \"a\"\n  example f {\"answer\": {\"result\": 1, \"audit\": 5}}\n  example f {\"answer\": {\"result\": 1, \"audit\": null}}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "660:cases",
+           "result": {
+            "errors": 3,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "660:cases",
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": 5}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "tolerances": {},
+               "result": 1
+              }
+             },
+             {
+              "id": "A#2",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"answer\": {\"result\": 1, \"audit\": null}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "tolerances": {},
+               "result": 1
+              }
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     }
+    ]
+   }
+  ],
+  "pairs": [
+   {
+    "a": "s17-ts",
+    "b": "s18-py",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 3,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     }
+    ]
+   },
+   {
+    "a": "s17-ts",
+    "b": "s19-ts",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 3,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     }
+    ]
+   },
+   {
+    "a": "s18-py",
+    "b": "s19-ts",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 3,
+      "requests": 3364,
+      "same": 3364,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     }
+    ]
+   }
+  ]
+ }
+}
