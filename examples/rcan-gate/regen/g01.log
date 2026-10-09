@@ -1,0 +1,6 @@
+  sandbox mhwqdz: brief written, leak check ok; launching sonnet (ts)
+  builder exited with 0 after 2.3 min
+run g01: claude-sonnet-5-5 (ts), 18 turns, 2.3 min, $0.61
+  audit: 1 violations, init ok, 1 denied calls
+  suite: passed 209/209
+  build copied to examples/rcan-gate/regen/impl/g01-ts; 9 choices to triage in examples/rcan-gate/regen/g01-ts.md

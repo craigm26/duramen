@@ -1,0 +1,793 @@
+# rcan-gate: whether a robot may carry out a command. A second domain for duramen (CONFIDENCE.md,
+# claim 5). The rules come from the RCAN robot communication protocol: the specification at
+# rcan.dev (its source, github.com/RobotRegistryFoundation/rcan-spec, at 0f425ec) and the
+# TypeScript SDK rcan-ts at b563fb5. Where those disagree, or say nothing, a decision says which
+# reading this record takes and why. The oracle is oracle.mjs, written to this record.
+
+duramen 0.2
+
+spec rcan-gate 1.0.0
+  title "A command gate for an RCAN robot: emergency stops, freshness, replay, roles, assurance, limits and confidence"
+  text
+    `rcan-gate` decides whether a robot may carry out a command. It is a pure function: the
+    gate's **state** and one **command** in; a **decision** (`execute`, `refuse` or `hold`), the
+    **reason** for it, and the **next state** out. The caller keeps the state, passes the next
+    state in with the next command, and sets the clock (`now`) itself. The gate reads nothing
+    else: no clock, no files, no network.
+
+    The rules follow the RCAN robot communication protocol (rcan.dev). An emergency stop
+    (ESTOP) is never blocked. A command that is too old or from the future is refused, and a
+    message ID works once. Each scope needs a lowest role, and each command a lowest level of
+    assurance (LoA) of its sender's identity. A stopped or e-stopped robot does not move. Joint
+    positions stay within their limits and speed under a maximum. A command that a model
+    produced with too little confidence is blocked, or held for a person to decide.
+
+    Times are in seconds. A number is an IEEE 754 binary64 value (a JavaScript `number`, a
+    Python `float`), however it is written in JSON (REQ-RQ-005).
+
+oracle node driver.mjs
+  source oracle.mjs
+
+type role = "GUEST" | "OPERATOR" | "CONTRIBUTOR" | "ADMIN" | "M2M_PEER" | "CREATOR" | "M2M_TRUSTED"
+type loa = 1 | 2 | 3
+type tier = "root" | "authoritative" | "community"
+type entry = {id: string, expires: number, ...}
+type gateState = {now: number, estopped?: boolean, stopped?: boolean, minLoaControl?: loa, minLoaSafety?: loa, window?: number, maxSpeed?: number, limits?: {...}, gates?: {...}, seen?: entry[], ...}
+type target = {joint: string, position: number, ...}
+type command = {id: string, timestamp: number, role: role, loa?: loa, tier?: tier, kind: "safety", event: "ESTOP" | "STOP" | "RESUME" | "ESTOP_CLEAR", ...} | {id: string, timestamp: number, role: role, loa?: loa, tier?: tier, kind: "status", ...} | {id: string, timestamp: number, role: role, loa?: loa, tier?: tier, kind: "move", scope: string, targets: target[], speed: number, confidence?: number in 0 .. 1, ...}
+type reason = "estop" | "stale" | "future" | "replay" | "estopped" | "role" | "loa" | "status" | "estop_clear" | "stop" | "resume" | "stopped" | "unknown_joint" | "duplicate_joint" | "limits" | "speed" | "confidence" | "ok"
+
+# Generated inputs. Types named sample* are what the properties are checked on: times around the
+# clock, IDs that collide, joints and scopes that do and do not exist. Types named draw* are where
+# `duramen agree` draws requests from (op decide, draw): the samples, and now and then a malformed
+# member. A union draws each of its alternatives equally often, so an alternative written twice is
+# drawn twice as often; sampleEasy moves pass most early steps, so that the later ones are reached.
+type sampleRange = {min: -2 | -1 | 0, max: 0 | 1 | 2}
+type sampleGate = {min: 0.5 | 0.75 | 0.9, onFail: "block" | "escalate"}
+type sampleEntry = {id: "a" | "b" | "c", expires: 995 | 1000 | 1000.5 | 1010 | 1030}
+type sampleLimits = {base: sampleRange, elbow: sampleRange, wrist: sampleRange, __proto__?: sampleRange, toString?: sampleRange}
+type sampleGates = {control?: sampleGate, teleop?: sampleGate, safety?: sampleGate, Control?: sampleGate, kick?: sampleGate} | {control: sampleGate, kick: sampleGate, safety?: sampleGate}
+type sampleLatch = false | false | false | true
+type sampleMinLoa = 1 | 1 | 2 | 3
+type sampleState = {now: 1000, estopped?: sampleLatch, stopped?: sampleLatch, minLoaControl?: sampleMinLoa, minLoaSafety?: sampleMinLoa, window?: 30 | 12 | 10 | 5, maxSpeed: 0 | 1 | 2 | 2, limits: sampleLimits, gates: sampleGates, seen?: sampleEntry[]}
+type drawOdd = {now: 1000 | "1000" | true, estopped?: boolean | 1 | null, minLoaControl?: 0 | 2 | 4 | 2.5 | true, window?: 30 | 0 | -5 | true, maxSpeed?: 1 | -1 | false, limits?: sampleLimits | "none" | {base: {min: 1, max: -1}}, gates?: sampleGates | {control: {min: 1.5, onFail: "block"}} | {control: {min: 0.5, onFail: "warn"}}, seen?: sampleEntry[] | {id: 1, expires: 1030}[]}
+type drawState = sampleState | sampleState | sampleState | sampleState | sampleState | sampleState | sampleState | sampleState | sampleState | sampleState | sampleState | drawOdd
+type sampleId = "a" | "b" | "c" | "d" | "e" | "f" | "g"
+type sampleTime = 1000 | 1000 | 995 | 990 | 1004.5 | 1005 | 970 | 989.5 | 1005.5 | 900
+type sampleRole = "OPERATOR" | "CREATOR" | "M2M_TRUSTED" | role
+type sampleLoa = 3 | 3 | 2 | 1
+type sampleScope = "control" | "Control" | "CONTROL" | "teleop" | "chat" | "contribute" | "safety" | "Safety" | "config" | "fleet.trusted" | "dance" | "constructor" | "toString" | "__proto__" | "\u212Aick" | "kick"
+type sampleTarget = {joint: "base" | "elbow" | "base" | "elbow" | "wrist" | "gripper" | "toString" | "__proto__", position: -2.5 | -2 | -1 | 0 | 0.5 | 1 | 2 | 2.5}
+type sampleSafety = {id: sampleId, timestamp: sampleTime, role: sampleRole, loa?: sampleLoa, tier?: tier, kind: "safety", event: "ESTOP" | "STOP" | "RESUME" | "ESTOP_CLEAR"}
+type sampleStatus = {id: sampleId, timestamp: sampleTime, role: role, loa?: loa, tier?: tier, kind: "status"}
+type sampleMove = {id: sampleId, timestamp: sampleTime, role: sampleRole, loa?: sampleLoa, tier?: tier, kind: "move", scope: sampleScope, targets: sampleTarget[], speed: 0 | 0.5 | 1 | 1.5 | 2, confidence?: 0 | 0.5 | 0.75 | 0.9 | 1}
+type sampleEasyTarget = {joint: "base" | "elbow" | "wrist", position: 0 | 0 | 0.5 | -1 | 1}
+type sampleEasy = {id: "e" | "f" | "g" | "a", timestamp: 1000 | 999 | 1004, role: "OPERATOR" | "CREATOR" | "M2M_TRUSTED", loa: 3, kind: "move", scope: "control" | "control" | "Control" | "teleop" | "kick" | "\u212Aick" | "safety", targets: sampleEasyTarget[], speed: 0 | 0.5 | 1, confidence: 0.5 | 0.75 | 0.9}
+type drawBad = {id: sampleId | "" | 7, timestamp: sampleTime | "1000" | true, role: role | "guest" | "constructor", loa?: loa | 0 | true | "2", tier?: tier | "Root", kind: "safety" | "status" | "move" | "teleport", event?: "ESTOP" | "STOP" | "estop", scope?: sampleScope | "", targets?: sampleTarget[], speed?: 0 | 1 | -1 | "1" | false, confidence?: 0.5 | 1.5 | -0.5 | null | true}
+type sampleCommand = sampleSafety | sampleStatus | sampleMove | sampleEasy
+type drawCommand = sampleSafety | sampleSafety | sampleSafety | sampleStatus | sampleMove | sampleMove | sampleMove | sampleEasy | sampleEasy | sampleEasy | sampleEasy | drawBad
+
+# ---------------------------------------------------------------------------------------------
+section RQ "Requests"
+
+errors
+  bad_request when the line is not a JSON object, or `id` is missing or not a string (the
+    response then has `"id": null`)
+  unknown_op when `op` is missing, not a string, or not `decide`
+  bad_request when `input` is missing or not an object, or `input.state` or `input.command` is
+    missing or not well formed (REQ-RQ-002, REQ-RQ-003)
+
+op decide
+  input state gateState, command command
+  returns {decision: "execute" | "refuse" | "hold", reason: reason, state: gateState}
+  result `decision`, `reason` and the next `state` (REQ-GT-001)
+  draw state drawState, command drawCommand
+
+req RQ-001 "Requests that cannot be handled"
+  text
+    A request line that cannot be handled MUST get exactly `{"id": <id>, "error": <code>}`,
+    with the code given by the numbered list under Errors, and the driver MUST then go on to
+    the next line. A command the gate refuses is not an error: it gets a result whose
+    `decision` is `refuse`.
+  example raw "{not json"
+    expect id = null
+    expect error = "bad_request"
+  example raw "[1,2]"
+    expect id = null
+    expect error = "bad_request"
+  example raw '{"id":5,"op":"decide","input":{}}'
+    expect id = null
+    expect error = "bad_request"
+  example decide {"state": {"now": 1000}, "command": {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    omit id
+    expect id = null
+    expect error = "bad_request"
+  example decide {"state": {"now": 1000}, "command": {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    omit op
+    expect error = "unknown_op"
+  example gate {"state": {"now": 1000}, "command": {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    expect error = "unknown_op"
+  example decide
+    expect error = "bad_request"
+  example decide {"command": {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    expect error = "bad_request"
+  example decide {"state": {"now": 1000}}
+    expect error = "bad_request"
+  example raw '{"id":"r1","op":"decide","input":[]}'
+    expect error = "bad_request"
+
+req RQ-002 "The state"
+  decision D-008
+  text
+    `input.state` MUST be a JSON object with these members. Only `now` is required; a member
+    left out has the value in the last column. A member that is present MUST have the form
+    given, or the request is a `bad_request`; `null` is not the same as leaving a member out.
+
+    | member | form | when left out |
+    |---|---|---|
+    | `now` | a number: the time now | (required) |
+    | `estopped` | `true` or `false`: the ESTOP latch | `false` |
+    | `stopped` | `true` or `false`: the STOP latch | `false` |
+    | `minLoaControl` | `1`, `2` or `3`: the lowest level of assurance a command may have | `1` |
+    | `minLoaSafety` | `1`, `2` or `3`: the lowest level for the `safety` scope | `1` |
+    | `window` | a number above 0: for how many seconds a command is fresh | `30` |
+    | `maxSpeed` | a number of 0 or more: the highest speed a move may ask for | `0` |
+    | `limits` | an object: for each joint the robot has, by name, an object with numbers `min` and `max`, `min` not above `max` | `{}` |
+    | `gates` | an object: for a scope, by its lowercased name, an object with a number `min` from 0 to 1 and `onFail`, `"block"` or `"escalate"` | `{}` |
+    | `seen` | an array of objects, each with a string `id` and a number `expires`: the message IDs used | `[]` |
+  table decide
+    | state | command | error |
+    | {} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": "1000"} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "estopped": 1} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "stopped": null} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "minLoaControl": 0} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "minLoaControl": 2.5} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "minLoaSafety": true} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "minLoaSafety": "3"} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "window": 0} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "maxSpeed": -0.5} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "limits": []} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "limits": {"base": {"min": 1, "max": -1}}} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "limits": {"base": {"min": -1}}} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "gates": {"control": {"min": 1.5, "onFail": "block"}}} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "gates": {"control": {"min": 0.5, "onFail": "warn"}}} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "seen": [{"id": 1, "expires": 1030}]} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "seen": {}} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+  example decide {"state": {"now": 1000, "minLoaControl": 2.0, "window": 0.5, "maxSpeed": 0, "limits": {"base": {"min": 1, "max": 1}}, "gates": {"control": {"min": 0, "onFail": "escalate"}}}, "command": {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    expect result.decision = "execute"
+    expect result.state.seen = [{"id": "q1", "expires": 1000.5}]
+
+req RQ-003 "The command"
+  text
+    `input.command` MUST be a JSON object with these members, or the request is a
+    `bad_request`:
+
+    | member | form |
+    |---|---|
+    | `id` | a string of at least one character: the message ID |
+    | `timestamp` | a number: when the command was sent |
+    | `role` | the role of its sender: one of the seven role names of REQ-GT-006, exactly as written there |
+    | `loa` | optional: `1`, `2` or `3`, the sender's level of assurance |
+    | `tier` | optional: `"root"`, `"authoritative"` or `"community"`, the tier of the registry that vouched for the sender |
+    | `kind` | `"safety"`, `"status"` or `"move"` |
+
+    A `safety` command also has `event`: `"ESTOP"`, `"STOP"`, `"RESUME"` or `"ESTOP_CLEAR"`. A
+    `status` command (a status query) has nothing more. A `move` also has `scope`, a string of
+    at least one character; `targets`, an array of at least one object, each with a string
+    `joint` and a number `position`; `speed`, a number of 0 or more; and, optionally,
+    `confidence`, a number from 0 to 1: the confidence of the model that produced the command.
+    A command a person gave has no `confidence`.
+  table decide
+    | state | command | error |
+    | {"now": 1000} | {"id": "", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": 7, "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": "1000", "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "guest", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "constructor", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "loa": 0, "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "loa": true, "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "loa": "2", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "tier": "Root", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "teleport"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "GUEST"} | "bad_request" |
+    | {"now": 1000} | {"id": "e1", "timestamp": 1000, "role": "GUEST", "kind": "safety"} | "bad_request" |
+    | {"now": 1000} | {"id": "e1", "timestamp": 1000, "role": "GUEST", "kind": "safety", "event": "estop"} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [], "speed": 0} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base"}], "speed": 0} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": "0"}], "speed": 0} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": 1, "position": 0}], "speed": 0} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}]} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": -1} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 1.5} | "bad_request" |
+    | {"now": 1000} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": null} | "bad_request" |
+  table decide
+    | state | command | result.decision | result.reason |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "loa": 2.0, "kind": "status"} | "execute" | "status" |
+    | {"now": 1000} | {"id": "e1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "STOP", "scope": 5} | "execute" | "stop" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"": {"min": 0, "max": 0}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "", "position": 0}], "speed": 1e0, "confidence": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 1, "confidence": 1} | "execute" | "ok" |
+
+req RQ-004 "Members nobody asked for"
+  text
+    Members that this document does not name, in the request, in `input`, in the state, in the
+    command, in a limit, a gate, a target or an entry of `seen`, MUST be ignored. So is a
+    member that another kind of command takes, such as `targets` on a status query. Members of
+    the state that this document does not name MUST be passed on unchanged in the next state
+    (REQ-GT-001).
+  example raw '{"id":"x1","op":"decide","trace":true,"input":{"note":"x","state":{"now":1000,"robot":"arm-7"},"command":{"id":"q1","timestamp":1000,"role":"GUEST","kind":"status","targets":[],"via":"lan"}}}'
+    expect result = {"decision": "execute", "reason": "status", "state": {"now": 1000, "robot": "arm-7", "estopped": false, "stopped": false, "seen": [{"id": "q1", "expires": 1030}]}}
+  example decide {"state": {"now": 1000, "__proto__": {"now": 5}, "constructor": 1}, "command": {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    expect result = {"decision": "execute", "reason": "status", "state": {"now": 1000, "__proto__": {"now": 5}, "constructor": 1, "estopped": false, "stopped": false, "seen": [{"id": "q1", "expires": 1030}]}}
+  example decide {"state": {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1, "unit": "rad"}}, "gates": {"control": {"min": 0.5, "onFail": "block", "by": "ops"}}, "seen": [{"id": "a", "expires": 1010, "from": "lan"}]}, "command": {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 1, "unit": "rad"}], "speed": 1, "confidence": 0.5}}
+    expect result.decision = "execute"
+    expect result.reason = "ok"
+    expect result.state.seen = [{"id": "a", "expires": 1010, "from": "lan"}, {"id": "m1", "expires": 1030}]
+
+req RQ-005 "Numbers"
+  text
+    A JSON number in a request MUST be read as the IEEE 754 binary64 value nearest to it,
+    however it is written: `2`, `2.0` and `2e0` are the same number, and `9007199254740993` is
+    `9007199254740992`. `true` and `false` are not numbers: a member that has to be a number
+    and holds one of them makes the request a `bad_request`. The gate's arithmetic MUST be
+    binary64 arithmetic on these values, with exactly the expressions this document gives:
+    `now - timestamp` compared with `w`, `now + 5` and `now + w`.
+  table decide
+    | state | command | error |
+    | {"now": true} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "window": true} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "maxSpeed": false} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "limits": {"base": {"min": true, "max": 1}}} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "gates": {"control": {"min": false, "onFail": "block"}}} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "seen": [{"id": "a", "expires": true}]} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000} | {"id": "q1", "timestamp": false, "role": "GUEST", "kind": "status"} | "bad_request" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": true}], "speed": 0} | "bad_request" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": false} | "bad_request" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": true} | "bad_request" |
+  table decide
+    | state | command | result.decision | result.reason |
+    | {"now": 9007199254740993, "window": 0.5} | {"id": "q1", "timestamp": 9007199254740992, "role": "GUEST", "kind": "status"} | "execute" | "status" |
+    | {"now": 1006.1, "window": 0.1} | {"id": "q1", "timestamp": 1006, "role": "GUEST", "kind": "status"} | "refuse" | "stale" |
+    | {"now": 1009.5, "window": 12.7} | {"id": "q1", "timestamp": 996.8, "role": "GUEST", "kind": "status"} | "refuse" | "stale" |
+    | {"now": 1019.9} | {"id": "q1", "timestamp": 1024.9, "role": "GUEST", "kind": "status"} | "execute" | "status" |
+    | {"now": 1000, "maxSpeed": 1e0, "limits": {"base": {"min": -1.0, "max": 10e-1}}} | {"id": "m1", "timestamp": 1000.0, "role": "OPERATOR", "loa": 1.0, "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 1.00}], "speed": 100e-2} | "execute" | "ok" |
+
+# ---------------------------------------------------------------------------------------------
+section GT "The gate"
+
+req GT-001 "The result and the next state"
+  decision D-001
+  text
+    For a request it can handle, the driver MUST respond
+    `{"id": <id>, "result": {"decision": <d>, "reason": <r>, "state": <next>}}`.
+
+    - `<d>` is `"execute"` (carry the command out), `"refuse"` (do not), or `"hold"` (do not
+      carry it out now: a person decides).
+    - `<r>` is the reason, from the step of REQ-GT-002 that decided.
+    - `<next>` is the state to pass in with the next command: the state as given, every member
+      kept as it was, except `estopped` and `stopped`, which are the latches after this command,
+      and `seen`, which is the replay set after it (REQ-GT-004). These three are always in
+      `<next>`, also when the state left them out.
+  example decide {"state": {"now": 1000}, "command": {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    expect result = {"decision": "execute", "reason": "status", "state": {"now": 1000, "estopped": false, "stopped": false, "seen": [{"id": "q1", "expires": 1030}]}}
+  example decide {"state": {"now": 1000, "window": 12, "maxSpeed": 2, "limits": {"base": {"min": -1, "max": 1}}, "gates": {}, "minLoaControl": 1}, "command": {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    expect result.state = {"now": 1000, "window": 12, "maxSpeed": 2, "limits": {"base": {"min": -1, "max": 1}}, "gates": {}, "minLoaControl": 1, "estopped": false, "stopped": false, "seen": [{"id": "q1", "expires": 1012}]}
+
+req GT-002 "The steps, in order"
+  decision D-002, D-003
+  text
+    The gate MUST take these steps in this order, and the first step that decides gives the
+    decision and the reason:
+
+    1. An ESTOP is carried out (REQ-GT-003): `execute`, `estop`.
+    2. A command too old is refused, `stale`; one from the future, `future` (REQ-GT-004).
+    3. A message ID already used is refused, `replay`; any other ID is used up here
+       (REQ-GT-004).
+    4. While the ESTOP latch is set, a move or a RESUME is refused, `estopped` (REQ-GT-005).
+    5. A sender whose role is too low for the command's scope is refused, `role` (REQ-GT-006).
+    6. A sender whose level of assurance is too low is refused, `loa`; a status query skips
+       this step (REQ-GT-007).
+    7. A status query is carried out: `execute`, `status`.
+    8. An ESTOP_CLEAR, a STOP and a RESUME are carried out: `estop_clear`, `stop` and
+       `resume` (REQ-GT-005, REQ-GT-008).
+    9. While the STOP latch is set, a move is refused, `stopped` (REQ-GT-008).
+    10. A move's targets are checked: `unknown_joint`, `duplicate_joint` or `limits`
+        (REQ-GT-009).
+    11. A move faster than the state allows is refused, `speed` (REQ-GT-010).
+    12. A move with too little confidence for its scope's gate is refused or held,
+        `confidence` (REQ-GT-011).
+    13. Any other move is carried out: `execute`, `ok`.
+  table decide
+    | state | command | result.decision | result.reason |
+    | {"now": 1000, "estopped": true, "seen": [{"id": "e1", "expires": 1030}]} | {"id": "e1", "timestamp": 1, "role": "GUEST", "kind": "safety", "event": "ESTOP"} | "execute" | "estop" |
+    | {"now": 1000, "seen": [{"id": "m1", "expires": 1030}]} | {"id": "m1", "timestamp": 900, "role": "GUEST", "kind": "status"} | "refuse" | "stale" |
+    | {"now": 1000, "estopped": true, "seen": [{"id": "m1", "expires": 1030}]} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "control", "targets": [{"joint": "x", "position": 0}], "speed": 9} | "refuse" | "replay" |
+    | {"now": 1000, "estopped": true, "minLoaControl": 3} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "control", "targets": [{"joint": "x", "position": 0}], "speed": 9} | "refuse" | "estopped" |
+    | {"now": 1000, "stopped": true, "minLoaControl": 3} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "control", "targets": [{"joint": "x", "position": 0}], "speed": 9} | "refuse" | "role" |
+    | {"now": 1000, "stopped": true, "minLoaControl": 3} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "x", "position": 0}], "speed": 9} | "refuse" | "loa" |
+    | {"now": 1000, "stopped": true} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "x", "position": 0}], "speed": 9} | "refuse" | "stopped" |
+    | {"now": 1000, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 5}], "speed": 9, "confidence": 0} | "refuse" | "limits" |
+    | {"now": 1000, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.5, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 9, "confidence": 0} | "refuse" | "speed" |
+    | {"now": 1000, "maxSpeed": 9, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.5, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 9, "confidence": 0} | "refuse" | "confidence" |
+    | {"now": 1000, "maxSpeed": 9, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.5, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 9, "confidence": 0.5} | "execute" | "ok" |
+
+req GT-003 "An ESTOP is never blocked"
+  decision D-002
+  text
+    A `safety` command whose `event` is `"ESTOP"` MUST be carried out (`execute`, `estop`),
+    whatever else is true: however old or new its timestamp, whether or not its ID was used
+    before, whatever its sender's role and level of assurance, and whether or not the robot is
+    already e-stopped. It sets the ESTOP latch (`estopped` becomes `true`) and leaves `stopped`
+    as it was. It does not use up its ID: `seen` in the next state is the replay set (REQ-GT-004)
+    with nothing added.
+  table decide
+    | state | command | result.decision | result.reason | result.state.estopped |
+    | {"now": 1000} | {"id": "e1", "timestamp": 1000, "role": "GUEST", "kind": "safety", "event": "ESTOP"} | "execute" | "estop" | true |
+    | {"now": 1000} | {"id": "e1", "timestamp": 1, "role": "GUEST", "kind": "safety", "event": "ESTOP"} | "execute" | "estop" | true |
+    | {"now": 1000} | {"id": "e1", "timestamp": 99999, "role": "GUEST", "kind": "safety", "event": "ESTOP"} | "execute" | "estop" | true |
+    | {"now": 1000, "estopped": true, "seen": [{"id": "e1", "expires": 1010}]} | {"id": "e1", "timestamp": 1000, "role": "GUEST", "kind": "safety", "event": "ESTOP"} | "execute" | "estop" | true |
+    | {"now": 1000, "minLoaControl": 3, "minLoaSafety": 3} | {"id": "e1", "timestamp": 1000, "role": "GUEST", "loa": 1, "tier": "community", "kind": "safety", "event": "ESTOP"} | "execute" | "estop" | true |
+  example decide {"state": {"now": 1000, "stopped": true, "seen": [{"id": "old", "expires": 1000}, {"id": "e1", "expires": 1001}]}, "command": {"id": "e2", "timestamp": 1000, "role": "GUEST", "kind": "safety", "event": "ESTOP"}}
+    expect result.state = {"now": 1000, "estopped": true, "stopped": true, "seen": [{"id": "e1", "expires": 1001}]}
+
+req GT-004 "Fresh, and once"
+  decision D-003, D-004
+  text
+    Let `w` be the state's `window`, or, for a `safety` command, the smaller of `window` and 10.
+    A command MUST be refused as `stale` when `now - timestamp` is greater than `w`, and as
+    `future` when `timestamp` is greater than `now + 5`. A command exactly `w` seconds old, or
+    exactly 5 seconds ahead, is fresh.
+
+    The **replay set** is `seen` without the entries whose `expires` is not greater than `now`;
+    the other entries stay as they were, in their order. A fresh command whose `id` is the `id`
+    of an entry of the replay set MUST be refused as `replay`. Otherwise its ID is used up: the
+    entry `{"id": <id>, "expires": now + w}` is added at the end of the replay set, whatever the
+    later steps decide. `seen` in the next state is the replay set, with the new entry when
+    there is one; a stale, future or replayed command adds none.
+  table decide
+    | state | command | result.decision | result.reason | result.state.seen |
+    | {"now": 1000} | {"id": "q1", "timestamp": 970, "role": "GUEST", "kind": "status"} | "execute" | "status" | [{"id": "q1", "expires": 1030}] |
+    | {"now": 1000} | {"id": "q1", "timestamp": 969.5, "role": "GUEST", "kind": "status"} | "refuse" | "stale" | [] |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1005, "role": "GUEST", "kind": "status"} | "execute" | "status" | [{"id": "q1", "expires": 1030}] |
+    | {"now": 1000} | {"id": "q1", "timestamp": 1005.5, "role": "GUEST", "kind": "status"} | "refuse" | "future" | [] |
+    | {"now": 1000} | {"id": "s1", "timestamp": 990, "role": "OPERATOR", "kind": "safety", "event": "STOP"} | "execute" | "stop" | [{"id": "s1", "expires": 1010}] |
+    | {"now": 1000} | {"id": "s1", "timestamp": 989.5, "role": "OPERATOR", "kind": "safety", "event": "STOP"} | "refuse" | "stale" | [] |
+    | {"now": 1000, "window": 5} | {"id": "s1", "timestamp": 994.5, "role": "OPERATOR", "kind": "safety", "event": "RESUME"} | "refuse" | "stale" | [] |
+    | {"now": 1000, "window": 5} | {"id": "s1", "timestamp": 995, "role": "OPERATOR", "kind": "safety", "event": "RESUME"} | "execute" | "resume" | [{"id": "s1", "expires": 1005}] |
+    | {"now": 1000, "window": 12} | {"id": "q1", "timestamp": 988, "role": "GUEST", "kind": "status"} | "execute" | "status" | [{"id": "q1", "expires": 1012}] |
+    | {"now": 1000, "seen": [{"id": "q1", "expires": 1030}]} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "refuse" | "replay" | [{"id": "q1", "expires": 1030}] |
+    | {"now": 1000, "seen": [{"id": "q1", "expires": 1000.5}]} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "refuse" | "replay" | [{"id": "q1", "expires": 1000.5}] |
+    | {"now": 1000, "seen": [{"id": "q1", "expires": 1000}]} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "execute" | "status" | [{"id": "q1", "expires": 1030}] |
+    | {"now": 1000, "seen": [{"id": "a", "expires": 990}, {"id": "b", "expires": 1020}, {"id": "c", "expires": 1000}]} | {"id": "q1", "timestamp": 900, "role": "GUEST", "kind": "status"} | "refuse" | "stale" | [{"id": "b", "expires": 1020}] |
+    | {"now": 1000, "seen": [{"id": "b", "expires": 1020}, {"id": "a", "expires": 1010}]} | {"id": "c", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" | [{"id": "b", "expires": 1020}, {"id": "a", "expires": 1010}, {"id": "c", "expires": 1030}] |
+    | {"now": 1000.25, "window": 0.5} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "execute" | "status" | [{"id": "q1", "expires": 1000.75}] |
+  example decide {"state": {"now": 1000, "seen": [{"id": "q1", "expires": 1030}, {"id": "q1", "expires": 1040}]}, "command": {"id": "q2", "timestamp": 1000, "role": "GUEST", "kind": "status"}}
+    expect result.state.seen = [{"id": "q1", "expires": 1030}, {"id": "q1", "expires": 1040}, {"id": "q2", "expires": 1030}]
+
+req GT-005 "The ESTOP latch"
+  decision D-005
+  text
+    While the state's `estopped` is `true`, a move and a RESUME MUST be refused as `estopped`.
+    A status query, a STOP and an ESTOP_CLEAR go on to the next steps. An ESTOP_CLEAR that
+    passes them (REQ-GT-006, REQ-GT-007) MUST be carried out (`execute`, `estop_clear`): it sets
+    `estopped` to `false`, whether or not it was set, and leaves `stopped` as it was. Only an
+    ESTOP sets the ESTOP latch, and only an ESTOP_CLEAR clears it.
+  table decide
+    | state | command | result.decision | result.reason | result.state.estopped | result.state.stopped |
+    | {"now": 1000, "estopped": true, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "estopped" | true | false |
+    | {"now": 1000, "estopped": true, "stopped": true} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "RESUME"} | "refuse" | "estopped" | true | true |
+    | {"now": 1000, "estopped": true} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "STOP"} | "execute" | "stop" | true | true |
+    | {"now": 1000, "estopped": true} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "execute" | "status" | true | false |
+    | {"now": 1000, "estopped": true, "stopped": true} | {"id": "c1", "timestamp": 1000, "role": "CREATOR", "kind": "safety", "event": "ESTOP_CLEAR"} | "execute" | "estop_clear" | false | true |
+    | {"now": 1000} | {"id": "c1", "timestamp": 1000, "role": "CREATOR", "kind": "safety", "event": "ESTOP_CLEAR"} | "execute" | "estop_clear" | false | false |
+    | {"now": 1000, "estopped": true} | {"id": "c1", "timestamp": 1000, "role": "ADMIN", "kind": "safety", "event": "ESTOP_CLEAR"} | "refuse" | "role" | true | false |
+  example decide {"state": {"now": 1000, "estopped": true}, "command": {"id": "c1", "timestamp": 989.5, "role": "CREATOR", "kind": "safety", "event": "ESTOP_CLEAR"}}
+    expect result.reason = "stale"
+    expect result.state.estopped = true
+
+req GT-006 "Roles and scopes"
+  decision D-006, D-007
+  text
+    Roles have these levels (RCAN §2):
+
+    | role | level |
+    |---|---|
+    | `GUEST` | 1 |
+    | `OPERATOR` | 2 |
+    | `CONTRIBUTOR` | 2.5 |
+    | `ADMIN` | 3 |
+    | `M2M_PEER` | 4 |
+    | `CREATOR` | 5 |
+    | `M2M_TRUSTED` | 6 |
+
+    The scope of a command is `status` for a status query, `control` for a STOP or a RESUME,
+    `safety` for an ESTOP_CLEAR, and its `scope` for a move. A scope needs the role this table
+    gives it, looked up by the scope with the ASCII letters `A` to `Z` made lowercase and every
+    other character left as it is:
+
+    | scope | lowest role |
+    |---|---|
+    | `status`, `discover`, `chat`, `observer` | `GUEST` |
+    | `contribute` | `CONTRIBUTOR` |
+    | `control`, `teleop` | `OPERATOR` |
+    | `training`, `training_data`, `config`, `authority` | `ADMIN` |
+    | `admin`, `safety`, `estop` | `CREATOR` |
+    | `fleet.trusted` | `M2M_TRUSTED` |
+
+    A scope that is not in the table needs `OPERATOR`; only the names in the table are in it,
+    so `constructor`, `toString` and `__proto__` are not. A command whose sender's role has a
+    lower level than the role its scope needs MUST be refused as `role`.
+  table decide
+    | state | command | result.decision | result.reason |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "CONTROL", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "Chat", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "contribute", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CONTRIBUTOR", "kind": "move", "scope": "contribute", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CONTRIBUTOR", "kind": "move", "scope": "config", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "ADMIN", "kind": "move", "scope": "training_data", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "M2M_PEER", "kind": "move", "scope": "admin", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CREATOR", "kind": "move", "scope": "Fleet.Trusted", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "M2M_TRUSTED", "kind": "move", "scope": "fleet.trusted", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "dance", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "dance", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "constructor", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "__proto__", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "toString", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "role" |
+    | {"now": 1000} | {"id": "s1", "timestamp": 1000, "role": "GUEST", "kind": "safety", "event": "STOP"} | "refuse" | "role" |
+    | {"now": 1000} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "RESUME"} | "execute" | "resume" |
+    | {"now": 1000, "estopped": true} | {"id": "c1", "timestamp": 1000, "role": "M2M_PEER", "kind": "safety", "event": "ESTOP_CLEAR"} | "refuse" | "role" |
+    | {"now": 1000, "estopped": true} | {"id": "c1", "timestamp": 1000, "role": "M2M_TRUSTED", "kind": "safety", "event": "ESTOP_CLEAR"} | "execute" | "estop_clear" |
+
+req GT-007 "Level of assurance"
+  decision D-009, D-010
+  text
+    The level of assurance (LoA) of a command is its `loa` when it has one; otherwise it is `2`
+    when its `tier` is `"authoritative"`, and `1` in every other case (RCAN §8.7). The level a
+    command needs is the state's `minLoaControl`; when its scope, lowercased as in REQ-GT-006,
+    is `safety`, it is the greater of `minLoaControl` and `minLoaSafety`. A command whose level
+    is below the level it needs MUST be refused as `loa`. A status query needs no level, and an
+    ESTOP never comes to this step (REQ-GT-003).
+  table decide
+    | state | command | result.decision | result.reason |
+    | {"now": 1000, "minLoaControl": 2, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaControl": 2, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "loa": 2, "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "minLoaControl": 2, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "tier": "authoritative", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "minLoaControl": 3, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "tier": "authoritative", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaControl": 2, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "tier": "community", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaControl": 2, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "tier": "root", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaControl": 2, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "loa": 1, "tier": "authoritative", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaControl": 2, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "GUEST", "kind": "move", "scope": "chat", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaControl": 3} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "execute" | "status" |
+    | {"now": 1000, "minLoaControl": 2} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "STOP"} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaControl": 2} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "loa": 3, "kind": "safety", "event": "STOP"} | "execute" | "stop" |
+    | {"now": 1000, "estopped": true, "minLoaSafety": 3} | {"id": "c1", "timestamp": 1000, "role": "CREATOR", "loa": 2, "kind": "safety", "event": "ESTOP_CLEAR"} | "refuse" | "loa" |
+    | {"now": 1000, "estopped": true, "minLoaSafety": 3} | {"id": "c1", "timestamp": 1000, "role": "CREATOR", "loa": 3, "kind": "safety", "event": "ESTOP_CLEAR"} | "execute" | "estop_clear" |
+    | {"now": 1000, "estopped": true, "minLoaControl": 2, "minLoaSafety": 1} | {"id": "c1", "timestamp": 1000, "role": "CREATOR", "loa": 1, "kind": "safety", "event": "ESTOP_CLEAR"} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaSafety": 3, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CREATOR", "loa": 2, "kind": "move", "scope": "SAFETY", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "loa" |
+    | {"now": 1000, "minLoaSafety": 3, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "CREATOR", "loa": 2, "kind": "move", "scope": "estop", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "minLoaControl": 3} | {"id": "s1", "timestamp": 1000, "role": "GUEST", "loa": 1, "kind": "safety", "event": "STOP"} | "refuse" | "role" |
+
+req GT-008 "STOP and RESUME"
+  decision D-005
+  text
+    A STOP that passes the earlier steps MUST be carried out (`execute`, `stop`) and sets
+    `stopped` to `true`; a RESUME that passes them MUST be carried out (`execute`, `resume`) and
+    sets `stopped` to `false`. Neither changes `estopped`, and neither depends on what `stopped`
+    was. While `stopped` is `true`, a move MUST be refused as `stopped`.
+  table decide
+    | state | command | result.decision | result.reason | result.state.stopped |
+    | {"now": 1000} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "STOP"} | "execute" | "stop" | true |
+    | {"now": 1000, "stopped": true} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "STOP"} | "execute" | "stop" | true |
+    | {"now": 1000, "stopped": true} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "RESUME"} | "execute" | "resume" | false |
+    | {"now": 1000} | {"id": "s1", "timestamp": 1000, "role": "OPERATOR", "kind": "safety", "event": "RESUME"} | "execute" | "resume" | false |
+    | {"now": 1000, "stopped": true, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "stopped" | true |
+    | {"now": 1000, "stopped": true} | {"id": "q1", "timestamp": 1000, "role": "GUEST", "kind": "status"} | "execute" | "status" | true |
+
+req GT-009 "Joint limits"
+  decision D-006
+  text
+    A move's targets MUST be checked one at a time, in their order, each with these checks in
+    this order; the first check that fails refuses the move:
+
+    1. a joint that is not a member of the state's `limits` (as a name: with no member
+       `toString` in `limits`, a joint `toString` is not in it): `unknown_joint`;
+    2. a joint that an earlier target of the same move named: `duplicate_joint`;
+    3. a position below the joint's `min` or above its `max`: `limits`. A position equal to
+       `min` or to `max` is within the limits.
+  table decide
+    | state | command | result.decision | result.reason |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 1}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": -1}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 1.0000001}], "speed": 0} | "refuse" | "limits" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "elbow", "position": -0.5}], "speed": 0} | "refuse" | "limits" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "gripper", "position": 0}], "speed": 0} | "refuse" | "unknown_joint" |
+    | {"now": 1000, "maxSpeed": 1} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "refuse" | "unknown_joint" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "Base", "position": 0}], "speed": 0} | "refuse" | "unknown_joint" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}, {"joint": "base", "position": 0}], "speed": 0} | "refuse" | "duplicate_joint" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 5}, {"joint": "base", "position": 0}], "speed": 0} | "refuse" | "limits" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "elbow", "position": 1}, {"joint": "base", "position": 0}, {"joint": "elbow", "position": 9}], "speed": 0} | "refuse" | "duplicate_joint" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}, {"joint": "gripper", "position": 0}, {"joint": "base", "position": 9}], "speed": 0} | "refuse" | "unknown_joint" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}, "elbow": {"min": 0, "max": 2}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "elbow", "position": 2}, {"joint": "base", "position": -1}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "toString", "position": 0}], "speed": 0} | "refuse" | "unknown_joint" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "__proto__", "position": 0}], "speed": 0} | "refuse" | "unknown_joint" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "hasOwnProperty", "position": 0}], "speed": 0} | "refuse" | "unknown_joint" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"__proto__": {"min": 0, "max": 1}, "toString": {"min": 0, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "__proto__", "position": 1}, {"joint": "toString", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"__proto__": {"min": 0, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "__proto__", "position": 2}], "speed": 0} | "refuse" | "limits" |
+
+req GT-010 "Speed"
+  decision D-008
+  text
+    A move whose `speed` is greater than the state's `maxSpeed` MUST be refused as `speed`. A
+    speed equal to `maxSpeed` is allowed. With no `maxSpeed` in the state it is 0
+    (REQ-RQ-002), so only a move at speed 0 gets past this step.
+  table decide
+    | state | command | result.decision | result.reason |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 1} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 1.5} | "refuse" | "speed" |
+    | {"now": 1000, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0.001} | "refuse" | "speed" |
+    | {"now": 1000, "maxSpeed": 0, "limits": {"base": {"min": -1, "max": 1}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+
+req GT-011 "Confidence gates"
+  decision D-007, D-011, D-012
+  text
+    The gate of a move is the member of the state's `gates` whose name is the move's scope,
+    lowercased as in REQ-GT-006; when `gates` has no member of that name, the move has no
+    gate. A move that has a gate and a `confidence` below the gate's `min` MUST be refused as
+    `confidence` when the gate's `onFail` is `"block"`, and held (`hold`, `confidence`) when it
+    is `"escalate"`. A confidence equal to `min` passes. A move without `confidence` passes
+    every gate.
+  table decide
+    | state | command | result.decision | result.reason |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.5} | "refuse" | "confidence" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.75} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.7499999} | "refuse" | "confidence" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.75, "onFail": "escalate"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.5} | "hold" | "confidence" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "Control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.5} | "refuse" | "confidence" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"Control": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "Control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.5} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "teleop", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.5} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"kick": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "Kick", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.5} | "refuse" | "confidence" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"kick": {"min": 0.75, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "Kick", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.5} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "toString", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0, "onFail": "block"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0} | "execute" | "ok" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 1, "onFail": "escalate"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.9} | "hold" | "confidence" |
+    | {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 1, "onFail": "escalate"}}} | {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 1} | "execute" | "ok" |
+  example decide {"state": {"now": 1000, "maxSpeed": 1, "limits": {"base": {"min": -1, "max": 1}}, "gates": {"control": {"min": 0.75, "onFail": "escalate"}}}, "command": {"id": "m1", "timestamp": 1000, "role": "OPERATOR", "kind": "move", "scope": "control", "targets": [{"joint": "base", "position": 0}], "speed": 0, "confidence": 0.5}}
+    expect result.state.seen = [{"id": "m1", "expires": 1030}]
+    expect result.state.estopped = false
+    expect result.state.stopped = false
+
+note
+  text
+    The properties below are checked on generated states and commands: the types whose names
+    start with `sample` say what is drawn. They are a choice of test inputs (the clock at 1000,
+    a few joints, scopes and IDs that collide), not a limit on what a request may hold, which
+    REQ-RQ-002 and REQ-RQ-003 give.
+
+property GT-P1 "An ESTOP is always carried out"
+  supports GT-003
+  samples 200
+  for s in sampleState
+  for c in sampleSafety
+  call a = decide {"state": s, "command": {"id": c.id, "timestamp": c.timestamp, "role": c.role, "kind": "safety", "event": "ESTOP"}}
+  expect a.result.decision == "execute" and a.result.reason == "estop" and a.result.state.estopped == true
+
+property GT-P2 "While e-stopped, nothing that could move the robot is carried out"
+  supports GT-005
+  samples 200
+  for s in sampleState
+  for c in sampleCommand
+  where has(s, "estopped") and s.estopped
+  call a = decide {"state": s, "command": c}
+  expect has(a, "error") or a.result.decision != "execute" or c.kind == "status" or (c.kind == "safety" and c.event != "RESUME")
+
+property GT-P3 "Only an executed safety event changes a latch"
+  supports GT-001, GT-005, GT-008
+  samples 300
+  for s in sampleState
+  for c in sampleCommand
+  call a = decide {"state": s, "command": c}
+  expect has(a, "error") or (a.result.decision == "execute" and c.kind == "safety") or (a.result.state.estopped == (has(s, "estopped") and s.estopped) and a.result.state.stopped == (has(s, "stopped") and s.stopped))
+
+property GT-P4 "A message ID works once"
+  supports GT-004
+  samples 300
+  for s in sampleState
+  for c in sampleCommand
+  call a = decide {"state": s, "command": c}
+  call b = decide {"state": has(a, "result") ? a.result.state : s, "command": c}
+  expect has(a, "error") or a.result.reason == "estop" or a.result.reason == "stale" or a.result.reason == "future" or b.result.reason == "replay"
+
+# ---------------------------------------------------------------------------------------------
+section BU "The implementation folder"
+  text
+    These requirements are checked on the implementation folder, not through the driver.
+
+req BU-001 "REGEN.json"
+  text
+    The implementation folder MUST contain `REGEN.json`, a JSON object with exactly the keys
+    `lang` (`"ts"` or `"py"`), `build`, `test` and `driver`. Each of `build`, `test` and
+    `driver` is a command string, or an object whose keys are Node.js `process.platform` values
+    (such as `"win32"`) plus a required `"default"`, each mapping to a command string. Commands
+    run in the implementation folder. `build` and `test` run through the platform shell; an
+    empty `build` means there is nothing to build. `driver` is split on single spaces and
+    started without a shell, so it MUST be plain space-separated words. The same REGEN.json
+    MUST work on Windows and on Linux.
+  static json "REGEN.json" matches {lang: "ts" | "py", build: string | {default: string, ...}, test: string | {default: string, ...}, driver: string | {default: string, ...}}
+
+req BU-002 "Own tests"
+  text
+    The implementation MUST have its own tests, including at least one for every MUST in this
+    document, and the command `REGEN.json` names as `test` MUST pass.
+  static command test exits 0 within 300
+
+req BU-003 "Runtime and dependencies"
+  text
+    TypeScript MUST run on Node.js 22.18 or later directly by type stripping: erasable syntax
+    only, no build step, relative imports with the `.ts` extension. Python MUST run on 3.11 or
+    later. Only the language's standard library is used: nothing is installed, and a
+    `package.json`, if there is one, declares no dependencies.
+  static file "node_modules", "package-lock.json", "requirements.txt", "Pipfile", "poetry.lock" absent
+  static text "package.json" not matching "\"(dev|peer|optional)?[dD]ependencies\""
+
+req BU-004 "Size"
+  text
+    At most 500 non-blank lines of source in all: `.ts .mts .mjs .js` or `.py` files under the
+    implementation folder, not counting tests (`*.test.*`, `*_test.*`, `test_*.py`, and anything
+    under a `test/` or `tests/` folder).
+  static lines "**/*.ts", "**/*.mts", "**/*.mjs", "**/*.js", "**/*.py" at most 500 excluding "**/*.test.*", "**/*_test.*", "**/test_*.py", "**/test/**", "**/tests/**"
+
+# ---------------------------------------------------------------------------------------------
+open OP-001 "Numbers outside binary64"
+  text
+    A JSON number in a request too large for a binary64 value (such as `1e400`), anywhere in
+    the request: whether it is a `bad_request`, and what the next state holds for it.
+
+open OP-002 "Standard error and error text"
+  text
+    What the driver writes to standard error; any human-readable error text, which never
+    appears in a response.
+
+open OP-003 "Odd request bytes"
+  text
+    Request bytes that are not valid UTF-8, and duplicate member names in a JSON object.
+
+open OP-004 "The size of the replay set"
+  text
+    How many entries `seen` may hold. rcan-ts drops the oldest entry when its replay cache
+    holds 10,000; this gate keeps every unexpired entry it is given, and the caller decides how
+    large a state it keeps.
+
+# ---------------------------------------------------------------------------------------------
+decision D-001 "A pure function of state and command"
+  source CONFIDENCE.md, claim 5; rcan-ts at b563fb5, src/replay.ts
+  text
+    rcan-ts keeps its replay cache inside an object and reads the clock with `Date.now()`. A
+    gate written that way cannot be judged request by request: its answer depends on what came
+    before and on when it runs. Decision: the state goes in with every command and comes back
+    out, and the clock is a member of the state (`now`). Why: every answer is then a function
+    of its request, so a suite can check it and two implementations can be compared on the
+    same requests.
+  rejected "A gate that keeps its state between requests: the suite would have to replay whole sessions, and one wrong answer would change every later one."
+
+decision D-002 "An ESTOP is never blocked, by anything"
+  source rcan-ts at b563fb5, src/safety.ts ("Protocol 66 safety invariant: ESTOP is NEVER blocked by new mechanisms"); rcan.dev/docs/safety ("ESTOP is always accepted regardless of clock sync state", "ESTOP is always exempt from LoA enforcement")
+  text
+    RCAN states the rule for each mechanism in turn: clock synchronization, level of
+    assurance, and new mechanisms in general. Decision: the ESTOP comes before every check,
+    freshness and replay included, and is carried out even when the latch is already set. It
+    does not use up its ID, since nothing is ever refused as a replayed ESTOP. Why: a stale or
+    repeated ESTOP that stops a robot costs little; a real one that is refused can cost a
+    great deal.
+  rejected "Apply the replay check to ESTOP like any other message: a retransmitted ESTOP, sent because the first seemed lost, would be refused."
+
+decision D-003 "Freshness and replay come first, and an ID is used up whatever follows"
+  source rcan-ts at b563fb5, src/replay.ts (ReplayCache.checkAndRecord records an ID as soon as it passes the freshness check)
+  text
+    In rcan-ts the replay cache is separate from authorization: an ID that passes it is
+    recorded, whatever happens to the message later. Decision: freshness and replay are steps
+    2 and 3, before the latches, roles, assurance and limits, and the ID is used up at step 3.
+    Why: a message ID names one message; a refused message sent again is still the same
+    message, and refusing it as a replay tells its sender to send a new one.
+  rejected "Use up an ID only when the command is carried out: a sender could then repeat a refused command until the robot's state changed under it."
+
+decision D-004 "A 10-second cap for safety messages and 5 seconds of drift"
+  source rcan-ts at b563fb5, src/replay.ts (DEFAULT_WINDOW_S 30, SAFETY_MAX_WINDOW_S 10, "Allow 5s future drift for clock skew"); rcan.dev/docs/safety, §8.4 ("Maximum drift tolerance: ±5 seconds")
+  text
+    Decision: the window defaults to 30 seconds; safety messages use at most 10; a timestamp
+    up to 5 seconds ahead of the clock is fresh. A command is stale only when strictly older
+    than the window, an entry expires when `expires` is not after `now`, and the new entry
+    expires at `now + w`, as rcan-ts does. Why: these are the SDK's numbers and comparisons.
+  rejected "Expire the new entry at timestamp + w: shorter, but not what rcan-ts does."
+
+decision D-005 "STOP and RESUME are control commands; ESTOP_CLEAR needs the safety scope"
+  source rcan-ts at b563fb5, src/safety.ts ("ESTOP requires explicit hardware-level clear; RESUME only clears STOP"); rcan.dev/docs/safety ("the robot remains stopped until an operator explicitly clears it via an authenticated ESTOP_CLEAR command"); rcan.dev/docs/identity, LoA matrix ("safety (ESTOP_CLEAR, config safety overrides)")
+  text
+    rcan-ts leaves clearing an ESTOP to hardware; the RCAN documents describe an
+    authenticated ESTOP_CLEAR command in the `safety` scope. Neither says which scope a STOP or
+    a RESUME needs. Decision: the gate has ESTOP_CLEAR, in the `safety` scope (CREATOR, and the
+    safety level of assurance); STOP and RESUME are in the `control` scope (OPERATOR). While
+    e-stopped, a STOP goes through (it can only make the robot safer, and it holds the robot
+    after the clear), a RESUME does not. Why: an operator who can drive the robot can stop it;
+    only the role that may change safety settings can undo an emergency stop.
+  rejected "No ESTOP_CLEAR in the gate, as in rcan-ts: then the caller must change estopped by hand, and nothing in the gate checks who did."
+  rejected "STOP in the safety scope: an operator could drive the robot and not stop it."
+
+decision D-006 "Names are looked up as names"
+  source rcan-ts at b563fb5, src/identity.ts (validateRoleForScope), run on 2026-10-08
+  text
+    rcan-ts looks scopes up in a plain JavaScript object, so a scope named `constructor` or
+    `__proto__` finds a member that every object inherits, and is refused for every role,
+    M2M_TRUSTED included, where its own rule says an unknown scope needs OPERATOR. The same
+    kind of lookup on joint names would let a joint named `toString` through with no limits at
+    all. Decision: scopes, joints and gates are looked up only among the names the tables and
+    the state hold, and examples pin the inherited names. Why: the stated rule is the
+    intended one, and a lookup that finds inherited members fails differently in each
+    language.
+  rejected "Follow rcan-ts and refuse constructor and __proto__ for every role: it fails safe, but it is a lookup accident, and Python implementations would not reproduce it."
+
+decision D-007 "Scopes are lowercased in ASCII only"
+  source rcan-ts at b563fb5, src/identity.ts (SCOPE_MIN_ROLE[scope.toLowerCase()])
+  text
+    rcan-ts lowercases a scope with JavaScript's `toLowerCase`, which also maps letters
+    outside ASCII: the KELVIN SIGN, U+212A, becomes the ASCII `k`. Languages and Unicode
+    versions differ in such mappings. Decision: only `A` to `Z` are lowercased. Why: every
+    scope name RCAN defines is ASCII, and the answer then does not depend on the language or
+    its Unicode tables.
+  rejected "Unicode lowercasing: the same scope could get different gates in different implementations."
+
+decision D-008 "What the gate is not told, it does not allow"
+  source rcan.dev/docs/identity, §8.7 (min_loa_for_control defaults to 1); rcan-ts at b563fb5, src/replay.ts (window 30)
+  text
+    RCAN gives defaults for the level of assurance (1) and the replay window (30 seconds), and
+    the gate uses them. It gives none for joint limits or a speed limit. Decision: with no
+    `limits`, no joint is known and every move is refused; with no `maxSpeed`, the limit is
+    0. Confidence gates default to none, since each gate only adds a refusal. Why: a gate
+    that forgets its configuration should stop the robot, not free it.
+  rejected "Unlimited speed without maxSpeed: a missing member would remove a safety limit."
+
+decision D-009 "The LoA minimum applies to every command that acts"
+  source rcan.dev/docs/identity, §8.7 (prose: "a minimum identity assurance level for control-scope commands"; pseudocode check_loa: required_loa = min_loa_for_control for every message; enforcement matrix: status, discover and observer at LoA 1)
+  text
+    The RCAN document says min_loa_for_control is for control-scope commands, but its
+    pseudocode applies it to every message, and its matrix recommends LoA 1 for status
+    queries. Decision: every command except a status query (and an ESTOP) needs
+    `minLoaControl`, raised to `minLoaSafety` in the `safety` scope. Why: a move in another
+    scope (`teleop`, or one this gate does not know) moves the robot as much as a `control`
+    one; a status query moves nothing.
+  rejected "Only the scope control: a teleop move from an unverified sender would pass."
+  rejected "Every message, status queries too: contradicts the matrix's LoA 1 for status."
+
+decision D-010 "A root-tier sender without loa has level 1"
+  source rcan.dev/docs/identity, §8.7 (defaults when loa is absent: authoritative 2, community 1, neither field present 1)
+  text
+    The document gives no default for a token from a root registry that carries no `loa`.
+    Decision: 1, as for every case the document does not raise to 2. Why: when the level is
+    unknown, the lowest is the safe assumption; a root registry that vouches for more can say
+    so in `loa`.
+  rejected "3, a root registry being the most trusted tier: trusts what the token does not say."
+
+decision D-011 "A confidence equal to the minimum passes"
+  source rcan-ts at b563fb5, src/gates.ts (allows: confidence >= threshold); rcan-py at b718bf3, rcan/gates.py (confidence >= self.threshold); rcan.dev/docs/safety ("Block command if AI confidence < 0.75"); against: rcan.dev/spec/v1.2 changelog ("ConfidenceGate now rejects exactly-at-threshold values (strict <)")
+  text
+    Both SDKs and the safety document allow a confidence equal to the threshold; one line of
+    the v1.2 changelog says the opposite. Decision: equal passes. Why: three sources, two of
+    them running code, against one changelog line, which may mean that the strict comparison
+    is the one that rejects.
+  rejected "Reject at the threshold, as the changelog line reads: both SDKs would disagree with the gate on every boundary value."
+
+decision D-012 "A command without confidence passes the gates"
+  source rcan.dev/docs/safety (brain.confidence_gates: "Per-scope AI confidence thresholds"; on_fail block or escalate); rcan.dev/conformance (L2-CONF-001 and L2-CONF-002)
+  text
+    RCAN's confidence gates are thresholds on the confidence of the AI brain, blocking or
+    escalating to a person a command the model was unsure of. A command a person gave carries
+    no model confidence. Decision: gates apply only to moves that carry `confidence`;
+    `escalate` holds the move (`hold`), and `block` refuses it. Why: the gate is about the
+    model's certainty; a person's command is checked by role and assurance instead.
+  rejected "Treat a missing confidence as 0: every command a person gave in a gated scope would be held or refused."

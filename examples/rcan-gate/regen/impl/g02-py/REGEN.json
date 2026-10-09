@@ -1,0 +1,6 @@
+{
+  "lang": "py",
+  "build": "",
+  "test": {"default": "python3 -m unittest discover -p \"test_*.py\"", "win32": "py -3 -m unittest discover -p \"test_*.py\""},
+  "driver": {"default": "python3 driver.py", "win32": "py -3 driver.py"}
+}
