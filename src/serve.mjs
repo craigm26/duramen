@@ -20,7 +20,7 @@ import { generateCases, judgeAnswer } from './suite.mjs';
 const ERR = (id, code) => ({ id, error: code });
 const LEVELS = { error: 0, warning: 1, info: 2 };
 
-const validName = (n) => n !== '' && !n.includes('\\') && !n.includes('\0') && !isAbsolute(n) && !/^[a-zA-Z]:/.test(n) && !n.split('/').some((p) => p === '' || p === '.' || p === '..');
+export const validName = (n) => n !== '' && !n.includes('\\') && !n.includes('\0') && !isAbsolute(n) && !/^[a-zA-Z]:/.test(n) && !n.split('/').some((p) => p === '' || p === '.' || p === '..');
 
 // Every name a relative path, every value a string, and no name also the folder of another.
 export function validFiles(files) {

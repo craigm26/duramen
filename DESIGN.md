@@ -192,7 +192,7 @@ note
 | `op … tolerance` | how far a numeric result may differ, by path (`result.wetBulbC`) |
 | `op … audit text` | the response also carries an `audit` string, compared byte for byte |
 | `op … request` | replaces the spec's request members for this op (`request {}` for none) |
-| `op … draw` (0.2) | where `duramen agree` draws an input field from, instead of its input type: a narrower or differently weighted type, so that generated requests reach the behavior that matters (times near the clock, names that collide); it is not shown in the brief and does not limit what a request may carry |
+| `op … draw` (0.2) | where `duramen agree` draws an input field from, instead of its input type: a narrower or differently weighted type, so that generated requests reach the behavior that matters (times near the clock, names that collide). It may also reach outside the input type on purpose, so that the answers to requests that must be refused are compared too (the gate's `drawOdd`); duramen does not require a draw type to fit the input type. It is not shown in the brief and does not limit what a request may carry |
 | `errors` | the error codes in the order the checks run; the first that applies wins |
 | `req … on` | `any` (the default), `posix` or `windows` |
 | `example <op> <json>` | a request with this input, sent exactly as written (spellings such as `2.0e1` survive) |

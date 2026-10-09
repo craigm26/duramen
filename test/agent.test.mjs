@@ -151,3 +151,11 @@ test('regen --agent: the brief, an OpenAI-compatible builder, its audit, the sco
     });
   } finally { await ep.close(); }
 });
+
+test('agent: the API key stays in the agent, out of the environment of the commands the model runs', async () => {
+  const { parseArgs } = await import('../lib/regen/agent.mjs');
+  process.env.DURAMEN_TEST_AGENT_KEY = 'sk-test';
+  const o = parseArgs(['--base-url', 'http://127.0.0.1:1/v1', '--model', 'm', '--work', '.', '--prompt-file', 'p.md', '--lang', 'ts', '--api-key-env', 'DURAMEN_TEST_AGENT_KEY']);
+  assert.equal(o.apiKey, 'sk-test');
+  assert.equal(process.env.DURAMEN_TEST_AGENT_KEY, undefined);
+});

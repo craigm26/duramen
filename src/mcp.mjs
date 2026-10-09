@@ -8,7 +8,7 @@
 // starts the driver an implementation's REGEN.json names, as `duramen run` does.
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
-import { validFiles, withRecord } from './serve.mjs';
+import { validFiles, validName, withRecord } from './serve.mjs';
 import { streamLines } from './driver.mjs';
 import { loadRecord } from './record.mjs';
 import { check } from './check.mjs';
@@ -56,7 +56,8 @@ async function withInput(args, fn) {
   }
   if (args.files !== undefined) {
     if (!validFiles(args.files)) return text('files must map relative file names ("/" separated, no "." or ".." parts) to texts.', true);
-    if (args.entry !== undefined && typeof args.entry !== 'string') return text('entry must be a string.', true);
+    // as `duramen serve` takes it: "." or a relative path, so that the record read is the one given
+    if (args.entry !== undefined && (typeof args.entry !== 'string' || (args.entry !== '.' && !validName(args.entry)))) return text('entry must be "." or a relative path among the files ("/" separated, no "." or ".." parts).', true);
     return withRecord({ files: args.files, entry: args.entry }, (entry, rel, dir) => fn(entry, dir));
   }
   return text('Give path (a record on this machine) or files (the record\'s texts).', true);

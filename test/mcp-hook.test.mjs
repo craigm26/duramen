@@ -105,3 +105,23 @@ test('hook: a .duramen edit is checked, its problems block, other files pass thr
     assert.deepEqual(await hook({ tool_name: 'Edit', tool_input: { file_path: join(dir, 'gone.duramen') } }), { code: 0, out: '' });
   });
 });
+
+test('hook: a file in a subfolder of a folder record checks that record; a file of its own stays alone', async () => {
+  const files = { 'rec/00.duramen': 'duramen 0.1\nspec r 1\n', 'rec/sub/10.duramen': 'duramen 0.1\nnote\n  text\n    Part of r.\n', 'lonely/x.duramen': 'duramen 0.1\nspec x 1\n', 'other/y.duramen': 'duramen 0.1\nspec y 1\n' };
+  await withFiles(files, async (dir) => {
+    const nested = JSON.parse((await hook({ tool_name: 'Edit', tool_input: { file_path: 'rec/sub/10.duramen' }, cwd: dir })).out);
+    assert.match(nested.hookSpecificOutput.additionalContext, /^duramen check rec: ok: /);
+    const alone = JSON.parse((await hook({ tool_name: 'Edit', tool_input: { file_path: 'lonely/x.duramen' }, cwd: dir })).out);
+    assert.match(alone.hookSpecificOutput.additionalContext, /^duramen check x\.duramen: ok: /);
+  });
+});
+
+test('mcp: an entry outside the files carried in the call is refused, as duramen serve refuses it', async () => {
+  const files = { 'a.duramen': 'duramen 0.1\nspec a 1\n' };
+  const answers = await mcp([call(1, 'check', { files, entry: '..' }), call(2, 'check', { files, entry: '/tmp' }), call(3, 'check', { files, entry: 'a.duramen' })]);
+  assert.equal(answers.get(1).result.isError, true);
+  assert.match(answers.get(1).result.content[0].text, /entry must be/);
+  assert.equal(answers.get(2).result.isError, true);
+  assert.notEqual(answers.get(3).result.isError, true);
+});
+
