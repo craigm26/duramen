@@ -29,6 +29,8 @@ const USAGE = `usage:
                 [--agent <base URL> --model <name> [--agent-key-env VAR] [--agent-text-tools]]
                   (--agent: build with an OpenAI-compatible endpoint instead of Claude Code)
   duramen serve  (duramen as a driver: check and cases requests on standard input)
+  duramen mcp    (duramen as an MCP server: check, brief, cases, run, diff and explain tools)
+  duramen hook   (a Claude Code PostToolUse hook: checks a .duramen file's record after an edit)
   duramen --version
 
 A record is a .duramen file or a folder of them.`;
@@ -66,6 +68,21 @@ const sortDs = (ds) => [...ds].sort((a, b) => (a.file === b.file ? a.line - b.li
 export async function main(argv, io = { out: (s) => process.stdout.write(s + '\n'), err: (s) => process.stderr.write(s + '\n') }) {
   const [cmd, ...rest] = argv;
   if (cmd === '--version' || cmd === 'version') { io.out(`duramen ${VERSION}`); return 0; }
+  if (cmd === 'hook') {
+    if (argv.length > 1) { io.err('duramen hook takes no arguments: it reads a Claude Code hook event on standard input'); return 2; }
+    let input = '';
+    for await (const c of process.stdin) input += c;
+    const { hook } = await import('./hook.mjs');
+    const r = await hook(input, { run: (a, quietIo) => main(a, quietIo) });
+    if (r.out) io.out(r.out);
+    return r.code;
+  }
+  if (cmd === 'mcp') {
+    if (argv.length > 1) { io.err('duramen mcp takes no arguments: it speaks MCP on standard input and output'); return 2; }
+    const { mcpServe } = await import('./mcp.mjs');
+    await mcpServe(process.stdin, (s) => process.stdout.write(s), VERSION);
+    return 0;
+  }
   if (cmd === 'serve') {
     if (argv.length > 1) { io.err('duramen serve takes no arguments: it reads requests on standard input'); return 2; }
     await serve();

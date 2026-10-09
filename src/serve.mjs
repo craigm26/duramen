@@ -22,7 +22,7 @@ const LEVELS = { error: 0, warning: 1, info: 2 };
 const validName = (n) => n !== '' && !n.includes('\\') && !n.includes('\0') && !isAbsolute(n) && !/^[a-zA-Z]:/.test(n) && !n.split('/').some((p) => p === '' || p === '.' || p === '..');
 
 // Every name a relative path, every value a string, and no name also the folder of another.
-function validFiles(files) {
+export function validFiles(files) {
   if (!files || typeof files !== 'object' || Array.isArray(files)) return false;
   const names = Object.keys(files);
   if (!names.length) return false;
@@ -35,7 +35,7 @@ function validFiles(files) {
   return true;
 }
 
-async function withRecord(input, fn) {
+export async function withRecord(input, fn) {
   const dir = mkdtempSync(join(tmpdir(), 'duramen-serve-'));
   try {
     for (const [name, text] of Object.entries(input.files)) {
@@ -45,7 +45,7 @@ async function withRecord(input, fn) {
     }
     const entry = input.entry === undefined || input.entry === '.' ? dir : join(dir, ...input.entry.split('/'));
     const rel = (f) => (f ? relative(dir, f).split('\\').join('/') || '.' : '.');
-    return await fn(entry, rel);
+    return await fn(entry, rel, dir);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

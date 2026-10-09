@@ -1,0 +1,39 @@
+# A GitHub Actions workflow for a repository whose behavior is specified in a duramen record.
+# Copy it to .github/workflows/duramen.yml and set the three paths below.
+name: duramen
+
+on:
+  push:
+  pull_request:
+
+env:
+  RECORD: spec/app.duramen      # the record: a .duramen file or a folder of them
+  IMPL: impl                    # the implementation folder (its REGEN.json names the driver)
+  DURAMEN_REF: main             # the duramen version to use
+
+jobs:
+  spec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Get duramen
+        run: git clone --depth 1 --branch "$DURAMEN_REF" https://github.com/craigm26/duramen.git "$RUNNER_TEMP/duramen"
+      - name: The record checks clean, every example run through its oracle
+        run: node "$RUNNER_TEMP/duramen/bin/duramen.mjs" check "$RECORD"
+      - name: The implementation passes the suite generated from the record
+        run: node "$RUNNER_TEMP/duramen/bin/duramen.mjs" run "$RECORD" --impl "$IMPL"
+      - name: The record's version grows with its changes
+        if: github.event_name == 'pull_request'
+        run: |
+          base="$RUNNER_TEMP/base"
+          git worktree add "$base" "origin/${{ github.base_ref }}"
+          if [ -e "$base/$RECORD" ]; then
+            node "$RUNNER_TEMP/duramen/bin/duramen.mjs" diff "$base/$RECORD" "$RECORD"
+          else
+            echo "no record on the base branch yet"
+          fi

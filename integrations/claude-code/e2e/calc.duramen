@@ -1,0 +1,10 @@
+duramen 0.1
+spec calc 1.0.0
+oracle node calc.mjs
+op add
+  input a number, b number
+req ADD-1 "Adds two numbers"
+  text
+    The result's sum MUST be a plus b.
+  example add {"a": 1, "b": 1}
+    expect result.sum = 2
