@@ -17,7 +17,10 @@ is duramen itself, and a checker rebuilt blind from its brief is judged by its s
 [`CONFIDENCE.md`](CONFIDENCE.md) states six claims about regenerative software with duramen,
 with pass criteria written before the runs, and what the runs showed: four pass and two fail.
 An agent that had not seen the work checked the results against this repository; its
-corrections are listed there.
+corrections are listed there. [`CONFIDENCE-2.md`](CONFIDENCE-2.md) states two more, with
+criteria committed before their runs: whether the language, and not only the builder, carries
+the behavior (JSONPath, judged by an outside compliance suite), and whether regeneration
+converges.
 
 Status: prototype, version 0.2.0. Node.js 22.18 or later (Node.js 24 and later have a JSON.parse
 bug that duramen warns of: [DESIGN.md](DESIGN.md#nodejs-versions)), no dependencies.
