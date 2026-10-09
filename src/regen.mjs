@@ -64,7 +64,11 @@ export function auditTranscript(text, workDir, { identifiers = [], allowedDomain
   if (tools !== 'Bash,Edit,Glob,Grep,Read,Write') initProblems.push(`tools ${tools}`);
   if ((init.mcp_servers ?? []).length) initProblems.push(`mcp_servers ${JSON.stringify(init.mcp_servers)}`);
   if (init.permissionMode !== 'dontAsk') initProblems.push(`permissionMode ${init.permissionMode}`);
-  if (!new RegExp(`^claude-${family}-`).test(init.model ?? '')) initProblems.push(`model ${init.model} is not a ${family} model`);
+  // `family` is a family (`sonnet`, which the CLI resolves to a dated model) or a full model ID.
+  const asked = String(family);
+  const served = init.model ?? '';
+  const fits = asked.startsWith('claude-') ? served === asked || served.startsWith(`${asked}-`) : served.startsWith(`claude-${asked}-`);
+  if (!fits) initProblems.push(`model ${init.model} is not ${asked.startsWith('claude-') ? asked : `a ${asked} model`}`);
   if (lines.filter((l) => l.type === 'system' && l.subtype === 'init').length !== 1) initProblems.push('not exactly one init line');
   const outside = (p) => {
     if (p === undefined || p === null || p === '') return null;

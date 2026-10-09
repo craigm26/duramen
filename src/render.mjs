@@ -5,6 +5,7 @@
 import { basename } from 'node:path';
 import { exampleId, pick } from './check.mjs';
 import { describeStatic } from './static.mjs';
+import { refsOf } from './types.mjs';
 
 const code = (s) => '`' + String(s).replace(/`/g, 'ˋ') + '`';
 const cell = (s) => String(s).replace(/\|/g, '\\|');
@@ -169,6 +170,35 @@ function requestMembersLine(ast) {
   return `Requests also carry ${parts.join('; ')}.`;
 }
 
+
+// The types the brief lists: all of them, except those that only an op's `draw` clause uses
+// (directly or through other types). Draw types say where `duramen agree` draws requests from;
+// like the clause, they are not part of the behavior a builder implements.
+function typesShown(ast) {
+  const env = new Map(ast.types.map((t) => [t.name, t.type]));
+  const reach = (roots) => {
+    const seen = new Set();
+    const stack = roots.flatMap((t) => (t ? [...refsOf(t)] : []));
+    while (stack.length) {
+      const n = stack.pop();
+      if (seen.has(n) || !env.has(n)) continue;
+      seen.add(n);
+      stack.push(...refsOf(env.get(n)));
+    }
+    return seen;
+  };
+  const drawn = reach(ast.ops.flatMap((o) => (o.draws ?? []).map((d) => d.parsed)));
+  if (!drawn.size) return ast.types;
+  const used = reach([
+    ...ast.ops.flatMap((o) => [...o.inputs.map((f) => f.parsed), o.returns]),
+    ...ast.properties.flatMap((p) => p.vars.filter((v) => v.gen?.kind === 'type').map((v) => v.gen.type)),
+    ...ast.items.filter((r) => r.type === 'req').flatMap((r) => (r.statics ?? []).filter((st) => st.kind === 'json').map((st) => st.type)),
+    // a type nothing uses at all is still listed, as before draw existed
+    ...ast.types.filter((t) => !drawn.has(t.name)).map((t) => ({ kind: 'ref', name: t.name })),
+  ]);
+  return ast.types.filter((t) => used.has(t.name) || !drawn.has(t.name));
+}
+
 export function renderSpec(ast, oracle, { version: duramenVersion = '0.2', properties = [] } = {}) {
   const s = ast.spec;
   const lib = ast.edgeLib ?? { defs: new Map() };
@@ -213,9 +243,10 @@ export function renderSpec(ast, oracle, { version: duramenVersion = '0.2', prope
     '- After end of input and the last response, the driver exits with status 0.');
   const rm = requestMembersLine(ast);
   if (rm) out.push('', rm);
-  if (ast.types.length) {
+  const shownTypes = typesShown(ast);
+  if (shownTypes.length) {
     out.push('', '### Types', '', 'Types named in this document (`number` is a JSON number, read as an IEEE 754 binary64 value; `{a: t, b?: t}` is an object with exactly these members, `b` optional, and `...` allows others; `t[]` is an array; `|` is either):', '');
-    for (const t of ast.types) out.push(`- ${code(t.name)} = ${code(t.text)}`);
+    for (const t of shownTypes) out.push(`- ${code(t.name)} = ${code(t.text)}`);
   }
   if (ast.properties.length) out.push('', ...propertyLanguage(ast));
   out.push('', '### Operations', '', '| op | input fields (required unless marked optional) | result | audit |', '|---|---|---|---|');

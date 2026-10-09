@@ -23,7 +23,7 @@ const CLAUSES = {
   edge: { once: [], many: ['decision'] },
   edgedef: { once: ['text'], many: ['family', 'item'] },
   section: { once: ['text'], many: [] },
-  op: { once: ['returns', 'result', 'audit', 'request'], many: ['input', 'tolerance'] },
+  op: { once: ['returns', 'result', 'audit', 'request'], many: ['input', 'tolerance', 'draw'] },
   req: { once: ['text', 'on'], many: ['decision', 'example', 'table', 'static'] },
   property: { once: ['text', 'samples', 'seed'], many: ['supports', 'decision', 'for', 'where', 'call', 'expect'] },
   evidence: { once: ['source', 'kind', 'text'], many: ['supports', 'decision', 'table', 'waive'] },
@@ -82,12 +82,12 @@ function parseInto(source, file, ast, diag) {
   }
 
   const unquote = (s, n, what, col = 1) => {
-    const m = s.match(/^"((?:[^"\\]|\\.)*)"$/);
+    const m = s.match(/^"((?:[^"\\]|\\.)*)"$/s);
     if (!m) { diag('error', n, 'P004', `${what} must be a quoted string`, col); return s; }
     try { return JSON.parse(`"${m[1]}"`); } catch { diag('error', n, 'P004', `${what}: bad string escape`, col); return m[1]; }
   };
   const idAndTitle = (s, what) => {
-    const m = s.rest.match(/^(\S+)\s+(".*")$/);
+    const m = s.rest.match(/^(\S+)\s+(".*")$/s);
     if (!m) { diag('error', s.line, 'P005', `${what} needs an ID and a quoted title`, s.restCol); return { id: s.rest.split(/\s+/)[0] || '?', title: '' }; }
     return { id: m[1], title: unquote(m[2], s.line, 'title', s.restCol + m[1].length + 1) };
   };
@@ -167,14 +167,14 @@ function parseInto(source, file, ast, diag) {
   function expectation(text, n, col) {
     let m = text.match(/^expect\s+([^\s=≈~]+)\s*=\s*\?$/);
     if (m) return { path: m[1], kind: 'show', line: n };
-    m = text.match(/^expect\s+([^\s=≈~]+)\s*(?:≈|~)(.*)$/);
+    m = text.match(/^expect\s+([^\s=≈~]+)\s*(?:≈|~)(.*)$/s);
     if (m) {
       const am = m[2].match(/^\s*(\S+)\s*(?:±|\+-)\s*(\S+)$/);
       const v = am ? jsonNumber(am[1]) : NaN; const tol = am ? jsonNumber(am[2]) : NaN;
       if (!Number.isFinite(v) || !Number.isFinite(tol) || tol < 0) { diag('error', n, 'P010', 'expect <path> ≈ <number> ± <tolerance>: JSON numbers, and a tolerance of 0 or more', col); return null; }
       return { path: m[1], kind: 'approx', value: v, tol, line: n };
     }
-    m = text.match(/^expect\s+([^\s=≈~]+)\s*=\s*(.*)$/);
+    m = text.match(/^expect\s+([^\s=≈~]+)\s*=\s*(.*)$/s);
     if (m) { const j = parseJSON(m[2], n, 'expected value', col + text.indexOf(m[2])); return j.ok ? { path: m[1], kind: 'eq', value: j.value, line: n } : null; }
     diag('error', n, 'P011', 'expect <path> = <json>, or expect <path> ≈ <number> ± <tolerance>', col);
     return null;
@@ -199,8 +199,9 @@ function parseInto(source, file, ast, diag) {
     // column again, is P013 and ends the table; a tolerance problem in a cell before it is P010.
     const header = [];
     for (const cell of cells(rows[0])) {
-      const hm = cell.match(/^(\S+?)\s*(?:(?:±|\+-)\s*(.*))?$/);
-      if (!hm || !(isExpectPath(hm[1]) ? !/[=≈~]/.test(hm[1]) : /^[\w-]+$/.test(hm[1]))) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
+      const hm = cell.match(/^(\S+?)\s*(?:(?:±|\+-)\s*(.*))?$/s);
+      // A path's names may hold `=`, `≈` and `~` here: they end a path only in an `expect` line.
+      if (!hm || !(isExpectPath(hm[1]) || /^[\w-]+$/.test(hm[1]))) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
       if (header.some((h) => h.name === hm[1])) { diag('error', rows[0].n, 'P013', 'a header names each column once', rows[0].indent + 1); return []; }
       const h = { name: hm[1], tol: hm[2] === undefined ? null : jsonNumber(hm[2]) };
       if (h.tol !== null && !isExpectPath(h.name)) { diag('error', rows[0].n, 'P010', `column "${h.name}": only an expectation column takes a tolerance`, rows[0].indent + 1); h.tol = null; }
@@ -246,7 +247,7 @@ function parseInto(source, file, ast, diag) {
     let i = 0;
     while (i < text.length) {
       if (text[i] === '"') {
-        const m = text.slice(i).match(/^"(?:[^"\\]|\\.)*"/);
+        const m = text.slice(i).match(/^"(?:[^"\\]|\\.)*"/s);
         if (!m) return null;
         try { out.push(JSON.parse(m[0])); } catch { return null; }
         i += m[0].length;
@@ -283,8 +284,8 @@ function parseInto(source, file, ast, diag) {
     const blank = { op: null, input: {}, raw: null, request: null, omit: [], expects: [], line: c.n, from: 'example' };
     if (/^raw(\s|$)/.test(c.rest)) {
       // `raw` is not an op name: example raw "<line>" (a JSON string) or example raw '<line>'
-      const dq = c.rest.match(/^raw\s+("(?:[^"\\]|\\.)*")$/);
-      const sq = c.rest.match(/^raw\s+'(.*)'$/);
+      const dq = c.rest.match(/^raw\s+("(?:[^"\\]|\\.)*")$/s);
+      const sq = c.rest.match(/^raw\s+'(.*)'$/s);
       let rawLine = null;
       if (dq) { try { rawLine = JSON.parse(dq[1]); } catch { rawLine = null; } }
       else if (sq) rawLine = sq[1];
@@ -292,7 +293,7 @@ function parseInto(source, file, ast, diag) {
       else if (/[\r\n]/.test(rawLine)) { diag('error', c.n, 'P026', 'a raw request line cannot contain a line break (CR or LF)', c.restCol); bad = true; }
       ex = { ...blank, rawLine: rawLine ?? '' };
     } else {
-      const m = c.rest.match(/^(\S+)(?:\s+(.+))?$/);
+      const m = c.rest.match(/^(\S+)(?:\s+(.+))?$/s);
       if (!m) { diag('error', c.n, 'P012', 'example <op> [<json input>], or example raw "<request line>"', c.restCol); bad = true; ex = { ...blank }; }
       else if (m[2] === undefined) ex = { ...blank, op: m[1], noInput: true };
       else {
@@ -311,7 +312,7 @@ function parseInto(source, file, ast, diag) {
       if (l.text === '' || l.text.startsWith('#')) continue;
       // A line whose first word is input, request or omit is a line of that kind, whatever follows.
       if (l.indent === 4 && /^input(\s|$)/.test(l.text)) {
-        const im = l.text.match(/^input\s+(.+?)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/) ?? [l.text, '', undefined];
+        const im = l.text.match(/^input\s+(.+?)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/s) ?? [l.text, '', undefined];
         // The text of a block is taken first, so that a bad input line does not make its text
         // look like lines of the example.
         const block = [];
@@ -360,15 +361,15 @@ function parseInto(source, file, ast, diag) {
   function staticCheck(c) {
     const s = c.rest;
     const globs = (t) => { try { const v = JSON.parse(`[${t}]`); return Array.isArray(v) && v.length && v.every((x) => typeof x === 'string') ? v : null; } catch { return null; } };
-    let m = s.match(/^file\s+(.+?)\s+(exists|absent)$/);
+    let m = s.match(/^file\s+(.+?)\s+(exists|absent)$/s);
     if (m) { const g = globs(m[1]); if (g) return { kind: m[2] === 'exists' ? 'exists' : 'absent', globs: g, line: c.n }; }
-    m = s.match(/^lines\s+(.+?)\s+at most\s+(\d+)(?:\s+excluding\s+(.+))?$/);
+    m = s.match(/^lines\s+(.+?)\s+at most\s+(\d+)(?:\s+excluding\s+(.+))?$/s);
     if (m) { const g = globs(m[1]); const x = m[3] ? globs(m[3]) : []; if (g && x) return { kind: 'lines', globs: g, max: Number(m[2]), exclude: x, line: c.n }; }
-    m = s.match(/^json\s+("(?:[^"\\]|\\.)*")\s+matches\s+(.+)$/);
+    m = s.match(/^json\s+("(?:[^"\\]|\\.)*")\s+matches\s+(.+)$/s);
     if (m) { const t = typeOf(m[2], c.n, c.restCol + s.indexOf(m[2]), 'static json'); return t ? { kind: 'json', target: JSON.parse(m[1]), type: t, typeText: m[2], line: c.n } : null; }
     m = s.match(/^command\s+(\S+)\s+exits\s+0(?:\s+within\s+(\d+))?$/);
     if (m) return { kind: 'command', key: m[1], within: m[2] ? Number(m[2]) : 300, line: c.n };
-    m = s.match(/^text\s+(.+?)\s+not matching\s+("(?:[^"\\]|\\.)*")$/);
+    m = s.match(/^text\s+(.+?)\s+not matching\s+("(?:[^"\\]|\\.)*")$/s);
     if (m) {
       const g = globs(m[1]);
       let re = null;
@@ -435,7 +436,7 @@ function parseInto(source, file, ast, diag) {
         break;
       }
       case 'type': {
-        const m = s.rest.match(/^([A-Za-z_][\w-]*)\s*=\s*(.+)$/);
+        const m = s.rest.match(/^([A-Za-z_][\w-]*)\s*=\s*(.+)$/s);
         if (!m) { diag('error', s.line, 'P029', 'type <name> = <type>', s.restCol); break; }
         const t = typeOf(m[2], s.line, s.restCol + s.rest.indexOf(m[2]), `type ${m[1]}`);
         if (t) ast.types.push({ name: m[1], type: t, text: m[2], line: s.line });
@@ -461,7 +462,7 @@ function parseInto(source, file, ast, diag) {
           if (c.kw === 'family') def.family.push(...ids(c.rest));
           else if (c.kw === 'text') def.text = prose(c);
           else if (c.kw === 'item') {
-            const refused = c.rest.match(/^(.+?)\s+refused$/);
+            const refused = c.rest.match(/^(.+?)\s+refused$/s);
             const src = refused ? refused[1] : null;
             if (src !== null) {
               const j = parseJSON(src, c.n, 'pack input', c.restCol);
@@ -501,17 +502,26 @@ function parseInto(source, file, ast, diag) {
       case 'op': {
         // a malformed first line is reported, and the clauses are still read
         if (!/^\S+$/.test(s.rest)) diag('error', s.line, 'P031', 'op <name>', s.restCol);
-        const op = { name: /^\S+$/.test(s.rest) ? s.rest : '?', inputs: [], returns: null, returnsText: null, tolerances: {}, audit: null, summary: '', request: null, line: s.line };
+        const op = { name: /^\S+$/.test(s.rest) ? s.rest : '?', inputs: [], draws: [], returns: null, returnsText: null, tolerances: {}, audit: null, summary: '', request: null, line: s.line };
         for (const c of cs) {
           if (c.kw === 'request') { const j = requestObject(c); if (j) op.request = j; continue; }
           if (c.kw === 'input') {
             // name[?] <type>, ... ; commas inside braces, brackets, parens or double quotes do not split
             for (const { text: f, at } of splitTop(c.rest, { keepEmpty: true })) {
-              const fm = f.match(/^([\w-]+)(\?)?\s+(.+)$/);
+              const fm = f.match(/^([\w-]+)(\?)?\s+(.+)$/s);
               if (!fm) { diag('error', c.n, 'P017', `input field "${f}": <name>[?] <type>`, c.restCol + at); continue; }
               if (op.inputs.some((x) => x.name === fm[1])) { diag('error', c.n, 'P052', `${op.name} already has an input field ${fm[1]}`, c.restCol + at); continue; }
               const pt = parseType(fm[3]);
               op.inputs.push({ name: fm[1], optional: !!fm[2], type: fm[3], parsed: pt.error ? null : pt.type, typeError: pt.error ?? null, line: c.n, col: c.restCol + at });
+            }
+          } else if (c.kw === 'draw') {
+            // <input field> <type>, ... : where `duramen agree` draws that field from (0.2)
+            for (const { text: f, at } of splitTop(c.rest, { keepEmpty: true })) {
+              const fm = f.match(/^([\w-]+)\s+(.+)$/s);
+              if (!fm) { diag('error', c.n, 'P017', `draw "${f}": <input field> <type>`, c.restCol + at); continue; }
+              if (op.draws.some((x) => x.name === fm[1])) { diag('error', c.n, 'P052', `${op.name} already draws ${fm[1]}`, c.restCol + at); continue; }
+              const pt = parseType(fm[2]);
+              op.draws.push({ name: fm[1], type: fm[2], parsed: pt.error ? null : pt.type, typeError: pt.error ?? null, line: c.n, col: c.restCol + at });
             }
           } else if (c.kw === 'returns') {
             op.returns = typeOf(c.rest, c.n, c.restCol, `returns of ${op.name}`);
@@ -537,7 +547,7 @@ function parseInto(source, file, ast, diag) {
         if (ast.errorsLine !== undefined) diag('error', s.line, 'P032', `errors is declared once (it is the order in which checks run; the first is at line ${ast.errorsLine})`);
         else ast.errorsLine = s.line;
         for (const c of cs) {
-          const m = (c.kw + ' ' + c.rest).match(/^(\S+)\s+when\s+(.+)$/);
+          const m = (c.kw + ' ' + c.rest).match(/^(\S+)\s+when\s+(.+)$/s);
           if (!m) diag('error', c.n, 'P019', 'errors: one "<code> when <condition>" per line, first match wins', c.col);
           const more = [];
           for (const l of c.sub) {
@@ -584,13 +594,13 @@ function parseInto(source, file, ast, diag) {
             if (!Number.isInteger(v) || v < (c.kw === 'samples' ? 1 : 0) || v > (c.kw === 'samples' ? 100000 : 0xffffffff)) diag('error', c.n, 'P034', `${c.kw} <whole number>`, c.restCol);
             else pr[c.kw] = v;
           } else if (c.kw === 'for') {
-            const m = c.rest.match(/^([A-Za-z_]\w*)\s+in\s+(.+)$/);
+            const m = c.rest.match(/^([A-Za-z_]\w*)\s+in\s+(.+)$/s);
             if (!m) { diag('error', c.n, 'P035', 'for <name> in <lo> .. <hi> | int <lo> .. <hi> | one of <json>, ... | json | <type>', c.restCol); continue; }
             const g = generator(m[2], c.n, c.restCol + c.rest.indexOf(m[2]));
             if (g) pr.vars.push({ name: m[1], gen: g, line: c.n });
           } else if (c.kw === 'where') { const e = exprOf(c.rest, c.n, c.restCol, 'where'); if (e) pr.where.push({ ast: e, text: c.rest, line: c.n }); }
           else if (c.kw === 'call') {
-            const m = c.rest.match(/^([A-Za-z_]\w*)\s*=\s*(\S+)\s+(.+)$/);
+            const m = c.rest.match(/^([A-Za-z_]\w*)\s*=\s*(\S+)\s+(.+)$/s);
             if (!m) { diag('error', c.n, 'P036', 'call <name> = <op> <input expression>', c.restCol); continue; }
             const e = exprOf(m[3], c.n, c.restCol + c.rest.indexOf(m[3]), 'call input');
             if (e) pr.calls.push({ name: m[1], op: m[2], input: e, inputText: m[3], line: c.n });
@@ -631,13 +641,13 @@ function parseInto(source, file, ast, diag) {
             if (!m) diag('error', c.n, 'P040', 'waive <row id> because <decision id>', c.restCol);
             else ev.waivers.push({ row: m[1], decision: m[2], line: c.n });
           } else if (c.kw === 'table') {
-            const m = c.rest.match(/^(\S+)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/);
+            const m = c.rest.match(/^(\S+)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/s);
             if (!m) { diag('error', c.n, 'P041', 'table <op> [from "<file>"]', c.restCol); continue; }
             if (!m[2]) { ev.tables.push({ op: m[1], line: c.n, rows: tableRows(c, m[1], 'evidence') }); continue; }
             const t = { op: m[1], file: JSON.parse(m[2]), line: c.n, columns: [], expects: [], idColumn: null };
             for (const l of contLines(c)) {
               let mm;
-              if ((mm = l.text.match(/^columns\s+(.+)$/))) {
+              if ((mm = l.text.match(/^columns\s+(.+)$/s))) {
                 for (const { text: part } of splitTop(mm[1])) {
                   const pm = part.match(/^([\w-]+)\s*=\s*([\w.-]+)(?:\s+as\s+(string|json))?$/);
                   if (!pm) { diag('error', l.n, 'P042', `columns: <input field> = <column> [as string|json], got "${part}"`, l.indent + 1); continue; }
@@ -694,7 +704,7 @@ function parseInto(source, file, ast, diag) {
       if (!Number.isFinite(lo) || !Number.isFinite(hi) || lo > hi) { diag('error', n, 'P035', 'a range needs finite lo <= hi', col); return null; }
       return m[1] ? { kind: 'type', type: { kind: 'integer', range: [lo, hi] }, text } : { kind: 'type', type: { kind: 'number', range: [lo, hi] }, text };
     }
-    if ((m = text.match(/^one of\s+(.+)$/))) {
+    if ((m = text.match(/^one of\s+(.+)$/s))) {
       const j = parseJSON(`[${m[1]}]`, n, 'one of', col);
       if (!j.ok) return null;
       if (!j.value.length) { diag('error', n, 'P035', 'one of needs at least one value', col); return null; }
@@ -718,7 +728,7 @@ export function splitTop(text, { keepEmpty = false } = {}) {
     if (quote) { if (c === '\\') i++; else if (c === quote) quote = null; continue; }
     if (c === '"') quote = c;
     else if ('{[('.includes(c)) depth++;
-    else if ('}])'.includes(c)) depth--;
+    else if ('}])'.includes(c)) { if (depth > 0) depth--; } // a closer with no opener is an ordinary character
     else if (c === ',' && depth === 0) { out.push({ text: text.slice(start, i).trim(), at: start }); start = i + 1; }
   }
   out.push({ text: text.slice(start).trim(), at: start });

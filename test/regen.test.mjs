@@ -77,6 +77,17 @@ test('regen: the audit flags network use and tools beyond the allowed set', () =
   assert.equal(a.network_violations.length, 3);
 });
 
+test('regen: the audit takes a family or a full model ID', () => {
+  const init = (model) => [{ type: 'system', subtype: 'init', cwd: '/w', tools: ['Bash', 'Edit', 'Glob', 'Grep', 'Read', 'Write'], mcp_servers: [], permissionMode: 'dontAsk', model }].map((o) => JSON.stringify(o)).join('\n');
+  assert.equal(auditTranscript(init('claude-haiku-5-5'), '/w', { family: 'haiku' }).init.ok, true);
+  assert.equal(auditTranscript(init('claude-haiku-5-5'), '/w', { family: 'sonnet' }).init.ok, false);
+  assert.equal(auditTranscript(init('claude-haiku-4-5-20251001'), '/w', { family: 'claude-haiku-4-5-20251001' }).init.ok, true);
+  assert.equal(auditTranscript(init('claude-haiku-4-5-20251001'), '/w', { family: 'claude-haiku-4-5' }).init.ok, true);
+  const other = auditTranscript(init('claude-haiku-5-5'), '/w', { family: 'claude-haiku-4-5' });
+  assert.equal(other.init.ok, false);
+  assert.match(other.init.problems.join(), /is not claude-haiku-4-5/);
+});
+
 test('regen: a builder that cannot be started settles once, with its error', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'duramen-launch-'));
   try {

@@ -4,8 +4,8 @@
 // value; everything else is a claim the oracle must agree with. A requirement that nothing but
 // the oracle backs is reported (T032), because then the spec is only as right as its model.
 import { dirname } from 'node:path';
-import { runDriver } from './driver.mjs';
-import { checkType, refsOf } from './types.mjs';
+import { runDriver, allFinite } from './driver.mjs';
+import { checkType, refsOf, genType, makeRng, seedOf } from './types.mjs';
 import { planProperty, propertyCase, runPropertyCases, showBindings } from './property.mjs';
 
 const OBLIGATION = /\b(MUST|MUST NOT|SHALL|SHALL NOT|REQUIRED)\b/;
@@ -70,7 +70,9 @@ export function pick(resp, path) {
     v = v[parts[i]];
     if (i === 0 && parts[0] === 'audit' && parts.length > 1) {
       if (typeof v !== 'string') return { found: false };
+      // an audit text that is not JSON, or holds a number too large for binary64, holds no value
       try { v = JSON.parse(v); } catch { return { found: false }; }
+      if (!allFinite(v)) return { found: false };
     }
   }
   return { found: true, value: v };
@@ -143,15 +145,16 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
   const env = typeEnv(ast);
   const newer = v02(ast);
 
-  // IDs are unique: REQ-x, OPEN-x, PROP-x, EV-x and decision IDs (REQ-WB-002 and OPEN-WB-002 may coexist).
+  // IDs are unique within each kind: REQ-x, OPEN-x, PROP-x, EV-x, decision IDs and op names
+  // (REQ-WB-002 and OPEN-WB-002 may coexist, and so may a decision named REQ-A and REQ-A).
   const seen = new Map();
   const allIds = [
     ...reqs.map((x) => [x, `REQ-${x.id}`]), ...opens.map((x) => [x, `OPEN-${x.id}`]),
     ...ast.properties.map((x) => [x, `PROP-${x.id}`]), ...ast.evidence.map((x) => [x, `EV-${x.id}`]),
-    ...ast.decisions.map((x) => [x, x.id]), ...ast.ops.map((x) => [x, `op ${x.name}`]),
+    ...ast.decisions.map((x) => [x, `decision ${x.id}`]), ...ast.ops.map((x) => [x, `op ${x.name}`]),
   ];
   for (const [x, id] of allIds) {
-    if (seen.has(id)) d('error', x, 'T007', `duplicate ID ${id} (first at ${seen.get(id)})`);
+    if (seen.has(id)) d('error', x, 'T007', `duplicate ${id.startsWith('decision ') || id.startsWith('op ') ? id : `ID ${id}`} (first at ${seen.get(id)})`);
     else seen.set(id, `${x.file === ast.file ? '' : `${x.file}:`}line ${x.line}`);
   }
 
@@ -180,6 +183,16 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
       if (newer) for (const n of refsOf(f.parsed)) if (!env.has(n)) d('error', f, 'T034', `${op.name} input ${f.name} uses type ${n}, which is not declared`, f.col);
     }
     if (op.returns) for (const n of refsOf(op.returns)) if (!env.has(n)) d('error', op, 'T034', `${op.name} returns type ${n}, which is not declared`);
+    for (const dr of op.draws ?? []) {
+      if (!newer) { d('error', dr, 'T037', 'draw needs duramen 0.2', dr.col); continue; }
+      if (dr.typeError) { d('error', dr, 'T040', `${op.name} draw ${dr.name}: "${dr.type}" is not a type (${dr.typeError})`, dr.col); continue; }
+      if (!op.inputs.some((f) => f.name === dr.name)) { d('error', dr, 'T041', `${op.name} draws ${dr.name}, which is not one of its input fields`, dr.col); continue; }
+      const unknown = [...refsOf(dr.parsed)].filter((n) => !env.has(n));
+      for (const n of unknown) d('error', dr, 'T034', `${op.name} draw ${dr.name} uses type ${n}, which is not declared`, dr.col);
+      if (unknown.length) continue;
+      const g = genType(dr.parsed, makeRng(seedOf(`${op.name}.${dr.name}`)), env);
+      if (g.error) d('error', dr, 'T041', `${op.name} cannot draw ${dr.name}: ${g.error}`, dr.col);
+    }
   }
 
   // Inputs against declared types (0.2): an example that sends a value of the wrong type must

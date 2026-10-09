@@ -274,7 +274,8 @@ export function genType(t, rng, env = new Map(), depth = 0) {
         if (f.optional && rng.next() < 0.5) continue;
         const g = genType(f.type, rng, env, depth + 1);
         if (g.error) return g;
-        o[f.name] = g.value;
+        // defined, not assigned: a member named __proto__ is then a member, as JSON.parse makes it
+        Object.defineProperty(o, f.name, { value: g.value, enumerable: true, writable: true, configurable: true });
       }
       return { value: o };
     }

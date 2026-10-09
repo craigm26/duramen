@@ -8,20 +8,23 @@ import { typeEnv, requestMembers } from './check.mjs';
 import { runDriver } from './driver.mjs';
 import { answerDiffers } from './suite.mjs';
 
+// The type an input field is drawn from: the op's `draw` type for it, else its input type.
+const drawType = (op, f) => (op.draws ?? []).find((x) => x.name === f.name)?.parsed ?? f.parsed;
+
 // Requests for every op whose inputs all have types: `samples` drawn inputs per op.
 export function agreeRequests(ast, { samples = 50, seed = 1 } = {}) {
   const env = typeEnv(ast);
   const out = [];
   const skipped = [];
   for (const op of ast.ops) {
-    if (!op.inputs.every((f) => f.parsed)) { skipped.push({ op: op.name, why: 'an input has no type duramen can draw from' }); continue; }
+    if (!op.inputs.every((f) => drawType(op, f))) { skipped.push({ op: op.name, why: 'an input has no type duramen can draw from' }); continue; }
     const rng = makeRng((seedOf(op.name) ^ seed) >>> 0);
     for (let k = 1; k <= samples; k++) {
       const input = {};
       let error = null;
       for (const f of op.inputs) {
         if (f.optional && rng.next() < 0.3) continue;
-        const g = genType(f.parsed, rng, env);
+        const g = genType(drawType(op, f), rng, env);
         if (g.error) { error = g.error; break; }
         input[f.name] = g.value;
       }

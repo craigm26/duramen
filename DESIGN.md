@@ -99,6 +99,7 @@ op <name>
   tolerance <result path> <number>
   audit text
   request {...}
+  draw <field> <type>, <field> <type>
 
 errors
   <code> when <condition>
@@ -191,6 +192,7 @@ note
 | `op … tolerance` | how far a numeric result may differ, by path (`result.wetBulbC`) |
 | `op … audit text` | the response also carries an `audit` string, compared byte for byte |
 | `op … request` | replaces the spec's request members for this op (`request {}` for none) |
+| `op … draw` (0.2) | where `duramen agree` draws an input field from, instead of its input type: a narrower or differently weighted type, so that generated requests reach the behavior that matters (times near the clock, names that collide); it is not shown in the brief and does not limit what a request may carry |
 | `errors` | the error codes in the order the checks run; the first that applies wins |
 | `req … on` | `any` (the default), `posix` or `windows` |
 | `example <op> <json>` | a request with this input, sent exactly as written (spellings such as `2.0e1` survive) |
@@ -238,8 +240,11 @@ The runner is defensive about the program on the other end: it never uses a shel
 whole process tree on timeout or runaway output, keeps every response that arrived before a
 failure, and reports the exit status, signal, timeout and the tail of standard error.
 
-`duramen serve` is duramen itself as a driver, with two operations, `check` and `cases`, whose
-input is a record as a map of file names to texts. It is the oracle of `spec/`.
+`duramen serve` is duramen itself as a driver, with three operations: `check` and `cases`, whose
+input is a record as a map of file names to texts, and `judge`, whose input is a case of a suite
+and an implementation's answer to it, and whose result is the verdict `duramen run` gives that
+answer (pass, or the checks and parts of the whole answer it fails). It is the oracle of
+`spec/`.
 
 ### Checks
 
@@ -310,7 +315,7 @@ checked further (`spec/`, REQ-RC-005).
 | T004 | error | an uppercase MUST, SHALL or REQUIRED (or a negation) outside quotes in a note, section, the spec's text, a decision or its rejected alternatives, an op's result summary, an error condition, evidence or a property |
 | T005 | error | a requirement's text names two codes declared in `errors` (as whole words) and talks about order |
 | T006 | error | the oracle fails a bound edge pack |
-| T007 | error | duplicate ID (`REQ-x`, `OPEN-x`, `PROP-x`, `EV-x` and decision IDs are separate), or two operations with one name |
+| T007 | error | duplicate ID within one kind (`REQ-x`, `OPEN-x`, `PROP-x`, `EV-x`, decision IDs and operation names are each their own kind) |
 | T008 | error | a requirement, edge, property or evidence cites an undeclared decision |
 | T009 | error | an example names an unknown op (allowed when it expects an error, and for raw lines) |
 | T010 | error | an example leaves out a required input field (same exceptions) |
@@ -340,10 +345,11 @@ checked further (`spec/`, REQ-RC-005).
 | T034 | error | a type declared twice, an undeclared type name, or a type that refers to itself with no structure in between |
 | T035 | error / warning | a property that calls an unknown op or cannot draw its inputs / whose `where` accepts fewer draws than its samples |
 | T036 | error / warning | evidence about an unknown op, or a waiver of a row it does not have / a waiver of a row the oracle agrees with |
-| T037 | error | static checks, evidence or properties in a `duramen 0.1` record |
+| T037 | error | static checks, evidence, properties or `draw` in a `duramen 0.1` record |
 | T038 | error | the oracle's answer does not have the op's declared result type |
 | T039 | error / warning | evidence or a property that supports an undeclared requirement / that supports none |
-| T040 | error | an op input type that does not parse (0.2) |
+| T040 | error | an op input or draw type that does not parse (0.2) |
+| T041 | error | an op `draw` for a field the op does not have, or a type nothing can be drawn from |
 
 T004 and T005 are text heuristics. T005 catches the form r02's mistake took. T004 would not
 have caught r05's as written, which used no uppercase keyword; an author can also phrase around
@@ -378,7 +384,7 @@ regen-heat-engine's REQ-CJ-001 to REQ-CJ-004. Edge texts are normative and may u
 | `duramen agree <record> --impl <dir> ...` | runs several implementations and the oracle on requests generated from the input types, and groups the answers: where builds agree with each other and not with the oracle, the oracle is the suspect |
 | `duramen diff <old> <new>` | classifies what changed between two versions of a record (breaking, tightening, additive, relaxing, prose) and checks that the version number says so; the old version's examples that the new one dropped are run through the new oracle, so a change of behavior is breaking even when no text shows it |
 | `duramen regen <record> --lang ts\|py` | one blind build, end to end: brief, sandbox, leak check, builder (`claude -p`, allow-listed environment, file and shell tools only), transcript audit, score, ledger |
-| `duramen serve` | duramen as a driver (`check`, `cases`), the oracle of `spec/` |
+| `duramen serve` | duramen as a driver (`check`, `cases`, `judge`), the oracle of `spec/` |
 
 ## What 0.2 does not do
 

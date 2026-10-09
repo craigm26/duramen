@@ -67,7 +67,7 @@ function explain(codes) {
   const out = [];
   for (const raw of codes.split(/[\s,]+/).filter(Boolean)) {
     const code = raw.toUpperCase();
-    if (!/^[PT]\d{3}$/.test(code)) { out.push(`${raw}: not a duramen code (P001 to P052 for reading, T001 to T040 for checking)`); continue; }
+    if (!/^[PT]\d{3}$/.test(code)) { out.push(`${raw}: not a duramen code (P001 to P052 for reading, T001 to T041 for checking)`); continue; }
     const row = design.find((l) => l.startsWith(`| ${code} |`));
     out.push(row ? row.split('|').map((c) => c.trim()).filter(Boolean).join(': ') : `${code}: no such code`);
   }
