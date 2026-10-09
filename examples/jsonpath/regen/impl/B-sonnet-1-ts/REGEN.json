@@ -1,0 +1,6 @@
+{
+  "lang": "ts",
+  "build": "",
+  "test": "node --test \"tests/*.test.ts\"",
+  "driver": "node driver.ts"
+}

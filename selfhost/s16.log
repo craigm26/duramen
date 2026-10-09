@@ -1,0 +1,6 @@
+  sandbox sbfigh: brief written, leak check ok; launching claude-opus-5-5 (ts)
+  builder exited with 0 after 18.1 min
+run s16: claude-opus-5-5 (ts), 73 turns, 18 min, $4.95
+  audit: 2 violations, init ok, 3 denied calls
+  suite: passed 235/235
+  build copied to selfhost/impl/s16-ts; 35 choices to triage in selfhost/s16-ts.md

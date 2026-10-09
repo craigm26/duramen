@@ -9,6 +9,8 @@
 //
 // --against compares with another implementation instead of duramen (it then stands where D0
 // does in the report), so that two rebuilt checkers can be compared with duramen out of the loop.
+// --json writes the report as JSON, with the id of every request answered differently
+// (`<mutant>:<op>`, or `seed<k>:<op>` for an unmutated record), under `differing`.
 import { loadRecord } from '../src/record.mjs';
 import { runDriver } from '../src/driver.mjs';
 import { makeRng } from '../src/types.mjs';
@@ -109,10 +111,12 @@ async function main(argv) {
   const t0 = Date.now();
   const [a, b] = [await answers(d0, requests), await answers(d1, requests)];
   const groups = new Map();
+  const differing = [];
   let same = 0;
   for (const q of requests) {
     const ra = a.get(q.id), rb = b.get(q.id);
     if (canon(ra) === canon(rb)) { same++; continue; }
+    differing.push(q.id);
     const sig = signature(ra, rb, q.op);
     const k = q.id.split(':')[0];
     const m = k.startsWith('seed') ? { from: all[Number(k.slice(4))].from, mutation: '(unmutated)', files: all[Number(k.slice(4))].files } : mutants[Number(k)];
@@ -122,7 +126,7 @@ async function main(argv) {
     groups.set(sig, g);
   }
   const sorted = [...groups].sort((x, y) => y[1].count - x[1].count);
-  const report = { implementation: dir, against: against ?? 'duramen', seeds: all.length, mutants: count, requests: requests.length, same, differ: requests.length - same, seconds: Math.round((Date.now() - t0) / 1000), groups: sorted.map(([sig, g]) => ({ signature: sig, count: g.count, examples: g.examples })) };
+  const report = { implementation: dir, against: against ?? 'duramen', seeds: all.length, mutants: count, requests: requests.length, same, differ: requests.length - same, seconds: Math.round((Date.now() - t0) / 1000), groups: sorted.map(([sig, g]) => ({ signature: sig, count: g.count, examples: g.examples })), differing };
   if (json) { console.log(JSON.stringify(report, null, 1)); return 0; }
   console.log(`${report.requests} requests (${count} mutants and ${all.length} seeds, check and cases each): ${same} answered the same, ${report.differ} differently (${report.seconds} s)`);
   for (const [sig, g] of sorted) {

@@ -1,0 +1,10 @@
+{
+  "name": "duramen-core",
+  "version": "0.10.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/*.test.ts\"",
+    "start": "node driver.ts"
+  }
+}

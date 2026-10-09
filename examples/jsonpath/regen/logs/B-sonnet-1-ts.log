@@ -1,0 +1,51 @@
+  sandbox adricx: brief written, leak check ok; launching claude-sonnet-5-5 (ts)
+  builder exited with 0 after 6.4 min
+run B-sonnet-1: claude-sonnet-5-5 (ts), 25 turns, 6.3 min, $1.39
+  audit: 2 violations, init ok, 3 denied calls
+  suite: passed 693/738
+    FAIL SE-003#2: result.values: expected [2,1], got [1,2]; result.paths: expected ["$['a']","$['b']"], got ["$['b']","$['a']"]; result: expected {"values":[2,1],"paths":["$['a']","$['b']"]}, got {"values":[1,2],"paths
+    FAIL SE-007#1: result.values: expected [4,1], got [1,4]; result.paths: expected ["$['a'][2][0]['j']","$['o']['j']"], got ["$['o']['j']","$['a'][2][0]['j']"]; result: expected {"values":[4,1],"paths":["$['a'][2][0]['
+    FAIL SE-007#3: result.values: expected [[5,3,[{"j":4},{"k":6}]],{"j":1,"k":2},5,3,[{"j":4},{"k":6}],{"j":4},{"k":6},4,6,1,2], got [{"j":1,"k":2},[5,3,[{"j":4},{"k":6}]],1,2,5,3,[{"j":4},{"k":6}],{"j":4},{"k":6},4,6]
+    FAIL SE-008#1: result.values: expected [3,2,1], got [1,2,3]; result.paths: expected ["$['B']","$['a']","$['b']"], got ["$['b']","$['a']","$['B']"]; result: expected {"values":[3,2,1],"paths":["$['B']","$['a']","$['b
+    FAIL SE-008#2: result.values: expected [3,1,2], got [1,2,3]; result.paths: expected ["$['1']","$['10']","$['9']"], got ["$['10']","$['9']","$['1']"]; result: expected {"values":[3,1,2],"paths":["$['1']","$['10']","$
+    FAIL SE-008#3: result.values: expected [3,2,1], got [1,2,3]; result.paths: expected ["$['']","$['a']","$['ab']"], got ["$['ab']","$['a']","$['']"]; result: expected {"values":[3,2,1],"paths":["$['']","$['a']","$['ab
+    FAIL SE-008#4: result.values: expected [4,3,2,1], got [1,2,3,4]; result.paths: expected ["$['z']","$['é']","$['￿']","$['😀']"], got ["$['😀']","$['￿']","$['é']","$['z']"]; result: expected {"values":[4,3,2,1],"paths
+    FAIL SE-008#5: result.values: expected [2,1], got [1,2]; result.paths: expected ["$['a']","$['b']"], got ["$['b']","$['a']"]; result: expected {"values":[2,1],"paths":["$['a']","$['b']"]}, got {"values":[1,2],"paths
+    FAIL SE-008#6: result.values: expected [[3],{"y":1,"x":2},3,2,1], got [{"y":1,"x":2},[3],1,2,3]; result.paths: expected ["$['a']","$['b']","$['a'][0]","$['b']['x']","$['b']['y']"], got ["$['b']","$['a']","$['b']['y'
+    FAIL FI-002#5: result.values: expected [1,false], got [false,1]; result.paths: expected ["$['a']","$['flag']"], got ["$['flag']","$['a']"]; result: expected {"values":[1,false],"paths":["$['a']","$['flag']"]}, got {
+    FAIL FI-003#1: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-003#2: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-003#5: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-003#9: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-003#10: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-004#3: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-004#4: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-004#6: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-004#9: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#1: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#3: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#4: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#6: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#7: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#8: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#9: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#10: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#11: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-005#12: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#1: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#3: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#6: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#7: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#11: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#13: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#14: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#15: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#16: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#17: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL FI-006#18: result.values: expected [[2,3],{"x":"y"}], got [{"x":"y"},[2,3]]; result: expected {"values":[[2,3],{"x":"y"}],"paths":["$['arr']","$['obj']"]}, got {"values":[{"x":"y"},[2,3]],"paths":["$['obj']","$[
+    FAIL ev:EV-RFC#T6-1: result: expected {"values":[[5,3],{"j":1,"k":2}],"paths":["$['a']","$['o']"]}, got {"values":[{"j":1,"k":2},[5,3]],"paths":["$['o']","$['a']"]}
+    FAIL ev:EV-RFC#T16-1: result: expected {"values":[4,1],"paths":["$['a'][2][0]['j']","$['o']['j']"]}, got {"values":[1,4],"paths":["$['o']['j']","$['a'][2][0]['j']"]}
+    FAIL ev:EV-RFC#T16-2: result.values: expected [4,1], got [1,4]; result.paths: expected ["$['a'][2][0]['j']","$['o']['j']"], got ["$['o']['j']","$['a'][2][0]['j']"]; result: expected {"values":[4,1],"paths":["$['a'][2][0]['
+    FAIL ev:EV-RFC#T16-4: result: expected {"values":[[5,3,[{"j":4},{"k":6}]],{"j":1,"k":2},5,3,[{"j":4},{"k":6}],{"j":4},{"k":6},4,6,1,2],"paths":["$['a']","$['o']","$['a'][0]","$['a'][1]","$['a'][2]","$['a'][2][0]","$['a'][2
+    FAIL ev:EV-RFC#T16-5: result: expected {"values":[[5,3,[{"j":4},{"k":6}]],{"j":1,"k":2},5,3,[{"j":4},{"k":6}],{"j":4},{"k":6},4,6,1,2],"paths":["$['a']","$['o']","$['a'][0]","$['a'][1]","$['a'][2]","$['a'][2][0]","$['a'][2
+  build copied to examples/jsonpath/regen/impl/B-sonnet-1-ts; 14 choices to triage in examples/jsonpath/regen/B-sonnet-1-ts.md

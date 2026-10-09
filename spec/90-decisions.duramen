@@ -237,3 +237,53 @@ decision D-020 "The echo fixture splits its own lines"
     text, so their requests change, `duramen diff` calls the record tighter, and its version
     is 0.9.0.
   rejected "Keep the fixture and require Node.js 22: the record would fail on the current Node.js for a reason that is not duramen's."
+
+decision D-021 "What the eighth round's three builds found"
+  source blind builds s14 (TypeScript, claude-sonnet-5-5), s15 (Python, claude-sonnet-5-5) and s16 (TypeScript, claude-opus-5-5) of duramen-core 0.9.0, compared with duramen on 4,500 mutated records each and on 374 records written for recorded choices, this round's and every earlier round's
+  text
+    All three passed every case of the 0.9.0 suite and were fixed points, and s14 and s16
+    answered every mutated record as duramen did. Where the four checkers read a record in more
+    than one way and no open item covered it, there were four readings. When an example that
+    states an expectation of something other than the error is answered with an error, s15 gave
+    T024, as s13 had in the round before; duramen, s14 and s16 gave it only to an example that
+    states no expectation at all, and the words now say so. duramen took a quotation out of a
+    text and joined the words around it, so it found no obligation word in ``` x`a`MUST ```
+    and one in ``` MU`a`ST ```; the words had said that a word is whole when no letter touches
+    it, all three builds followed them, and duramen changes. s16 read a quotation across the
+    line break of a rejected alternative, which the words now name as two lines. An oracle's audit that is not
+    a string went into the suite's `full` in duramen and s15, where `judge` takes only a
+    string; it is now left out, and duramen changes. A raw example's line holding a lone
+    surrogate reached the oracle as U+FFFD from duramen, s14 and s16, and as bytes that are not
+    UTF-8 from s15; the words now say U+FFFD. Every other record read more than one way fell
+    under an open item: the rest of the language, the time an oracle may take, names a file
+    system cannot hold, checks of other kinds, and which white space makes a line blank.
+
+decision D-022 "What the ninth round's three builds found"
+  source blind builds s17 (TypeScript, claude-sonnet-5-5), s18 (Python, claude-sonnet-5-5) and s19 (TypeScript, claude-opus-5-5) of duramen-core 0.10.0, compared with duramen on 4,500 mutated records each and on 397 records written for recorded choices, this round's and every earlier round's
+  text
+    All three passed every case of the 0.10.0 suite and were fixed points. On the mutated
+    records the only record any of them read otherwise than duramen was a `duramen 0.2` file,
+    whose checks are open, and every two of them answered every mutated record alike. On the
+    records written for recorded choices, four readings split them where no open item did. A
+    table column named `result`, `audit`, `error` or `id` that the operation also declares as
+    an input field: every earlier build and two of these read it as a path, s18 as the field;
+    the words said "also when", which reads both ways, and now say "even when". Commas between
+    input fields after brackets of two kinds, as in `a (x}, b`: s19 counted each kind apart,
+    duramen and the other two counted them together, and the words now say together. A
+    tolerance for the path `__proto__`: s17 lost it, as a plain JavaScript object does, where
+    D-018 had already said such a name is like any other; an example now shows it. A rejected
+    alternative holding a lone CR: all three builds ended a line there, as REQ-SY-001 ends
+    lines, and duramen did not, so its quotation ran on; duramen changes.
+
+decision D-023 "What the tenth round's three builds found"
+  source blind builds s20 (TypeScript, claude-sonnet-5-5), s21 (Python, claude-sonnet-5-5) and s22 (TypeScript, claude-opus-5-5) of duramen-core 0.11.0, compared with duramen on 4,500 mutated records each and on 410 records written for recorded choices, this round's and every earlier round's
+  text
+    All three passed every case of the 0.11.0 suite and were fixed points. Three readings
+    split them where no open item did, each on few records. s22 let a second `audit` clause
+    of an operation pass, reading the once-only clauses of REQ-SY-003 as a list that leaves it
+    out, where the list names it; an example now shows it. s20 read "nothing else in the table
+    is checked", after P013, as covering the P006 a line that is no row gets; duramen and the
+    other two did not, and the words now say so. s21 took the path of `input b  from "t.txt"`,
+    with two spaces before `from`, to end in a space, where the others read the file; the
+    words now allow white space of any length there. This version was written after the last
+    round of CONFIDENCE-2.md's claim 8, and no build has been made from it.

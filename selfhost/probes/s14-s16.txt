@@ -1,0 +1,715 @@
+# Records and requests written to try the choices of round eight's builds: s14 (TypeScript,
+# claude-sonnet-5-5), s15 (Python, claude-sonnet-5-5) and s16 (TypeScript, claude-opus-5-5),
+# all from duramen-core 0.9.0. Read by selfhost/probe.mjs: each "=== " section is one record
+# (a.duramen, and the files after "--- " lines; "--- <name> from <path>" takes a file of this
+# repository as it is); "@op cases" asks for the suite instead of the diagnostics; "@input"
+# sends that input instead of a record; "@raw" sends the lines after it, each written as a JSON
+# string, in a driver session of its own. Round eight's probes are this file and the four
+# earlier ones (s06-s07 to s12-s13), sent to duramen and to every checker of the round.
+
+=== s14 C-2, s15 C-10, s16 C-9: an oracle that answers after 25 seconds
+duramen 0.1
+spec s 1
+oracle node slow.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- slow.mjs
+await new Promise((r) => setTimeout(r, 25000));
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (line.trim() === '') continue;
+  const req = JSON.parse(line);
+  console.log(JSON.stringify({ id: req.id, result: req.input }));
+}
+
+=== s14 C-3, s15 C-16, s16 C-17: a request line that is a CR alone
+@raw
+"\r"
+"{\"id\":\"after\",\"op\":\"check\",\"input\":{\"files\":{\"a.duramen\":\"duramen 0.1\\nspec s 1\\n\"}}}"
+
+=== s14 C-3, s15 C-16, s16 C-17: a request line that is a vertical tab
+@raw
+"\u000b"
+"{\"id\":\"after\",\"op\":\"check\",\"input\":{\"files\":{\"a.duramen\":\"duramen 0.1\\nspec s 1\\n\"}}}"
+
+=== s14 C-3, s15 C-16, s16 C-17: a request line that is a form feed
+@raw
+"\f"
+"{\"id\":\"after\",\"op\":\"check\",\"input\":{\"files\":{\"a.duramen\":\"duramen 0.1\\nspec s 1\\n\"}}}"
+
+=== s14 C-3, s15 C-16, s16 C-17: a request line that is U+00A0
+@raw
+" "
+"{\"id\":\"after\",\"op\":\"check\",\"input\":{\"files\":{\"a.duramen\":\"duramen 0.1\\nspec s 1\\n\"}}}"
+
+=== s14 C-3, s15 C-16, s16 C-17: a request line that is U+2028
+@raw
+" "
+"{\"id\":\"after\",\"op\":\"check\",\"input\":{\"files\":{\"a.duramen\":\"duramen 0.1\\nspec s 1\\n\"}}}"
+
+=== s14 C-3, s15 C-16, s16 C-17: request lines of spaces and tabs, and a request ending in CR
+@raw
+" \t "
+"{\"id\":\"cr\",\"op\":\"check\",\"input\":{\"files\":{\"a.duramen\":\"duramen 0.1\\nspec s 1\\n\"}}}\r"
+"\t"
+
+=== s15 C-21: IDs and titles of odd forms
+duramen 0.1
+spec s 1
+section A ""
+section B "\"
+section C "a\q
+section D "a" "
+section "E"
+section F	"a tab before the title"
+section G  "two spaces before the title"
+section H "a"x"
+
+=== s15 C-2, s15 C-3: a comment at indent 2 between an example and its lines
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+  # a comment between the example and its lines
+    expect result.x = 2
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-2: a line indented one space inside a text, then an obligation word
+duramen 0.1
+spec s 1
+note
+  text
+    One.
+ Two.
+    It MUST be text.
+
+=== s16 C-24: lines starting with # indented three under a text and under errors
+duramen 0.1
+spec s 1
+errors
+  e when one
+   # three
+note
+  text
+    One.
+   # three
+
+=== s16 C-24: a line starting with # indented three under an example and under a table
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+   # three, under an example
+    expect result.x = 1
+  table f
+   # three, under a table
+    | x | result.x |
+    | 1 | 1 |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-9, s16 C-26: input lines whose path holds the word from
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {}
+    input x."from" from "t.txt"
+    expect result.x.from = "T\n"
+  example f {}
+    input x."a from \"t.txt\""
+      text
+    expect result.x = {"a from \"t.txt\"": "text\n"}
+  example f {}
+    input x from "t.txt" from "u.txt"
+    expect result.x = ?
+  example f {}
+    input x from "\q"
+      text
+    expect result.x = ?
+  example f {}
+    input from from "t.txt"
+    expect result.from = "T\n"
+--- echo.mjs from spec/fixtures/echo.mjs
+--- t.txt
+T
+--- u.txt
+U
+
+=== s14 C-10, s16 C-6: a from name that leaves the record's folder and comes back
+@input {"files": {"r/a.duramen": "duramen 0.1\nspec s 1\nop f\n  input x? json\nreq A \"a\"\n  example f {}\n    input x from \"../r/t.txt\"\n    expect result.x = \"T\\n\"\n", "r/t.txt": "T\n"}, "entry": "r"}
+
+=== s14 C-10, s16 C-6: a from name that leaves the record's folder for a file beside it
+@input {"files": {"r/a.duramen": "duramen 0.1\nspec s 1\nop f\n  input x? json\nreq A \"a\"\n  example f {}\n    input x from \"../t.txt\"\n    expect result.x = \"T\\n\"\n", "t.txt": "T\n"}, "entry": "r"}
+
+=== s14 C-11, s15 C-12: a cell holding a backslash before an escaped pipe
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x |
+    | "a\\|b" | ? |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-11, s15 C-12: a cell holding two backslashes before an escaped pipe, the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x |
+    | "a\\\|b" | ? |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s16 C-5: a row with two cells that are not JSON, and one with a cell that is not a number under a tolerance
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json, y? json
+req A "a"
+  table f
+    | x | y | result.x ± 1 |
+    | nope | nope | 1 |
+    | 1 | 2 | one |
+    | nope | 2 | one |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-8: ? under an input field
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x |
+    | ? | 1 |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-12: a tolerance after an input field, then rows
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x ± 1 | result.x |
+    | 1 | 1 |
+    | "a" | "a" |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-13: an oracle command with a backslash inside double quotes
+duramen 0.1
+spec s 1
+oracle node "./sub\dir/echo.mjs"
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- sub\dir/echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-13: an oracle command with a backslash inside single quotes, and words joined to quotes
+duramen 0.1
+spec s 1
+oracle no'de' 'e\cho.mjs'
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- e\cho.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-13: an oracle command of white space only
+duramen 0.1
+spec s 1
+oracle
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+
+=== s14 C-15, s15 C-15, s16 C-11: judge, a check of an unknown kind
+@op judge
+@input {"case": {"checks": [{"path": "result", "kind": "contains", "value": 1}], "full": {"members": ["id", "result"], "tolerances": {}}}, "answer": {"id": "x", "result": 1}}
+
+=== s14 C-15, s15 C-15, s16 C-11: judge, a check whose kind is not a string
+@op judge
+@input {"case": {"checks": [{"path": "result", "kind": 1, "value": 1}], "full": null}, "answer": {"id": "x", "result": 1}}
+
+=== s14 C-15, s15 C-15, s16 C-11: judge, a check with no kind
+@op judge
+@input {"case": {"checks": [{"path": "result", "value": 1}], "full": null}, "answer": {"id": "x", "result": 1}}
+
+=== s15 C-15: judge, a case with no full member
+@op judge
+@input {"case": {"checks": [{"path": "result", "kind": "eq", "value": 1}]}, "answer": {"id": "x", "result": 1}}
+
+=== s16 C-31: judge, tolerances that are an array
+@op judge
+@input {"case": {"checks": [], "full": {"members": ["id", "result"], "result": 1, "tolerances": []}}, "answer": {"id": "x", "result": 1}}
+
+=== s14 C-16: judge, a tolerance at a path where the answer holds an object
+@op judge
+@input {"case": {"checks": [], "full": {"members": ["id", "result"], "result": {"a": 1}, "tolerances": {"result.a": 0.5}}}, "answer": {"id": "x", "result": {"a": {"b": 1}}}}
+
+=== s14 C-16: judge, a tolerance at a path where the answer holds a string, and one within it
+@op judge
+@input {"case": {"checks": [], "full": {"members": ["id", "result"], "result": {"a": 1, "b": [1, 2]}, "tolerances": {"result.a": 0.5, "result.b.1": 0.5}}}, "answer": {"id": "x", "result": {"a": "1", "b": [1, 2.4]}}}
+
+=== s14 C-16: judge, a tolerance for a member name holding a dot
+@op judge
+@input {"case": {"checks": [], "full": {"members": ["id", "result"], "result": {"a.b": 1}, "tolerances": {"result.a.b": 0.5}}}, "answer": {"id": "x", "result": {"a.b": 1.4}}}
+
+=== s15 C-24: judge, full.members not in sorted order
+@op judge
+@input {"case": {"checks": [], "full": {"members": ["result", "id"], "result": 1, "tolerances": {}}}, "answer": {"id": "x", "result": 1}}
+
+=== s15 C-24: judge, member names that sort differently by code units and by code points
+@op judge
+@input {"case": {"checks": [], "full": {"members": ["id", "result", "😀", "ｚ"], "result": 1, "tolerances": {}}}, "answer": {"id": "x", "result": 1, "ｚ": 1, "😀": 1}}
+
+=== s14 C-18, s16 C-14: a spec request and an operation request, the suite
+@op cases
+duramen 0.1
+spec s 1
+  request {"v": 1, "w": 2}
+oracle node echo.mjs
+op f
+  input x? json
+  request {"v": 3}
+op g
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+  example g {"x": 1}
+    expect result.x = 1
+  example h {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s16 C-14: two operations of one name, the second with a request and a tolerance, the suite
+@op cases
+duramen 0.1
+spec s 1
+  request {"v": 1}
+oracle node echo.mjs
+op f
+  input x? json
+op f
+  input y? json
+  request {"v": 2}
+  tolerance result.x 1
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-19, s15 C-11, s16 C-10: a request file whose name no file system can hold, with an oracle
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+--- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.txt
+x
+
+=== s14 C-20: expect lines with no white space around the operator
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x=1
+    expect result.x≈1±0
+    expect result.x~1+-0
+    expect result.x =1
+    expect result.x= 2
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-4: an empty source and an empty status, each then given again
+duramen 0.1
+spec s 1
+decision D-1 "d"
+  source
+  source a document
+  status
+  status accepted
+  text
+    Why.
+
+=== s15 C-4: an empty on, then another on
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  on
+  on posix
+  example f {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-4: an empty contract, then another contract
+duramen 0.1
+spec s 1
+  contract
+  contract a contract
+
+=== s15 C-6, s16 C-25: raw examples of odd single-quote forms
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example raw 'a' b
+  example raw '
+  example raw ''
+  example raw 'x'y'
+  example raw  'two spaces before'
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-9: an error answer to an example whose only expectation is about error.code
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+errors
+  e when never
+req A "a"
+  example f {"answer": {"error": {"code": 1}}}
+    expect error.code = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-9: an error answer to an example whose only expectation is about the result
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+req A "a"
+  example f {"answer": {"error": "e"}}
+    expect result = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s16 C-28: expect error = ? and expect error ≈ for an undeclared operation, and a ? in an error column
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+req A "a"
+  example g {"answer": {"error": "e"}}
+    expect error = ?
+  example g {"answer": {"error": 1}}
+    expect error ≈ 1 ± 0
+  table g
+    | answer | error |
+    | {"error": "e"} | ? |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-13: an errors condition on two lines, with a quotation across the line break and MUST after it
+duramen 0.1
+spec s 1
+errors
+  e when the input "is
+    wrong" and it MUST fail
+
+=== s15 C-22, s16 C-30: obligation words inside curly quotes, backquotes, an unclosed mark, and a rejected alternative
+duramen 0.1
+spec s 1
+note
+  text
+    “It MUST”, `it MUST`, and that is all.
+decision D-1 "d"
+  source a document
+  status accepted
+  text
+    Why.
+  rejected "It MUST \"not\" be so."
+  rejected "\"It MUST\" be quoted."
+
+=== s15 C-22: an unclosed quotation mark before MUST
+duramen 0.1
+spec s 1
+note
+  text
+    An "unclosed mark, then MUST.
+
+=== s15 C-23: phrases of T005 with other white space, and codes touched by letters outside ASCII
+duramen 0.1
+spec s 1
+errors
+  a when one
+  b when two
+req R "r"
+  text
+    It reports a, then b, in this order.
+req S "s"
+  text
+    a takes precedence over b.
+req T "t"
+  text
+    aé first that applies bé.
+req U "u"
+  text
+    a is reported
+    before b.
+
+=== s16 C-3: a tab-indented line in the body of an unknown statement and under an ignored clause
+duramen 0.1
+spec s 1
+thing x
+	tabbed
+note
+  other
+	tabbed
+
+=== s16 C-4: a comment indented two before the first statement
+  # a comment
+duramen 0.1
+spec s 1
+
+=== s16 C-4: a comment indented one before the first statement
+ # a comment
+duramen 0.1
+spec s 1
+
+=== s16 C-23: a duramen statement with three spaces before its version, and one with a tab
+duramen   0.1
+spec s 1
+--- b.duramen
+duramen	0.1
+note
+  text
+    Hi.
+
+=== s16 C-29: a decision declared twice, each with no source and a malformed status
+duramen 0.1
+spec s 1
+decision D-1 "d"
+  status nonsense
+  text
+    One.
+decision D-1 "d again"
+  status also nonsense
+  text
+    Two.
+req A "a"
+  decision D-1
+  text
+    It works.
+
+=== s16 C-34: tolerances written -0, the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+  tolerance result.x -0
+req A "a"
+  example f {"x": 1}
+    expect result.x ≈ 1 ± -0
+  table f
+    | x | result.x ± -0 |
+    | 1 | 1 |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-14: numbers in a spec request, an example with input lines, and a table row, the suite
+@op cases
+duramen 0.1
+spec s 1
+  request {"big": 9007199254740993, "small": 5e-324, "one": 1.0, "minus": -0, "exp": 1E21}
+oracle node echo.mjs
+op f
+  input x? json, t? text
+req A "a"
+  example f {"x": 9007199254740993}
+    expect result.x = ?
+  example f {"x": 123456789012345678901234567890, "y": 1.50}
+    input t
+      text
+    expect result.x = ?
+  table f
+    | x | result.x |
+    | 1.0e0 | ? |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-18: a malformed request clause on an operation, then a second one, the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+  request [1]
+  request {"v": 1}
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s15 C-19: a file whose only duramen statement states an unknown version
+duramen 9.9
+spec s 1
+
+=== s15 C-20: a requirement whose only example is dropped
+duramen 0.1
+spec s 1
+req A "a"
+  example f [1]
+
+=== s16 C-7, s16 C-8: two requirements with one ID whose examples disagree, and an oracle that answers twice
+duramen 0.1
+spec s 1
+oracle node twice.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+req A "a again"
+  example f {"x": 2}
+    expect result.x = 2
+--- twice.mjs
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (line.trim() === '') continue;
+  const req = JSON.parse(line);
+  console.log('not json');
+  console.log(JSON.stringify({ id: 7, result: 0 }));
+  console.log(JSON.stringify({ id: req.id, result: req.input }));
+  console.log(JSON.stringify({ id: req.id, result: { x: 99 } }));
+}
+
+=== s16 C-16: a raw example whose solo run writes nothing, and one that writes two lines
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example raw '{"id":"r","op":"f","input":{"silent":true}}'
+    expect result = 1
+  example raw '{"id":"r","op":"f","input":{"say":"{\"id\":\"r\",\"result\":1}\n{\"id\":\"r\",\"result\":2}"}}'
+    expect result = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s16 C-18: superseded by itself, and by itself with two spaces
+duramen 0.1
+spec s 1
+decision D-1 "d"
+  source a document
+  status superseded by D-1
+  text
+    Why.
+decision D-2 "e"
+  source a document
+  status superseded  by D-2
+  text
+    Why.
+
+=== s16 C-21, s16 C-22: duramen 0.2 after other statements, and a second duramen statement
+note
+  text
+    First.
+duramen 0.2
+spec s 1
+duramen 0.1
+
+=== s14 C-13 (again: the names above are not relative paths): an oracle command with joined quoted parts
+duramen 0.1
+spec s 1
+oracle no'de' e"cho".mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-13 (again): an oracle command with an escaped quote inside double quotes, and an empty word
+duramen 0.1
+spec s 1
+oracle node "echo.mjs" "" "a\"b" "c\d"
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-13 (again): an oracle command whose double quote is closed only by an escaped one
+duramen 0.1
+spec s 1
+oracle node "echo.mjs\"
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s14 C-18, s16 C-14 (again, without an undeclared operation): a spec request and an operation request, the suite
+@op cases
+duramen 0.1
+spec s 1
+  request {"v": 1, "w": 2}
+oracle node echo.mjs
+op f
+  input x? json
+  request {"v": 3}
+op g
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+  example g {"x": 1}
+    request {"w": 5, "z": 6}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s16 C-14 (again, as a check): two operations of one name, the example sends a field only the second declares
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+op f
+  input y? json
+req A "a"
+  example f {"y": 1}
+    expect result.y = 1
+--- echo.mjs from spec/fixtures/echo.mjs

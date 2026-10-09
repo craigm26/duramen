@@ -1,0 +1,7 @@
+{
+  "_comment": "Leak check and audit terms for blind builds of jsonpath (CONFIDENCE-2.md, claim 7). Identifiers fail case-insensitively: the judge's name must not reach a builder, and a transcript that names it is flagged. Symbols (names from oracle.mjs) fail case-sensitively.",
+  "identifiers": ["craigm26", "craigmerry", "github.com/craigm26", "PlatAtlas", "regen-sandbox", "jsonpath-compliance-test-suite", "compliance test suite", "cts.json", "jsonpath-standard"],
+  "symbols": ["translateIRegexp", "NotIRegexp", "cmpCodePoints", "checkComparable", "normalName"],
+  "allow": [],
+  "allowedDomains": []
+}

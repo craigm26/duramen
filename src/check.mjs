@@ -298,8 +298,10 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
   }
   // T004: obligations live in requirements (and in the edge texts a spec imports). Anywhere
   // else, an RFC 2119 keyword is an error, unless it is quoted ("..." or `...`), as when a
-  // decision quotes an earlier text.
-  const keyword = (text) => (text ?? '').replace(/"[^"\n]*"|“[^”\n]*”|`[^`\n]*`/g, '').match(OBLIGATION);
+  // decision quotes an earlier text. A quotation is not part of the words around it: it is
+  // taken out as a space, so `x`a`MUST` holds MUST and MU`a`ST holds no word; and it ends with
+  // its line, which a lone CR ends too, inside a rejected alternative (REQ-CK-006, REQ-SY-001).
+  const keyword = (text) => (text ?? '').replace(/"[^"\n\r]*"|“[^”\n\r]*”|`[^`\n\r]*`/g, ' ').match(OBLIGATION);
   const place = [
     ...ast.items.filter((i) => i.type === 'note' || i.type === 'section').map((i) => [i.text, i, `a ${i.type}`]),
     [ast.spec?.text, ast.spec ?? { line: 1 }, "the spec's text"],

@@ -1,0 +1,6 @@
+  sandbox kkzddb: brief written, leak check ok; launching claude-opus-5-5 (ts)
+  builder exited with 0 after 16.2 min
+run s19: claude-opus-5-5 (ts), 53 turns, 16.2 min, $4.35
+  audit: 0 violations, init ok, 2 denied calls
+  suite: passed 239/239
+  build copied to selfhost/impl/s19-ts; 30 choices to triage in selfhost/s19-ts.md

@@ -1,0 +1,6 @@
+{
+  "lang": "ts",
+  "build": "",
+  "test": "npm test",
+  "driver": "node driver.ts"
+}

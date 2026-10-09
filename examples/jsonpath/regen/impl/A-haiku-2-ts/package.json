@@ -1,0 +1,9 @@
+{
+  "name": "jsonpath",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test json.test.ts iregexp.test.ts query.test.ts evaluate.test.ts protocol.test.ts driver.test.ts repo.test.ts"
+  }
+}

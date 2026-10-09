@@ -1,0 +1,1171 @@
+{
+ "requests": 6000,
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "builds": [
+  {
+   "name": "A-haiku-1-ts",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "A-haiku-2-ts",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "A-sonnet-1-py",
+   "answered": 6000,
+   "invalid": 3296,
+   "retried": 0,
+   "seconds": 1
+  },
+  {
+   "name": "A-sonnet-1-ts",
+   "answered": 6000,
+   "invalid": 3296,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "A-sonnet-2-py",
+   "answered": 6000,
+   "invalid": 3285,
+   "retried": 0,
+   "seconds": 1
+  },
+  {
+   "name": "A-sonnet-2-ts",
+   "answered": 6000,
+   "invalid": 3296,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "B-haiku-1-ts",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 5
+  },
+  {
+   "name": "B-haiku-2-ts",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "B-sonnet-1-py",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 1
+  },
+  {
+   "name": "B-sonnet-1-ts",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "B-sonnet-2-py",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 1
+  },
+  {
+   "name": "B-sonnet-2-ts",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "C-haiku-1-ts",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "C-haiku-2-ts",
+   "answered": 6000,
+   "invalid": 3311,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "C-sonnet-1-py",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 1
+  },
+  {
+   "name": "C-sonnet-1-ts",
+   "answered": 6000,
+   "invalid": 3311,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "C-sonnet-2-py",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 1
+  },
+  {
+   "name": "C-sonnet-2-ts",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 4
+  },
+  {
+   "name": "oracle",
+   "answered": 6000,
+   "invalid": 3312,
+   "retried": 0,
+   "seconds": 2
+  }
+ ],
+ "pairs": [
+  {
+   "a": "A-haiku-1-ts",
+   "b": "A-haiku-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "A-sonnet-1-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "A-sonnet-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "A-sonnet-2-py",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "A-sonnet-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "B-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "B-haiku-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "B-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "B-sonnet-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "B-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "B-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "C-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-1-ts",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "A-sonnet-1-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "A-sonnet-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "A-sonnet-2-py",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "A-sonnet-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "B-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "B-haiku-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "B-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "B-sonnet-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "B-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "B-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "C-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-haiku-2-ts",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "A-sonnet-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "A-sonnet-2-py",
+   "agree": 5989,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "A-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "B-haiku-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "B-haiku-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "B-sonnet-1-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "B-sonnet-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "B-sonnet-2-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "B-sonnet-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "C-haiku-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "C-haiku-2-ts",
+   "agree": 5985,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "C-sonnet-1-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "C-sonnet-1-ts",
+   "agree": 5985,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "C-sonnet-2-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "C-sonnet-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-py",
+   "b": "oracle",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "A-sonnet-2-py",
+   "agree": 5989,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "A-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "B-haiku-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "B-haiku-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "B-sonnet-1-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "B-sonnet-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "B-sonnet-2-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "B-sonnet-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "C-haiku-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5985,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5985,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-1-ts",
+   "b": "oracle",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "A-sonnet-2-ts",
+   "agree": 5989,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "B-haiku-1-ts",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "B-haiku-2-ts",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "B-sonnet-1-py",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "B-sonnet-1-ts",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "B-sonnet-2-py",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "B-sonnet-2-ts",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "C-haiku-1-ts",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "C-haiku-2-ts",
+   "agree": 5974,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "C-sonnet-1-py",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "C-sonnet-1-ts",
+   "agree": 5974,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "C-sonnet-2-py",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "C-sonnet-2-ts",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-py",
+   "b": "oracle",
+   "agree": 5973,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "B-haiku-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "B-haiku-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "B-sonnet-1-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "B-sonnet-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "B-sonnet-2-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "B-sonnet-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "C-haiku-1-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5985,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5985,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "A-sonnet-2-ts",
+   "b": "oracle",
+   "agree": 5984,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "B-haiku-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "B-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "B-sonnet-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "B-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "B-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "C-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-1-ts",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "B-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "B-sonnet-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "B-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "B-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "C-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-haiku-2-ts",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "B-sonnet-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "B-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "B-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "C-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-py",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "B-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "B-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "C-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-1-ts",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-py",
+   "b": "B-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-py",
+   "b": "C-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-py",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-py",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-py",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-py",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-py",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-py",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-ts",
+   "b": "C-haiku-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "B-sonnet-2-ts",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-1-ts",
+   "b": "C-haiku-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-1-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-1-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-1-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-1-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-1-ts",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-2-ts",
+   "b": "C-sonnet-1-py",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-2-ts",
+   "b": "C-sonnet-1-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-2-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-2-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-haiku-2-ts",
+   "b": "oracle",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-1-py",
+   "b": "C-sonnet-1-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-1-py",
+   "b": "C-sonnet-2-py",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-1-py",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-1-py",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-1-ts",
+   "b": "C-sonnet-2-py",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-1-ts",
+   "b": "C-sonnet-2-ts",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-1-ts",
+   "b": "oracle",
+   "agree": 5999,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-2-py",
+   "b": "C-sonnet-2-ts",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-2-py",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  },
+  {
+   "a": "C-sonnet-2-ts",
+   "b": "oracle",
+   "agree": 6000,
+   "of": 6000
+  }
+ ]
+}

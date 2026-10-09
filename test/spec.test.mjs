@@ -309,6 +309,26 @@ decision D-1 "D"
   assert.deepEqual(codes(ds, 'warning').filter((c) => c === 'T014'), ['T014']);
 });
 
+test('check: a quotation is not part of the words around it (T004, duramen-core 0.10.0)', async () => {
+  const at = async (text) => {
+    const { ast } = parse(src(`
+duramen 0.1
+spec s 1
+note
+  text
+    ${text}
+`), 's.duramen');
+    ast.edgeLib = { defs: new Map(), families: new Map() };
+    return (await check(ast)).diagnostics.filter((d) => d.code === 'T004').length;
+  };
+  assert.equal(await at('x`a`MUST'), 1);
+  assert.equal(await at('A"q"SHALL'), 1);
+  assert.equal(await at('MUST“q”x'), 1);
+  assert.equal(await at('MU`a`ST'), 0);
+  assert.equal(await at('"MU"ST and MU"ST"'), 0);
+  assert.equal(await at('It ``MUST`` be.'), 1);
+});
+
 test('check: decision status (T027, T028)', async () => {
   await withFiles({ 's.duramen': src(`
 duramen 0.1

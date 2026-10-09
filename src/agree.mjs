@@ -6,7 +6,7 @@
 import { genType, makeRng, seedOf, setOwn } from './types.mjs';
 import { typeEnv, requestMembers } from './check.mjs';
 import { runDriver } from './driver.mjs';
-import { answerDiffers } from './suite.mjs';
+import { answerDiffers, wholeAnswer } from './suite.mjs';
 
 // The type an input field is drawn from: the op's `draw` type for it, else its input type.
 const drawType = (op, f) => (op.draws ?? []).find((x) => x.name === f.name)?.parsed ?? f.parsed;
@@ -52,8 +52,10 @@ export async function agree(ast, participants, opts = {}) {
     const groups = [];
     for (const { p, run } of runs) {
       const resp = run.responses.get(r.id);
-      const full = resp ? { members: Object.keys(resp).sort(), error: resp.error, result: resp.result, audit: op?.audit ? resp.audit : undefined, tolerances: op?.tolerances ?? {} } : null;
-      const g = groups.find((x) => (x.full === null && full === null) || (x.full && full && answerDiffers(x.full, resp).length === 0));
+      const full = resp ? wholeAnswer(resp, op) : null;
+      // two answers agree when each meets the other's whole answer, so that the order participants
+      // come in cannot matter (an audit that is not a string is no part of either)
+      const g = groups.find((x) => (x.full === null && full === null) || (x.full && full && answerDiffers(x.full, resp).length === 0 && answerDiffers(full, x.resp).length === 0));
       if (g) g.names.push(p.name);
       else groups.push({ names: [p.name], full, resp: resp ?? null });
     }

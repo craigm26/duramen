@@ -1,0 +1,171 @@
+# Records and requests written to try the choices of round ten's builds: s20 (TypeScript,
+# claude-sonnet-5-5), s21 (Python, claude-sonnet-5-5) and s22 (TypeScript, claude-opus-5-5),
+# all from duramen-core 0.11.0. Read by selfhost/probe.mjs (see s14-s16.txt for the format).
+# Round ten's probes are this file and the six earlier ones, sent to duramen and to every
+# checker of the round.
+
+=== s20 C-11: table lines starting with # after their indent, and rows indented more than four
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x |
+    # a comment between rows
+       | 1 | 1 |
+        # deeper
+    | 2 | 2 |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s20 C-16: obligation words in a spec's title and contract and in a decision's source
+duramen 0.1
+spec s 1
+  title "It MUST be titled"
+  contract It MUST hold.
+decision D-1 "d"
+  source It MUST come from here.
+  text
+    Fine.
+req A "a"
+  decision D-1
+  text
+    It works.
+
+=== s20 C-20: a second field of one name, in a clause that also holds a malformed field
+duramen 0.1
+spec s 1
+op f
+  input a json
+  input b json, , a json
+
+=== s20 C-21: statements whose first word has a colon or a capital
+duramen 0.1
+spec s 1
+note: here
+  text
+    Hi.
+Note
+  text
+    Hi.
+
+=== s21 C-2: integers beyond 2^53 and other spellings in a request member and in input lines, the suite
+@op cases
+duramen 0.1
+spec s 1
+  request {"big": 12345678901234567890, "e": 1E+2}
+oracle node echo.mjs
+op f
+  input x? json, t? text
+req A "a"
+  example f {"x": 12345678901234567890}
+    input t
+      text
+    expect result.x = ?
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s21 C-8: a header cell that repeats a name and has a bad tolerance
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x | result.x ± -1 |
+    | 1 | 1 | 1 |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s21 C-10: a table with an error column whose cell is empty, for an undeclared operation
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input answer? json
+errors
+  e when never
+req A "a"
+  table g
+    | answer | error |
+    | {"error": "e"} | |
+    | {"error": "e"} | "e" |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s21 C-16: expect = ? for an example the oracle does not answer
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input silent? json
+req A "a"
+  example f {"silent": true}
+    expect result = ?
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s21 C-24: lines under a malformed clause and under a malformed example
+duramen 0.1
+spec s 1
+  title not a JSON string
+     a line under it
+op f
+  input x? json
+  result
+     a line under result
+req A "a"
+  example f [1]
+    expect result = 1
+
+=== s22 C-16: a requirement whose only examples are table rows, in a record with no oracle
+duramen 0.1
+spec s 1
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x |
+    | 1 | 1 |
+
+=== s22 C-24: two audit clauses on one operation, two source clauses on a decision, and two rejected
+duramen 0.1
+spec s 1
+op f
+  input x? json
+  audit
+  audit text
+decision D-1 "d"
+  source a
+  source b
+  rejected "x"
+  rejected "y"
+  text
+    Why.
+
+=== s22 C-22: a second spec, oracle and errors statement
+duramen 0.1
+spec s 1
+spec t 2
+oracle node a.mjs
+oracle node b.mjs
+errors
+  a when one
+errors
+  b when two
+
+=== s22 C-25: __proto__ as a request member, an input field and an input line, the suite
+@op cases
+duramen 0.1
+spec s 1
+  request {"__proto__": {"x": 1}}
+oracle node echo.mjs
+op f
+  input __proto__? json
+req A "a"
+  example f {"__proto__": 1}
+    expect result = ?
+  example f {}
+    input __proto__
+      text
+    expect result = ?
+--- echo.mjs from spec/fixtures/echo.mjs

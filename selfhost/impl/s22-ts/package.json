@@ -1,0 +1,14 @@
+{
+  "name": "duramen-core",
+  "version": "0.11.0",
+  "private": true,
+  "type": "module",
+  "description": "The duramen checker and suite generator, for the core of the language",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.ts\"",
+    "serve": "node src/driver.ts"
+  }
+}

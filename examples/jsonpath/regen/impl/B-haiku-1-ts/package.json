@@ -1,0 +1,11 @@
+{
+  "name": "jsonpath",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "RFC 9535 JSONPath evaluator driven by JSON lines on stdin",
+  "scripts": {
+    "test": "node --test",
+    "start": "node driver.ts"
+  }
+}

@@ -1,0 +1,6 @@
+  sandbox azkzpc: brief written, leak check ok; launching claude-sonnet-5-5 (py)
+  builder exited with 0 after 4.6 min
+run C-sonnet-2: claude-sonnet-5-5 (py), 20 turns, 4.6 min, $1.00
+  audit: 0 violations, init ok, 1 denied calls
+  suite: passed 738/738
+  build copied to examples/jsonpath/regen/impl/C-sonnet-2-py; 12 choices to triage in examples/jsonpath/regen/C-sonnet-2-py.md

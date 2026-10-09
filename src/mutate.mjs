@@ -12,7 +12,7 @@ import { pathToFileURL } from 'node:url';
 import { join, dirname, relative, resolve } from 'node:path';
 import { tmpdir, availableParallelism } from 'node:os';
 import { check } from './check.mjs';
-import { generateCases, answerDiffers } from './suite.mjs';
+import { generateCases, answerDiffers, wholeAnswer } from './suite.mjs';
 
 const PUNCT = ['>>>=', '...', '===', '!==', '**=', '<<=', '>>=', '>>>', '&&=', '||=', '??=', '=>', '==', '!=', '<=', '>=', '&&', '||', '??', '?.', '++', '--', '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', '**', '<<', '>>', '{', '}', '(', ')', '[', ']', ';', ',', '<', '>', '+', '-', '*', '/', '%', '&', '|', '^', '!', '~', '?', ':', '=', '.', '@', '#'];
 const REGEX_AFTER = new Set(['(', ',', '=', ':', '[', '!', '&', '|', '?', '{', '}', ';', '+', '-', '*', '%', '<', '>', '~', '^', '=>', '==', '===', '!=', '!==', '<=', '>=', '&&', '||', '??', '+=', '-=', '*=', '/=', '%=', 'return', 'typeof', 'case', 'do', 'else', 'in', 'of', 'new', 'delete', 'void', 'throw', 'instanceof', 'yield', 'await']);
@@ -180,7 +180,7 @@ export async function mutate(ast, files, { jobs = Math.max(1, Math.min(8, availa
   for (const p of base.properties) {
     for (const [id, { op: opName, resp }] of p.answers) {
       const op = ast.ops.find((o) => o.name === opName);
-      fullOf.set(id, { members: Object.keys(resp).sort(), error: resp.error, result: resp.result, audit: op?.audit ? resp.audit : undefined, tolerances: op?.tolerances ?? {} });
+      fullOf.set(id, wholeAnswer(resp, op));
     }
   }
   const results = new Array(todo.length);

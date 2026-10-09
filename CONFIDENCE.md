@@ -8,7 +8,8 @@ programs whose behavior can be observed as requests and responses.
 This file states six claims, the test for each, and what counts as passing. **The criteria
 were written on 2026-10-09 (UTC), and the commit that adds this file comes before every run
 it judges.** Results go under each claim afterwards; the criteria are not edited after a run
-starts. A claim that fails is reported as failing.
+starts. A claim that fails is reported as failing. Round two's claims, 7 and 8, are in
+[CONFIDENCE-2.md](CONFIDENCE-2.md).
 
 ## 1. The loop converges
 

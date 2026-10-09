@@ -1,0 +1,2298 @@
+{
+ "round": "round10",
+ "mutantsPerSeed": 1500,
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "builds": [
+  {
+   "name": "s20-ts",
+   "dir": "selfhost/impl/s20-ts",
+   "suite": {
+    "passed": 243,
+    "total": 243
+   },
+   "fixedPoint": true,
+   "fixedPointText": false,
+   "checker": true,
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3372,
+     "same": 3372,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3372,
+     "same": 3366,
+     "records": 3
+    },
+    {
+     "seed": 3,
+     "requests": 3372,
+     "same": 3368,
+     "records": 2
+    }
+   ]
+  },
+  {
+   "name": "s21-py",
+   "dir": "selfhost/impl/s21-py",
+   "suite": {
+    "passed": 243,
+    "total": 243
+   },
+   "fixedPoint": true,
+   "fixedPointText": false,
+   "checker": true,
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3372,
+     "same": 3372,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3372,
+     "same": 3368,
+     "records": 2
+    },
+    {
+     "seed": 3,
+     "requests": 3372,
+     "same": 3372,
+     "records": 0
+    }
+   ]
+  },
+  {
+   "name": "s22-ts",
+   "dir": "selfhost/impl/s22-ts",
+   "suite": {
+    "passed": 243,
+    "total": 243
+   },
+   "fixedPoint": true,
+   "fixedPointText": false,
+   "checker": true,
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3372,
+     "same": 3372,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3372,
+     "same": 3370,
+     "records": 1
+    },
+    {
+     "seed": 3,
+     "requests": 3372,
+     "same": 3368,
+     "records": 2
+    }
+   ]
+  }
+ ],
+ "checkers": [
+  "s20-ts",
+  "s21-py",
+  "s22-ts"
+ ],
+ "splits": {
+  "records": 8,
+  "mutated": 8,
+  "unmutated": 0,
+  "list": [
+   {
+    "record": "2/103",
+    "by": [
+     "s20-ts"
+    ]
+   },
+   {
+    "record": "2/661",
+    "by": [
+     "s20-ts",
+     "s21-py",
+     "s22-ts"
+    ]
+   },
+   {
+    "record": "2/1443",
+    "by": [
+     "s20-ts"
+    ]
+   },
+   {
+    "record": "3/923",
+    "by": [
+     "s20-ts"
+    ]
+   },
+   {
+    "record": "3/1288",
+    "by": [
+     "s20-ts"
+    ]
+   },
+   {
+    "record": "2/353",
+    "by": [
+     "s21-py"
+    ]
+   },
+   {
+    "record": "3/265",
+    "by": [
+     "s22-ts"
+    ]
+   },
+   {
+    "record": "3/1068",
+    "by": [
+     "s22-ts"
+    ]
+   }
+  ]
+ },
+ "pairs": [
+  {
+   "a": "s20-ts",
+   "b": "s21-py",
+   "records": [
+    "2/103",
+    "2/353",
+    "2/1443",
+    "3/923",
+    "3/1288"
+   ],
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3372,
+     "same": 3372,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3372,
+     "same": 3366,
+     "records": 3
+    },
+    {
+     "seed": 3,
+     "requests": 3372,
+     "same": 3368,
+     "records": 2
+    }
+   ]
+  },
+  {
+   "a": "s20-ts",
+   "b": "s22-ts",
+   "records": [
+    "2/103",
+    "2/1443",
+    "3/265",
+    "3/923",
+    "3/1068",
+    "3/1288"
+   ],
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3372,
+     "same": 3372,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3372,
+     "same": 3368,
+     "records": 2
+    },
+    {
+     "seed": 3,
+     "requests": 3372,
+     "same": 3364,
+     "records": 4
+    }
+   ]
+  },
+  {
+   "a": "s21-py",
+   "b": "s22-ts",
+   "records": [
+    "2/353",
+    "3/265",
+    "3/1068"
+   ],
+   "differ": [
+    {
+     "seed": 1,
+     "requests": 3372,
+     "same": 3372,
+     "records": 0
+    },
+    {
+     "seed": 2,
+     "requests": 3372,
+     "same": 3370,
+     "records": 1
+    },
+    {
+     "seed": 3,
+     "requests": 3372,
+     "same": 3368,
+     "records": 2
+    }
+   ]
+  }
+ ],
+ "detail": {
+  "builds": [
+   {
+    "name": "s20-ts",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3372,
+      "same": 3372,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3372,
+      "same": 3366,
+      "differ": 6,
+      "records": [
+       "2/103",
+       "2/661",
+       "2/1443"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error P006 | D1 -",
+        "count": 2,
+        "examples": [
+         {
+          "id": "103:check",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: duplicate 1, word 7, indent 15 +1",
+          "files": {
+           "s.duramen": "duramen 0.1\nduramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    superseded x |\n    | 1 |\n  table f\n    | x |\n  table f\n    | x | result ± -1 |\n    | 1 | 2           |\n  table f\n     | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "103:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:2: error P023",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P013",
+             "s.duramen:7: error P006",
+             "s.duramen:9: error P013",
+             "s.duramen:12: error P010",
+             "s.duramen:16: error P010",
+             "s.duramen:19: error P014",
+             "s.duramen:20: error P009",
+             "s.duramen:21: error P006",
+             "s.duramen:23: error P013",
+             "s.duramen:26: error P010"
+            ],
+            "errors": 12,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "103:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:2: error P023",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P013",
+             "s.duramen:9: error P013",
+             "s.duramen:12: error P010",
+             "s.duramen:16: error P010",
+             "s.duramen:19: error P014",
+             "s.duramen:20: error P009",
+             "s.duramen:21: error P006",
+             "s.duramen:23: error P013",
+             "s.duramen:26: error P010"
+            ],
+            "errors": 11,
+            "warnings": 0
+           }
+          }
+         },
+         {
+          "id": "1443:check",
+          "from": "REQ-SY-011#3",
+          "mutation": "s.duramen: insert at 3, char 2, insert at 8",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec .s 1\n\nreq A \"a\"\n  example f {}\n    input a\n     not six\n  table f g\n      six, but after the line that ended the text\n"
+          },
+          "d0": {
+           "id": "1443:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:6: error P049",
+             "s.duramen:7: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006"
+            ],
+            "errors": 4,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "1443:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:6: error P049",
+             "s.duramen:7: error P006",
+             "s.duramen:8: error P013"
+            ],
+            "errors": 3,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 12 vs 11",
+        "count": 1,
+        "examples": [
+         {
+          "id": "103:cases",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: duplicate 1, word 7, indent 15 +1",
+          "files": {
+           "s.duramen": "duramen 0.1\nduramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    superseded x |\n    | 1 |\n  table f\n    | x |\n  table f\n    | x | result ± -1 |\n    | 1 | 2           |\n  table f\n     | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "103:cases",
+           "result": {
+            "errors": 12,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "103:cases",
+           "result": {
+            "errors": 11,
+            "cases": []
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "check: D0 error T034, warning T032, error T029 | D1 -",
+        "count": 1,
+        "examples": [
+         {
+          "id": "661:check",
+          "from": "REQ-SU-005#3",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\n  tolerance __proto__ 1\n  tolerance result.constructor 2\nreq A \"a\"\n  example f {\"x\": 1}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "661:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error T034",
+             "s.duramen:8: warning T032",
+             "s.duramen:9: error T029"
+            ],
+            "errors": 2,
+            "warnings": 1
+           }
+          },
+          "d1": {
+           "id": "661:check",
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 2 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "661:cases",
+          "from": "REQ-SU-005#3",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\n  tolerance __proto__ 1\n  tolerance result.constructor 2\nreq A \"a\"\n  example f {\"x\": 1}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "661:cases",
+           "result": {
+            "errors": 2,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "661:cases",
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\": 1}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "id",
+                "result"
+               ],
+               "result": {
+                "x": 1
+               },
+               "tolerances": {
+                "__proto__": 1,
+                "result.constructor": 2
+               }
+              }
+             }
+            ]
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 4 vs 3",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1443:cases",
+          "from": "REQ-SY-011#3",
+          "mutation": "s.duramen: insert at 3, char 2, insert at 8",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec .s 1\n\nreq A \"a\"\n  example f {}\n    input a\n     not six\n  table f g\n      six, but after the line that ended the text\n"
+          },
+          "d0": {
+           "id": "1443:cases",
+           "result": {
+            "errors": 4,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "1443:cases",
+           "result": {
+            "errors": 3,
+            "cases": []
+           }
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3372,
+      "same": 3368,
+      "differ": 4,
+      "records": [
+       "3/923",
+       "3/1288"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error P006 | D1 -",
+        "count": 2,
+        "examples": [
+         {
+          "id": "923:check",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: drop char 11, word 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    request x |\n    | 1 |\n  table f\n    | x |\n  table f\n    |x | result ± -1 |\n    | 1 | 2           |\n  table f\n    | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "923:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:4: error P013",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:11: error P010",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P014",
+             "s.duramen:19: error P009",
+             "s.duramen:20: error P006",
+             "s.duramen:22: error P013",
+             "s.duramen:25: error P010"
+            ],
+            "errors": 11,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "923:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:4: error P013",
+             "s.duramen:5: error P013",
+             "s.duramen:8: error P013",
+             "s.duramen:11: error P010",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P014",
+             "s.duramen:19: error P009",
+             "s.duramen:20: error P006",
+             "s.duramen:22: error P013",
+             "s.duramen:25: error P010"
+            ],
+            "errors": 10,
+            "warnings": 0
+           }
+          }
+         },
+         {
+          "id": "1288:check",
+          "from": "REQ-SY-012#3",
+          "mutation": "s.duramen: insert at 2, drop char 6",
+          "files": {
+           "s.duramen": "duramen 0.1\n\nspec s 1\nreq A \"a\"\n  table f g\n   | x |\n    | {bad |\n  table f\n   | x |\n    | 1 |\n  table f\n    | a.b | result |\n    | 1   | 2      |\n  table f\n    | x | result ± lots |\n    | 1 | \"two\"         |\n  table f\n    | x | result ± 1 2 | result.y+-0.5 |\n    | 1 | 2            | 3             |\n  table f\n    | x | x |\n    | 1 | 2 |\n  table f\n    | x | result ± 0.5 |\n    | 1 | 2.25 [       |\n    | { | ?            |\n"
+          },
+          "d0": {
+           "id": "1288:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006",
+             "s.duramen:12: error P013",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P010",
+             "s.duramen:21: error P013",
+             "s.duramen:25: error P010",
+             "s.duramen:26: error P009"
+            ],
+            "errors": 10,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "1288:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error P013",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006",
+             "s.duramen:12: error P013",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P010",
+             "s.duramen:21: error P013",
+             "s.duramen:25: error P010",
+             "s.duramen:26: error P009"
+            ],
+            "errors": 9,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 11 vs 10",
+        "count": 1,
+        "examples": [
+         {
+          "id": "923:cases",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: drop char 11, word 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    request x |\n    | 1 |\n  table f\n    | x |\n  table f\n    |x | result ± -1 |\n    | 1 | 2           |\n  table f\n    | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "923:cases",
+           "result": {
+            "errors": 11,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "923:cases",
+           "result": {
+            "errors": 10,
+            "cases": []
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 10 vs 9",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1288:cases",
+          "from": "REQ-SY-012#3",
+          "mutation": "s.duramen: insert at 2, drop char 6",
+          "files": {
+           "s.duramen": "duramen 0.1\n\nspec s 1\nreq A \"a\"\n  table f g\n   | x |\n    | {bad |\n  table f\n   | x |\n    | 1 |\n  table f\n    | a.b | result |\n    | 1   | 2      |\n  table f\n    | x | result ± lots |\n    | 1 | \"two\"         |\n  table f\n    | x | result ± 1 2 | result.y+-0.5 |\n    | 1 | 2            | 3             |\n  table f\n    | x | x |\n    | 1 | 2 |\n  table f\n    | x | result ± 0.5 |\n    | 1 | 2.25 [       |\n    | { | ?            |\n"
+          },
+          "d0": {
+           "id": "1288:cases",
+           "result": {
+            "errors": 10,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "1288:cases",
+           "result": {
+            "errors": 9,
+            "cases": []
+           }
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "s21-py",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3372,
+      "same": 3372,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3372,
+      "same": 3368,
+      "differ": 4,
+      "records": [
+       "2/353",
+       "2/661"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 - | D1 error P049",
+        "count": 1,
+        "examples": [
+         {
+          "id": "353:check",
+          "from": "REQ-SY-011#4",
+          "mutation": "r/s.duramen: char 6",
+          "files": {
+           "outside.txt": "x",
+           "r/s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input a from \"../outside.txt\"\n    input b  from \"t.txt\"\n      not its text\n    input c from \"unclosed\n  example f {\n    input d from \"../outside.txt\"\n",
+           "r/t.txt": "t\n"
+          },
+          "d0": {
+           "id": "353:check",
+           "result": {
+            "diagnostics": [
+             "r/s.duramen:5: error P048",
+             "r/s.duramen:7: error P006",
+             "r/s.duramen:8: error P049",
+             "r/s.duramen:9: error P009",
+             "r/s.duramen:10: error P048"
+            ],
+            "errors": 5,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "result": {
+            "diagnostics": [
+             "r/s.duramen:5: error P048",
+             "r/s.duramen:6: error P049",
+             "r/s.duramen:7: error P006",
+             "r/s.duramen:8: error P049",
+             "r/s.duramen:9: error P009",
+             "r/s.duramen:10: error P048"
+            ],
+            "errors": 6,
+            "warnings": 0
+           },
+           "id": "353:check"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 5 vs 6",
+        "count": 1,
+        "examples": [
+         {
+          "id": "353:cases",
+          "from": "REQ-SY-011#4",
+          "mutation": "r/s.duramen: char 6",
+          "files": {
+           "outside.txt": "x",
+           "r/s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input a from \"../outside.txt\"\n    input b  from \"t.txt\"\n      not its text\n    input c from \"unclosed\n  example f {\n    input d from \"../outside.txt\"\n",
+           "r/t.txt": "t\n"
+          },
+          "d0": {
+           "id": "353:cases",
+           "result": {
+            "errors": 5,
+            "cases": []
+           }
+          },
+          "d1": {
+           "result": {
+            "errors": 6,
+            "cases": []
+           },
+           "id": "353:cases"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "check: D0 error T034, warning T032, error T029 | D1 -",
+        "count": 1,
+        "examples": [
+         {
+          "id": "661:check",
+          "from": "REQ-SU-005#3",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\n  tolerance __proto__ 1\n  tolerance result.constructor 2\nreq A \"a\"\n  example f {\"x\": 1}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "661:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error T034",
+             "s.duramen:8: warning T032",
+             "s.duramen:9: error T029"
+            ],
+            "errors": 2,
+            "warnings": 1
+           }
+          },
+          "d1": {
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           },
+           "id": "661:check"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 2 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "661:cases",
+          "from": "REQ-SU-005#3",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\n  tolerance __proto__ 1\n  tolerance result.constructor 2\nreq A \"a\"\n  example f {\"x\": 1}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "661:cases",
+           "result": {
+            "errors": 2,
+            "cases": []
+           }
+          },
+          "d1": {
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\": 1}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "id",
+                "result"
+               ],
+               "tolerances": {
+                "__proto__": 1,
+                "result.constructor": 2
+               },
+               "result": {
+                "x": 1
+               }
+              }
+             }
+            ]
+           },
+           "id": "661:cases"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3372,
+      "same": 3372,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     }
+    ]
+   },
+   {
+    "name": "s22-ts",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3372,
+      "same": 3372,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3372,
+      "same": 3370,
+      "differ": 2,
+      "records": [
+       "2/661"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error T034, warning T032, error T029 | D1 -",
+        "count": 1,
+        "examples": [
+         {
+          "id": "661:check",
+          "from": "REQ-SU-005#3",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\n  tolerance __proto__ 1\n  tolerance result.constructor 2\nreq A \"a\"\n  example f {\"x\": 1}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "661:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error T034",
+             "s.duramen:8: warning T032",
+             "s.duramen:9: error T029"
+            ],
+            "errors": 2,
+            "warnings": 1
+           }
+          },
+          "d1": {
+           "id": "661:check",
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 2 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "661:cases",
+          "from": "REQ-SU-005#3",
+          "mutation": "s.duramen: word 1",
+          "files": {
+           "s.duramen": "duramen 0.2\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\n  tolerance __proto__ 1\n  tolerance result.constructor 2\nreq A \"a\"\n  example f {\"x\": 1}\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "661:cases",
+           "result": {
+            "errors": 2,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "661:cases",
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\": 1}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "id",
+                "result"
+               ],
+               "tolerances": {
+                "__proto__": 1,
+                "result.constructor": 2
+               },
+               "result": {
+                "x": 1
+               }
+              }
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3372,
+      "same": 3368,
+      "differ": 4,
+      "records": [
+       "3/265",
+       "3/1068"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error P052 | D1 -",
+        "count": 2,
+        "examples": [
+         {
+          "id": "265:check",
+          "from": "REQ-SY-007#3",
+          "mutation": "s.duramen: duplicate 7, duplicate 9",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a number, b? {x: number, y: string}, c \"one, two\" | [1, 2], d-e (f, g)\n  result the sum\n  tolerance result.sum 0.005\n  tolerance result.count 0\n  tolerance result.count 0\n  audit text\n  audit text\n  request {}\n"
+          },
+          "d0": {
+           "id": "265:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:8: error P052",
+             "s.duramen:10: error P052"
+            ],
+            "errors": 2,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "265:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:8: error P052"
+            ],
+            "errors": 1,
+            "warnings": 0
+           }
+          }
+         },
+         {
+          "id": "1068:check",
+          "from": "REQ-SU-005#4",
+          "mutation": "s.duramen: duplicate 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\n  audit\n  tolerance result.t 0.5\nreq A \"a\"\n  example raw '{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}'\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "1068:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:7: error P052"
+            ],
+            "errors": 1,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "1068:check",
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 2 vs 1",
+        "count": 1,
+        "examples": [
+         {
+          "id": "265:cases",
+          "from": "REQ-SY-007#3",
+          "mutation": "s.duramen: duplicate 7, duplicate 9",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a number, b? {x: number, y: string}, c \"one, two\" | [1, 2], d-e (f, g)\n  result the sum\n  tolerance result.sum 0.005\n  tolerance result.count 0\n  tolerance result.count 0\n  audit text\n  audit text\n  request {}\n"
+          },
+          "d0": {
+           "id": "265:cases",
+           "result": {
+            "errors": 2,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "265:cases",
+           "result": {
+            "errors": 1,
+            "cases": []
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 1 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1068:cases",
+          "from": "REQ-SU-005#4",
+          "mutation": "s.duramen: duplicate 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\n  audit\n  tolerance result.t 0.5\nreq A \"a\"\n  example raw '{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}'\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "1068:cases",
+           "result": {
+            "errors": 1,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "1068:cases",
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "tolerances": {},
+               "result": {
+                "t": 1
+               }
+              },
+              "solo": true
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "pairs": [
+   {
+    "a": "s20-ts",
+    "b": "s21-py",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3372,
+      "same": 3372,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3372,
+      "same": 3366,
+      "differ": 6,
+      "records": [
+       "2/103",
+       "2/353",
+       "2/1443"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 - | D1 error P006",
+        "count": 2,
+        "examples": [
+         {
+          "id": "103:check",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: duplicate 1, word 7, indent 15 +1",
+          "files": {
+           "s.duramen": "duramen 0.1\nduramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    superseded x |\n    | 1 |\n  table f\n    | x |\n  table f\n    | x | result ± -1 |\n    | 1 | 2           |\n  table f\n     | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "103:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:2: error P023",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P013",
+             "s.duramen:9: error P013",
+             "s.duramen:12: error P010",
+             "s.duramen:16: error P010",
+             "s.duramen:19: error P014",
+             "s.duramen:20: error P009",
+             "s.duramen:21: error P006",
+             "s.duramen:23: error P013",
+             "s.duramen:26: error P010"
+            ],
+            "errors": 11,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "result": {
+            "diagnostics": [
+             "s.duramen:2: error P023",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P013",
+             "s.duramen:7: error P006",
+             "s.duramen:9: error P013",
+             "s.duramen:12: error P010",
+             "s.duramen:16: error P010",
+             "s.duramen:19: error P014",
+             "s.duramen:20: error P009",
+             "s.duramen:21: error P006",
+             "s.duramen:23: error P013",
+             "s.duramen:26: error P010"
+            ],
+            "errors": 12,
+            "warnings": 0
+           },
+           "id": "103:check"
+          }
+         },
+         {
+          "id": "1443:check",
+          "from": "REQ-SY-011#3",
+          "mutation": "s.duramen: insert at 3, char 2, insert at 8",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec .s 1\n\nreq A \"a\"\n  example f {}\n    input a\n     not six\n  table f g\n      six, but after the line that ended the text\n"
+          },
+          "d0": {
+           "id": "1443:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:6: error P049",
+             "s.duramen:7: error P006",
+             "s.duramen:8: error P013"
+            ],
+            "errors": 3,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "result": {
+            "diagnostics": [
+             "s.duramen:6: error P049",
+             "s.duramen:7: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006"
+            ],
+            "errors": 4,
+            "warnings": 0
+           },
+           "id": "1443:check"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 11 vs 12",
+        "count": 1,
+        "examples": [
+         {
+          "id": "103:cases",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: duplicate 1, word 7, indent 15 +1",
+          "files": {
+           "s.duramen": "duramen 0.1\nduramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    superseded x |\n    | 1 |\n  table f\n    | x |\n  table f\n    | x | result ± -1 |\n    | 1 | 2           |\n  table f\n     | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "103:cases",
+           "result": {
+            "errors": 11,
+            "cases": []
+           }
+          },
+          "d1": {
+           "result": {
+            "errors": 12,
+            "cases": []
+           },
+           "id": "103:cases"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "check: D0 - | D1 error P049",
+        "count": 1,
+        "examples": [
+         {
+          "id": "353:check",
+          "from": "REQ-SY-011#4",
+          "mutation": "r/s.duramen: char 6",
+          "files": {
+           "outside.txt": "x",
+           "r/s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input a from \"../outside.txt\"\n    input b  from \"t.txt\"\n      not its text\n    input c from \"unclosed\n  example f {\n    input d from \"../outside.txt\"\n",
+           "r/t.txt": "t\n"
+          },
+          "d0": {
+           "id": "353:check",
+           "result": {
+            "diagnostics": [
+             "r/s.duramen:5: error P048",
+             "r/s.duramen:7: error P006",
+             "r/s.duramen:8: error P049",
+             "r/s.duramen:9: error P009",
+             "r/s.duramen:10: error P048"
+            ],
+            "errors": 5,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "result": {
+            "diagnostics": [
+             "r/s.duramen:5: error P048",
+             "r/s.duramen:6: error P049",
+             "r/s.duramen:7: error P006",
+             "r/s.duramen:8: error P049",
+             "r/s.duramen:9: error P009",
+             "r/s.duramen:10: error P048"
+            ],
+            "errors": 6,
+            "warnings": 0
+           },
+           "id": "353:check"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 5 vs 6",
+        "count": 1,
+        "examples": [
+         {
+          "id": "353:cases",
+          "from": "REQ-SY-011#4",
+          "mutation": "r/s.duramen: char 6",
+          "files": {
+           "outside.txt": "x",
+           "r/s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input a from \"../outside.txt\"\n    input b  from \"t.txt\"\n      not its text\n    input c from \"unclosed\n  example f {\n    input d from \"../outside.txt\"\n",
+           "r/t.txt": "t\n"
+          },
+          "d0": {
+           "id": "353:cases",
+           "result": {
+            "errors": 5,
+            "cases": []
+           }
+          },
+          "d1": {
+           "result": {
+            "errors": 6,
+            "cases": []
+           },
+           "id": "353:cases"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 3 vs 4",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1443:cases",
+          "from": "REQ-SY-011#3",
+          "mutation": "s.duramen: insert at 3, char 2, insert at 8",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec .s 1\n\nreq A \"a\"\n  example f {}\n    input a\n     not six\n  table f g\n      six, but after the line that ended the text\n"
+          },
+          "d0": {
+           "id": "1443:cases",
+           "result": {
+            "errors": 3,
+            "cases": []
+           }
+          },
+          "d1": {
+           "result": {
+            "errors": 4,
+            "cases": []
+           },
+           "id": "1443:cases"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3372,
+      "same": 3368,
+      "differ": 4,
+      "records": [
+       "3/923",
+       "3/1288"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 - | D1 error P006",
+        "count": 2,
+        "examples": [
+         {
+          "id": "923:check",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: drop char 11, word 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    request x |\n    | 1 |\n  table f\n    | x |\n  table f\n    |x | result ± -1 |\n    | 1 | 2           |\n  table f\n    | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "923:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:4: error P013",
+             "s.duramen:5: error P013",
+             "s.duramen:8: error P013",
+             "s.duramen:11: error P010",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P014",
+             "s.duramen:19: error P009",
+             "s.duramen:20: error P006",
+             "s.duramen:22: error P013",
+             "s.duramen:25: error P010"
+            ],
+            "errors": 10,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "result": {
+            "diagnostics": [
+             "s.duramen:4: error P013",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:11: error P010",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P014",
+             "s.duramen:19: error P009",
+             "s.duramen:20: error P006",
+             "s.duramen:22: error P013",
+             "s.duramen:25: error P010"
+            ],
+            "errors": 11,
+            "warnings": 0
+           },
+           "id": "923:check"
+          }
+         },
+         {
+          "id": "1288:check",
+          "from": "REQ-SY-012#3",
+          "mutation": "s.duramen: insert at 2, drop char 6",
+          "files": {
+           "s.duramen": "duramen 0.1\n\nspec s 1\nreq A \"a\"\n  table f g\n   | x |\n    | {bad |\n  table f\n   | x |\n    | 1 |\n  table f\n    | a.b | result |\n    | 1   | 2      |\n  table f\n    | x | result ± lots |\n    | 1 | \"two\"         |\n  table f\n    | x | result ± 1 2 | result.y+-0.5 |\n    | 1 | 2            | 3             |\n  table f\n    | x | x |\n    | 1 | 2 |\n  table f\n    | x | result ± 0.5 |\n    | 1 | 2.25 [       |\n    | { | ?            |\n"
+          },
+          "d0": {
+           "id": "1288:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error P013",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006",
+             "s.duramen:12: error P013",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P010",
+             "s.duramen:21: error P013",
+             "s.duramen:25: error P010",
+             "s.duramen:26: error P009"
+            ],
+            "errors": 9,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006",
+             "s.duramen:12: error P013",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P010",
+             "s.duramen:21: error P013",
+             "s.duramen:25: error P010",
+             "s.duramen:26: error P009"
+            ],
+            "errors": 10,
+            "warnings": 0
+           },
+           "id": "1288:check"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 10 vs 11",
+        "count": 1,
+        "examples": [
+         {
+          "id": "923:cases",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: drop char 11, word 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    request x |\n    | 1 |\n  table f\n    | x |\n  table f\n    |x | result ± -1 |\n    | 1 | 2           |\n  table f\n    | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "923:cases",
+           "result": {
+            "errors": 10,
+            "cases": []
+           }
+          },
+          "d1": {
+           "result": {
+            "errors": 11,
+            "cases": []
+           },
+           "id": "923:cases"
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 9 vs 10",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1288:cases",
+          "from": "REQ-SY-012#3",
+          "mutation": "s.duramen: insert at 2, drop char 6",
+          "files": {
+           "s.duramen": "duramen 0.1\n\nspec s 1\nreq A \"a\"\n  table f g\n   | x |\n    | {bad |\n  table f\n   | x |\n    | 1 |\n  table f\n    | a.b | result |\n    | 1   | 2      |\n  table f\n    | x | result ± lots |\n    | 1 | \"two\"         |\n  table f\n    | x | result ± 1 2 | result.y+-0.5 |\n    | 1 | 2            | 3             |\n  table f\n    | x | x |\n    | 1 | 2 |\n  table f\n    | x | result ± 0.5 |\n    | 1 | 2.25 [       |\n    | { | ?            |\n"
+          },
+          "d0": {
+           "id": "1288:cases",
+           "result": {
+            "errors": 9,
+            "cases": []
+           }
+          },
+          "d1": {
+           "result": {
+            "errors": 10,
+            "cases": []
+           },
+           "id": "1288:cases"
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "a": "s20-ts",
+    "b": "s22-ts",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3372,
+      "same": 3372,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3372,
+      "same": 3368,
+      "differ": 4,
+      "records": [
+       "2/103",
+       "2/1443"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 - | D1 error P006",
+        "count": 2,
+        "examples": [
+         {
+          "id": "103:check",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: duplicate 1, word 7, indent 15 +1",
+          "files": {
+           "s.duramen": "duramen 0.1\nduramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    superseded x |\n    | 1 |\n  table f\n    | x |\n  table f\n    | x | result ± -1 |\n    | 1 | 2           |\n  table f\n     | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "103:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:2: error P023",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P013",
+             "s.duramen:9: error P013",
+             "s.duramen:12: error P010",
+             "s.duramen:16: error P010",
+             "s.duramen:19: error P014",
+             "s.duramen:20: error P009",
+             "s.duramen:21: error P006",
+             "s.duramen:23: error P013",
+             "s.duramen:26: error P010"
+            ],
+            "errors": 11,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "103:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:2: error P023",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P013",
+             "s.duramen:7: error P006",
+             "s.duramen:9: error P013",
+             "s.duramen:12: error P010",
+             "s.duramen:16: error P010",
+             "s.duramen:19: error P014",
+             "s.duramen:20: error P009",
+             "s.duramen:21: error P006",
+             "s.duramen:23: error P013",
+             "s.duramen:26: error P010"
+            ],
+            "errors": 12,
+            "warnings": 0
+           }
+          }
+         },
+         {
+          "id": "1443:check",
+          "from": "REQ-SY-011#3",
+          "mutation": "s.duramen: insert at 3, char 2, insert at 8",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec .s 1\n\nreq A \"a\"\n  example f {}\n    input a\n     not six\n  table f g\n      six, but after the line that ended the text\n"
+          },
+          "d0": {
+           "id": "1443:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:6: error P049",
+             "s.duramen:7: error P006",
+             "s.duramen:8: error P013"
+            ],
+            "errors": 3,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "1443:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:6: error P049",
+             "s.duramen:7: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006"
+            ],
+            "errors": 4,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 11 vs 12",
+        "count": 1,
+        "examples": [
+         {
+          "id": "103:cases",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: duplicate 1, word 7, indent 15 +1",
+          "files": {
+           "s.duramen": "duramen 0.1\nduramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    superseded x |\n    | 1 |\n  table f\n    | x |\n  table f\n    | x | result ± -1 |\n    | 1 | 2           |\n  table f\n     | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "103:cases",
+           "result": {
+            "errors": 11,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "103:cases",
+           "result": {
+            "errors": 12,
+            "cases": []
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 3 vs 4",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1443:cases",
+          "from": "REQ-SY-011#3",
+          "mutation": "s.duramen: insert at 3, char 2, insert at 8",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec .s 1\n\nreq A \"a\"\n  example f {}\n    input a\n     not six\n  table f g\n      six, but after the line that ended the text\n"
+          },
+          "d0": {
+           "id": "1443:cases",
+           "result": {
+            "errors": 3,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "1443:cases",
+           "result": {
+            "errors": 4,
+            "cases": []
+           }
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3372,
+      "same": 3364,
+      "differ": 8,
+      "records": [
+       "3/265",
+       "3/923",
+       "3/1068",
+       "3/1288"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error P052 | D1 -",
+        "count": 2,
+        "examples": [
+         {
+          "id": "265:check",
+          "from": "REQ-SY-007#3",
+          "mutation": "s.duramen: duplicate 7, duplicate 9",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a number, b? {x: number, y: string}, c \"one, two\" | [1, 2], d-e (f, g)\n  result the sum\n  tolerance result.sum 0.005\n  tolerance result.count 0\n  tolerance result.count 0\n  audit text\n  audit text\n  request {}\n"
+          },
+          "d0": {
+           "id": "265:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:8: error P052",
+             "s.duramen:10: error P052"
+            ],
+            "errors": 2,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "265:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:8: error P052"
+            ],
+            "errors": 1,
+            "warnings": 0
+           }
+          }
+         },
+         {
+          "id": "1068:check",
+          "from": "REQ-SU-005#4",
+          "mutation": "s.duramen: duplicate 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\n  audit\n  tolerance result.t 0.5\nreq A \"a\"\n  example raw '{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}'\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "1068:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:7: error P052"
+            ],
+            "errors": 1,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "1068:check",
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "check: D0 - | D1 error P006",
+        "count": 2,
+        "examples": [
+         {
+          "id": "923:check",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: drop char 11, word 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    request x |\n    | 1 |\n  table f\n    | x |\n  table f\n    |x | result ± -1 |\n    | 1 | 2           |\n  table f\n    | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "923:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:4: error P013",
+             "s.duramen:5: error P013",
+             "s.duramen:8: error P013",
+             "s.duramen:11: error P010",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P014",
+             "s.duramen:19: error P009",
+             "s.duramen:20: error P006",
+             "s.duramen:22: error P013",
+             "s.duramen:25: error P010"
+            ],
+            "errors": 10,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "923:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:4: error P013",
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:11: error P010",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P014",
+             "s.duramen:19: error P009",
+             "s.duramen:20: error P006",
+             "s.duramen:22: error P013",
+             "s.duramen:25: error P010"
+            ],
+            "errors": 11,
+            "warnings": 0
+           }
+          }
+         },
+         {
+          "id": "1288:check",
+          "from": "REQ-SY-012#3",
+          "mutation": "s.duramen: insert at 2, drop char 6",
+          "files": {
+           "s.duramen": "duramen 0.1\n\nspec s 1\nreq A \"a\"\n  table f g\n   | x |\n    | {bad |\n  table f\n   | x |\n    | 1 |\n  table f\n    | a.b | result |\n    | 1   | 2      |\n  table f\n    | x | result ± lots |\n    | 1 | \"two\"         |\n  table f\n    | x | result ± 1 2 | result.y+-0.5 |\n    | 1 | 2            | 3             |\n  table f\n    | x | x |\n    | 1 | 2 |\n  table f\n    | x | result ± 0.5 |\n    | 1 | 2.25 [       |\n    | { | ?            |\n"
+          },
+          "d0": {
+           "id": "1288:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error P013",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006",
+             "s.duramen:12: error P013",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P010",
+             "s.duramen:21: error P013",
+             "s.duramen:25: error P010",
+             "s.duramen:26: error P009"
+            ],
+            "errors": 9,
+            "warnings": 0
+           }
+          },
+          "d1": {
+           "id": "1288:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:5: error P013",
+             "s.duramen:6: error P006",
+             "s.duramen:8: error P013",
+             "s.duramen:9: error P006",
+             "s.duramen:12: error P013",
+             "s.duramen:15: error P010",
+             "s.duramen:18: error P010",
+             "s.duramen:21: error P013",
+             "s.duramen:25: error P010",
+             "s.duramen:26: error P009"
+            ],
+            "errors": 10,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 2 vs 1",
+        "count": 1,
+        "examples": [
+         {
+          "id": "265:cases",
+          "from": "REQ-SY-007#3",
+          "mutation": "s.duramen: duplicate 7, duplicate 9",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a number, b? {x: number, y: string}, c \"one, two\" | [1, 2], d-e (f, g)\n  result the sum\n  tolerance result.sum 0.005\n  tolerance result.count 0\n  tolerance result.count 0\n  audit text\n  audit text\n  request {}\n"
+          },
+          "d0": {
+           "id": "265:cases",
+           "result": {
+            "errors": 2,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "265:cases",
+           "result": {
+            "errors": 1,
+            "cases": []
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 10 vs 11",
+        "count": 1,
+        "examples": [
+         {
+          "id": "923:cases",
+          "from": "REQ-SY-012#2",
+          "mutation": "s.duramen: drop char 11, word 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    request x |\n    | 1 |\n  table f\n    | x |\n  table f\n    |x | result ± -1 |\n    | 1 | 2           |\n  table f\n    | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+          },
+          "d0": {
+           "id": "923:cases",
+           "result": {
+            "errors": 10,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "923:cases",
+           "result": {
+            "errors": 11,
+            "cases": []
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 1 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1068:cases",
+          "from": "REQ-SU-005#4",
+          "mutation": "s.duramen: duplicate 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\n  audit\n  tolerance result.t 0.5\nreq A \"a\"\n  example raw '{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}'\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "id": "1068:cases",
+           "result": {
+            "errors": 1,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "1068:cases",
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "tolerances": {},
+               "result": {
+                "t": 1
+               }
+              },
+              "solo": true
+             }
+            ]
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 9 vs 10",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1288:cases",
+          "from": "REQ-SY-012#3",
+          "mutation": "s.duramen: insert at 2, drop char 6",
+          "files": {
+           "s.duramen": "duramen 0.1\n\nspec s 1\nreq A \"a\"\n  table f g\n   | x |\n    | {bad |\n  table f\n   | x |\n    | 1 |\n  table f\n    | a.b | result |\n    | 1   | 2      |\n  table f\n    | x | result ± lots |\n    | 1 | \"two\"         |\n  table f\n    | x | result ± 1 2 | result.y+-0.5 |\n    | 1 | 2            | 3             |\n  table f\n    | x | x |\n    | 1 | 2 |\n  table f\n    | x | result ± 0.5 |\n    | 1 | 2.25 [       |\n    | { | ?            |\n"
+          },
+          "d0": {
+           "id": "1288:cases",
+           "result": {
+            "errors": 9,
+            "cases": []
+           }
+          },
+          "d1": {
+           "id": "1288:cases",
+           "result": {
+            "errors": 10,
+            "cases": []
+           }
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "a": "s21-py",
+    "b": "s22-ts",
+    "seeds": [
+     {
+      "seed": 1,
+      "requests": 3372,
+      "same": 3372,
+      "differ": 0,
+      "records": [],
+      "groups": []
+     },
+     {
+      "seed": 2,
+      "requests": 3372,
+      "same": 3370,
+      "differ": 2,
+      "records": [
+       "2/353"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error P049 | D1 -",
+        "count": 1,
+        "examples": [
+         {
+          "id": "353:check",
+          "from": "REQ-SY-011#4",
+          "mutation": "r/s.duramen: char 6",
+          "files": {
+           "outside.txt": "x",
+           "r/s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input a from \"../outside.txt\"\n    input b  from \"t.txt\"\n      not its text\n    input c from \"unclosed\n  example f {\n    input d from \"../outside.txt\"\n",
+           "r/t.txt": "t\n"
+          },
+          "d0": {
+           "result": {
+            "diagnostics": [
+             "r/s.duramen:5: error P048",
+             "r/s.duramen:6: error P049",
+             "r/s.duramen:7: error P006",
+             "r/s.duramen:8: error P049",
+             "r/s.duramen:9: error P009",
+             "r/s.duramen:10: error P048"
+            ],
+            "errors": 6,
+            "warnings": 0
+           },
+           "id": "353:check"
+          },
+          "d1": {
+           "id": "353:check",
+           "result": {
+            "diagnostics": [
+             "r/s.duramen:5: error P048",
+             "r/s.duramen:7: error P006",
+             "r/s.duramen:8: error P049",
+             "r/s.duramen:9: error P009",
+             "r/s.duramen:10: error P048"
+            ],
+            "errors": 5,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 6 vs 5",
+        "count": 1,
+        "examples": [
+         {
+          "id": "353:cases",
+          "from": "REQ-SY-011#4",
+          "mutation": "r/s.duramen: char 6",
+          "files": {
+           "outside.txt": "x",
+           "r/s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input a from \"../outside.txt\"\n    input b  from \"t.txt\"\n      not its text\n    input c from \"unclosed\n  example f {\n    input d from \"../outside.txt\"\n",
+           "r/t.txt": "t\n"
+          },
+          "d0": {
+           "result": {
+            "errors": 6,
+            "cases": []
+           },
+           "id": "353:cases"
+          },
+          "d1": {
+           "id": "353:cases",
+           "result": {
+            "errors": 5,
+            "cases": []
+           }
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "seed": 3,
+      "requests": 3372,
+      "same": 3368,
+      "differ": 4,
+      "records": [
+       "3/265",
+       "3/1068"
+      ],
+      "groups": [
+       {
+        "signature": "check: D0 error P052 | D1 -",
+        "count": 2,
+        "examples": [
+         {
+          "id": "265:check",
+          "from": "REQ-SY-007#3",
+          "mutation": "s.duramen: duplicate 7, duplicate 9",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a number, b? {x: number, y: string}, c \"one, two\" | [1, 2], d-e (f, g)\n  result the sum\n  tolerance result.sum 0.005\n  tolerance result.count 0\n  tolerance result.count 0\n  audit text\n  audit text\n  request {}\n"
+          },
+          "d0": {
+           "result": {
+            "diagnostics": [
+             "s.duramen:8: error P052",
+             "s.duramen:10: error P052"
+            ],
+            "errors": 2,
+            "warnings": 0
+           },
+           "id": "265:check"
+          },
+          "d1": {
+           "id": "265:check",
+           "result": {
+            "diagnostics": [
+             "s.duramen:8: error P052"
+            ],
+            "errors": 1,
+            "warnings": 0
+           }
+          }
+         },
+         {
+          "id": "1068:check",
+          "from": "REQ-SU-005#4",
+          "mutation": "s.duramen: duplicate 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\n  audit\n  tolerance result.t 0.5\nreq A \"a\"\n  example raw '{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}'\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "result": {
+            "diagnostics": [
+             "s.duramen:7: error P052"
+            ],
+            "errors": 1,
+            "warnings": 0
+           },
+           "id": "1068:check"
+          },
+          "d1": {
+           "id": "1068:check",
+           "result": {
+            "diagnostics": [],
+            "errors": 0,
+            "warnings": 0
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 2 vs 1",
+        "count": 1,
+        "examples": [
+         {
+          "id": "265:cases",
+          "from": "REQ-SY-007#3",
+          "mutation": "s.duramen: duplicate 7, duplicate 9",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a number, b? {x: number, y: string}, c \"one, two\" | [1, 2], d-e (f, g)\n  result the sum\n  tolerance result.sum 0.005\n  tolerance result.count 0\n  tolerance result.count 0\n  audit text\n  audit text\n  request {}\n"
+          },
+          "d0": {
+           "result": {
+            "errors": 2,
+            "cases": []
+           },
+           "id": "265:cases"
+          },
+          "d1": {
+           "id": "265:cases",
+           "result": {
+            "errors": 1,
+            "cases": []
+           }
+          }
+         }
+        ]
+       },
+       {
+        "signature": "cases: errors 1 vs 0",
+        "count": 1,
+        "examples": [
+         {
+          "id": "1068:cases",
+          "from": "REQ-SU-005#4",
+          "mutation": "s.duramen: duplicate 6",
+          "files": {
+           "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\n  audit\n  tolerance result.t 0.5\nreq A \"a\"\n  example raw '{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}'\n",
+           "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+          },
+          "d0": {
+           "result": {
+            "errors": 1,
+            "cases": []
+           },
+           "id": "1068:cases"
+          },
+          "d1": {
+           "id": "1068:cases",
+           "result": {
+            "errors": 0,
+            "cases": [
+             {
+              "id": "A#1",
+              "kind": "example",
+              "reqs": [
+               "REQ-A"
+              ],
+              "platform": "any",
+              "line": "{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}",
+              "checks": [],
+              "full": {
+               "members": [
+                "audit",
+                "id",
+                "result"
+               ],
+               "tolerances": {},
+               "result": {
+                "t": 1
+               }
+              },
+              "solo": true
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}
