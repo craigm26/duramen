@@ -78,7 +78,7 @@ checkers, mutants and pairs, and [`rounds/`](rounds/) holds each round's reports
 Each build is compared with the duramen of its own round: the fixed point and the agreement are
 measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a, 0.3.0 at
 66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0, 0.6.0 at 78ecd48, 0.7.0 at e39579d, 0.8.0 at c6d499d,
-0.9.0 at 92dfcec, 0.10.0 at fb8f843, 0.11.0 at 4ca0ab7). s01 to s09
+0.9.0 at 92dfcec, 0.10.0 at fb8f843, 0.11.0 at 4ca0ab7, 0.12.0 at db94452). s01 to s09
 were built by `claude-sonnet-5-5`; s10, s10b and s11 by the models named, for
 [CONFIDENCE.md](../CONFIDENCE.md)'s claim 2; from s14 on, each round is two `claude-sonnet-5-5`
 builds and one `claude-opus-5-5` build. From s08 on, the rescored column counts the 44

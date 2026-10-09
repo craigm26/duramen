@@ -248,3 +248,79 @@ grammar that both written briefs spell out, which the generated requests and C's
 and the compliance suite does not test; there C did no better than B. And C alone carried an
 error into its builds, from duramen's own renderer. Four builds per brief is a small sample,
 but no sample size turns 2.00, 2.00 and 2.00 into a large effect.
+
+### 8. Regeneration converges at a frozen version: fails
+
+Three rounds ran, eight to ten, each from the brief of the record as the round before left it,
+with three blind builds launched together: `claude-sonnet-5-5` in TypeScript and in Python, and
+`claude-opus-5-5` in TypeScript. No builder from outside Anthropic took part (there was no
+access), so everything below holds among Claude builders only. All nine builds passed every case
+of their round's suite and were fixed points, so every round had three checkers besides
+duramen. No round was clean.
+
+| round | brief | probe records | read more than one way | under an open item | undeclared (readings) | mutated records split | undeclared | pairs of builds alike on every mutated record |
+|---|---|---|---|---|---|---|---|---|
+| eight (s14, s15, s16) | 0.9.0 | 374 | 27 | 18 | 9 (4) | 1 | 1 | one of three (s14 and s16) |
+| nine (s17, s18, s19) | 0.10.0 | 397 | 32 | 19 | 13 (4) | 1 | 0 | all three |
+| ten (s20, s21, s22) | 0.11.0 | 410 | 22 | 19 | 3 (2) | 8 | 7 (3) | none |
+
+Each round sent 4,500 mutated records (three seeds of 1,500) and the suite's own records to
+every build, as `check` and `cases`; a record splits when a checker's answer to either differs
+from duramen's. A round's probe records are every probe file so far, the round's own included
+([`selfhost/probes/`](selfhost/probes/)). The reports are in [`selfhost/rounds/`](selfhost/rounds/),
+and each build's triage in its run record ([s14](selfhost/s14-ts.md) to [s22](selfhost/s22-ts.md)).
+
+The undeclared readings, and who was out of step:
+- **Round eight:** T024 for an example with an expectation that is not about the error (s15;
+  round seven's s13 had read it the same way); obligation words touching a quotation (duramen,
+  against its own words, and s16 on a rejected alternative's line break); an oracle's audit
+  that is not a string (duramen and s15 kept it in the suite, s14 and s16 left it out, the
+  words in conflict); a lone surrogate in a raw line sent to the oracle (s15). 0.10.0 pinned
+  all four, and duramen changed on two.
+- **Round nine:** a table column named like a declared input field (s18 read "also when" the
+  other way from every build since round seven); brackets of different kinds between input
+  fields (s19 counted them apart); a tolerance for the path `__proto__` (s17 lost it); a lone CR
+  inside a rejected alternative (duramen's quotations ran across it). 0.11.0 pinned all four,
+  and duramen changed on one.
+- **Round ten:** a second `audit` clause of an operation (s22 read REQ-SY-003's once-only list as
+  leaving it out; it names it); P006 for a line that is no row under a table that gets P013
+  (s20); two spaces before `from` in an `input` line (s21). 0.12.0 pins all three, after the
+  last round; no build has been made from it.
+
+Every change between rounds was tightening by `duramen diff`, with no new operation or
+statement, and no open item was added. Everything else that split fell under the brief's open
+items: the rest of the language (OPEN-RC-001), how long an oracle may run (OPEN-RQ-001), names a
+file system cannot hold (OPEN-RQ-003), checks of other kinds and numbers too large in a judge
+request (OPEN-JU-001, OPEN-JU-002), and which white space makes a request line blank (the
+driver protocol, which says it is open in words rather than with an OPEN item; counted here as
+declared).
+
+**The curve from round five.** Rounds five to seven counted probe records read more than one
+way among their own records, with no line drawn between open and not: 8 of 49 (round five), 44
+of 175 (six), 31 of 83 (seven; 16 after duramen was fixed). On mutated records they differed
+from duramen on no record, three records, and one record. Rounds eight to ten, on every probe
+file so far: 27, 32 and 22 records read more than one way, of which 9, 13 and 3 under no open
+item; on mutated records 1, 0 and 7 undeclared.
+
+**What it says.** By this method, the words of duramen-core have not been shown to settle its
+behavior: each round's new builders found three or four readings that split the checkers, and
+the outcome this file named as counting against convergence happened. Round nine came closest:
+every pair of its builds answered every mutated record alike, the second half of the
+criterion, but 13 probe records split under no open item. The splits are few and
+narrow (a clause repeated, a corner of the table syntax, a code unit no encoder writes), and
+each was pinned by one example or a sentence; but the next round found others, and round ten's
+mutated records found more than round nine's. Some splits were not gaps in the words at all:
+s22 misread a list that names the clause, s16 a rule that says "on one line", and duramen itself
+changed three times, twice where it was out of step with its own words. A test that counts every split cannot pass while
+builders, or the reference, misread clear words now and then, and this one did not.
+
+### Against regenerative software, as listed above
+
+All three happened.
+- **A brief that pins a wrong reading, inherited by every build:** C's brief said `$.ˋa` is
+  invalid, and the four C sonnet builds answer so (claim 7). The wrong reading came from
+  duramen's renderer rather than from the record, and no test here would have found it; the
+  independent check did. The renderer is fixed.
+- **A record that restates the implementation:** C's oracle is 679 non-blank lines, against
+  762 to 1,078 for the sonnet builds made from it, and the record itself is 1,509 lines.
+- **Rounds that keep finding undeclared splits:** three of three (claim 8).
