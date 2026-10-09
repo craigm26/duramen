@@ -18,9 +18,11 @@ is duramen itself, and a checker rebuilt blind from its brief is judged by its s
 with pass criteria written before the runs, and what the runs showed: four pass and two fail.
 An agent that had not seen the work checked the results against this repository; its
 corrections are listed there. [`CONFIDENCE-2.md`](CONFIDENCE-2.md) states two more, with
-criteria committed before their runs: whether the language, and not only the builder, carries
-the behavior (JSONPath, judged by an outside compliance suite), and whether regeneration
-converges.
+criteria committed before their runs, and both fail. On JSONPath, judged by an outside
+compliance suite, builds from a duramen brief did no better than builds from the RFC alone or
+from a markdown spec: all 18 passed 704 of 706 cases ([`examples/jsonpath/`](examples/jsonpath/README.md)).
+And three more rounds of rebuilding duramen-core each found a few readings its words had not
+settled, so regeneration was not shown to converge.
 
 Status: prototype, version 0.2.0. Node.js 22.18 or later (Node.js 24 and later have a JSON.parse
 bug that duramen warns of: [DESIGN.md](DESIGN.md#nodejs-versions)), no dependencies.
@@ -94,13 +96,13 @@ The full list of checks, the syntax and the limits are in [DESIGN.md](DESIGN.md)
 
 ## duramen specified in duramen
 
-[`spec/`](spec/) is duramen-core 0.8.0: the core of the language (the statements of 0.1 other
+[`spec/`](spec/) is duramen-core 0.12.0: the core of the language (the statements of 0.1 other
 than `edge`) and three operations of the checker, `check` (a record's diagnostics), `cases`
 (the suite generated from it) and `judge` (whether an implementation's answer passes a case),
-in 47 requirements and 232 examples. It is written in the core
+in 47 requirements and 243 examples. It is written in the core
 language it specifies, so that a checker built from it can read it, and its oracle is duramen
 itself, through `duramen serve`, which takes a record as a map of file names to texts. Every
-expected value in it was typed by hand, and `duramen check spec/` runs all 232 through duramen
+expected value in it was typed by hand, and `duramen check spec/` runs all 243 through duramen
 in a few seconds.
 
 Writing it found behavior nobody had decided. Before it was written, duramen dropped some
@@ -175,6 +177,16 @@ Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
     [s13](selfhost/s13-py.md)). 0.9.0 changes only the fixture that the examples' records use as
     their oracle, which Node.js 24 broke ([D-020](spec/90-decisions.duramen)); s12 and s13 pass
     it.
+11. **Three rounds at a frozen language.** For [CONFIDENCE-2.md](CONFIDENCE-2.md)'s claim 8, the
+    operations and statements stayed fixed and three rounds ran, s14 to s22, each two
+    `claude-sonnet-5-5` builds and one `claude-opus-5-5` build. All nine passed every case and
+    were fixed points. Each round sent them every probe record written so far (374 to 410)
+    and 4,500 mutated records, and each found three to five readings the words had not
+    settled, among them a column named like an input field, brackets of two kinds, a second
+    `audit` clause, and a lone CR; three times it was duramen itself that changed.
+    Each was pinned by an example (0.10.0 to 0.12.0, all tightening), but no round was clean,
+    so convergence was not shown ([selfhost/README.md](selfhost/README.md),
+    [D-021 to D-023](spec/90-decisions.duramen)).
 
 Blind means the builders were not shown duramen's source; the spec they read describes duramen
 in detail, and these builds by three models of one family are a small sample. Their tools
