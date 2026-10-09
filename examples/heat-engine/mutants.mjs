@@ -40,17 +40,23 @@ const MUTANTS = [
   ['crlf', 'protocol: CRLF line ends', 'driver.ts', 'outLines.push(handle(line) + "\\n");', 'outLines.push(handle(line) + "\\r\\n");'],
 ];
 
+// The kinds of case that failed tell how a mutant was caught: by a value only the oracle stands
+// behind (example), or by a check that does not come from the oracle (evidence, property,
+// edge pack, static check, protocol).
 function duramenRun(dir) {
-  const r = spawnSync(process.execPath, [DURAMEN, 'run', SPEC, '--impl', dir], { encoding: 'utf8' });
-  const m = r.stdout.match(/passed (\d+)\/(\d+)/);
-  return m ? { passed: +m[1], total: +m[2] } : { error: (r.stdout + r.stderr).trim().split('\n').pop() };
+  const r = spawnSync(process.execPath, [DURAMEN, 'run', SPEC, '--impl', dir, '--json'], { encoding: 'utf8' });
+  let j;
+  try { j = JSON.parse(r.stdout.trim().split('\n').pop()); } catch { return { error: (r.stdout + r.stderr).trim().split('\n').pop() }; }
+  if (!j.run) return { error: `check failed: ${j.summary?.errors} errors` };
+  const by = [...new Set(j.run.failures.map((f) => f.kind))].sort();
+  return { passed: j.run.passed, total: j.run.total, by };
 }
 function handRun(dir) {
   const r = spawnSync(process.execPath, [SUITE, '--impl', dir], { encoding: 'utf8', cwd: dirname(dirname(dirname(SUITE))) });
   const m = r.stdout.match(/passed (\d+)\/(\d+)/);
   return m ? { passed: +m[1], total: +m[2] } : { error: (r.stdout + r.stderr).trim().split('\n').pop() };
 }
-const show = (x) => (x.error ? `error (${x.error})` : x.passed === x.total ? `${x.passed}/${x.total} (missed)` : `${x.passed}/${x.total} (caught)`);
+const show = (x) => (x.error ? `error (${x.error})` : x.passed === x.total ? `${x.passed}/${x.total} (missed)` : `${x.passed}/${x.total} (caught${x.by ? ` by ${x.by.join(', ')}` : ''})`);
 
 const rows = [];
 const base = mkdtempSync(join(tmpdir(), 'duramen-mutants-'));
@@ -68,7 +74,7 @@ try {
     const t = duramenRun(dir);
     const h = SUITE ? handRun(dir) : null;
     rows.push({ name, what, duramen: t, hand: h });
-    console.log(`${name.padEnd(24)} duramen ${show(t).padEnd(22)}${h ? ` hand-built ${show(h)}` : ''}`);
+    console.log(`${name.padEnd(24)} duramen ${show(t).padEnd(52)}${h ? ` hand-built ${show(h)}` : ''}`);
   }
 } finally {
   rmSync(base, { recursive: true, force: true });

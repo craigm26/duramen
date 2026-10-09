@@ -1,0 +1,100 @@
+# Canonical JSON: three members of a family that "canonical JSON" names without saying which.
+# Each item: the JSON input as written => the canonical text, or "refused" when the value has
+# no canonical form under that edge. "escaped" gives the expected text as a JSON string, for
+# texts with characters that are invisible in a source file.
+
+duramen 0.2
+
+edgedef json/sorted-utf16 "Canonical JSON, keys in UTF-16 order, lone surrogates escaped"
+  family canonical-json, json
+  text
+    The canonical JSON text of a value has no whitespace outside strings:
+
+    - `null`, `true`, `false` as those words; a finite number as its number text
+      (edge number-text/ecmascript).
+    - A string as `"`, each UTF-16 code unit escaped as below, then `"`.
+    - An array as `[`, its elements in order separated by `,`, then `]`.
+    - An object as `{`, its members separated by `,`, then `}`; each member is the key as a
+      string, `:`, then the value. Members are ordered by key, comparing keys as sequences of
+      **UTF-16 code units** (not code points).
+
+    Escaping, per UTF-16 code unit: `"` and `\` with a backslash; `0x08`, `0x0C`, `0x0A`,
+    `0x0D`, `0x09` as `\b`, `\f`, `\n`, `\r`, `\t`; any other unit below `0x20`, and any
+    surrogate that is not part of a valid pair, as `\u` and four **lowercase** hex digits;
+    everything else, including `/`, `0x7F` and U+2028, as itself. The text is UTF-8 encoded.
+  item {"b":1,"a":2} => {"a":2,"b":1}
+  item {"｡":1,"😀":2} => {"😀":2,"｡":1}
+  item {"10":1,"9":2,"":3} => {"":3,"10":1,"9":2}
+  item {"b\u0000":1,"b":2} => {"b":2,"b\u0000":1}
+  item {"a":{"c":[{}],"b":[]}} => {"a":{"b":[],"c":[{}]}}
+  item {"a":null} => {"a":null}
+  item [1,2.50,1e21] => [1,2.5,1e+21]
+  item [-0,0.000001,1e-7] => [0,0.000001,1e-7]
+  item "a\u0000b" => "a\u0000b"
+  item "\u001F" => "\u001f"
+  item "\u2028" escaped "\"\u2028\""
+  item "\u007f" escaped "\"\u007f\""
+  item "\/" => "/"
+  item "\u00e9" => "é"
+  item "\ud83d\ude00" => "😀"
+  item null => null
+  item true => true
+  item "\ud800" => "\ud800"
+  item "\ude00\ud83d" => "\ude00\ud83d"
+
+edgedef json/sorted-codepoint "Canonical JSON, keys in code-point order, lone surrogates refused"
+  family canonical-json, json
+  text
+    The rules of json/sorted-utf16, with two differences. Members are ordered by key comparing
+    keys as sequences of Unicode **code points** (a valid surrogate pair counts as the one code
+    point it encodes); this differs from UTF-16 order only for keys that mix characters above
+    U+FFFF with characters in U+E000–U+FFFF. And a string containing a surrogate code unit that is
+    not part of a valid pair is not a sequence of code points, so a value containing one has
+    **no** canonical form: the implementation MUST answer with an error instead.
+  item {"b":1,"a":2} => {"a":2,"b":1}
+  item {"｡":1,"😀":2} => {"｡":1,"😀":2}
+  item {"10":1,"9":2,"":3} => {"":3,"10":1,"9":2}
+  item {"b\u0000":1,"b":2} => {"b":2,"b\u0000":1}
+  item {"a":{"c":[{}],"b":[]}} => {"a":{"b":[],"c":[{}]}}
+  item {"a":null} => {"a":null}
+  item [1,2.50,1e21] => [1,2.5,1e+21]
+  item [-0,0.000001,1e-7] => [0,0.000001,1e-7]
+  item "a\u0000b" => "a\u0000b"
+  item "\u001F" => "\u001f"
+  item "\u2028" escaped "\"\u2028\""
+  item "\u007f" escaped "\"\u007f\""
+  item "\/" => "/"
+  item "\u00e9" => "é"
+  item "\ud83d\ude00" => "😀"
+  item null => null
+  item true => true
+  item "\ud800" refused
+  item "\ude00\ud83d" refused
+
+edgedef json/rfc8785 "Canonical JSON per RFC 8785, read strictly (lone surrogates refused)"
+  family canonical-json, json
+  text
+    RFC 8785 (JSON Canonicalization Scheme) read strictly: the rules of json/sorted-utf16
+    (RFC 8785 also orders keys by UTF-16 code units and writes numbers as ECMAScript does), except
+    that RFC 8785 takes I-JSON input (RFC 7493), which excludes unpaired surrogates. So a value
+    containing a surrogate code unit that is not part of a valid pair has **no** canonical form, and
+    the implementation MUST answer with an error instead.
+  item {"b":1,"a":2} => {"a":2,"b":1}
+  item {"｡":1,"😀":2} => {"😀":2,"｡":1}
+  item {"10":1,"9":2,"":3} => {"":3,"10":1,"9":2}
+  item {"b\u0000":1,"b":2} => {"b":2,"b\u0000":1}
+  item {"a":{"c":[{}],"b":[]}} => {"a":{"b":[],"c":[{}]}}
+  item {"a":null} => {"a":null}
+  item [1,2.50,1e21] => [1,2.5,1e+21]
+  item [-0,0.000001,1e-7] => [0,0.000001,1e-7]
+  item "a\u0000b" => "a\u0000b"
+  item "\u001F" => "\u001f"
+  item "\u2028" escaped "\"\u2028\""
+  item "\u007f" escaped "\"\u007f\""
+  item "\/" => "/"
+  item "\u00e9" => "é"
+  item "\ud83d\ude00" => "😀"
+  item null => null
+  item true => true
+  item "\ud800" refused
+  item "\ude00\ud83d" refused

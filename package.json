@@ -1,6 +1,6 @@
 {
   "name": "duramen",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A specification language for regenerative software: one source for the builder's brief, the decisions, and the suite, with every example checked against the spec's own model.",
   "type": "module",
   "bin": { "duramen": "bin/duramen.mjs" },

@@ -1,0 +1,16 @@
+# Fixed-point text. The pack is still empty: the text is in the brief, but nothing checks it yet.
+
+duramen 0.2
+
+edgedef fixed-text/ecmascript "Fixed-point text (ECMAScript Number.prototype.toFixed)"
+  text
+    A finite number `x` "fixed to `f` places" is written as ECMAScript's
+    `Number.prototype.toFixed(f)` writes it:
+
+    1. If `|x| ≥ 1e21`, write the number text of `x` (edge number-text/ecmascript).
+    2. If `x < 0` (strictly), write `-` followed by the fixed text of `-x`. `-0` is written like `+0`.
+    3. Otherwise let `m` be the integer for which `m / 10^f − x` is closest to zero, using the
+       **exact** binary value of `x`; on an exact tie take the larger `m`. Write `m` in decimal,
+       left-padded with zeros to at least `f + 1` digits, with `.` before the last `f` digits.
+
+    Python's `format(x, '.1f')` rounds exact ties to even and so differs (`20.25` gives `20.2`).

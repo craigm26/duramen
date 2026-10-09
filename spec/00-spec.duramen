@@ -1,0 +1,147 @@
+# duramen, specified in duramen. The oracle is duramen itself (`duramen serve`), and every
+# expected value below was typed by hand, so checking this record checks duramen against what
+# this record says it does. The record is written in the core language it specifies, so that a
+# checker built from it can read it.
+
+duramen 0.1
+
+spec duramen-core 0.7.0
+  title "The duramen checker and suite generator, for the core of the language"
+  text
+    duramen is a language for specifications that programs are rebuilt from. A *record* is one
+    `.duramen` file, or a folder of them, holding a program's requirements with examples, the
+    decisions behind them, its deliberate gaps, and a command that runs the specification's own
+    executable model, its *oracle*. The checker reads a record, reports the problems in it as
+    diagnostics, runs every example through the oracle, and turns the examples into a suite of
+    cases that judges implementations of the program.
+
+    This document specifies the core of the language (the statements `duramen`, `spec`,
+    `oracle`, `section`, `op`, `errors`, `req`, `open`, `decision` and `note`) and two
+    operations of the checker: `check`, which reports a record's diagnostics, and `cases`,
+    which lists the suite generated from it. The rest of the language is open here
+    (OPEN-RC-001), and so is everything the checker writes for people to read: its messages,
+    the columns it points at, and the brief it renders for builders (OPEN-RQ-002).
+
+    The records in the examples travel inside requests, as texts (REQ-RQ-001). A diagnostic is
+    written `<file>:<line>: <level> <code>`, for example `s.duramen:3: error P002`: the file's
+    name in the request, the line (counting from 1), the level (`error`, `warning` or `info`),
+    and a code that names the rule broken. P codes are for reading a record and T codes for
+    checking it.
+
+oracle node ../bin/duramen.mjs serve
+
+op check
+  input files object, entry? string
+  result `{"diagnostics": [<diagnostic>, ...], "errors": <count>, "warnings": <count>}`, the record's diagnostics in order (REQ-RC-006) and how many are errors and warnings
+
+op cases
+  input files object, entry? string
+  result `{"errors": <count>, "cases": [<case>, ...]}`, the suite generated from the record (REQ-SU-001) and how many errors the record has
+
+errors
+  bad_request when the line is not a JSON object, or its `id` is missing or is not a string (the
+    response then has `"id": null`)
+  unknown_op when `op` is not `"check"` or `"cases"`
+  bad_request when `input` is not an object; when `files` is missing, is not an object, is
+    empty, holds a value that is not a string, or has a name that is not a relative path
+    (REQ-RQ-001); when one name is the folder of another, as `a` is of `a/b.duramen`; or when
+    `entry` is present and is neither `"."` nor a relative path
+
+section RQ "Requests"
+
+req RQ-001 "A record travels inside the request"
+  decision D-001
+  text
+    `input.files` maps names to the texts of files. A name is a relative path: parts separated
+    by `/`, none of them empty, `.` or `..`, with no backslash and no NUL character, and not
+    starting with a letter and a colon (as `c:` does). The checker MUST read the record as if
+    these files were the whole content of a folder, and MUST write each diagnostic's file as its
+    name here. `input.entry` names the record: a file, or a folder (REQ-RC-001); `"."` and a
+    missing `entry` both name the folder that holds all the files.
+  example check {"entry": "a.duramen"}
+    input files."a.duramen"
+      duramen 0.1
+      spec a 1
+    input files."b.duramen"
+      frobnicate
+    expect result = {"diagnostics": [], "errors": 0, "warnings": 0}
+  example check {}
+    input files."a.duramen"
+      duramen 0.1
+      spec a 1
+    input files."b.duramen"
+      frobnicate
+    expect result = {"diagnostics": ["b.duramen:1: error P002", "b.duramen:1: error P020"], "errors": 2, "warnings": 0}
+
+req RQ-002 "Requests that cannot be handled"
+  text
+    A request that cannot be handled MUST get exactly `{"id": <id>, "error": <code>}`, with the
+    code of the first condition under Errors that holds, and the driver MUST go on to the next
+    line.
+  example raw "{not json"
+    expect id = null
+    expect error = "bad_request"
+  example raw "[1, 2]"
+    expect id = null
+    expect error = "bad_request"
+  example check {"files": {"a.duramen": "duramen 0.1\nspec a 1\n"}}
+    omit id
+    expect id = null
+    expect error = "bad_request"
+  example raw '{"id": 7, "op": "check", "input": {"files": {"a.duramen": "duramen 0.1\nspec a 1\n"}}}'
+    expect id = null
+    expect error = "bad_request"
+  example lint {"files": {"a.duramen": "x"}}
+    expect error = "unknown_op"
+  example lint
+    expect error = "unknown_op"
+  example check
+    expect error = "bad_request"
+  example check {}
+    expect error = "bad_request"
+  example check {"files": {}}
+    expect error = "bad_request"
+  example check {"files": ["a.duramen"]}
+    expect error = "bad_request"
+  example check {"files": {"a.duramen": 1}}
+    expect error = "bad_request"
+  example check {"files": {"../a.duramen": "duramen 0.1\nspec a 1\n"}}
+    expect error = "bad_request"
+  example check {"files": {"/a.duramen": "duramen 0.1\nspec a 1\n"}}
+    expect error = "bad_request"
+  example check {"files": {"x/./a.duramen": "duramen 0.1\nspec a 1\n"}}
+    expect error = "bad_request"
+  example check {"files": {"x//a.duramen": "duramen 0.1\nspec a 1\n"}}
+    expect error = "bad_request"
+  example check {"files": {"c:a.duramen": "duramen 0.1\nspec a 1\n"}}
+    expect error = "bad_request"
+  example cases {"files": {"a\\b.duramen": "duramen 0.1\nspec a 1\n"}}
+    expect error = "bad_request"
+  example cases {"files": {"a": "x", "a/b.duramen": "duramen 0.1\nspec a 1\n"}}
+    expect error = "bad_request"
+  example check {"files": {"a.duramen": "duramen 0.1\nspec a 1\n"}, "entry": "../a.duramen"}
+    expect error = "bad_request"
+  example check {"files": {"a.duramen": "duramen 0.1\nspec a 1\n"}, "entry": 1}
+    expect error = "bad_request"
+  example check {"files": {"a.duramen": "duramen 0.1\nspec a 1\n"}, "entry": ""}
+    expect error = "bad_request"
+
+open RQ-001 "Running time and size"
+  text
+    How long a request may take, and how large a record or its files may be.
+
+open RQ-002 "What the checker writes for people"
+  text
+    The text of each diagnostic's message, the column it points at, and the brief, decisions
+    and trace the checker renders for builders and readers.
+
+open RQ-003 "Names a file system cannot hold"
+  text
+    Names that the platform's file system cannot store as given, such as names that differ
+    only in letter case on a file system that ignores case, or names holding characters a
+    platform forbids.
+
+open RQ-004 "Failures of the checker itself"
+  text
+    What the driver answers when it fails on a request it accepted. (The reference answers
+    `{"id": <id>, "error": "internal_error"}` and writes the details to standard error.)

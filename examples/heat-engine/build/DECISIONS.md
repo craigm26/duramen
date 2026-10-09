@@ -64,7 +64,7 @@ Rejected:
 ## D-009: RH is clamped to [5, 100], not [5, 99]
 
 - Source: extraction
-- Cited by: REQ-WB-001
+- Cited by: REQ-WB-001, PROP-WB-P8, PROP-WB-P2, PROP-WB-P3
 
 Stull's stated validity range is RH 5–99 %; the earlier input schema said implementations
 "MUST clamp to [5, 99]"; the earlier code clamped to [5, 100], and a test asserts
@@ -78,7 +78,7 @@ Rejected:
 ## D-010: Flag bands are in °F, and the °C path uses one exact expression
 
 - Source: extraction, primary source
-- Cited by: REQ-WB-005, REQ-FL-001, REQ-FL-004
+- Cited by: REQ-WB-005, REQ-FL-001, REQ-FL-004, PROP-WB-P1, PROP-FL-P1
 
 MCO 6200.1E defines the bands in °F with inclusive lower bounds. The °C path converts
 first. Floating-point error can move a value across a boundary: for `26.66666666666666` °C,
@@ -158,3 +158,18 @@ restates it (T005).
 
 Rejected:
 - Keep a table and drop the first clause: still easy to misread.
+
+## D-025: Infinite °F converts by the same expression
+
+- Source: blind build t07 (choice C-7) and duramen agree, 2026-10-08
+- Cited by: REQ-WB-005
+
+REQ-WB-005 said that "a non-finite tempF gives a non-finite tempC". The t07 builder read
+that as "always NaN" and wrote `"NaN"` in the audit for an infinite `tempF`, where the exact
+expression gives an infinity; no case checked it, and `duramen agree` found the difference
+on 199 of 400 generated `wetBulbF` requests. Decision: the text says that the expression
+applies to non-finite values too, and two examples pin the infinities. Why: the expression
+was already the rule; the summary sentence invited the shortcut.
+
+Rejected:
+- Treat every non-finite tempF as NaN: loses the sign the input had, and contradicts the exact expression.

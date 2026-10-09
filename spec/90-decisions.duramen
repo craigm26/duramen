@@ -1,0 +1,184 @@
+duramen 0.1
+
+
+decision D-001 "duramen is judged through a driver of its own"
+  source written for this record, 2026-10-08
+  text
+    A program rebuilt from a specification is judged only through its driver: one JSON request
+    per line in, one JSON response per line out. To specify duramen in duramen, the checker
+    itself speaks that protocol (`duramen serve`), and a record travels inside a request as a
+    map of file names to texts, so that one request is one whole, self-contained case: no
+    files to set up, nothing left behind.
+  rejected "Command-line cases (arguments in, exit status and output out): the driver protocol is what every duramen suite already runs, and one protocol keeps the suite runner unchanged."
+
+decision D-002 "A folder record is read in one order everywhere"
+  source written for this record, 2026-10-08
+  text
+    File systems list a folder in different orders, so the files of a record are sorted, and
+    by UTF-16 code units, the order JavaScript and Java compare strings in, so that "first" and
+    "second" mean the same on every platform. Diagnostics are sorted the same way, so that two
+    checkers that agree on a record write the same list. Folders named `build` and
+    `node_modules`, and names starting with `.`, hold generated files, dependencies and tool
+    state, not the record.
+  rejected "Unicode code point order: it differs from UTF-16 order only above U+FFFF, and every tool that compares strings natively in JavaScript gets UTF-16 order for free."
+
+decision D-003 "Problems found while reading stop the check"
+  source written for this record, 2026-10-08
+  text
+    A record that was not read as written makes the later checks report the consequences of
+    the misreading (an unknown op because a clause was dropped, say) rather than its cause. The
+    checker reports what it found while reading, and checks nothing else until that is fixed.
+
+decision D-004 "Indentation is spaces"
+  source duramen 0.1
+  text
+    Indentation carries the structure of a record, and a tab has no agreed width, so a line
+    indented with anything but spaces is an error rather than a guess. A line of white space
+    only is blank, whatever it holds: it carries nothing.
+
+decision D-005 "A line that belongs to nothing is an error"
+  source found while writing this record, 2026-10-08
+  text
+    Before this record was written, duramen ignored some lines without a word: a line under a
+    clause that takes none (a second line of a `title`), a line under a table that is not a
+    row, and a line under an example indented three spaces or six. Each was a place where a
+    writer's intent could be dropped silently. Now each is P006, so every line of a record is
+    either read or reported.
+  rejected "Reading such lines as continuations: it would give `title`, `source` and the rest a second syntax for no gain."
+
+decision D-006 "Obligations live in requirements"
+  source a blind build of another specification (r05), and duramen 0.1
+  text
+    A builder acts on requirements and reads everything else as context. In one blind build, a
+    fact that an implementation had to act on was written in a decision, as context, and the
+    builder's tests missed it. An obligation outside a requirement has no ID and no example, so
+    nothing checks it; the checker rejects the words that state obligations anywhere else.
+    Quotations are exempt, so that a decision can quote an earlier text.
+
+decision D-007 "The order of errors is stated once"
+  source a blind build of another specification (r02), and duramen 0.1
+  text
+    One specification listed its error codes in a table and then restated their order in a
+    sentence, and the two disagreed. An order stated twice can drift; stated once, as the
+    order of the `errors` list, it cannot. The check is a heuristic: it catches the form that
+    mistake took, not every way of restating an order.
+
+decision D-008 "Decisions have a lifecycle"
+  source Chad Fowler, "The Specification Is Not a Document" (the seven states)
+  text
+    A decision is observed, inferred or proposed before it is accepted, and may later be
+    contested, superseded or rejected. Only an accepted decision should carry a requirement: a
+    requirement resting on a weaker one is a warning, and on a withdrawn one an error. A
+    decision that nothing cites, or that does not say where its claim came from, is a warning.
+
+decision D-009 "Every example is run through the oracle before a builder sees it"
+  source a blind build of another specification (r01), and duramen 0.1
+  text
+    In one blind build, an example typed by hand contradicted the formula its requirement
+    stated, and the builder had to choose between them. A value typed by hand is a claim; the
+    oracle, the specification's executable model, checks every such claim when the record is
+    checked, so a contradiction is found by the checker, not by a builder. Values written `?`
+    are the oracle's own and are shown, not checked: a requirement backed only by them is only
+    as right as the oracle.
+
+decision D-010 "An example's input is sent as written"
+  source duramen 0.1, from the examples of another specification
+  text
+    Some behavior lives in the spelling of an input: `2.0e1` and `20`, or `-0` and `0`, are the
+    same number but not the same text, and a program that reads text can treat them
+    differently. So an example's input is spliced into its request line exactly as the example
+    wrote it, and reaches the oracle and every implementation unchanged. An input built from
+    input lines has no spelling of its own, so it is written as compact JSON.
+
+decision D-011 "What the first blind build found unsaid"
+  source blind build s01 of duramen-core 0.2.0 (its CHOICES.md), and a comparison of s01 with duramen on 600 mutated records
+  text
+    s01 passed every case of the 0.2.0 suite, and still recorded 19 choices the brief left to
+    it, and answered 15 of the mutated records differently from duramen. Each difference was
+    either a place this record was silent (a `#` line at an odd indent, a title that does not
+    end with a quote, `example raw` with no line, `≈` without `±`, a table row indented three
+    spaces, separators before the header, header cells that are no names, a code inside a
+    longer word, `expect error = ?`, `expect error.code`), or a place where duramen itself was
+    inconsistent (P047 for a version that was already P023; the lines of a malformed example
+    left unread; a second `text` dropped without a word). 0.3.0 says each of these, with an
+    example, choosing in each case the reading with the fewest diagnostics for one mistake.
+    The lines under a clause a statement does not take are ignored, as the body of an unknown
+    statement is: one mistake, one diagnostic.
+
+decision D-012 "A record reads files only inside its folder"
+  source blind build s01, choice C-10
+  text
+    `input <path> from "<file>"` read any file the checker could reach, so a record carried in
+    a request could read files outside it. Files a record reads now stay inside its folder.
+
+decision D-013 "One of each"
+  source blind build s01, choice C-12, and the s01 comparison on mutated records
+  text
+    A second `op` of the same name, or a second `title`, `text`, `source` or `status` of one
+    statement, was accepted, and one of the two was silently ignored. Each is now an error
+    (T007 for operations, P052 for clauses), so a record never holds two answers to one
+    question.
+
+decision D-014 "What the second blind build found unsaid"
+  source blind build s02 of duramen-core 0.3.0 (its CHOICES.md), and a comparison of s02 with duramen on 600 mutated records
+  text
+    s02 passed every case of the 0.3.0 suite and was a fixed point too; it recorded 33 choices,
+    and answered 6 mutated records differently from duramen (s01 had answered 15 so). Most of
+    its choices were already decided; the rest were small corners: what white space is, a
+    title that is one quote, an empty `input` or `omit`, a field named twice, two `request`
+    lines, `audit json`, a status followed by a comma, an empty status, a quotation that spans
+    two lines of a condition, `length` on an array, and an oracle command with an unclosed
+    quote. Two were mistakes in duramen: a request member named "2" was written before `id`,
+    because a JSON object puts such names first; and a `duramen` statement that repeated the
+    version and named an unknown one was reported twice. 0.4.0 pins each.
+
+decision D-015 "What the first Python build found unsaid"
+  source blind build s03 of duramen-core 0.4.0 in Python (its CHOICES.md), and a comparison of s03 with duramen on 600 mutated records
+  text
+    s03, the first build in another language, passed every case of the 0.4.0 suite and was a
+    fixed point when suites are compared as JSON values, the way this record compares
+    results; as text, three of its cases list their members in another order. It found one
+    sentence of this record that said more than duramen does: 0.4.0 said a second `duramen`
+    statement "is not read further", and s03 took that to cover its body too, where duramen
+    reads it, as it reads a second `spec` or `oracle` (which a record split across files
+    could not avoid). 0.5.0 says so. The rest were corners: the lines of an input text are
+    consecutive; the clauses of an `op` or `oracle` with a malformed first line are read, as
+    every other statement's are; a header's tolerance is the rest of its cell; and a decision
+    cited twice by one requirement is judged once.
+
+decision D-016 "Where two blind builds agreed against duramen"
+  source blind builds s04 (TypeScript) and s05 (Python) of duramen-core 0.5.0, compared with duramen on 4,500 mutated records
+  text
+    s04 and s05 each passed every case of the 0.5.0 suite, were fixed points, and answered all
+    600 records of the usual comparison as duramen did. On 3,000 more, with other seeds, they
+    differed from duramen on five kinds of record, and on four of the five they gave the same
+    answer as each other, in two languages, from one brief: an `omit`, `request` or `input`
+    line with nothing after the word; a second `oracle` after one with no command; a `from`
+    file under an example dropped for its first line; and a cell that is not a number in a
+    column with a tolerance. Where independent builds agree and the model does not, the
+    model is the suspect, and in each of these duramen was the one that had not followed this
+    record's own words. 0.6.0 pins them. The fifth showed something no one had decided: a
+    table header that names a column twice, which duramen accepted while writing a request
+    with a member twice; it is now P013. Their choices showed one more of the first kind: both
+    read the phrases of T005 across a line break, and duramen did not.
+
+decision D-017 "What the fifth round's two builds found"
+  source blind builds s06 (TypeScript) and s07 (Python) of duramen-core 0.6.0, their CHOICES.md, and records written to test their choices against duramen
+  text
+    s06 and s07 each passed every case of the 0.6.0 suite, were fixed points, and answered all
+    4,500 mutated records of three seeds as duramen did. Records written for their choices
+    found what the mutants had not. Three times both builds read a record alike and duramen
+    otherwise: a table header with a tolerance after an input field and then a cell of no known
+    form, where duramen reported only P013 and the builds read the cells from the left; a
+    number too large for binary64, such as `1e400`, after `≈` or as a tolerance, which duramen
+    refused (P010, P018) and the builds took; and the `returns` and `static` clauses, which are
+    open (OPEN-RC-001) and which duramen reads as the rest of the language does. On the numbers
+    the builds followed the words, and the words were incomplete: such a number cannot be
+    written into a request or a suite (duramen and s06 wrote `null` for it, and s07 could not
+    write it at all), so 0.7.0 refuses it wherever a record holds JSON, and an oracle's answer
+    that holds one is no answer. Once the three read a record three ways: a malformed second
+    `request` line under an example, which this record already gave P052; s06 gave it that
+    alone, and 0.7.0 says it gets nothing else. The rest were things all three did and nothing
+    said: a first once-only clause with a problem of its own still counts; an empty `contract`
+    or `decision` clause is none; a tolerance's path is its first word; a raw example's `input`
+    lines get P022 only; and a malformed status still says what its decision is, for T028.

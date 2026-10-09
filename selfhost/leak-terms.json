@@ -1,0 +1,7 @@
+{
+  "_comment": "Leak check and audit terms for blind builds of duramen-core from spec/. The program's own name is not a leak: the brief is about it. Identifiers fail case-insensitively; symbols (names from the reference implementation's source) fail case-sensitively.",
+  "identifiers": ["craigm26", "craigmerry", "github.com/craigm26", "PlatAtlas", "regen-sandbox"],
+  "symbols": ["loadRecord", "generateCases", "requestFor", "parseInto", "idAndTitle", "tableRows", "evidenceRows", "runDriver", "answerDiffers", "requestMembers", "recordFiles", "withRecord"],
+  "allow": [],
+  "allowedDomains": []
+}
