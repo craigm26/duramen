@@ -213,13 +213,13 @@ req SU-004 "Checks"
     expect result.cases.1.checks = [{"path": "result.x", "kind": "approx", "value": 2.25, "tol": 0.5}]
 
 req SU-005 "The oracle's whole answer"
-  decision D-018
+  decision D-018, D-021
   text
     A case's `full` MUST be the oracle's whole answer to its request, as an object with:
     `members`, the names of the response's members, sorted by UTF-16 code units; `error`, the
     response's error, when it has one; `result`, the response's result, when it has one;
-    `audit`, the response's audit text, when the operation declares an audit and the response
-    has one; and `tolerances`, an object that maps each path in the operation's `tolerance`
+    `audit`, the response's audit text, when the operation declares an audit and the response's
+    `audit` is a string (REQ-JU-001 takes no other); and `tolerances`, an object that maps each path in the operation's `tolerance`
     clauses to its number (`{}` when there are none, or no such operation). A raw example names
     no operation, whatever its line holds: its `tolerances` are `{}`, and it has no `audit`.
   example cases {}
@@ -248,6 +248,20 @@ req SU-005 "The oracle's whole answer"
     expect result.cases.1.full = {"members": ["error", "extra", "id"], "error": "e", "tolerances": {"result.t": 0.5, "result.u": 0}}
     expect result.cases.2.full = {"members": ["audit", "id", "result"], "result": 2, "tolerances": {}}
     expect result.cases.3.full = {"members": ["error", "id"], "error": "e", "tolerances": {}}
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+        audit
+      req A "a"
+        example f {"answer": {"result": 1, "audit": 5}}
+        example f {"answer": {"result": 1, "audit": null}}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.cases.0.full = {"members": ["audit", "id", "result"], "result": 1, "tolerances": {}}
+    expect result.cases.1.full = {"members": ["audit", "id", "result"], "result": 1, "tolerances": {}}
   example cases {}
     input files."s.duramen"
       duramen 0.1

@@ -32,7 +32,7 @@ function sameResult(a, b, tolerances, path = 'result') {
 const members = (resp) => Object.keys(resp).sort();
 
 const fullAnswer = (resp, op) => (resp && !('oracle_error' in resp)
-  ? { members: members(resp), error: resp.error, result: resp.result, audit: op?.audit ? resp.audit : undefined, tolerances: op?.tolerances ?? {} }
+  ? { members: members(resp), error: resp.error, result: resp.result, audit: op?.audit && typeof resp.audit === 'string' ? resp.audit : undefined, tolerances: op?.tolerances ?? {} }
   : null);
 
 export function generateCases(ast, oracle, propertyRuns = []) {

@@ -1,0 +1,5723 @@
+[
+ {
+  "name": "REQ-RQ-001 example 1 (line 95)",
+  "request": {
+   "id": "x0",
+   "op": "check",
+   "input": {
+    "entry": "a.duramen",
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n",
+     "b.duramen": "frobnicate\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "diagnostics": [],
+     "errors": 0,
+     "warnings": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-001 example 2 (line 112)",
+  "request": {
+   "id": "x1",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n",
+     "b.duramen": "frobnicate\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "diagnostics": [
+      "b.duramen:1: error P002",
+      "b.duramen:1: error P020"
+     ],
+     "errors": 2,
+     "warnings": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 143)",
+  "request": {
+   "id": "x2",
+   "op": "check",
+   "input": {}
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 144)",
+  "request": {
+   "id": "x3",
+   "op": "check",
+   "input": {
+    "files": {}
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 145)",
+  "request": {
+   "id": "x4",
+   "op": "check",
+   "input": {
+    "files": [
+     "a.duramen"
+    ]
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 146)",
+  "request": {
+   "id": "x5",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": 1
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 147)",
+  "request": {
+   "id": "x6",
+   "op": "check",
+   "input": {
+    "files": {
+     "../a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 148)",
+  "request": {
+   "id": "x7",
+   "op": "check",
+   "input": {
+    "files": {
+     "/a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 149)",
+  "request": {
+   "id": "x8",
+   "op": "check",
+   "input": {
+    "files": {
+     "x/./a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 150)",
+  "request": {
+   "id": "x9",
+   "op": "check",
+   "input": {
+    "files": {
+     "x//a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 151)",
+  "request": {
+   "id": "x10",
+   "op": "check",
+   "input": {
+    "files": {
+     "c:a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 152)",
+  "request": {
+   "id": "x11",
+   "op": "cases",
+   "input": {
+    "files": {
+     "a\\b.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 153)",
+  "request": {
+   "id": "x12",
+   "op": "cases",
+   "input": {
+    "files": {
+     "a": "x",
+     "a/b.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 154)",
+  "request": {
+   "id": "x13",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n"
+    },
+    "entry": "../a.duramen"
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 155)",
+  "request": {
+   "id": "x14",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n"
+    },
+    "entry": 1
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RQ-002 bullet (line 156)",
+  "request": {
+   "id": "x15",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n"
+    },
+    "entry": ""
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-001 example 1 (line 188)",
+  "request": {
+   "id": "x16",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n",
+     "notes.md": "frobnicate\n",
+     "build/x.duramen": "frobnicate\n",
+     "sub/build/x.duramen": "frobnicate\n",
+     "node_modules/x.duramen": "frobnicate\n",
+     ".hidden.duramen": "frobnicate\n",
+     "sub/.hidden/x.duramen": "frobnicate\n",
+     "sub/b.duramen": "duramen 0.1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-001 example 2 (line 241)",
+  "request": {
+   "id": "x17",
+   "op": "check",
+   "input": {
+    "entry": "notes.md",
+    "files": {
+     "notes.md": "duramen 0.1\nspec n 1\n",
+     "a.duramen": "frobnicate\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-001 example 3 (line 258)",
+  "request": {
+   "id": "x18",
+   "op": "check",
+   "input": {
+    "entry": "sub",
+    "files": {
+     "sub/a.duramen": "duramen 0.1\nspec a 1\n",
+     "sub/deeper/b.duramen": "duramen 0.1\n",
+     "c.duramen": "frobnicate\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-001 example 4 (line 281)",
+  "request": {
+   "id": "x19",
+   "op": "check",
+   "input": {
+    "entry": "sub/a.duramen",
+    "files": {
+     "sub/a.duramen": "duramen 0.1\nspec a 1\n",
+     "sub/b.duramen": "frobnicate\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-001 example 5 (line 298)",
+  "request": {
+   "id": "x20",
+   "op": "check",
+   "input": {
+    "entry": "build",
+    "files": {
+     "build/a.duramen": "duramen 0.1\nspec a 1\n",
+     "build/build/b.duramen": "frobnicate\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-001 example 6 (line 315)",
+  "request": {
+   "id": "x21",
+   "op": "check",
+   "input": {
+    "entry": "missing.duramen",
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "missing.duramen:1: error P046"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-001 example 7 (line 326)",
+  "request": {
+   "id": "x22",
+   "op": "check",
+   "input": {
+    "entry": "sub",
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "sub:1: error P046"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-001 example 8 (line 337)",
+  "request": {
+   "id": "x23",
+   "op": "check",
+   "input": {
+    "files": {
+     "notes.md": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "diagnostics": [
+      ".:1: error P046"
+     ],
+     "errors": 1,
+     "warnings": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-002 example 1 (line 357)",
+  "request": {
+   "id": "x24",
+   "op": "check",
+   "input": {
+    "files": {
+     "b.duramen": "duramen 0.1\nspec b 1\n",
+     "a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "b.duramen:2: error P044"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-002 example 2 (line 375)",
+  "request": {
+   "id": "x25",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec a 1\n",
+     "B.duramen": "duramen 0.1\nspec b 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "a.duramen:2: error P044"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-002 example 3 (line 393)",
+  "request": {
+   "id": "x26",
+   "op": "check",
+   "input": {
+    "files": {
+     "a/z.duramen": "duramen 0.1\nspec z 1\n",
+     "a.duramen": "duramen 0.1\nspec a 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "a/z.duramen:2: error P044"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-002 example 4 (line 411)",
+  "request": {
+   "id": "x27",
+   "op": "check",
+   "input": {
+    "files": {
+     "｡.duramen": "duramen 0.1\nspec x 1\n",
+     "😀.duramen": "duramen 0.1\nspec y 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "｡.duramen:2: error P044"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 1 (line 443)",
+  "request": {
+   "id": "x28",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "spec s 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:1: error P020"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 3 (line 453)",
+  "request": {
+   "id": "x29",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.3\nspec s 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:1: error P023"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 4 (line 464)",
+  "request": {
+   "id": "x30",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nduramen 0.1\nduramen 9\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P023",
+     "s.duramen:4: error P023"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 5 (line 477)",
+  "request": {
+   "id": "x31",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen\nspec s 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:1: error P023"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 6 (line 488)",
+  "request": {
+   "id": "x32",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec s 1\n",
+     "b.duramen": "duramen 0.2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     ".:1: error P047"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 7 (line 505)",
+  "request": {
+   "id": "x33",
+   "op": "check",
+   "input": {
+    "entry": "r",
+    "files": {
+     "r/a.duramen": "duramen 0.2\nspec s 1\n",
+     "r/b.duramen": "duramen 0.1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "r:1: error P047"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 8 (line 522)",
+  "request": {
+   "id": "x34",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.2\nspec s 1\n",
+     "b.duramen": "duramen 0.2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 9 (line 539)",
+  "request": {
+   "id": "x35",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.2\nspec s 1\n",
+     "b.duramen": "duramen 2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "b.duramen:1: error P023"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 10 (line 556)",
+  "request": {
+   "id": "x36",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1 extra\nspec s 1\n",
+     "b.duramen": "duramen 0.2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "a.duramen:1: error P023"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 example 11 (line 573)",
+  "request": {
+   "id": "x37",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.3\nduramen 0.2\nspec s 1\n",
+     "b.duramen": "duramen 0.1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "a.duramen:1: error P023",
+     "a.duramen:2: error P023"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-003 bullet (line 592)",
+  "request": {
+   "id": "x38",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": ""
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     ".:1: error P021",
+     "s.duramen:1: error P020"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 1 (line 606)",
+  "request": {
+   "id": "x39",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     ".:1: error P021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 2 (line 616)",
+  "request": {
+   "id": "x40",
+   "op": "check",
+   "input": {
+    "entry": "s.duramen",
+    "files": {
+     "s.duramen": "duramen 0.1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:1: error P021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 3 (line 626)",
+  "request": {
+   "id": "x41",
+   "op": "check",
+   "input": {
+    "entry": "r",
+    "files": {
+     "r/s.duramen": "duramen 0.1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "r:1: error P021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 4 (line 636)",
+  "request": {
+   "id": "x42",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec a 1\n\nspec b 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P044"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 5 (line 649)",
+  "request": {
+   "id": "x43",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec s 1\noracle node a.mjs\n",
+     "b.duramen": "duramen 0.1\noracle node b.mjs\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "b.duramen:2: error P044"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 6 (line 668)",
+  "request": {
+   "id": "x44",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nerrors\n  e1 when x\nerrors\n  e2 when y\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P032"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 7 (line 683)",
+  "request": {
+   "id": "x45",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec s 1\nerrors\n  e1 when x\n",
+     "b.duramen": "duramen 0.1\n\nerrors\n  e2 when y\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "b.duramen:3: error P032"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 8 (line 705)",
+  "request": {
+   "id": "x46",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nerrors\nerrors\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P032"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 9 (line 718)",
+  "request": {
+   "id": "x47",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nduramen 0.1\n  title \"t\"\nspec s\noracle\n  source o.mjs\n    more\nerrors x\n  e if\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P023",
+     "s.duramen:4: error P015",
+     "s.duramen:5: error P021",
+     "s.duramen:5: error P044",
+     "s.duramen:6: error P028",
+     "s.duramen:8: error P006",
+     "s.duramen:9: error P050",
+     "s.duramen:10: error P019"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-004 example 10 (line 737)",
+  "request": {
+   "id": "x48",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec s 1\noracle\noracle node a.mjs\n",
+     "b.duramen": "duramen 0.1\noracle node b.mjs\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "a.duramen:3: error P028",
+     "a.duramen:4: error P044",
+     "b.duramen:2: error P044"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-005 example 1 (line 765)",
+  "request": {
+   "id": "x49",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nfrobnicate\nreq A \"a\"\n  example nope {}\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P002"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-006 example 1 (line 788)",
+  "request": {
+   "id": "x50",
+   "op": "check",
+   "input": {
+    "files": {
+     "b.duramen": "frobnicate\nduramen 0.1\n",
+     "a.duramen": "duramen 0.1\nspec s 1\n\n\nfrobnicate\nfrobnicate\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "diagnostics": [
+      "a.duramen:5: error P002",
+      "a.duramen:6: error P002",
+      "b.duramen:1: error P002"
+     ],
+     "errors": 3,
+     "warnings": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-006 example 2 (line 810)",
+  "request": {
+   "id": "x51",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n\ndecision D-1 \"one\"\n  text\n    No source, and cited by nothing.\n\nreq A \"a\"\n  decision D-2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "diagnostics": [
+      "s.duramen:4: warning T012",
+      "s.duramen:4: warning T013",
+      "s.duramen:8: error T001",
+      "s.duramen:8: error T008"
+     ],
+     "errors": 2,
+     "warnings": 2
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-RC-006 example 3 (line 828)",
+  "request": {
+   "id": "x52",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n\ndecision D-1 \"proposed\"\n  source here\n  status proposed\n\ndecision D-2 \"contested\"\n  source there\n  status contested\n\nreq A \"a\"\n  decision D-1, D-2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "diagnostics": [
+      "s.duramen:12: error T001",
+      "s.duramen:12: error T028",
+      "s.duramen:12: warning T028"
+     ],
+     "errors": 2,
+     "warnings": 1
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-001 bullet (line 886)",
+  "request": {
+   "id": "x53",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "﻿duramen 0.1\r\nspec s 1\rnote  \n  text\t\n    Some text.  \r\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-001 bullet (line 887)",
+  "request": {
+   "id": "x54",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n\tnote\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P001"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-001 bullet (line 888)",
+  "request": {
+   "id": "x55",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nnote\n  \ttext\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P001"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-001 bullet (line 889)",
+  "request": {
+   "id": "x56",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n note\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P001"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-001 bullet (line 890)",
+  "request": {
+   "id": "x57",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "  \t \nduramen 0.1\n\t\nspec s 1\n   \n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-001 bullet (line 891)",
+  "request": {
+   "id": "x58",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1　\nspec s 1 \nnote\n  text\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P001"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-002 example 1 (line 903)",
+  "request": {
+   "id": "x59",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "# A comment.\nduramen 0.1\n#A comment too.\nspec s 1\nfrobnicate this\n  title \"ignored\"\n    ignored too\nNote\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P002",
+     "s.duramen:8: error P002"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-002 example 2 (line 920)",
+  "request": {
+   "id": "x60",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "  indented\n # indented too\nduramen 0.1\nspec s 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:1: error P003",
+     "s.duramen:2: error P003"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-003 example 1 (line 956)",
+  "request": {
+   "id": "x61",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nnote\n  # A comment.\n  text\n    Text.\n    # Text, not a comment.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-003 example 2 (line 972)",
+  "request": {
+   "id": "x62",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nnote\n text\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P007"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-003 example 3 (line 985)",
+  "request": {
+   "id": "x63",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nnote\n    Text without a clause.\n  text\n    Text.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P006"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-003 example 4 (line 1000)",
+  "request": {
+   "id": "x64",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  colour blue\n    more\nnote\n  example f {}\n    expect result = 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P015",
+     "s.duramen:6: error P015"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-003 example 5 (line 1016)",
+  "request": {
+   "id": "x65",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nnote\n # not a comment here\n    # nor here\n  text\n    Text.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P007",
+     "s.duramen:5: error P006"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-003 example 6 (line 1032)",
+  "request": {
+   "id": "x66",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  title \"one\"\n  title \"two\"\n    more\nnote\n  text\n    One.\n  text Two.\ndecision D \"d\"\n  source a\n  source b\n  status accepted\n  status rejected\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P052",
+     "s.duramen:9: error P052",
+     "s.duramen:12: error P052",
+     "s.duramen:14: error P052"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-003 example 7 (line 1055)",
+  "request": {
+   "id": "x67",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  title x\n  title \"two\"\nop f\n  request [1]\n  request {}\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P004",
+     "s.duramen:4: error P052",
+     "s.duramen:6: error P009",
+     "s.duramen:7: error P052"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-003 example 8 (line 1071)",
+  "request": {
+   "id": "x68",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  title \"A title\"\n    that goes on\n  # A comment.\n    # Another.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P006"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 1 (line 1102)",
+  "request": {
+   "id": "x69",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\n  title \"x\"\nspec s 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:2: error P015"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 2 (line 1114)",
+  "request": {
+   "id": "x70",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:2: error P021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 3 (line 1125)",
+  "request": {
+   "id": "x71",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1 2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:2: error P021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 4 (line 1136)",
+  "request": {
+   "id": "x72",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1.0.0-beta\n  title \"The s program\"\n  contract s-out-2\n  request {\"clock\": \"2026-01-01T00:00:00Z\", \"n\": 1}\n  text\n    What s is.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 5 (line 1152)",
+  "request": {
+   "id": "x73",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  request {\"clock\":\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P009"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 6 (line 1164)",
+  "request": {
+   "id": "x74",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  request [\"clock\"]\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P009"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 7 (line 1176)",
+  "request": {
+   "id": "x75",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  request {\"op\": \"x\"}\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P051"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 8 (line 1188)",
+  "request": {
+   "id": "x76",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P028"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-004 example 9 (line 1200)",
+  "request": {
+   "id": "x77",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node model.mjs --quiet\n  source model.mjs, lib/a.mjs lib/b.mjs\n  timeout 5\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P015"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-005 example 1 (line 1221)",
+  "request": {
+   "id": "x78",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nnote\n  text Here.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P008"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-005 example 2 (line 1234)",
+  "request": {
+   "id": "x79",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nnote\n  text\n    One.\n   Two.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:6: error P008"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-005 example 3 (line 1249)",
+  "request": {
+   "id": "x80",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nnote\n  text\n    # It MUST be text.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error T004"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-006 example 1 (line 1274)",
+  "request": {
+   "id": "x81",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection S A title\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P005"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-006 example 2 (line 1286)",
+  "request": {
+   "id": "x82",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection S \"A title\" and more\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P005"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-006 example 3 (line 1298)",
+  "request": {
+   "id": "x83",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection S\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P005"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-006 example 4 (line 1310)",
+  "request": {
+   "id": "x84",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection S \"unclosed\nsection T \"A\" \"B\"\nsection U \"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P005",
+     "s.duramen:4: error P004",
+     "s.duramen:5: error P005"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-006 example 5 (line 1324)",
+  "request": {
+   "id": "x85",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection S \"A \\q title\"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P004"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-006 example 6 (line 1336)",
+  "request": {
+   "id": "x86",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection S \"A \"quoted\" title\"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P004"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-006 example 7 (line 1348)",
+  "request": {
+   "id": "x87",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  title A title\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P004"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-006 example 8 (line 1360)",
+  "request": {
+   "id": "x88",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection S-1.x \"A \\\"quoted\\\" title, é and all\"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-007 example 1 (line 1399)",
+  "request": {
+   "id": "x89",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f g\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P031"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-007 example 2 (line 1411)",
+  "request": {
+   "id": "x90",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P031"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-007 example 3 (line 1423)",
+  "request": {
+   "id": "x91",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a number, b? {x: number, y: string}, c \"one, two\" | [1, 2], d-e (f, g)\n  result the sum\n  tolerance result.sum 0.005\n  tolerance result.count 0\n  audit text\n  request {}\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-007 example 4 (line 1441)",
+  "request": {
+   "id": "x92",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a\n  input a.b number\n  input b?number\n  input\n  input c number, , d number,\n  input e 'x, y'\n  input c number\n  input é number\nop g\n  audit json\nop\n  input x\n  tolerance result.y\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P017",
+     "s.duramen:5: error P017",
+     "s.duramen:6: error P017",
+     "s.duramen:7: error P017",
+     "s.duramen:8: error P017",
+     "s.duramen:8: error P017",
+     "s.duramen:9: error P017",
+     "s.duramen:10: error P052",
+     "s.duramen:11: error P017",
+     "s.duramen:13: error P050",
+     "s.duramen:14: error P031",
+     "s.duramen:15: error P017",
+     "s.duramen:16: error P018"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-007 example 5 (line 1466)",
+  "request": {
+   "id": "x93",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  tolerance result.x\n  tolerance result.x -1\n  tolerance result.x 0x10\n  tolerance result.x 1 2\n  tolerance result.x 1e-3\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P018",
+     "s.duramen:5: error P018",
+     "s.duramen:6: error P018",
+     "s.duramen:7: error P018"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-007 example 6 (line 1483)",
+  "request": {
+   "id": "x94",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  tolerance foo 0.1\n  tolerance result.x -0\n  tolerance result.y 1e400\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:6: error P018"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-007 example 7 (line 1498)",
+  "request": {
+   "id": "x95",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  request 5\nop g\n  request {\"input\": 5}\nop h\n  tolerance result.x 1\n  tolerance result.y 1\n  tolerance result.x 2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P009",
+     "s.duramen:6: error P051",
+     "s.duramen:10: error P052"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-007 example 8 (line 1517)",
+  "request": {
+   "id": "x96",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a x], b y\n  input b z\n  input c \"a\\\", b\" x, d y\nop h\n  tolerance result.x 1\n  tolerance result.x result\n  tolerance result.x 2\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P052",
+     "s.duramen:9: error P018",
+     "s.duramen:10: error P052"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-008 example 1 (line 1548)",
+  "request": {
+   "id": "x97",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nerrors\n  bad_input when the input is not an object, or\n    when it lacks a field\n  not_found when there is no such thing\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-008 example 2 (line 1563)",
+  "request": {
+   "id": "x98",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nerrors first\n  e when x\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P050"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-008 example 3 (line 1576)",
+  "request": {
+   "id": "x99",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nerrors\n  e if x\n  e when\n    the input is bad\n  when x\n  f when y\n   and z\n  g is\n   wrong\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P019",
+     "s.duramen:5: error P019",
+     "s.duramen:7: error P019",
+     "s.duramen:9: error P006",
+     "s.duramen:10: error P019",
+     "s.duramen:11: error P006"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-008 example 4 (line 1596)",
+  "request": {
+   "id": "x100",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nerrors\n  e when x\n    # It MUST be read.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error T004"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-008 example 5 (line 1610)",
+  "request": {
+   "id": "x101",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nerrors\n  e when x\n  f when y\n  e when z\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-009 example 1 (line 1640)",
+  "request": {
+   "id": "x102",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection S \"Things\"\n  text\n    About things.\nnote\n  text\n    A note.\nopen S-1 \"Unsaid\"\n  text\n    Left open.\ndecision D-1 \"Why\"\n  source the author\n  status accepted\n  text\n    Because.\n  rejected \"Another way, because no.\"\n  rejected \"A third way.\"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:12: warning T012"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-009 example 2 (line 1667)",
+  "request": {
+   "id": "x103",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  on mac\n  status accepted\n  example f {}\nnote x\nsection S \"s\"\n  example f {}\ndecision D \"d\"\n  title \"x\"\nopen O \"o\"\n  decision D\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P033",
+     "s.duramen:5: error P015",
+     "s.duramen:7: error P050",
+     "s.duramen:9: error P015",
+     "s.duramen:11: error P015",
+     "s.duramen:13: error P015"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-009 example 3 (line 1689)",
+  "request": {
+   "id": "x104",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  contract\nreq A \"a\"\n  decision\n  text\n    Words.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error T001"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-010 example 1 (line 1744)",
+  "request": {
+   "id": "x105",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example\n  example f [1]\n  example f {\"x\": 1\n  example f 2\n  example raw \"{\\\"id\\\": \\\"1\\\",\\n\\\"op\\\": \\\"f\\\"}\"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P012",
+     "s.duramen:5: error P012",
+     "s.duramen:6: error P009",
+     "s.duramen:7: error P012",
+     "s.duramen:8: error P026"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-010 example 2 (line 1761)",
+  "request": {
+   "id": "x106",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example raw\n  example raw {\"id\": \"x\"}\n  example raw \"unclosed\n  example raw \"a\" \"b\"\n  example raw \"carriage\\rreturn\"\n  example f [1]\n    expect result\n     expect result = 1\n    expect result ≈ 1\n    expect result~1+-0.5\n    expect result=\"~\"\n    expect result =\n    expect = 1\n    request {\"a\": 1}\n    request {\"b\": 1}\n    omit\n    omit a, b c\n    omit d\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P004",
+     "s.duramen:5: error P004",
+     "s.duramen:6: error P004",
+     "s.duramen:7: error P004",
+     "s.duramen:8: error P026",
+     "s.duramen:9: error P012",
+     "s.duramen:10: error P011",
+     "s.duramen:11: error P006",
+     "s.duramen:12: error P010",
+     "s.duramen:15: error P009",
+     "s.duramen:16: error P011",
+     "s.duramen:18: error P052",
+     "s.duramen:19: error P011"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-010 example 3 (line 1791)",
+  "request": {
+   "id": "x107",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example raw '{\"id\": \"x\"}'\n    omit\n    request\n    input\n  example f {}\n    request\n    input\n    omit ,\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P022",
+     "s.duramen:6: error P022",
+     "s.duramen:7: error P022",
+     "s.duramen:9: error P009",
+     "s.duramen:10: error P049",
+     "s.duramen:11: error P011"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-010 example 4 (line 1811)",
+  "request": {
+   "id": "x108",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    expect result ≈ 1 ± -1\n    expect result ~ 1 +- x\n    expect result ≈ 0x10 ± 1\n    expect result = {nope}\n    expect result\n    result = 1\n     expect result = 1\n      expect result = 1\n    request [1]\n    request {\"input\": {}}\n  example raw '{\"id\": \"x\"}'\n    omit id\n    request {\"a\": 1}\n    input files.\"a\"\n      text\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P010",
+     "s.duramen:6: error P010",
+     "s.duramen:7: error P010",
+     "s.duramen:8: error P009",
+     "s.duramen:9: error P011",
+     "s.duramen:10: error P011",
+     "s.duramen:11: error P006",
+     "s.duramen:12: error P006",
+     "s.duramen:13: error P009",
+     "s.duramen:14: error P051",
+     "s.duramen:16: error P022",
+     "s.duramen:17: error P022",
+     "s.duramen:18: error P022"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-010 example 5 (line 1839)",
+  "request": {
+   "id": "x109",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\nreq A \"a\"\n  text\n    T.\n  example f {}\n    request {\"a\": 1}\n    request [2]\n    request {\"id\": 3}\n    request {\"b\": 4}\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:9: error P052",
+     "s.duramen:10: error P052",
+     "s.duramen:11: error P052"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-010 example 6 (line 1859)",
+  "request": {
+   "id": "x110",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\nreq A \"a\"\n  text\n    T.\n  example raw '{\"id\":\"1\",\"op\":\"f\"}'\n    input files.\"a\" from \"nofile\"\n    input files.\"b\"\n      hello\n  example raw x\n    input files.\"c\" from \"nofile\"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:8: error P022",
+     "s.duramen:9: error P022",
+     "s.duramen:11: error P004",
+     "s.duramen:12: error P022"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-010 example 7 (line 1880)",
+  "request": {
+   "id": "x111",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\nreq A \"a\"\n  text\n    T.\n  example raw '{\"id\":\"1\",\"op\":\"f\"}'\n    input files.\"a\" from \"nofile\"\n      hello\n  example f [1]\n    input a\n      t\n    input a.b\n      u\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:8: error P022",
+     "s.duramen:9: error P006",
+     "s.duramen:10: error P012",
+     "s.duramen:13: error P049"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-011 example 1 (line 1930)",
+  "request": {
+   "id": "x112",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input files object, n? number\nreq A \"a\"\n  example f {\"n\": 1}\n    input files.\"a b\"\n      one\n        two\n\n    input files.x\n      three\n\n\n    expect result = {\"n\": 1, \"files\": {\"a b\": \"one\\n  two\\n\", \"x\": \"three\\n\"}}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-011 example 2 (line 1957)",
+  "request": {
+   "id": "x113",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {\"x\": 1}\n    input files.\n    input files..\"a\"\n    input \"a\n    input x.y\n      text\n    input z\n    input y from \"missing.txt\"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P049",
+     "s.duramen:6: error P049",
+     "s.duramen:7: error P049",
+     "s.duramen:8: error P049",
+     "s.duramen:10: error P049",
+     "s.duramen:11: error P048"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-011 example 3 (line 1977)",
+  "request": {
+   "id": "x114",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input a\n     not six\n      six, but after the line that ended the text\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P049",
+     "s.duramen:6: error P006",
+     "s.duramen:7: error P006"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-011 example 4 (line 1993)",
+  "request": {
+   "id": "x115",
+   "op": "check",
+   "input": {
+    "entry": "r",
+    "files": {
+     "outside.txt": "x",
+     "r/s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input a from \"../outside.txt\"\n    input b from \"t.txt\"\n      not its text\n    input c from \"unclosed\n  example f {\n    input d from \"../outside.txt\"\n",
+     "r/t.txt": "t\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "r/s.duramen:5: error P048",
+     "r/s.duramen:7: error P006",
+     "r/s.duramen:8: error P049",
+     "r/s.duramen:9: error P009",
+     "r/s.duramen:10: error P048"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-011 example 5 (line 2018)",
+  "request": {
+   "id": "x116",
+   "op": "check",
+   "input": {
+    "files": {
+     "sub/data/t.txt": "hello,\r\nworld",
+     "sub/s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input t? string\nreq A \"a\"\n  example f {}\n    input t from \"data/t.txt\"\n    expect result = {\"t\": \"hello,\\r\\nworld\"}\n",
+     "sub/echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-011 example 6 (line 2038)",
+  "request": {
+   "id": "x117",
+   "op": "check",
+   "input": {
+    "files": {
+     "b.txt": "﻿bom",
+     "t.txt": "t",
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input t? json, u? json, a? json\nreq A \"a\"\n  example f {}\n    input t\n      one\n# a comment at indent 0\n  # and one at indent 2\n      two\n    input u from \"./sub/..//b.txt\"\n      # a comment indented six\n    expect result = {\"t\": \"one\\ntwo\\n\", \"u\": \"\\ufeffbom\"}\n  example f {\"a\": 1}\n    input x..y from \"missing.txt\"\n    input a.b from \"missing.txt\"\n    input a.c from \"t.txt\"\n    input t from \"sub\"\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:17: error P049",
+     "s.duramen:18: error P048",
+     "s.duramen:19: error P049",
+     "s.duramen:20: error P048"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-012 example 1 (line 2102)",
+  "request": {
+   "id": "x118",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json, y? json\nreq A \"a\"\n  table f\n    | x        | y | result.x | result.y ± 0.5 |\n    |----------|---|:--------:|----------------|\n    | \"a\\|b\"   |   | \"a\\|b\"   |                |\n    | 1        | 2 | ?        | 2.4            |\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-012 example 2 (line 2124)",
+  "request": {
+   "id": "x119",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n  table f g\n    | x |\n    | 1 |\n  table f\n    | x |\n  table f\n    | x | result ± -1 |\n    | 1 | 2           |\n  table f\n    | x | result ± 0.5 |\n    | 1 | \"2\"          |\n  table f\n    | x | y |\n    | 1 |\n    | {  | 2 |\n    x | 1\n  table f\n    | x | |\n    | 1 | 2 |\n  table f\n    | x ± 1 |\n    | 1     |\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P013",
+     "s.duramen:5: error P013",
+     "s.duramen:8: error P013",
+     "s.duramen:11: error P010",
+     "s.duramen:15: error P010",
+     "s.duramen:18: error P014",
+     "s.duramen:19: error P009",
+     "s.duramen:20: error P006",
+     "s.duramen:22: error P013",
+     "s.duramen:25: error P010"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-012 example 3 (line 2159)",
+  "request": {
+   "id": "x120",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f g\n    | x |\n    | {bad |\n  table f\n   | x |\n    | 1 |\n  table f\n    | a.b | result |\n    | 1   | 2      |\n  table f\n    | x | result ± lots |\n    | 1 | \"two\"         |\n  table f\n    | x | result ± 1 2 | result.y+-0.5 |\n    | 1 | 2            | 3             |\n  table f\n    | x | x |\n    | 1 | 2 |\n  table f\n    | x | result ± 0.5 |\n    | 1 | 2.25 [       |\n    | { | ?            |\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P013",
+     "s.duramen:7: error P013",
+     "s.duramen:8: error P006",
+     "s.duramen:11: error P013",
+     "s.duramen:14: error P010",
+     "s.duramen:17: error P010",
+     "s.duramen:20: error P013",
+     "s.duramen:24: error P010",
+     "s.duramen:25: error P009"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-012 example 4 (line 2193)",
+  "request": {
+   "id": "x121",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  table f\n    |---|----------|\n    | x | result.x |\n    |   |\n    | 1 | 1\n    |\n    | 2 | 2        |\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-012 example 5 (line 2217)",
+  "request": {
+   "id": "x122",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a int\nreq A \"a\"\n  text\n    T.\n  table f\n    | a ± 1 | b! | result ± x |\n    | 1 | 2 | 3 |\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:9: error P010",
+     "s.duramen:9: error P013"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-012 example 6 (line 2236)",
+  "request": {
+   "id": "x123",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json, id? json\nreq A \"a\"\n  table f\n    | answer | result.k=1 | result.k~2 ± 0.5 | id |\n    | ---\t|---|:-:|　|\n    | {\"result\": {\"k=1\": 1, \"k~2\": 2.25}} | 1 | 2 | \"A#1\" |\n  table f\n    | answer | result.a b |\n    | 1 | 2 |\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:12: error P013"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-013 example 1 (line 2255)",
+  "request": {
+   "id": "x124",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  request {\"x\": 1e400}\nop f\n  input a int\nreq A \"a\"\n  text\n    T.\n  example f {\"a\": 1e400}\n  example f {\"a\": 1}\n    expect result.a = [1, -1e400]\n    request {\"y\": 1e999}\n  table f\n    | a | result |\n    | 1e999 | 1 |\n  example raw '{\"id\":\"r\",\"op\":\"f\",\"input\":{\"a\":1e400}}'\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error P009",
+     "s.duramen:9: error P009",
+     "s.duramen:11: error P009",
+     "s.duramen:12: error P009",
+     "s.duramen:15: error P009"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-013 example 2 (line 2280)",
+  "request": {
+   "id": "x125",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input a int\n  tolerance result.x 1e400\nreq A \"a\"\n  text\n    T.\n  example f {\"a\": 1}\n    expect result ≈ 1e400 ± 1\n    expect result ≈ 1 ± 1e400\n  table f\n    | a | result ± 1e400 |\n    | 1 | 2 |\n  table f\n    | a | result ± 1 |\n    | 1 | 1e400 |\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:5: error P018",
+     "s.duramen:10: error P010",
+     "s.duramen:11: error P010",
+     "s.duramen:13: error P010",
+     "s.duramen:17: error P010"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SY-013 example 3 (line 2306)",
+  "request": {
+   "id": "x126",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  request {\"id\": 1e400}\nreq A \"a\"\n  text\n    T.\n  example f [1e400]\n  example f 1e400\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P009",
+     "s.duramen:8: error P009",
+     "s.duramen:9: error P009"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-001 example 1 (line 2338)",
+  "request": {
+   "id": "x127",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  text\n    It MUST work.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error T001"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-001 example 2 (line 2352)",
+  "request": {
+   "id": "x128",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  table f\n    | x |\n    |---|\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error P013"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-002 example 1 (line 2378)",
+  "request": {
+   "id": "x129",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  example f {}\nreq A \"again\"\n  example f {}\nopen A \"an open item may share a requirement's ID\"\n  text\n    Open.\nopen B \"b\"\n  text\n    Open.\nopen B \"b again\"\n  text\n    Open.\ndecision D-1 \"d\"\n  source s\ndecision D-1 \"d again\"\n  source s\nreq C \"c\"\n  decision D-1\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:8: error T007",
+     "s.duramen:16: error T007",
+     "s.duramen:21: error T007"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-002 example 2 (line 2414)",
+  "request": {
+   "id": "x130",
+   "op": "check",
+   "input": {
+    "files": {
+     "a.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  example f {}\n",
+     "b.duramen": "duramen 0.1\nreq A \"a\"\n  example f {}\nop f\n  input y? json\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "b.duramen:2: error T007",
+     "b.duramen:4: error T007"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-002 example 3 (line 2442)",
+  "request": {
+   "id": "x131",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  decision REQ-A, OPEN-B\n  example f {}\ndecision REQ-A \"named like a requirement\"\n  source s\ndecision OPEN-B \"named like an open item\"\n  source s\nopen B \"b\"\n  text\n    Open.\nreq A \"a third time\"\n  example f {}\nreq A \"and a third\"\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:16: error T007",
+     "s.duramen:18: error T007"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-003 example 1 (line 2479)",
+  "request": {
+   "id": "x132",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\ndecision D-1 \"d\"\n  source s\nreq A \"a\"\n  decision D-1 D-2, D-3\n  decision D-2\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:8: error T008",
+     "s.duramen:8: error T008"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-004 example 1 (line 2512)",
+  "request": {
+   "id": "x133",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input a number, b? number\nerrors\n  e when never\nreq A \"a\"\n  example g {\"a\": 1}\n  example f {\"b\": 1}\n  example f {\"a\": 1, \"c\": 2}\n  example f\n  example g {\"answer\": {\"error\": \"e\"}}\n    expect error = \"e\"\n  example raw '{\"id\": \"A#6\", \"op\": \"g\"}'\n  table f\n    | b | c |\n    | 1 | 2 |\n  example g {}\n    expect error.code = \"e\"\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:9: error T009",
+     "s.duramen:10: error T010",
+     "s.duramen:11: warning T011",
+     "s.duramen:12: error T010",
+     "s.duramen:18: error T010",
+     "s.duramen:18: warning T011",
+     "s.duramen:19: error T009"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-005 example 1 (line 2553)",
+  "request": {
+   "id": "x134",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\nerrors\n  e when never\nreq A \"a\"\n  example f {\"answer\": {\"error\": \"e\"}}\n    expect error = \"e\"\n  example f {\"answer\": {\"error\": \"nope\"}}\n    expect error = \"nope\"\n  example raw '{\"id\": \"r\", \"op\": \"f\", \"input\": {\"answer\": {\"error\": \"other\"}}}'\n    expect error = \"other\"\n  example f {\"answer\": {\"error\": \"e\"}}\n    expect error = ?\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:12: error T023",
+     "s.duramen:14: error T023"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-005 example 2 (line 2580)",
+  "request": {
+   "id": "x135",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\nerrors\n  e when never\nreq A \"a\"\n  example f {\"answer\": {\"error\": 1}}\n    expect error ≈ 1 ± 0\n  table f\n    | answer           | error ± 1 |\n    | {\"error\": 2}     | 2         |\n    | {\"error\": \"e\"}   | ?         |\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:10: error T023",
+     "s.duramen:13: error T023"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-006 example 1 (line 2621)",
+  "request": {
+   "id": "x136",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  text\n    The program MUST work.\nop f\n  result what it MUST return\nerrors\n  e when it SHALL fail\nsection S \"It MUST be titled\"\n  text\n    REQUIRED reading.\nnote\n  text\n    This note says `MUST`, \"SHALL\" and “REQUIRED”, MUSTARD and must.\ndecision D-1 \"d\"\n  source s\n  text\n    Fine.\n  rejected \"Another MUST.\"\nopen O \"o\"\n  text\n    It MUST NOT be.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:2: error T004",
+     "s.duramen:5: error T004",
+     "s.duramen:8: error T004",
+     "s.duramen:9: error T004",
+     "s.duramen:15: error T004",
+     "s.duramen:15: warning T012",
+     "s.duramen:20: warning T014"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-006 example 2 (line 2652)",
+  "request": {
+   "id": "x137",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\ndecision D-1 \"d\"\n  source s\n  text\n    It MUST.\n  rejected \"It SHALL.\"\n  rejected \"It is REQUIRED.\"\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error T004",
+     "s.duramen:3: error T004",
+     "s.duramen:3: error T004",
+     "s.duramen:3: warning T012"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-006 example 3 (line 2669)",
+  "request": {
+   "id": "x138",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nerrors\n  e when the \"MUST\n    hold\" rule fails\n  f when the \"MUST hold\" rule fails\nnote\n  text\n    A MUST-have.\nsection S \"s\"\n  text\n    MUSTé\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error T004",
+     "s.duramen:7: error T004",
+     "s.duramen:10: error T004"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-006 example 4 (line 2690)",
+  "request": {
+   "id": "x139",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nsection T \"t\"\n  text\n    It ``MUST`` be, and it `MUST` not.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error T004"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-007 example 1 (line 2711)",
+  "request": {
+   "id": "x140",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nopen O \"o\"\n  example f {}\n  table f\n    | x |\n    | 1 |\n  example f {not json\n    expect nothing at all\n  table g h\n    | {bad |\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:4: error T003",
+     "s.duramen:5: error T003",
+     "s.duramen:8: error T003",
+     "s.duramen:10: error T003"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-008 example 1 (line 2745)",
+  "request": {
+   "id": "x141",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nerrors\n  too_big when x > 9\n  too_small when x < 0\nreq A \"a\"\n  text\n    A request that is too_big gets too_big, and one too_small gets too_small.\n  example f {}\nreq B \"b\"\n  text\n    too_big is checked Before too_small.\n  example f {}\nreq C \"c\"\n  text\n    too_big is checked first.\n    After that, nothing.\n  example f {}\nreq D \"d\"\n  text\n    too_big and too_small are checked in this\n    order.\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:14: error T005",
+     "s.duramen:23: error T005"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-008 example 2 (line 2782)",
+  "request": {
+   "id": "x142",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nerrors\n  e when x\n  f when y\nreq A \"a\"\n  text\n    A request may be refused before it is read: see the errors list.\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-008 example 3 (line 2805)",
+  "request": {
+   "id": "x143",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nerrors\n  too_big when x > 9\n  too_small when x < 0\nreq A \"a\"\n  text\n    too_bigé, then too_small: decided before-hand.\n  example f {}\nreq B \"b\"\n  text\n    xtoo_big and too_small2 come after.\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:10: error T005"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-009 example 1 (line 2853)",
+  "request": {
+   "id": "x144",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\ndecision D-1 \"uncited, no source\"\ndecision D-2 \"bad status\"\n  source s\n  status Accepted\ndecision D-3 \"superseded by nothing\"\n  source s\n  status superseded\ndecision D-4 \"superseded by an undeclared one\"\n  source s\n  status superseded by D-9\ndecision D-5 \"superseded properly\"\n  source s\n  status superseded by D-6\ndecision D-6 \"accepted, with more words\"\n  source s\n  status accepted on 2026-01-01\ndecision D-7 \"observed\"\n  source s\n  status observed\nreq A \"a\"\n  decision D-2, D-3, D-4, D-5, D-6, D-7\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:6: warning T012",
+     "s.duramen:6: warning T013",
+     "s.duramen:7: error T027",
+     "s.duramen:10: error T027",
+     "s.duramen:13: error T027",
+     "s.duramen:25: error T028",
+     "s.duramen:25: error T028",
+     "s.duramen:25: error T028",
+     "s.duramen:25: warning T028"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-009 example 2 (line 2891)",
+  "request": {
+   "id": "x145",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\ndecision D-1 \"a comma after the word\"\n  source s\n  status accepted, 2026-01-01\ndecision D-2 \"an empty status\"\n  source\n  status\nreq A \"a\"\n  decision D-1, D-2\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:6: error T027",
+     "s.duramen:9: warning T013",
+     "s.duramen:9: error T027"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-009 example 3 (line 2916)",
+  "request": {
+   "id": "x146",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  decision D, E\n  text\n    T.\ndecision D \"d\"\n  source x\n  status superseded  by E\ndecision E \"e\"\n  source x\n  status Accepted\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error T001",
+     "s.duramen:3: error T028",
+     "s.duramen:7: error T027",
+     "s.duramen:10: error T027"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-CK-009 example 4 (line 2937)",
+  "request": {
+   "id": "x147",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  decision D\n  example f {}\ndecision D \"d\"\n  source x\n  status rejected\ndecision D \"d again\"\n  source x\ndecision E \"e\"\n  source x\ndecision E \"e again\"\n  source x\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:6: error T028",
+     "s.duramen:12: error T007",
+     "s.duramen:14: warning T012",
+     "s.duramen:16: error T007",
+     "s.duramen:16: warning T012"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-001 example 1 (line 2980)",
+  "request": {
+   "id": "x148",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input x? json\nreq A \"a\"\n  example f {}\n    expect result = 1\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:2: error T019"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-001 example 2 (line 2996)",
+  "request": {
+   "id": "x149",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nop f\n  input x? json\nreq A \"a\"\n  text\n    No example.\nreq B \"b\"\n  example f {}\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:2: error T019",
+     "s.duramen:5: error T001"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-002 example 1 (line 3038)",
+  "request": {
+   "id": "x150",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  request {\"clock\": 1}\noracle node echo.mjs\nop f\n  input line? boolean, x? json\nreq A \"a\"\n  example f {\"line\": true,  \"x\": 2.50}\n    expect result = \"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"f\\\",\\\"clock\\\":1,\\\"input\\\":{\\\"line\\\": true,  \\\"x\\\": 2.50}}\"\n  example f {\"line\": true}\n    omit id\n    expect result = \"{\\\"op\\\":\\\"f\\\",\\\"clock\\\":1,\\\"input\\\":{\\\"line\\\": true}}\"\n  example raw '{\"id\": \"x\",  \"op\": \"f\", \"input\": {\"line\": true}}'\n    expect id = \"x\"\n    expect result = \"{\\\"id\\\": \\\"x\\\",  \\\"op\\\": \\\"f\\\", \\\"input\\\": {\\\"line\\\": true}}\"\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-002 example 2 (line 3064)",
+  "request": {
+   "id": "x151",
+   "op": "check",
+   "input": {
+    "files": {
+     "sub/s.duramen": "duramen 0.1\nspec s 1\noracle node \"my echo.mjs\"\nop f\n  input x? json\nreq A \"a\"\n  example f {\"x\": 1}\n    expect result.x = 1\n",
+     "sub/my echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": []
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-002 example 3 (line 3083)",
+  "request": {
+   "id": "x152",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  text\n    No example.\nreq B \"b\"\n  example f {\"x\": 1}\n    expect result.x = 2\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:6: error T001",
+     "s.duramen:11: error T002"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-002 example 4 (line 3105)",
+  "request": {
+   "id": "x153",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input say? string\nreq A \"a\"\n  example raw '{\"id\": \"r1\", \"op\": \"f\", \"input\": {\"say\": \" \\u00a0\\n{\\\"id\\\": \\\"elsewhere\\\", \\\"result\\\": 1}\\n\\t\"}}'\n    expect result = 1\n  example raw '{\"id\": \"r2\", \"op\": \"f\", \"input\": {\"say\": \"{\\\"id\\\": \\\"r2\\\", \\\"result\\\": 1}\\r\\n\"}}'\n    expect result = 1\n  example raw '{\"id\": \"r3\", \"op\": \"f\", \"input\": {\"say\": \"{\\\"result\\\": 1}\\r{\\\"result\\\": 2}\"}}'\n    expect result = ?\n  example raw '{\"id\": \"r4\", \"op\": \"f\", \"input\": {\"say\": \"{\\\"result\\\": 1}\\n[2]\"}}'\n    expect result = ?\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:11: error T021",
+     "s.duramen:13: error T021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-003 example 1 (line 3147)",
+  "request": {
+   "id": "x154",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json, y? json, answer? json\nreq A \"a\"\n  example f {\"x\": 1.0, \"y\": [5, {\"z\": null}]}\n    expect result = {\"y\": [5, {\"z\": null}], \"x\": 1}\n    expect result.y.1.z = null\n    expect result.y.0 ≈ 5.5 ± 0.5\n    expect result.x = 2\n    expect result.y.2 = 5\n    expect result.y.0 ≈ 5.5 ± 0.4\n    expect result.y.1 = {}\n  example f {\"answer\": {\"result\": 0, \"audit\": \"{\\\"a\\\": [1, 2]}\"}}\n    expect audit.a.1 = 2\n    expect audit = \"{\\\"a\\\": [1, 2]}\"\n    expect audit.b = 1\n  table f\n    | x | result.x | result.y |\n    | 1 | 2        | 3        |\n  example f {\"x\": {\"\": 1}}\n    expect result.x. = 1\n    expect result..x = 1\n  example f {\"y\": [7, 8]}\n    expect result.y.1 = 8\n    expect result.y.length = 2\n    expect result.y.01 = 8\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:11: error T002",
+     "s.duramen:12: error T002",
+     "s.duramen:13: error T002",
+     "s.duramen:14: error T002",
+     "s.duramen:18: error T002",
+     "s.duramen:21: error T002",
+     "s.duramen:21: error T002",
+     "s.duramen:24: error T002",
+     "s.duramen:27: error T002",
+     "s.duramen:28: error T002"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-003 example 2 (line 3186)",
+  "request": {
+   "id": "x155",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\nerrors\n  e when never\nreq A \"a\"\n  example f {\"answer\": {\"result\": 1}}\n    expect error = \"e\"\n  example g {\"answer\": {\"error\": \"e\"}}\n    expect error = \"e\"\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:10: error T002"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-003 example 3 (line 3209)",
+  "request": {
+   "id": "x156",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json, x? json\nreq A \"a\"\n  example f {\"answer\": {\"result\": 1, \"audit\": \"{\\\"a\\\": 1e400, \\\"b\\\": 1}\"}}\n    expect audit.b = 1\n    expect audit.a = ?\n  example f {\"x\": 2}\n    expect result.x ≈ 1.9 ± 0.1\n    expect result.x ≈ 1.9 ± 0.10000000000000009\n  example f {\"x\": 1}\n    expect result.x ≈ -8.673617379884035e-19 ± 1\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:8: error T002",
+     "s.duramen:9: error T025",
+     "s.duramen:11: error T002"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-004 example 1 (line 3241)",
+  "request": {
+   "id": "x157",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle no-such-program-for-duramen\nop f\n  input x? json\nreq A \"a\"\n  example f {}\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error T020",
+     "s.duramen:7: error T021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-004 example 2 (line 3257)",
+  "request": {
+   "id": "x158",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json, exit? integer\nreq A \"a\"\n  example f {\"x\": 1}\n    expect result.x = 2\n  example f {\"exit\": 3}\n    expect result.exit = 3\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error T020",
+     "s.duramen:8: error T002"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-004 example 3 (line 3278)",
+  "request": {
+   "id": "x159",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input exit? integer\nreq A \"a\"\n  example f {}\n  example raw '{\"id\": \"r\", \"op\": \"f\", \"input\": {\"exit\": 4}}'\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:8: error T020"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-004 example 4 (line 3297)",
+  "request": {
+   "id": "x160",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle no-such-program-for-duramen\nop f\n  input x? json\nreq A \"a\"\n  example raw '{\"id\": \"r\", \"op\": \"f\"}'\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:7: error T020",
+     "s.duramen:7: error T021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-004 example 5 (line 3313)",
+  "request": {
+   "id": "x161",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node \"echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:3: error T020",
+     "s.duramen:7: error T021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-005 example 1 (line 3339)",
+  "request": {
+   "id": "x162",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input silent? boolean\nreq A \"a\"\n  example f {\"silent\": true}\n  example f {}\n  example raw '{\"id\": \"r\", \"op\": \"f\", \"input\": {\"silent\": true}}'\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:7: error T021",
+     "s.duramen:9: error T021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-005 example 2 (line 3359)",
+  "request": {
+   "id": "x163",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input say string\nreq A \"a\"\n  example f {\"say\": \"{\\\"id\\\":\\\"A#1\\\",\\\"result\\\":1e400}\"}\n    expect result = ?\n  example f {\"say\": \"{\\\"id\\\":\\\"A#2\\\",\\\"result\\\":1e300}\"}\n    expect result = ?\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:7: error T021"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-006 example 1 (line 3387)",
+  "request": {
+   "id": "x164",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\nreq A \"a\"\n  example f {\"answer\": {\"oracle_error\": \"left open\"}}\n    expect result = 1\n    expect result = ?\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:7: error T022"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-006 example 2 (line 3407)",
+  "request": {
+   "id": "x165",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\nreq A \"a\"\n  example f {\"answer\": {\"oracle_error\": null, \"error\": \"x\"}}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:7: error T022"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-007 example 1 (line 3431)",
+  "request": {
+   "id": "x166",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\nerrors\n  e when never\nreq A \"a\"\n  example f {\"answer\": {\"error\": \"e\"}}\n  example f {\"answer\": {\"error\": \"e\"}}\n    expect error = \"e\"\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "diagnostics": [
+      "s.duramen:9: warning T024"
+     ],
+     "errors": 0,
+     "warnings": 1
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-007 example 2 (line 3453)",
+  "request": {
+   "id": "x167",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\nreq A \"a\"\n  example f {\"answer\": {\"error\": null}}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "diagnostics": [
+      "s.duramen:7: warning T024"
+     ],
+     "errors": 0,
+     "warnings": 1
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-OR-008 example 1 (line 3476)",
+  "request": {
+   "id": "x168",
+   "op": "check",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  example f {\"x\": 1}\n    expect result.x = ?\n    expect result.y = ?\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.diagnostics",
+    "value": [
+     "s.duramen:9: error T025"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-001 example 1 (line 3510)",
+  "request": {
+   "id": "x169",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "frobnicate\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "cases": [],
+     "errors": 3
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-001 example 2 (line 3520)",
+  "request": {
+   "id": "x170",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  text\n    Nothing to show.\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "cases": [],
+     "errors": 1
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-001 example 3 (line 3534)",
+  "request": {
+   "id": "x171",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  example f {\"y\": 1}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.errors",
+    "value": 0
+   },
+   {
+    "path": "result.cases.0.id",
+    "value": "A#1"
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-002 example 1 (line 3566)",
+  "request": {
+   "id": "x172",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  example f {\"x\": 1}\n    expect result.x = 1\nreq B \"b\"\n  on posix\n  table f\n    | x | result.x |\n    | 2 | 2        |\n    | 3 | ?        |\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "cases": [
+      {
+       "checks": [
+        {
+         "kind": "eq",
+         "path": "result.x",
+         "value": 1
+        }
+       ],
+       "full": {
+        "members": [
+         "id",
+         "result"
+        ],
+        "result": {
+         "x": 1
+        },
+        "tolerances": {}
+       },
+       "id": "A#1",
+       "kind": "example",
+       "line": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"x\": 1}}",
+       "platform": "any",
+       "reqs": [
+        "REQ-A"
+       ]
+      },
+      {
+       "checks": [
+        {
+         "kind": "eq",
+         "path": "result.x",
+         "value": 2
+        }
+       ],
+       "full": {
+        "members": [
+         "id",
+         "result"
+        ],
+        "result": {
+         "x": 2
+        },
+        "tolerances": {}
+       },
+       "id": "B#1",
+       "kind": "example",
+       "line": "{\"id\":\"B#1\",\"op\":\"f\",\"input\":{\"x\":2}}",
+       "platform": "posix",
+       "reqs": [
+        "REQ-B"
+       ]
+      },
+      {
+       "checks": [
+        {
+         "from": "oracle",
+         "kind": "eq",
+         "path": "result.x",
+         "value": 3
+        }
+       ],
+       "full": {
+        "members": [
+         "id",
+         "result"
+        ],
+        "result": {
+         "x": 3
+        },
+        "tolerances": {}
+       },
+       "id": "B#2",
+       "kind": "example",
+       "line": "{\"id\":\"B#2\",\"op\":\"f\",\"input\":{\"x\":3}}",
+       "platform": "posix",
+       "reqs": [
+        "REQ-B"
+       ]
+      }
+     ],
+     "errors": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-002 example 2 (line 3591)",
+  "request": {
+   "id": "x173",
+   "op": "cases",
+   "input": {
+    "files": {
+     "b.duramen": "duramen 0.1\nreq B \"b\"\n  on windows\n  example f {}\n",
+     "a.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  example f {}\n  example f {}\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.cases.0.id",
+    "value": "A#1"
+   },
+   {
+    "path": "result.cases.1.id",
+    "value": "A#2"
+   },
+   {
+    "path": "result.cases.2.id",
+    "value": "B#1"
+   },
+   {
+    "path": "result.cases.2.platform",
+    "value": "windows"
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-003 example 1 (line 3641)",
+  "request": {
+   "id": "x174",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\n  request {\"clock\": \"c\", \"trace\": true}\noracle node echo.mjs\nop f\n  input x? json\nop g\n  input x? json\n  request {\"mode\": 2}\nreq A \"a\"\n  example f {\"x\" : 2.50e0 }\n  example f\n  example f {\"x\": 1}\n    request {\"trace\": false, \"user\": \"u\"}\n    omit clock\n  example g {\"x\": 1}\n    omit id, input\n  example f {\"x\": 1}\n    omit op, id\n  example raw '{\"id\": \"A#6\",  \"op\": \"f\"}'\n  example f {\"x\": 1}\n    request {\"b\": {\"z\": 1, \"10\": 2, \"9\": 3}, \"2\": \"two\", \"a\": 1}\n    omit clock\n    omit trace\n  table f\n    | result |\n    | ?      |\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.cases.0",
+    "value": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "x": 2.5
+      },
+      "tolerances": {}
+     },
+     "id": "A#1",
+     "kind": "example",
+     "line": "{\"id\":\"A#1\",\"op\":\"f\",\"clock\":\"c\",\"trace\":true,\"input\":{\"x\" : 2.50e0 }}",
+     "platform": "any",
+     "reqs": [
+      "REQ-A"
+     ]
+    }
+   },
+   {
+    "path": "result.cases.1.line",
+    "value": "{\"id\":\"A#2\",\"op\":\"f\",\"clock\":\"c\",\"trace\":true}"
+   },
+   {
+    "path": "result.cases.2.line",
+    "value": "{\"id\":\"A#3\",\"op\":\"f\",\"trace\":false,\"user\":\"u\",\"input\":{\"x\": 1}}"
+   },
+   {
+    "path": "result.cases.3",
+    "value": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {},
+      "tolerances": {}
+     },
+     "id": "A#4",
+     "kind": "example",
+     "line": "{\"op\":\"g\",\"mode\":2}",
+     "platform": "any",
+     "reqs": [
+      "REQ-A"
+     ],
+     "solo": true
+    }
+   },
+   {
+    "path": "result.cases.4.line",
+    "value": "{\"clock\":\"c\",\"trace\":true,\"input\":{\"x\": 1}}"
+   },
+   {
+    "path": "result.cases.4.solo",
+    "value": true
+   },
+   {
+    "path": "result.cases.5.line",
+    "value": "{\"id\": \"A#6\",  \"op\": \"f\"}"
+   },
+   {
+    "path": "result.cases.5.solo",
+    "value": true
+   },
+   {
+    "path": "result.cases.6.line",
+    "value": "{\"id\":\"A#7\",\"op\":\"f\",\"2\":\"two\",\"b\":{\"9\":3,\"10\":2,\"z\":1},\"a\":1,\"input\":{\"x\": 1}}"
+   },
+   {
+    "path": "result.cases.7.line",
+    "value": "{\"id\":\"A#8\",\"op\":\"f\",\"clock\":\"c\",\"trace\":true,\"input\":{}}"
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-003 example 2 (line 3679)",
+  "request": {
+   "id": "x175",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input files? object, n? number\nreq A \"a\"\n  example f {\"n\" : 1.50, \"files\": {\"z\": \"old\"}}\n    input files.\"a.duramen\"\n      duramen 0.1\n      \"quoted\" é\n    input files.z\n      new\n  table f\n    | n      | files |\n    | 1.50   |       |\n    |        | {}    |\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.cases.0.line",
+    "value": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"n\":1.5,\"files\":{\"z\":\"new\\n\",\"a.duramen\":\"duramen 0.1\\n\\\"quoted\\\" é\\n\"}}}"
+   },
+   {
+    "path": "result.cases.1.line",
+    "value": "{\"id\":\"A#2\",\"op\":\"f\",\"input\":{\"n\":1.50}}"
+   },
+   {
+    "path": "result.cases.2.line",
+    "value": "{\"id\":\"A#3\",\"op\":\"f\",\"input\":{\"files\":{}}}"
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-003 example 3 (line 3706)",
+  "request": {
+   "id": "x176",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input t? string\nreq A \"a\"\n  example f\n    input t\n      x\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.cases.0.line",
+    "value": "{\"id\":\"A#1\",\"op\":\"f\",\"input\":{\"t\":\"x\\n\"}}"
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-004 example 1 (line 3735)",
+  "request": {
+   "id": "x177",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input x? json\nreq A \"a\"\n  example f {\"x\": {\"y\": [1, 2]}}\n    expect result.x.y.0 = 1\n    expect result.x.y.1 ~ 2.1 +- 0.25\n    expect result.x = ?\n    expect id = \"A#1\"\n  table f\n    | x | result.x ± 0.5 |\n    | 2 | 2.25           |\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.cases.0.checks",
+    "value": [
+     {
+      "kind": "eq",
+      "path": "result.x.y.0",
+      "value": 1
+     },
+     {
+      "kind": "approx",
+      "path": "result.x.y.1",
+      "tol": 0.25,
+      "value": 2.1
+     },
+     {
+      "from": "oracle",
+      "kind": "eq",
+      "path": "result.x",
+      "value": {
+       "y": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "kind": "eq",
+      "path": "id",
+      "value": "A#1"
+     }
+    ]
+   },
+   {
+    "path": "result.cases.1.checks",
+    "value": [
+     {
+      "kind": "approx",
+      "path": "result.x",
+      "tol": 0.5,
+      "value": 2.25
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-005 example 1 (line 3772)",
+  "request": {
+   "id": "x178",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\n  tolerance result.t 0.5\n  tolerance result.u 0\nop g\n  input answer? json\nerrors\n  e when never\nreq A \"a\"\n  example f {\"answer\": {\"result\": {\"t\": 1}, \"audit\": \"A\"}}\n  example f {\"answer\": {\"error\": \"e\", \"extra\": 1}}\n    expect error = \"e\"\n  example g {\"answer\": {\"result\": 2, \"audit\": \"B\"}}\n  example h {\"answer\": {\"error\": \"e\"}}\n    expect error = \"e\"\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.cases.0.full",
+    "value": {
+     "audit": "A",
+     "members": [
+      "audit",
+      "id",
+      "result"
+     ],
+     "result": {
+      "t": 1
+     },
+     "tolerances": {
+      "result.t": 0.5,
+      "result.u": 0
+     }
+    }
+   },
+   {
+    "path": "result.cases.1.full",
+    "value": {
+     "error": "e",
+     "members": [
+      "error",
+      "extra",
+      "id"
+     ],
+     "tolerances": {
+      "result.t": 0.5,
+      "result.u": 0
+     }
+    }
+   },
+   {
+    "path": "result.cases.2.full",
+    "value": {
+     "members": [
+      "audit",
+      "id",
+      "result"
+     ],
+     "result": 2,
+     "tolerances": {}
+    }
+   },
+   {
+    "path": "result.cases.3.full",
+    "value": {
+     "error": "e",
+     "members": [
+      "error",
+      "id"
+     ],
+     "tolerances": {}
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-SU-005 example 2 (line 3802)",
+  "request": {
+   "id": "x179",
+   "op": "cases",
+   "input": {
+    "files": {
+     "s.duramen": "duramen 0.1\nspec s 1\noracle node echo.mjs\nop f\n  input answer? json\n  audit\n  tolerance result.t 0.5\nreq A \"a\"\n  example raw '{\"id\":\"r\",\"op\":\"f\",\"input\":{\"answer\":{\"result\":{\"t\":1},\"audit\":\"A\"}}}'\n",
+     "echo.mjs": "// A tiny oracle for the example records in this specification. It speaks the driver protocol\n// and answers each request with its input as the result, unless the input says otherwise:\n//   \"answer\": {...}   answer with these members instead (and the request's id)\n//   \"line\": true      answer with the request line, as received, as the result\n//   \"silent\": true    write no answer to this request\n//   \"exit\": <n>       answer as usual, and exit with status n at the end of input\n//   \"say\": \"<text>\"   write this text as the answer line, exactly\n//\n// A line ends at LF, CR LF or CR, as Node's readline ended lines before Node 24; U+2028 and\n// U+2029 do not end one (from Node 24, readline ends lines there too), so the input is read\n// whole and split here.\n\nconst chunks = [];\nfor await (const chunk of process.stdin) chunks.push(chunk);\nconst lines = Buffer.concat(chunks).toString('utf8').split(/\\r\\n|\\n|\\r/);\nif (lines[lines.length - 1] === '') lines.pop();\nlet status = 0;\nfor (const line of lines) {\n  if (line.trim() === '') continue;\n  let req;\n  try { req = JSON.parse(line); } catch { console.log(JSON.stringify({ id: null, error: 'bad_request' })); continue; }\n  const input = req && typeof req.input === 'object' && req.input !== null ? req.input : {};\n  if (Number.isInteger(input.exit)) status = input.exit;\n  if (input.silent === true) continue;\n  if (typeof input.say === 'string') { console.log(input.say); continue; }\n  const result = input.line === true ? { result: line } : { result: input };\n  console.log(JSON.stringify({ id: req?.id ?? null, ...(input.answer ?? result) }));\n}\nprocess.exitCode = status;\n"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.cases.0.full",
+    "value": {
+     "members": [
+      "audit",
+      "id",
+      "result"
+     ],
+     "result": {
+      "t": 1
+     },
+     "tolerances": {}
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 bullet (line 3858)",
+  "request": {
+   "id": "x180",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result.x",
+       "kind": "eq",
+       "value": 1
+      }
+     ],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "x": 1
+      },
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "x": 1
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "pass": true
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 bullet (line 3859)",
+  "request": {
+   "id": "x181",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result.x",
+       "kind": "eq",
+       "value": 1
+      }
+     ],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "x": 1
+      },
+      "tolerances": {}
+     }
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "answer"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 bullet (line 3860)",
+  "request": {
+   "id": "x182",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result.x",
+       "kind": "eq",
+       "value": 1
+      },
+      {
+       "path": "result.y",
+       "kind": "eq",
+       "value": 2
+      },
+      {
+       "path": "id",
+       "kind": "eq",
+       "value": "A#1"
+      }
+     ],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "x": 1,
+       "y": 2
+      },
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "x": 5
+     },
+     "note": 1
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "checks.0",
+      "checks.1",
+      "members",
+      "result"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 bullet (line 3861)",
+  "request": {
+   "id": "x183",
+   "op": "judge",
+   "input": {
+    "case": {
+     "id": "A#1",
+     "kind": "example",
+     "line": "{}",
+     "checks": [],
+     "full": null,
+     "more": 1
+    },
+    "answer": {
+     "id": "anything",
+     "x": 1
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "pass": true
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 bullet (line 3862)",
+  "request": {
+   "id": "x184",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": null
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3867)",
+  "request": {
+   "id": "x185",
+   "op": "judge",
+   "input": {
+    "case": [],
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3868)",
+  "request": {
+   "id": "x186",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": {},
+     "full": null
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3869)",
+  "request": {
+   "id": "x187",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result",
+       "kind": "eq"
+      }
+     ],
+     "full": null
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3870)",
+  "request": {
+   "id": "x188",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": 1,
+       "kind": "eq",
+       "value": 1
+      }
+     ],
+     "full": null
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3871)",
+  "request": {
+   "id": "x189",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result",
+       "kind": "approx",
+       "value": "1",
+       "tol": 0
+      }
+     ],
+     "full": null
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3872)",
+  "request": {
+   "id": "x190",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result",
+       "kind": "approx",
+       "value": 1,
+       "tol": -1
+      }
+     ],
+     "full": null
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3873)",
+  "request": {
+   "id": "x191",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result",
+       "kind": "approx",
+       "value": 1
+      }
+     ],
+     "full": null
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3874)",
+  "request": {
+   "id": "x192",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      1
+     ],
+     "full": null
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3875)",
+  "request": {
+   "id": "x193",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": []
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3876)",
+  "request": {
+   "id": "x194",
+   "op": "judge",
+   "input": {
+    "case": {
+     "full": null
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3877)",
+  "request": {
+   "id": "x195",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": []
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3878)",
+  "request": {
+   "id": "x196",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": "id",
+      "tolerances": {}
+     }
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3879)",
+  "request": {
+   "id": "x197",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       1
+      ],
+      "tolerances": {}
+     }
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3880)",
+  "request": {
+   "id": "x198",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id"
+      ]
+     }
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3881)",
+  "request": {
+   "id": "x199",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id"
+      ],
+      "tolerances": {
+       "result": "1"
+      }
+     }
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3882)",
+  "request": {
+   "id": "x200",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id"
+      ],
+      "tolerances": {
+       "result": -1
+      }
+     }
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3883)",
+  "request": {
+   "id": "x201",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "audit"
+      ],
+      "tolerances": {},
+      "audit": 1
+     }
+    },
+    "answer": null
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3884)",
+  "request": {
+   "id": "x202",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": null
+    },
+    "answer": []
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-001 table row (line 3885)",
+  "request": {
+   "id": "x203",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": null
+    },
+    "answer": "x"
+   }
+  },
+  "assertions": [
+   {
+    "path": "error",
+    "value": "bad_request"
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-002 bullet (line 3902)",
+  "request": {
+   "id": "x204",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result.a.0",
+       "kind": "eq",
+       "value": 5
+      },
+      {
+       "path": "result.a.01",
+       "kind": "eq",
+       "value": 6
+      },
+      {
+       "path": "result.a.length",
+       "kind": "eq",
+       "value": 2
+      },
+      {
+       "path": "result.b.",
+       "kind": "eq",
+       "value": 3
+      },
+      {
+       "path": "result.c.0",
+       "kind": "eq",
+       "value": 7
+      },
+      {
+       "path": "result.d.length",
+       "kind": "eq",
+       "value": 3
+      },
+      {
+       "path": "audit.k.1",
+       "kind": "eq",
+       "value": 2
+      },
+      {
+       "path": "audit",
+       "kind": "eq",
+       "value": "{\"k\": [1, 2]}"
+      },
+      {
+       "path": "result.a.-1",
+       "kind": "eq",
+       "value": 6
+      }
+     ],
+     "full": null
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "a": [
+       5,
+       6
+      ],
+      "b": {
+       "": 3
+      },
+      "c": {
+       "0": 7
+      },
+      "d": "abc"
+     },
+     "audit": "{\"k\": [1, 2]}"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "checks.1",
+      "checks.2",
+      "checks.5",
+      "checks.8"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-002 bullet (line 3903)",
+  "request": {
+   "id": "x205",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "audit.k",
+       "kind": "eq",
+       "value": 1
+      },
+      {
+       "path": "audit",
+       "kind": "eq",
+       "value": "{\"k\": 1, \"big\": 1e400}"
+      }
+     ],
+     "full": null
+    },
+    "answer": {
+     "id": "A#1",
+     "audit": "{\"k\": 1, \"big\": 1e400}"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "checks.0"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-002 bullet (line 3904)",
+  "request": {
+   "id": "x206",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "audit.k",
+       "kind": "eq",
+       "value": 1
+      },
+      {
+       "path": "result",
+       "kind": "eq",
+       "value": null
+      }
+     ],
+     "full": null
+    },
+    "answer": {
+     "id": "A#1",
+     "audit": "k=1"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "checks.0",
+      "checks.1"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-003 bullet (line 3919)",
+  "request": {
+   "id": "x207",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [
+      {
+       "path": "result.o",
+       "kind": "eq",
+       "value": {
+        "a": 1,
+        "b": [
+         1,
+         2
+        ]
+       }
+      },
+      {
+       "path": "result.z",
+       "kind": "eq",
+       "value": 0
+      },
+      {
+       "path": "result.t",
+       "kind": "eq",
+       "value": 1
+      },
+      {
+       "path": "result.n",
+       "kind": "eq",
+       "value": true
+      },
+      {
+       "path": "result.s",
+       "kind": "eq",
+       "value": 1
+      },
+      {
+       "path": "result.missing",
+       "kind": "eq",
+       "value": null
+      },
+      {
+       "path": "result.e",
+       "kind": "eq",
+       "value": []
+      },
+      {
+       "path": "result.l",
+       "kind": "eq",
+       "value": {}
+      },
+      {
+       "path": "result.p",
+       "kind": "eq",
+       "value": [
+        1,
+        2
+       ]
+      },
+      {
+       "path": "result.w",
+       "kind": "eq",
+       "value": {
+        "a": 1
+       }
+      },
+      {
+       "path": "result.h",
+       "kind": "approx",
+       "value": 2,
+       "tol": 0.5
+      },
+      {
+       "path": "result.i",
+       "kind": "approx",
+       "value": 2,
+       "tol": 0.5
+      },
+      {
+       "path": "result.j",
+       "kind": "approx",
+       "value": 2,
+       "tol": 0.5
+      },
+      {
+       "path": "result.k",
+       "kind": "approx",
+       "value": 2,
+       "tol": 0.5
+      },
+      {
+       "path": "result.m",
+       "kind": "approx",
+       "value": 1.9,
+       "tol": 0.1
+      },
+      {
+       "path": "result.u",
+       "kind": "eq",
+       "value": null
+      }
+     ],
+     "full": null
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "o": {
+       "b": [
+        1,
+        2
+       ],
+       "a": 1
+      },
+      "z": 0,
+      "t": true,
+      "n": 1,
+      "s": "1",
+      "e": {},
+      "l": [],
+      "p": [
+       2,
+       1
+      ],
+      "w": {
+       "a": 1,
+       "b": 2
+      },
+      "h": 2.5,
+      "i": 2.5000001,
+      "j": "2",
+      "k": 1.5,
+      "m": 2,
+      "u": null
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "checks.2",
+      "checks.3",
+      "checks.4",
+      "checks.5",
+      "checks.6",
+      "checks.7",
+      "checks.8",
+      "checks.9",
+      "checks.11",
+      "checks.12",
+      "checks.14"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 bullet (line 3939)",
+  "request": {
+   "id": "x208",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": 1,
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "result": 1,
+     "id": "A#1"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "pass": true
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 bullet (line 3940)",
+  "request": {
+   "id": "x209",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "error",
+       "id"
+      ],
+      "error": "e",
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "id": "x",
+     "error": "f",
+     "result": 1
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "members",
+      "error"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 bullet (line 3941)",
+  "request": {
+   "id": "x210",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "error",
+       "id"
+      ],
+      "error": {
+       "code": 1,
+       "at": [
+        1
+       ]
+      },
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "id": "x",
+     "error": {
+      "at": [
+       1
+      ],
+      "code": 1
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "pass": true
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 bullet (line 3942)",
+  "request": {
+   "id": "x211",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "error",
+       "id"
+      ],
+      "error": null,
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "id": "x"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "members",
+      "error"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 bullet (line 3943)",
+  "request": {
+   "id": "x212",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": 10,
+      "tolerances": {
+       "result": 1
+      }
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": 10.5
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "pass": true
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 bullet (line 3944)",
+  "request": {
+   "id": "x213",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "audit",
+       "id",
+       "result"
+      ],
+      "result": 1,
+      "audit": "A",
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": 1,
+     "audit": "A "
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "audit"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 bullet (line 3945)",
+  "request": {
+   "id": "x214",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "audit",
+       "id",
+       "result"
+      ],
+      "result": 1,
+      "audit": "A",
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": 1
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "members",
+      "audit"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 bullet (line 3946)",
+  "request": {
+   "id": "x215",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id"
+      ],
+      "tolerances": {}
+     }
+    },
+    "answer": {
+     "id": "x",
+     "result": 1
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result",
+    "value": {
+     "failed": [
+      "members"
+     ],
+     "pass": false
+    }
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 table row (line 3950)",
+  "request": {
+   "id": "x216",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "t": 1,
+       "u": [
+        1,
+        2
+       ]
+      },
+      "tolerances": {
+       "result.t": 0.5,
+       "result.u.1": 0.1
+      }
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "u": [
+       1,
+       2.05
+      ],
+      "t": 1.5
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.pass",
+    "value": true
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 table row (line 3951)",
+  "request": {
+   "id": "x217",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "t": 1,
+       "u": [
+        1,
+        2
+       ]
+      },
+      "tolerances": {
+       "result.t": 0.5,
+       "result.u.1": 0.1
+      }
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "u": [
+       1.01,
+       2
+      ],
+      "t": 1
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.pass",
+    "value": false
+   },
+   {
+    "path": "result.failed",
+    "value": [
+     "result"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 table row (line 3952)",
+  "request": {
+   "id": "x218",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "t": 1,
+       "u": [
+        1,
+        2
+       ]
+      },
+      "tolerances": {
+       "result.t": 0.5,
+       "result.u.1": 0.1
+      }
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "u": [
+       1,
+       2
+      ],
+      "t": "1"
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.pass",
+    "value": false
+   },
+   {
+    "path": "result.failed",
+    "value": [
+     "result"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 table row (line 3953)",
+  "request": {
+   "id": "x219",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "t": 1,
+       "u": [
+        1,
+        2
+       ]
+      },
+      "tolerances": {
+       "result.t": 0.5,
+       "result.u.1": 0.1
+      }
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "u": [
+       1,
+       2
+      ],
+      "t": 1,
+      "v": 0
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.pass",
+    "value": false
+   },
+   {
+    "path": "result.failed",
+    "value": [
+     "result"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 table row (line 3954)",
+  "request": {
+   "id": "x220",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "t": 1,
+       "u": [
+        1,
+        2
+       ]
+      },
+      "tolerances": {
+       "result.t": 0.5,
+       "result.u.1": 0.1
+      }
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "u": [
+       1,
+       2,
+       3
+      ],
+      "t": 1
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.pass",
+    "value": false
+   },
+   {
+    "path": "result.failed",
+    "value": [
+     "result"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 table row (line 3955)",
+  "request": {
+   "id": "x221",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "t": 1,
+       "u": [
+        1,
+        2
+       ]
+      },
+      "tolerances": {
+       "result.t": 0.5,
+       "result.u.1": 0.1
+      }
+     }
+    },
+    "answer": {
+     "id": "A#1"
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.pass",
+    "value": false
+   },
+   {
+    "path": "result.failed",
+    "value": [
+     "members",
+     "result"
+    ]
+   }
+  ]
+ },
+ {
+  "name": "REQ-JU-004 table row (line 3956)",
+  "request": {
+   "id": "x222",
+   "op": "judge",
+   "input": {
+    "case": {
+     "checks": [],
+     "full": {
+      "members": [
+       "id",
+       "result"
+      ],
+      "result": {
+       "t": 1,
+       "u": [
+        1,
+        2
+       ]
+      },
+      "tolerances": {
+       "result.t": 0.5,
+       "result.u.1": 0.1
+      }
+     }
+    },
+    "answer": {
+     "id": "A#1",
+     "result": {
+      "u": [
+       1,
+       2
+      ],
+      "t": 0.4
+     }
+    }
+   }
+  },
+  "assertions": [
+   {
+    "path": "result.pass",
+    "value": false
+   },
+   {
+    "path": "result.failed",
+    "value": [
+     "result"
+    ]
+   }
+  ]
+ }
+]

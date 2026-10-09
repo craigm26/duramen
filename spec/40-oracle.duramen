@@ -36,7 +36,7 @@ req OR-001 "A record with examples has an oracle"
     expect result.diagnostics = ["s.duramen:2: error T019", "s.duramen:5: error T001"]
 
 req OR-002 "How the oracle is run"
-  decision D-014, D-015, D-017
+  decision D-014, D-015, D-017, D-021
   text
     The oracle is the command after `oracle`, split into words at spaces and tabs, where a
     word may be quoted with `"…"` or `'…'` to hold spaces (inside `"…"`, `\"` stands for `"`
@@ -44,8 +44,9 @@ req OR-002 "How the oracle is run"
     and `""` is an empty word); a command with a quote that is not closed cannot be started
     (REQ-OR-004). The checker MUST start it without a shell, in the
     folder of the file that holds the `oracle` statement, as a driver: it writes one request
-    line per example to the oracle's standard input, in record order, each ending with LF,
-    closes it, and reads one JSON response per line from its standard output, matching each to
+    line per example to the oracle's standard input, in record order, each ending with LF, in
+    UTF-8 (where a raw example's line holds a lone surrogate, a code unit from U+D800 to U+DFFF
+    that is not half of a pair, U+FFFD is written in its place), closes it, and reads one JSON response per line from its standard output, matching each to
     its example by `id` (a line that is not a JSON object with a string `id`, or that holds a
     number too large to be finite (REQ-SY-013), matches nothing, and of two responses with one
     `id`, the first is the one); it runs the oracle so only when there is at least one such
@@ -121,6 +122,18 @@ req OR-002 "How the oracle is run"
           expect result = ?
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:11: error T021", "s.duramen:13: error T021"]
+  example cases {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example raw "{\"id\":\"r\",\"op\":\"f\",\"input\":{\"x\":\"\ud800\"}}"
+          expect result = ?
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.cases.0.checks.0.value = {"x": "\ufffd"}
 
 req OR-003 "Examples the oracle disagrees with"
   decision D-009, D-014, D-018
@@ -334,10 +347,12 @@ req OR-006 "Examples the oracle cannot compute"
     expect result.diagnostics = ["s.duramen:7: error T022"]
 
 req OR-007 "Errors nobody expected"
+  decision D-021
   text
-    When the oracle answers an example that states no expectation with an error (a response
-    with an `error` member, whatever its value, `null` included), the example MUST get the
-    warning T024 at its line.
+    When the oracle answers with an error (a response with an `error` member, whatever its
+    value, `null` included) an example that states no expectation at all, the example MUST get
+    the warning T024 at its line. An expectation of any path is one, `result` and `id`
+    included, and so is a non-empty cell under an expectation path in a table row.
   example check {}
     input files."s.duramen"
       duramen 0.1
@@ -364,6 +379,20 @@ req OR-007 "Errors nobody expected"
         example f {"answer": {"error": null}}
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result = {"diagnostics": ["s.duramen:7: warning T024"], "errors": 0, "warnings": 1}
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input answer? json
+      req A "a"
+        example f {"answer": {"error": "e"}}
+          expect result = 1
+        example f {"answer": {"error": "e"}}
+          expect id = "A#2"
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result = {"diagnostics": ["s.duramen:8: error T002"], "errors": 1, "warnings": 0}
 
 req OR-008 "Values taken from the oracle"
   text
