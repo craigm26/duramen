@@ -4,18 +4,28 @@ A small specification language for regenerative software. Duramen is botany's wo
 heartwood: the durable core of a tree that stays while the living wood around it is replaced,
 as a specification stays while its implementations are regenerated.
 
-One `.duramen` file holds a program's requirements, examples, decisions, deliberate gaps and
-named edge semantics. `duramen check` checks the file before any implementation exists, running
-every example through the spec's own executable model (its *oracle*). `duramen build` writes the
-builder's brief (`SPEC.md`), `DECISIONS.md`, a trace and the suite from that one file, so they
-cannot drift apart. `duramen run` runs the suite against an implementation's driver.
+A *record*, one `.duramen` file or a folder of them, holds a program's requirements, examples,
+decisions, deliberate gaps, named edge semantics, and evidence and properties that check the
+spec's own executable model (its *oracle*). `duramen check` checks the record before any
+implementation exists, running every example, evidence row and property through the oracle.
+`duramen build` writes the builder's brief (`SPEC.md`), `DECISIONS.md`, a trace and the suite
+from that one record, so they cannot drift apart. `duramen run` runs the suite against an
+implementation's driver, and `duramen regen` runs one blind build from the brief, end to end.
 
-Status: prototype, version 0.1.0. Node.js 22.18 or later, no dependencies.
+duramen is specified in duramen: [`spec/`](spec/) is a record of the core language whose oracle
+is duramen itself, and a checker rebuilt blind from its brief is judged by its suite (below).
+
+Status: prototype, version 0.2.0. Node.js 22.18 or later, no dependencies.
 
 ```
-node bin/duramen.mjs check examples/heat-engine/heat.duramen
+node bin/duramen.mjs check examples/heat-engine
 node bin/duramen.mjs build examples/heat-engine/heat.duramen --out examples/heat-engine/build
-node bin/duramen.mjs run   examples/heat-engine/heat.duramen --impl <regen-heat-engine>/impl/ts
+node bin/duramen.mjs run   examples/heat-engine/heat.duramen --impl examples/heat-engine/regen/impl/t06-ts
+node bin/duramen.mjs mutate examples/heat-engine/heat.duramen
+node bin/duramen.mjs agree examples/heat-engine/heat.duramen --impl <dir> --impl <dir> --oracle
+node bin/duramen.mjs diff  <old record> <new record>
+node bin/duramen.mjs regen examples/heat-engine/heat.duramen --lang ts --runs <dir>
+node bin/duramen.mjs check spec/
 npm test
 ```
 
@@ -184,15 +194,23 @@ moving between specs by name; it does not show the packs finding them fresh.
 ## Layout
 
 ```
-bin/duramen.mjs              the command line
+bin/duramen.mjs              the command line (src/cli.mjs)
 src/parse.mjs                .duramen source to a syntax tree, with diagnostics (P codes)
-src/check.mjs                the checks (T codes); runs examples and bound edge packs through the oracle
-src/edges.mjs                the edge library: normative texts and conformance packs
+src/record.mjs               a record from disk: files, versions, the edge library, data files
+src/check.mjs                the checks (T codes); runs examples, evidence, properties and packs through the oracle
+src/types.mjs, expr.mjs      the type language and the property expressions
+src/property.mjs, static.mjs properties on generated inputs; static checks on an implementation folder
 src/render.mjs               SPEC.md, DECISIONS.md, trace.md
 src/suite.mjs                the generated suite, and the runner
 src/driver.mjs               the line protocol shared by oracles and implementations
-examples/heat-engine/        the slice, its oracle, the generated build, and mutants.mjs
-examples/heat-engine/blind/  the blind builds: prompts, the kit's tools, records, output
+src/mutate.mjs, agree.mjs, diff.mjs, regen.mjs, serve.mjs   the other commands
+lib/edges/                   the edge library, as edgedef records
+lib/regen/                   the generic builder prompts for duramen regen
+spec/                        duramen-core, specified in duramen
+selfhost/                    blind builds of duramen-core, and the fixed-point and agreement tests
+examples/heat-engine/        the slice, its oracle and evidence, the generated build, mutants.mjs
+examples/heat-engine/blind/  blind builds t01 to t05: prompts, the kit's tools, records, output
+examples/heat-engine/regen/  blind builds t06 and t07 with duramen regen
 examples/rcan/               the edge binding run against the RCAN SDKs
 examples/history/            the incidents, one file each
 test/                        node --test

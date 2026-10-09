@@ -145,7 +145,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
   const allIds = [
     ...reqs.map((x) => [x, `REQ-${x.id}`]), ...opens.map((x) => [x, `OPEN-${x.id}`]),
     ...ast.properties.map((x) => [x, `PROP-${x.id}`]), ...ast.evidence.map((x) => [x, `EV-${x.id}`]),
-    ...ast.decisions.map((x) => [x, x.id]),
+    ...ast.decisions.map((x) => [x, x.id]), ...ast.ops.map((x) => [x, `op ${x.name}`]),
   ];
   for (const [x, id] of allIds) {
     if (seen.has(id)) d('error', x, 'T007', `duplicate ID ${id} (first at ${seen.get(id)})`);
@@ -204,7 +204,7 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
     for (const ex of r.examples) {
       const op = ast.ops.find((o) => o.name === ex.op);
       if (expectsError(ex) || isRaw(ex)) {
-        for (const e of ex.expects.filter((y) => y.path === 'error')) {
+        for (const e of ex.expects.filter((y) => y.path === 'error' && y.kind !== 'show')) {
           if (!codes.includes(e.value)) d('error', e, 'T023', `${JSON.stringify(e.value)} is not an error code declared in "errors"`);
         }
         continue;
@@ -215,7 +215,8 @@ export async function check(ast, { runOracle = true, strict = false, timeoutMs, 
       for (const why of inputProblems(ex.op, ex.input)) d('error', ex, 'T029', `${r.id}: the input does not have ${ex.op}'s declared types (${why}); an example of a bad input says which error it expects`);
     }
     // T005: order is declared once (`errors`), never restated in prose.
-    const named = codes.filter((c) => r.text.includes(c));
+    // a code is named when it appears as a whole word (not next to a letter, digit, _ or -)
+    const named = codes.filter((c) => new RegExp(`(?<![\\w-])${c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`).test(r.text));
     if (named.length >= 2 && ORDER_WORDS.test(r.text)) {
       d('error', { file: r.file, line: r.textLine ?? r.line }, 'T005', `${r.id} restates the order of ${named.join(', ')}; that order is declared once, in "errors" (line ${ast.errors[0]?.line})`);
     }

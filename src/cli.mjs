@@ -12,7 +12,7 @@ import { regen } from './regen.mjs';
 import { serve } from './serve.mjs';
 import { mutate, oracleSources } from './mutate.mjs';
 import { agree } from './agree.mjs';
-import { diffRecords } from './diff.mjs';
+import { diffRecords, behaviorChanges, withBehavior } from './diff.mjs';
 
 export const VERSION = '0.2.0';
 
@@ -23,7 +23,7 @@ const USAGE = `usage:
                 [--without-oracle] [--no-static] [--strict] [--json]
   duramen mutate <record> [--file <oracle source>] [--limit <n>] [--jobs <n>] [--json]
   duramen agree  <record> --impl <dir> [--impl <dir> ...] [--oracle] [--samples <n>] [--seed <n>] [--json]
-  duramen diff   <old record> <new record> [--json]
+  duramen diff   <old record> <new record> [--no-oracle] [--json]
   duramen regen  <record> --lang ts|py [--model sonnet] [--runs <dir>] [--sandbox-root <dir>] [--leak-terms <file.json>]
                 [--prompt <file>] [--run-id <id>] [--max-minutes <n>] [--json]
   duramen serve  (duramen as a driver: check and cases requests on standard input)
@@ -54,7 +54,7 @@ const OPTIONS = {
   run: { impl: 'value', driver: 'value', cwd: 'value', repeat: 'value', timeout: 'value', strict: 'flag', json: 'flag', 'without-oracle': 'flag', 'no-static': 'flag' },
   mutate: { file: 'value', limit: 'value', jobs: 'value', timeout: 'value', json: 'flag' },
   agree: { impl: 'list', oracle: 'flag', samples: 'value', seed: 'value', timeout: 'value', json: 'flag' },
-  diff: { json: 'flag' },
+  diff: { json: 'flag', 'no-oracle': 'flag' },
   regen: { lang: 'value', model: 'value', runs: 'value', 'sandbox-root': 'value', 'leak-terms': 'value', prompt: 'value', 'run-id': 'value', 'max-minutes': 'value', builder: 'value', json: 'flag' },
 };
 
@@ -227,7 +227,9 @@ async function diffCommand(args, io) {
     if (x.diagnostics.some((d) => d.code === 'P046')) { io.err(`duramen diff: cannot read ${p}`); return 2; }
     if (x.diagnostics.some((d) => d.level === 'error')) { io.err(`duramen diff: ${p} has errors; run duramen check on it first`); return 1; }
   }
-  const r = diffRecords(A.ast, B.ast);
+  let r = diffRecords(A.ast, B.ast);
+  // the old version's examples, through the new version's oracle
+  if (!args['no-oracle']) r = withBehavior(r, A.ast, B.ast, await behaviorChanges(A.ast, B.ast));
   if (args.json) { io.out(JSON.stringify({ duramen: VERSION, command: 'diff', ...r })); return r.version.ok === false ? 1 : 0; }
   for (const kind of ['breaking', 'tightening', 'additive', 'relaxing', 'prose']) {
     const cs = r.changes.filter((c) => c.kind === kind);
@@ -236,6 +238,7 @@ async function diffCommand(args, io) {
     for (const c of cs) io.out(`  ${c.what}`);
   }
   if (r.contract) io.out(`contract version: ${r.contract[0] ?? '(none)'} -> ${r.contract[1] ?? '(none)'}`);
+  if (r.behavior?.ran) io.out(`behavior: ${r.behavior.compared} old example${r.behavior.compared === 1 ? '' : 's'} the new record no longer has, run through the new oracle${r.behavior.error ? ` (oracle: ${r.behavior.error})` : ''}`);
   const v = r.version;
   io.out(`version ${v.from} -> ${v.to}: ${v.ok === null ? v.why : v.ok ? `ok (${v.bump}${v.need !== 'none' ? `, needs ${v.need}` : ''})` : `too small: ${v.why}`}`);
   return v.ok === false ? 1 : 0;

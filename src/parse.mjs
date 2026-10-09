@@ -11,6 +11,27 @@ const TOP = new Set(['duramen', 'spec', 'oracle', 'type', 'edge', 'edgedef', 'se
 // A number written as JSON writes one (no hex, no Infinity, no leading +), or NaN.
 const JSON_NUMBER = /^-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?$/;
 export const jsonNumber = (text) => (JSON_NUMBER.test(text) ? Number(text) : NaN);
+// The clauses each statement takes: `once` at most one of each, `many` any number. A clause a
+// statement does not take is P015, and its lines are ignored; a second `once` clause is P052.
+// `errors` is not here: every clause of it is an error code.
+const CLAUSES = {
+  duramen: { once: [], many: [] },
+  spec: { once: ['title', 'contract', 'request', 'text'], many: [] },
+  oracle: { once: [], many: ['source'] },
+  type: { once: [], many: [] },
+  edge: { once: [], many: ['decision'] },
+  edgedef: { once: ['text'], many: ['family', 'item'] },
+  section: { once: ['text'], many: [] },
+  op: { once: ['returns', 'result', 'audit', 'request'], many: ['input', 'tolerance'] },
+  req: { once: ['text', 'on'], many: ['decision', 'example', 'table', 'static'] },
+  property: { once: ['text', 'samples', 'seed'], many: ['supports', 'decision', 'for', 'where', 'call', 'expect'] },
+  evidence: { once: ['source', 'kind', 'text'], many: ['supports', 'decision', 'table', 'waive'] },
+  open: { once: ['text'], many: ['example', 'table'] },
+  decision: { once: ['source', 'status', 'text'], many: ['rejected'] },
+  note: { once: ['text'], many: [] },
+};
+// Only these clauses take lines of their own (and the clauses of `errors`, which continue).
+const TAKES_LINES = new Set(['text', 'example', 'table']);
 export const EVIDENCE_KINDS = ['published', 'derived', 'computed', 'measured', 'implementation', 'incident'];
 
 export function parse(source, file = '<input>') {
@@ -138,14 +159,16 @@ function parseInto(source, file, ast, diag) {
   // expect <path> = <json>   |   expect <path> ≈ <number> ± <tol>   (ASCII: ~ and +-)
   // expect <path> = ?         the value is the oracle's: shown in the brief, checked by the suite
   function expectation(text, n, col) {
-    if (/^expect\s+\S+\s*=\s*\?$/.test(text)) return { path: text.match(/^expect\s+(\S+)/)[1], kind: 'show', line: n };
-    let m = text.match(/^expect\s+(\S+)\s*(?:≈|~)\s*(\S+)\s*(?:±|\+-)\s*(\S+)$/);
+    let m = text.match(/^expect\s+([^\s=≈~]+)\s*=\s*\?$/);
+    if (m) return { path: m[1], kind: 'show', line: n };
+    m = text.match(/^expect\s+([^\s=≈~]+)\s*(?:≈|~)(.*)$/);
     if (m) {
-      const v = jsonNumber(m[2]); const tol = jsonNumber(m[3]);
-      if (!Number.isFinite(v) || !Number.isFinite(tol) || tol < 0) { diag('error', n, 'P010', 'approximate expectation needs finite numbers and a tolerance of 0 or more', col); return null; }
+      const am = m[2].match(/^\s*(\S+)\s*(?:±|\+-)\s*(\S+)$/);
+      const v = am ? jsonNumber(am[1]) : NaN; const tol = am ? jsonNumber(am[2]) : NaN;
+      if (!Number.isFinite(v) || !Number.isFinite(tol) || tol < 0) { diag('error', n, 'P010', 'expect <path> ≈ <number> ± <tolerance>: JSON numbers, and a tolerance of 0 or more', col); return null; }
       return { path: m[1], kind: 'approx', value: v, tol, line: n };
     }
-    m = text.match(/^expect\s+(\S+)\s*=\s*(.+)$/);
+    m = text.match(/^expect\s+([^\s=≈~]+)\s*=\s*(.+)$/);
     if (m) { const j = parseJSON(m[2], n, 'expected value', col + text.indexOf(m[2])); return j.ok ? { path: m[1], kind: 'eq', value: j.value, line: n } : null; }
     diag('error', n, 'P011', 'expect <path> = <json>, or expect <path> ≈ <number> ± <tolerance>', col);
     return null;
@@ -156,19 +179,27 @@ function parseInto(source, file, ast, diag) {
   const cells = (l) => l.text.replace(/^\|/, '').replace(/\|$/, '').split(/(?<!\\)\|/).map((x) => x.trim().replace(/\\\|/g, '|'));
   const isExpectPath = (name) => /^(result|audit|error|id)(\.|$)/.test(name);
   function tableRows(c, op, from) {
-    for (const l of c.sub) if (l.text !== '' && !l.text.startsWith('#') && !l.text.startsWith('|')) diag('error', l.n, 'P006', 'a line under a table is a row, starting with |', l.indent + 1);
-    // A separator row (|---|:--:|) after the header is not a row.
-    const rows = c.sub.filter((l) => l.text.startsWith('|')).filter((l, i) => i === 0 || !/^\|[\s|:-]+\|$/.test(l.text));
+    // Rows are the lines that start with |, indented four spaces or more; a separator row (only
+    // |, -, : and spaces, starting and ending with |) is skipped wherever it is.
+    const rows = [];
+    for (const l of c.sub) {
+      if (l.text === '' || l.text.startsWith('#')) continue;
+      if (!l.text.startsWith('|')) { diag('error', l.n, 'P006', 'a line under a table is a row, starting with |', l.indent + 1); continue; }
+      if (l.indent < 4) { diag('error', l.n, 'P006', 'table rows are indented four spaces', l.indent + 1); continue; }
+      if (!/^\|(?:[\s|:-]*\|)?$/.test(l.text)) rows.push(l);
+    }
     if (!op || /\s/.test(op) || rows.length < 2) { diag('error', c.n, 'P013', 'table <op>, then a header row and at least one row', c.restCol); return []; }
     const header = cells(rows[0]).map((h) => {
       const hm = h.match(/^(\S+)(?:\s*(?:±|\+-)\s*(\S+))?$/);
-      return hm ? { name: hm[1], tol: hm[2] === undefined ? null : jsonNumber(hm[2]) } : { name: h, tol: null };
+      return hm && (isExpectPath(hm[1]) ? !/[=≈~]/.test(hm[1]) : /^[\w-]+$/.test(hm[1])) ? { name: hm[1], tol: hm[2] === undefined ? null : jsonNumber(hm[2]) } : null;
     });
-    if (header.some((h) => h.name === '')) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
+    if (header.some((h) => h === null)) { diag('error', rows[0].n, 'P013', 'every header cell names an input field or an expectation path', rows[0].indent + 1); return []; }
     for (const h of header) {
       if (h.tol === null) continue;
       if (!isExpectPath(h.name)) diag('error', rows[0].n, 'P010', `column "${h.name}": only an expectation column takes a tolerance`, rows[0].indent + 1);
       else if (!(Number.isFinite(h.tol) && h.tol >= 0)) diag('error', rows[0].n, 'P010', `column "${h.name}": a tolerance is a number of 0 or more`, rows[0].indent + 1);
+      else continue;
+      h.tol = null; // reported; the column has no tolerance
     }
     const out = [];
     for (const l of rows.slice(1)) {
@@ -239,20 +270,29 @@ function parseInto(source, file, ast, diag) {
 
   function example(c) {
     let ex;
-    const rm = c.rest.match(/^raw\s+(".*")$/) ?? c.rest.match(/^raw\s+'(.*)'$/);
-    if (rm) {
-      const rawLine = rm[1].startsWith('"') ? unquote(rm[1], c.n, 'raw request line', c.restCol + 4) : rm[1];
-      if (rawLine.includes('\n')) { diag('error', c.n, 'P026', 'a raw request line cannot contain a line break', c.restCol); return null; }
-      ex = { op: null, input: {}, raw: null, rawLine, request: null, omit: [], expects: [], line: c.n, from: 'example' };
+    // A malformed first line is reported, and the lines under it are still read (and their
+    // problems reported); the example itself is then dropped.
+    let bad = false;
+    const blank = { op: null, input: {}, raw: null, request: null, omit: [], expects: [], line: c.n, from: 'example' };
+    if (/^raw(\s|$)/.test(c.rest)) {
+      // `raw` is not an op name: example raw "<line>" (a JSON string) or example raw '<line>'
+      const dq = c.rest.match(/^raw\s+("(?:[^"\\]|\\.)*")$/);
+      const sq = c.rest.match(/^raw\s+'(.*)'$/);
+      let rawLine = null;
+      if (dq) { try { rawLine = JSON.parse(dq[1]); } catch { rawLine = null; } }
+      else if (sq) rawLine = sq[1];
+      if (rawLine === null) { diag('error', c.n, 'P004', 'example raw "<request line>" (a JSON string) or example raw \'<request line>\'', c.restCol + 4); bad = true; }
+      else if (/[\r\n]/.test(rawLine)) { diag('error', c.n, 'P026', 'a raw request line cannot contain a line break (CR or LF)', c.restCol); bad = true; }
+      ex = { ...blank, rawLine: rawLine ?? '' };
     } else {
       const m = c.rest.match(/^(\S+)(?:\s+(.+))?$/);
-      if (!m) { diag('error', c.n, 'P012', 'example <op> [<json input>], or example raw "<request line>"', c.restCol); return null; }
-      if (m[2] === undefined) ex = { op: m[1], input: {}, raw: null, noInput: true, request: null, omit: [], expects: [], line: c.n, from: 'example' };
+      if (!m) { diag('error', c.n, 'P012', 'example <op> [<json input>], or example raw "<request line>"', c.restCol); bad = true; ex = { ...blank }; }
+      else if (m[2] === undefined) ex = { ...blank, op: m[1], noInput: true };
       else {
         const j = parseJSON(m[2], c.n, 'example input', c.restCol + m[1].length + 1);
-        if (!j.ok) return null;
-        if (j.value === null || typeof j.value !== 'object' || Array.isArray(j.value)) { diag('error', c.n, 'P012', 'an example input is a JSON object', c.restCol + m[1].length + 1); return null; }
-        ex = { op: m[1], input: j.value, raw: m[2], request: null, omit: [], expects: [], line: c.n, from: 'example' };
+        if (!j.ok) { bad = true; ex = { ...blank, op: m[1] }; }
+        else if (j.value === null || typeof j.value !== 'object' || Array.isArray(j.value)) { diag('error', c.n, 'P012', 'an example input is a JSON object', c.restCol + m[1].length + 1); bad = true; ex = { ...blank, op: m[1] }; }
+        else ex = { ...blank, op: m[1], input: j.value, raw: m[2] };
       }
     }
     // Lines under the example, in order. `input <path>` starts a block of text, the lines after
@@ -293,7 +333,7 @@ function parseInto(source, file, ast, diag) {
       const e = expectation(l.text, l.n, l.indent + 1);
       if (e) ex.expects.push(e);
     }
-    return ex;
+    return bad ? null : ex;
   }
 
   // static checks on an implementation folder (evaluated by `duramen run`, not by the driver):
@@ -334,18 +374,25 @@ function parseInto(source, file, ast, diag) {
   }
 
   function statement(s) {
-    const cs = clauses(s.body);
-    // Only text, example and table clauses, and the clauses of errors (whose conditions may
-    // continue), take indented lines; under any other clause such a line belongs to nothing.
-    if (s.kw !== 'errors') for (const c of cs) if (!['text', 'example', 'table'].includes(c.kw)) for (const l of c.sub) if (l.text !== '' && !l.text.startsWith('#')) diag('error', l.n, 'P006', `${c.kw} takes no indented lines`, l.indent + 1);
-    const only = (allowed) => { for (const c of cs) if (!allowed.includes(c.kw)) diag('error', c.n, 'P015', `"${c.kw}" is not a clause of ${s.kw}`, c.col); };
+    const cs = [];
+    const takes = CLAUSES[s.kw];
+    const seen = new Set();
+    for (const c of clauses(s.body)) {
+      if (!takes) { cs.push(c); continue; }
+      if (!takes.once.includes(c.kw) && !takes.many.includes(c.kw)) { diag('error', c.n, 'P015', `"${c.kw}" is not a clause of ${s.kw}`, c.col); continue; }
+      if (takes.once.includes(c.kw)) {
+        if (seen.has(c.kw)) { diag('error', c.n, 'P052', `${s.kw} takes one "${c.kw}" clause`, c.col); continue; }
+        seen.add(c.kw);
+      }
+      if (!TAKES_LINES.has(c.kw)) for (const l of c.sub) if (l.text !== '' && !l.text.startsWith('#')) diag('error', l.n, 'P006', `${c.kw} takes no indented lines`, l.indent + 1);
+      cs.push(c);
+    }
     const textOf = () => { const c = cs.find((x) => x.kw === 'text'); return c ? prose(c) : ''; };
     switch (s.kw) {
       case 'duramen':
         if (versionLine) diag('error', s.line, 'P023', `the version is stated twice (first at line ${versionLine})`);
         else { versionLine = s.line; ast.version = s.rest; }
         if (!VERSIONS.includes(s.rest)) diag('error', s.line, 'P023', `duramen ${s.rest} is not a version this tool reads (${VERSIONS.join(', ')})`, s.restCol);
-        only([]);
         break;
       case 'spec': {
         if (ast.spec) diag('error', s.line, 'P044', `a second spec statement (the first is at line ${ast.spec.line})`);
@@ -357,7 +404,6 @@ function parseInto(source, file, ast, diag) {
           else if (c.kw === 'contract') spec.contract = c.rest;
           else if (c.kw === 'request') { const j = requestObject(c); if (j) spec.request = j; }
           else if (c.kw === 'text') spec.text = prose(c);
-          else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of spec`, c.col);
         }
         ast.spec ??= spec;
         break;
@@ -368,7 +414,6 @@ function parseInto(source, file, ast, diag) {
         const oracle = { command: s.rest, sources: [], line: s.line };
         for (const c of cs) {
           if (c.kw === 'source') oracle.sources.push(...ids(c.rest));
-          else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of oracle`, c.col);
         }
         ast.oracle ??= oracle;
         break;
@@ -378,7 +423,6 @@ function parseInto(source, file, ast, diag) {
         if (!m) { diag('error', s.line, 'P029', 'type <name> = <type>', s.restCol); break; }
         const t = typeOf(m[2], s.line, s.restCol + s.rest.indexOf(m[2]), `type ${m[1]}`);
         if (t) ast.types.push({ name: m[1], type: t, text: m[2], line: s.line });
-        only([]);
         break;
       }
       case 'edge': {
@@ -389,7 +433,6 @@ function parseInto(source, file, ast, diag) {
         const edge = { name: m[1], via: m[2] ? { op: m[2], field: m[3], encoding: m[4] ?? 'text' } : null, decisions: [], line: s.line };
         for (const c of cs) {
           if (c.kw === 'decision') edge.decisions.push(...ids(c.rest));
-          else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of edge`, c.col);
         }
         ast.edges.push(edge);
         break;
@@ -428,14 +471,13 @@ function parseInto(source, file, ast, diag) {
               break;
             }
             if (!found) diag('error', c.n, 'P030', 'item <json input> => <expected text>, item <json input> escaped <JSON string>, or item <json input> refused', c.restCol);
-          } else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of edgedef`, c.col);
+          }
         }
         ast.edgedefs.push(def);
         break;
       }
       case 'section': {
         const { id, title } = idAndTitle(s, 'section');
-        only(['text']);
         section = { type: 'section', id, title, text: textOf(), line: s.line };
         ast.items.push(section);
         break;
@@ -459,10 +501,10 @@ function parseInto(source, file, ast, diag) {
           } else if (c.kw === 'tolerance') {
             const tm = c.rest.match(/^(\S+)\s+(\S+)$/);
             if (!tm || !Number.isFinite(jsonNumber(tm[2])) || jsonNumber(tm[2]) < 0) diag('error', c.n, 'P018', 'tolerance <result path> <number of 0 or more>', c.restCol);
+            else if (Object.hasOwn(op.tolerances, tm[1])) diag('error', c.n, 'P052', `${op.name} already has a tolerance for ${tm[1]}`, c.restCol);
             else op.tolerances[tm[1]] = jsonNumber(tm[2]);
           } else if (c.kw === 'audit') op.audit = c.rest || 'text';
           else if (c.kw === 'result') op.summary = c.rest;
-          else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of op`, c.col);
         }
         ast.ops.push(op);
         break;
@@ -476,7 +518,12 @@ function parseInto(source, file, ast, diag) {
         for (const c of cs) {
           const m = (c.kw + ' ' + c.rest).match(/^(\S+)\s+when\s+(.+)$/);
           if (!m) { diag('error', c.n, 'P019', 'errors: one "<code> when <condition>" per line, first match wins', c.col); continue; }
-          const more = c.sub.map((l) => l.text).filter((t) => t !== '');
+          const more = [];
+          for (const l of c.sub) {
+            if (l.text === '') continue;
+            if (l.indent < 4) { diag('error', l.n, 'P006', 'a condition continues on lines indented four spaces', l.indent + 1); continue; }
+            more.push(l.text);
+          }
           ast.errors.push({ code: m[1], when: [m[2], ...more].join(' '), line: c.n });
         }
         break;
@@ -493,7 +540,6 @@ function parseInto(source, file, ast, diag) {
           } else if (c.kw === 'example') { const ex = example(c); if (ex) req.examples.push(ex); }
           else if (c.kw === 'table') req.examples.push(...tableRows(c, c.rest.trim(), 'table'));
           else if (c.kw === 'static') { const st = staticCheck(c); if (st) req.statics.push(st); }
-          else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of req`, c.col);
         }
         ast.items.push(req);
         break;
@@ -523,7 +569,6 @@ function parseInto(source, file, ast, diag) {
             const e = exprOf(m[3], c.n, c.restCol + c.rest.indexOf(m[3]), 'call input');
             if (e) pr.calls.push({ name: m[1], op: m[2], input: e, inputText: m[3], line: c.n });
           } else if (c.kw === 'expect') { const e = exprOf(c.rest, c.n, c.restCol, 'expect'); if (e) pr.expects.push({ ast: e, text: c.rest, line: c.n }); }
-          else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of property`, c.col);
         }
         // every name an expression reads is a variable or an earlier call
         const bound = new Set(pr.vars.map((v) => v.name));
@@ -582,7 +627,7 @@ function parseInto(source, file, ast, diag) {
             }
             if (!t.columns.length) diag('error', c.n, 'P042', 'a table from a file needs a columns line', c.restCol);
             ev.tables.push(t);
-          } else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of evidence`, c.col);
+          }
         }
         if (!ev.source) diag('error', s.line, 'P043', `evidence ${id} needs a source: where the values came from`);
         if (!ev.kind) diag('error', s.line, 'P043', `evidence ${id} needs a kind (${EVIDENCE_KINDS.join(', ')})`);
@@ -591,7 +636,6 @@ function parseInto(source, file, ast, diag) {
       }
       case 'open': {
         const { id, title } = idAndTitle(s, 'open');
-        only(['text', 'example', 'table']);
         const exampleLines = cs.filter((c) => c.kw === 'example' || c.kw === 'table').map((c) => c.n); // T003, in check
         ast.items.push({ type: 'open', id, title, section: section?.id ?? null, text: textOf(), exampleLines, line: s.line });
         break;
@@ -604,14 +648,12 @@ function parseInto(source, file, ast, diag) {
           else if (c.kw === 'status') d.status = c.rest;
           else if (c.kw === 'text') d.text = prose(c);
           else if (c.kw === 'rejected') d.rejected.push(unquote(c.rest, c.n, 'rejected alternative', c.restCol));
-          else diag('error', c.n, 'P015', `"${c.kw}" is not a clause of decision`, c.col);
         }
         ast.decisions.push(d);
         break;
       }
       case 'note': {
         if (s.rest) diag('error', s.line, 'P050', 'note takes nothing after the keyword', s.restCol);
-        only(['text']);
         ast.items.push({ type: 'note', section: section?.id ?? null, text: textOf(), line: s.line });
         break;
       }

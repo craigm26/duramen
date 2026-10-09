@@ -57,3 +57,30 @@ test('diff: changes are classified, and the version bump is checked', async () =
   assert.equal(versionVerdict('1.2.0', '1.2.1', 'prose').ok, true);
   assert.equal(versionVerdict('x', 'y', 'prose').ok, null);
 });
+
+test('diff: an old example replaced, not edited, is run through the new oracle', async () => {
+  const { behaviorChanges, withBehavior } = await import('../src/diff.mjs');
+  const oracle = (k) => `for await (const c of process.stdin) for (const l of String(c).split('\\n')) if (l.trim()) { const r = JSON.parse(l); console.log(JSON.stringify({ id: r.id, result: r.input.x + ${k} })); }\n`;
+  const rec = (x, want, version) => src(`
+duramen 0.1
+spec s ${version}
+oracle node oracle.mjs
+op f
+  input x number
+req A "a"
+  example f {"x": ${x}}
+    expect result = ${want}
+`);
+  await withFiles({ 'old/s.duramen': rec(1, 2, '1.0.0'), 'old/oracle.mjs': oracle(1), 'new/s.duramen': rec(5, 7, '1.1.0'), 'new/oracle.mjs': oracle(2) }, async (dir) => {
+    const a = loadRecord(join(dir, 'old')).ast, b = loadRecord(join(dir, 'new')).ast;
+    const d = diffRecords(a, b);
+    assert.equal(d.worst, 'tightening'); // the texts show one example removed and one added
+    const beh = await behaviorChanges(a, b);
+    assert.equal(beh.compared, 1);
+    assert.deepEqual(beh.changes.map((c) => c.kind), ['breaking']);
+    assert.match(beh.changes[0].what, /result was 2, the new oracle gives 3/);
+    const r = withBehavior(d, a, b, beh);
+    assert.equal(r.worst, 'breaking');
+    assert.equal(r.version.ok, false); // 1.0.0 -> 1.1.0 is too small for a breaking change
+  });
+});

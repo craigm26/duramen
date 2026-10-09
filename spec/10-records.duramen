@@ -5,14 +5,15 @@ section RC "Records"
     A record is what the checker reads: one file, or a folder of files read as one.
 
 req RC-001 "The files of a record"
-  decision D-002
+  decision D-002, D-012
   text
     A record named by a file MUST consist of that file alone, whatever its name. A record named
     by a folder MUST consist of every file in the folder and its subfolders whose name ends in
-    `.duramen`, leaving out every file and folder whose name starts with `.`, and every folder
-    named `build` or `node_modules`. A record named by a file or folder that does not exist, or
-    a folder record with no files, MUST get P046 at line 1 of the name it was given (`.` for
-    the folder that holds all the files) and no other diagnostic.
+    `.duramen`, leaving out every file and folder below it whose name starts with `.`, and
+    every folder below it named `build` or `node_modules`. A record named by a file or folder
+    that does not exist, or a folder record with no files, MUST get P046 at line 1 of the name
+    it was given (`.` for the folder that holds all the files) and no other diagnostic. The
+    folder of a record is the folder it names, or for a file, the folder the file is in.
   example check {}
     input files."a.duramen"
       duramen 0.1
@@ -53,6 +54,13 @@ req RC-001 "The files of a record"
       duramen 0.1
       spec a 1
     input files."sub/b.duramen"
+      frobnicate
+    expect result.diagnostics = []
+  example check {"entry": "build"}
+    input files."build/a.duramen"
+      duramen 0.1
+      spec a 1
+    input files."build/build/b.duramen"
       frobnicate
     expect result.diagnostics = []
   example check {"entry": "missing.duramen"}
@@ -112,13 +120,14 @@ req RC-002 "The order of a record's files"
     expect result.diagnostics = ["｡.duramen:2: error P044"]
 
 req RC-003 "Versions"
+  decision D-011
   text
     Every file of a record MUST state the version of the language it is written in, with the
     statement `duramen <version>`; the versions this checker reads are `0.1` and `0.2`. A file
     that states none MUST get P020 at line 1. A version that is not one of these, or a second
     `duramen` statement in one file, MUST get P023 at that statement's line. When the files of
-    one record state different versions, the record MUST get P047 at line 1 of its name (`.`
-    for the folder that holds all the files).
+    one record state different versions of those this checker reads, the record MUST get P047
+    at line 1 of its name (`.` for the folder that holds all the files).
   example check {}
     input files."s.duramen"
       spec s 1
@@ -162,6 +171,13 @@ req RC-003 "Versions"
     input files."b.duramen"
       duramen 0.2
     expect result.diagnostics = []
+  example check {}
+    input files."a.duramen"
+      duramen 0.2
+      spec s 1
+    input files."b.duramen"
+      duramen 2
+    expect result.diagnostics = ["b.duramen:1: error P023"]
 
 req RC-004 "One spec, one oracle, one list of errors"
   text

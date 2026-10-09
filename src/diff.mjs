@@ -12,7 +12,9 @@
 //
 // A breaking change needs a new major version (before 1.0, a new minor: 0.MINOR.PATCH, as npm
 // reads it); tightening and additive changes a new minor; the rest a new patch.
-import { requestFor } from './check.mjs';
+import { dirname } from 'node:path';
+import { requestFor, holds, expectsError, isRaw, isSolo } from './check.mjs';
+import { runDriver } from './driver.mjs';
 
 const KINDS = ['breaking', 'tightening', 'additive', 'relaxing', 'prose'];
 
@@ -128,6 +130,52 @@ export function diffRecords(a, b) {
 
   const worst = KINDS.find((k) => changes.some((c) => c.kind === k)) ?? null;
   return { changes, worst, version: versionVerdict(a.spec?.version, b.spec?.version, worst), contract: a.spec?.contract !== b.spec?.contract ? [a.spec?.contract ?? null, b.spec?.contract ?? null] : null };
+}
+
+// The old version's examples, run through the new version's oracle. Comparing texts cannot see
+// every change of behavior: an example replaced rather than edited, or a model that changed
+// under examples that did not, leaves no trace in the text. An old example the new record no
+// longer has (or sends differently) whose typed values the new oracle does not give is a
+// breaking change: an implementation that met the old version fails the new one there.
+export async function behaviorChanges(a, b, { timeoutMs, env } = {}) {
+  if (!b.oracle) return { ran: false, why: 'the new record has no oracle', changes: [] };
+  const opsB = new Set(b.ops.map((o) => o.name));
+  const kept = new Set(b.items.filter((i) => i.type === 'req').flatMap((r) => r.examples.map((ex) => exampleKey(b, ex))));
+  const batch = [], solos = [];
+  for (const r of a.items.filter((i) => i.type === 'req')) {
+    r.examples.forEach((ex, k) => {
+      const typed = ex.expects.filter((e) => e.kind !== 'show');
+      if (!typed.length || kept.has(exampleKey(a, ex))) return; // compared as text above
+      if (!opsB.has(ex.op) && !expectsError(ex) && !isRaw(ex)) return; // its op is gone: reported above
+      const item = { r, ex, typed, id: `old:${r.id}#${k + 1}` };
+      item.line = requestFor(a, ex, item.id);
+      (isSolo(ex) ? solos : batch).push(item);
+    });
+  }
+  const opts = { cwd: dirname(b.oracle.file ?? b.file), ...(timeoutMs ? { timeoutMs } : {}), ...(env ? { env } : {}) };
+  const run = batch.length ? await runDriver(b.oracle.command, batch.map((x) => x.line), opts) : { responses: new Map(), error: null };
+  const answers = new Map(run.responses);
+  for (const x of solos) { const sr = await runDriver(b.oracle.command, [x.line], opts); if (sr.list.length === 1 && sr.list[0]) answers.set(x.id, sr.list[0]); }
+  const changes = [];
+  let compared = 0;
+  for (const { r, ex, typed, id } of [...batch, ...solos]) {
+    const resp = answers.get(id);
+    if (!resp || 'oracle_error' in resp) continue;
+    compared++;
+    const failed = typed.map((e) => ({ e, h: holds(resp, e) })).find((x) => !x.h.ok);
+    if (failed) {
+      const want = failed.e.kind === 'approx' ? `${failed.e.value} ± ${failed.e.tol}` : JSON.stringify(failed.e.value);
+      changes.push({ kind: 'breaking', what: `REQ-${r.id}: the old example at line ${ex.line} no longer holds: ${failed.e.path} was ${want}, the new oracle gives ${failed.h.got === undefined ? '(nothing)' : JSON.stringify(failed.h.got)}` });
+    }
+  }
+  return { ran: true, compared, error: run.error ?? null, changes };
+}
+
+// Merge behavior changes into a diff and judge the version again.
+export function withBehavior(d, a, b, behavior) {
+  const changes = [...d.changes, ...behavior.changes];
+  const worst = KINDS.find((k) => changes.some((c) => c.kind === k)) ?? null;
+  return { ...d, changes, worst, version: versionVerdict(a.spec?.version, b.spec?.version, worst), behavior: { ran: behavior.ran, compared: behavior.compared ?? 0, error: behavior.error ?? null, why: behavior.why } };
 }
 
 // Is the version bump big enough? Semantic versions only; anything else is reported as unchecked.

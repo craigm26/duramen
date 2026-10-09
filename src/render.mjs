@@ -286,7 +286,22 @@ export function renderSpec(ast, oracle, { version: duramenVersion = '0.2', prope
     }
     out.push('');
   }
-  return out.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n';
+  return collapseBlankLines(out.join('\n')).trimEnd() + '\n';
+}
+
+// At most one blank line in a row, except inside fenced blocks, whose text is shown as it is
+// (a builder counts its lines: s01 C-1 found two blank lines in an example shown as one).
+function collapseBlankLines(text) {
+  const out = [];
+  let fence = null;
+  for (const line of text.split('\n')) {
+    const f = line.match(/^(`{3,})/);
+    if (fence === null && f) fence = f[1];
+    else if (fence !== null && line.trim() === fence) { out.push(line); fence = null; continue; }
+    if (fence === null && line === '' && out.length && out[out.length - 1] === '') continue;
+    out.push(line);
+  }
+  return out.join('\n');
 }
 
 export function renderDecisions(ast) {

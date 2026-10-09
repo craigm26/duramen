@@ -1,0 +1,6 @@
+  sandbox mnipav: brief written, leak check ok; launching sonnet (ts)
+  builder exited with 0 after 10.1 min
+run s01: claude-sonnet-5-5 (ts), 30 turns, 10.1 min, $1.82
+  audit: 0 violations, init ok, 1 denied calls
+  suite: passed 142/142
+  build copied to selfhost/impl/s01-ts; 19 choices to triage in selfhost/s01-ts.md

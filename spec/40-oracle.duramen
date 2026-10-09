@@ -43,7 +43,9 @@ req OR-002 "How the oracle is run"
     folder of the file that holds the `oracle` statement, as a driver: it writes one request
     line per example to the oracle's standard input, in record order, each ending with LF,
     closes it, and reads one JSON response per line from its standard output, matching each to
-    its example by `id`; it runs the oracle so only when there is at least one such line. An
+    its example by `id` (a line that is not a JSON object with a string `id` matches nothing,
+    and of two responses with one `id`, the first is the one); it runs the oracle so only when
+    there is at least one such line. An
     example that is raw, or that leaves out `id`, MUST be sent alone, in a run of the oracle of
     its own, and its response is the one line that run writes (none when the run writes no
     line, or more than one). The examples run are those of declared operations, and those that
@@ -104,7 +106,9 @@ req OR-003 "Examples the oracle disagrees with"
     line, once for each expectation that fails. A path is names separated by dots: member
     names, and for arrays, indexes from 0; `audit.<path>` reads the path in the JSON value
     that the response's `audit` text holds. Two values are equal when they are the same JSON
-    value: object members in any order, and numbers by value, so that `1.0` equals `1`. For
+    value: object members in any order, and numbers by value, as IEEE 754 binary64 values, so
+    that `1.0` equals `1`. A name in a path may be empty: `result.x.` reads the member named
+    `""` of `result.x`. For
     `expect <path> ≈ <number> ± <tolerance>`, the value at the path MUST be a number no
     further from the number than the tolerance.
   example check {}
@@ -130,8 +134,11 @@ req OR-003 "Examples the oracle disagrees with"
         table f
           | x | result.x | result.y |
           | 1 | 2        | 3        |
+        example f {"x": {"": 1}}
+          expect result.x. = 1
+          expect result..x = 1
     input files."echo.mjs" from "fixtures/echo.mjs"
-    expect result.diagnostics = ["s.duramen:11: error T002", "s.duramen:12: error T002", "s.duramen:13: error T002", "s.duramen:14: error T002", "s.duramen:18: error T002", "s.duramen:21: error T002", "s.duramen:21: error T002"]
+    expect result.diagnostics = ["s.duramen:11: error T002", "s.duramen:12: error T002", "s.duramen:13: error T002", "s.duramen:14: error T002", "s.duramen:18: error T002", "s.duramen:21: error T002", "s.duramen:21: error T002", "s.duramen:24: error T002"]
   example check {}
     input files."s.duramen"
       duramen 0.1

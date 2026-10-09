@@ -4,10 +4,13 @@
 // own `edgedef`s), and reads the data files that evidence tables name. The parser stays pure;
 // all file access is here.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, dirname, resolve, relative, basename, extname } from 'node:path';
+import { join, dirname, resolve, relative, basename, extname, isAbsolute } from 'node:path';
 import { parse, VERSIONS } from './parse.mjs';
 
 export const LIB_DIR = resolve(import.meta.dirname, '..', 'lib');
+
+// Files a record reads (example inputs, evidence data) stay inside the record's folder.
+const inside = (root, p) => { const r = relative(resolve(root), p); return r !== '' && !r.startsWith('..') && !isAbsolute(r); };
 const SKIP_DIRS = new Set(['node_modules', 'build', '.git', '.regenerate']);
 
 // The .duramen files of a folder, recursively, sorted by relative path (UTF-16 code units).
@@ -169,7 +172,9 @@ export function loadRecord(path, { useLibrary = true } = {}) {
     for (const ex of r.examples) {
       for (const f of ex.inputFiles ?? []) {
         let text;
-        try { text = readFileSync(resolve(dirname(ex.file ?? r.file), f.file), 'utf8'); } catch (e) { diag('error', { file: ex.file ?? r.file, line: f.line }, 'P048', `cannot read ${f.file}: ${e.code ?? e.message}`); continue; }
+        const fp = resolve(dirname(ex.file ?? r.file), f.file);
+        if (!inside(root, fp)) { diag('error', { file: ex.file ?? r.file, line: f.line }, 'P048', `${f.file} is outside the record's folder`); continue; }
+        try { text = readFileSync(fp, 'utf8'); } catch (e) { diag('error', { file: ex.file ?? r.file, line: f.line }, 'P048', `cannot read ${f.file}: ${e.code ?? e.message}`); continue; }
         if (ex.noInput) { ex.noInput = false; ex.input = {}; }
         let o = ex.input;
         let ok = true;
@@ -193,6 +198,7 @@ export function loadRecord(path, { useLibrary = true } = {}) {
     for (const t of ev.tables) {
       if (!t.file) { ev.rows.push(...t.rows.map((r) => ({ ...r, rowId: String(++ordinal), file: ev.file }))); continue; }
       const p = resolve(dirname(ev.file), t.file);
+      if (!inside(root, p)) { diag('error', { file: ev.file, line: t.line }, 'P045', `${t.file} is outside the record's folder`); continue; }
       let text;
       try { text = readFileSync(p, 'utf8'); } catch (e) { diag('error', { file: ev.file, line: t.line }, 'P045', `cannot read ${t.file}: ${e.code ?? e.message}`); continue; }
       const ext = extname(p).toLowerCase();
@@ -213,7 +219,7 @@ function merge(parts, path, isDir, diag) {
   const versions = new Set();
   for (const { ast: a } of parts) {
     const tag = (x) => Object.assign(x, { file: x.file ?? a.file });
-    if (a.version) versions.add(a.version);
+    if (a.version && VERSIONS.includes(a.version)) versions.add(a.version); // an unknown version is P023 already
     if (a.spec) {
       if (ast.spec) diag('error', { file: a.file, line: a.spec.line }, 'P044', `a second spec statement (the first is in ${ast.spec.file}:${ast.spec.line})`);
       else ast.spec = tag(a.spec);
@@ -232,9 +238,8 @@ function merge(parts, path, isDir, diag) {
     for (const op of a.ops) op.inputs.forEach((i) => tag(i));
   }
   if (versions.size > 1) diag('error', { file: path, line: 1 }, 'P047', `the files of this record use different versions: ${[...versions].join(', ')}`);
-  ast.version = versions.size === 1 ? [...versions][0] : versions.size ? [...versions].sort().at(-1) : null;
+  ast.version = versions.size ? [...versions].sort().at(-1) : null;
   if (!ast.spec) diag('error', { file: isDir ? path : parts[0]?.ast.file ?? path, line: 1 }, 'P021', 'missing "spec <name> <version>"');
-  if (ast.version && !VERSIONS.includes(ast.version)) ast.version = null;
   ast.file = isDir ? path : parts[0]?.ast.file ?? path;
   return ast;
 }
