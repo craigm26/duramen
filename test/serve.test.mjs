@@ -25,6 +25,14 @@ test('serve: check and cases on a record carried in the request', async () => {
   assert.deepEqual(await handle({ id: '4', op: 'check', input: { files: { 'notes.md': 'x' } } }), { id: '4', result: { diagnostics: ['.:1: error P046'], errors: 1, warnings: 0 } });
 });
 
+test('serve: cases of the rest of the language keep what they need to run', async () => {
+  const files = { 'a.duramen': 'duramen 0.2\nspec a 1\nreq A "a"\n  static file "REGEN.json" exists\n  static lines "*.ts" at most 100\n' };
+  const r = await handle({ id: 's', op: 'cases', input: { files } });
+  assert.equal(r.result.errors, 0);
+  assert.deepEqual(r.result.cases.map((c) => [c.id, c.kind, c.static?.kind]), [['static:A#1', 'static', 'exists'], ['static:A#2', 'static', 'lines']]);
+  assert.equal(r.result.cases[1].static.max, 100);
+});
+
 test('serve: one response per non-blank line, in order', async () => {
   const lines = ['', '{not json', '  \t', JSON.stringify({ id: 'a', op: 'check', input: { files: rec } }), '[1]'];
   let out = '';
@@ -41,4 +49,13 @@ test('self-hosting: duramen agrees with every example in its own specification',
   assert.deepEqual(ds.filter((d) => d.level !== 'info').map((d) => `${d.file}:${d.line} ${d.code} ${d.message}`), []);
   const reqs = ast.items.filter((i) => i.type === 'req');
   assert.ok(reqs.length >= 40 && reqs.reduce((n, r) => n + r.examples.length, 0) >= 130);
+});
+
+test('fixed point: a result that is not a suite is reported, not compared', async () => {
+  const { notASuite } = await import('../selfhost/fixedpoint.mjs');
+  assert.equal(notASuite({ errors: 0, cases: [] }), null);
+  assert.equal(notASuite(null), 'not an object');
+  assert.equal(notASuite({ cases: [] }), '"errors" is not a number');
+  assert.equal(notASuite({ errors: 0 }), '"cases" is not an array');
+  assert.equal(notASuite({ errors: 0, cases: [{ id: 'a' }, { id: 1 }] }), 'case 2 is not an object with a string "id"');
 });

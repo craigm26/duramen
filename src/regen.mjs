@@ -12,7 +12,7 @@
 //
 // The audit and the leak check are adapted from the regen kit's audit-transcript.mjs and
 // leak-check.mjs (MIT, Copyright (c) 2026 craigm26).
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, statSync, cpSync, existsSync, openSync, closeSync, appendFileSync } from 'node:fs';
 import { join, resolve, relative, isAbsolute, normalize } from 'node:path';
@@ -118,7 +118,11 @@ export function auditTranscript(text, workDir, { identifiers = [], allowedDomain
   };
 }
 
-function launch(work, meta, { prompt, model, lang, maxTurns, maxMinutes, builder = ['claude'] }) {
+// Launch the builder and wait for it. Settles once, whatever happens: a builder that cannot be
+// started, one that exits, and one that outlives --max-minutes. At the deadline it is asked to
+// stop (SIGTERM to its process group); after a grace period it is killed with its descendants,
+// and the launch settles even if it still has not closed.
+export function launch(work, meta, { prompt, model, lang, maxTurns, maxMinutes, builder = ['claude'], killGraceMs = 10_000 }) {
   const env = {};
   for (const k of KEEP_ENV) if (process.env[k] !== undefined) env[k] = process.env[k];
   Object.assign(env, { GOPROXY: 'off', GOTOOLCHAIN: 'local', npm_config_offline: 'true', PIP_NO_INDEX: '1' }); // package managers fail closed
@@ -132,10 +136,37 @@ function launch(work, meta, { prompt, model, lang, maxTurns, maxMinutes, builder
   const err = openSync(join(meta, 'stderr.log'), 'w');
   return new Promise((done) => {
     const [program, ...pre] = builder;
-    const child = spawn(program, [...pre, ...args], { cwd: work, env, stdio: ['ignore', out, err], detached: process.platform !== 'win32' });
-    const timer = setTimeout(() => { try { process.kill(-child.pid, 'SIGTERM'); } catch { child.kill('SIGTERM'); } }, maxMinutes * 60_000);
-    child.on('error', (e) => { clearTimeout(timer); closeSync(out); closeSync(err); done({ code: null, error: e.message }); });
-    child.on('close', (code) => { clearTimeout(timer); closeSync(out); closeSync(err); done({ code }); });
+    const timers = [];
+    let settled = false;
+    let timedOut = false;
+    const settle = (r) => {
+      if (settled) return;
+      settled = true;
+      for (const t of timers) clearTimeout(t);
+      for (const fd of [out, err]) { try { closeSync(fd); } catch { /* already closed */ } }
+      done(timedOut ? { ...r, timedOut: true, error: r.error ?? `stopped after --max-minutes ${maxMinutes}` } : r);
+    };
+    let child;
+    try {
+      child = spawn(program, [...pre, ...args], { cwd: work, env, stdio: ['ignore', out, err], detached: process.platform !== 'win32' });
+    } catch (e) { settle({ code: null, error: e.message }); return; }
+    const stop = (signal) => {
+      if (!child.pid) return;
+      try {
+        if (process.platform === 'win32') { if (signal === 'SIGKILL') spawnSync('taskkill', ['/pid', String(child.pid), '/T', '/F'], { stdio: 'ignore' }); else child.kill(signal); }
+        else process.kill(-child.pid, signal);
+      } catch { try { child.kill(signal); } catch { /* gone */ } }
+    };
+    timers.push(setTimeout(() => {
+      timedOut = true;
+      stop('SIGTERM');
+      timers.push(setTimeout(() => {
+        stop('SIGKILL');
+        timers.push(setTimeout(() => settle({ code: null, error: `did not stop within ${killGraceMs * 2} ms of --max-minutes ${maxMinutes}, and was killed` }), killGraceMs));
+      }, killGraceMs));
+    }, maxMinutes * 60_000));
+    child.on('error', (e) => settle({ code: null, error: e.message }));
+    child.on('close', (code, signal) => settle({ code, ...(signal ? { signal } : {}) }));
   });
 }
 

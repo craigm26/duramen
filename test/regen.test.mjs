@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import { join } from 'node:path';
 import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { loadRecord } from '../src/record.mjs';
-import { regen, leakCheck, auditTranscript } from '../src/regen.mjs';
+import { regen, leakCheck, auditTranscript, launch } from '../src/regen.mjs';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { CALC_ORACLE, src, withFiles } from './helpers.mjs';
 
 const SPEC = src(`
@@ -73,4 +75,25 @@ test('regen: the audit flags network use and tools beyond the allowed set', () =
   const a = auditTranscript(t, '/w');
   assert.equal(a.init.ok, false);
   assert.equal(a.network_violations.length, 3);
+});
+
+test('regen: a builder that cannot be started settles once, with its error', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'duramen-launch-'));
+  try {
+    const r = await launch(dir, dir, { prompt: 'x', model: 'm', lang: 'ts', maxTurns: 1, maxMinutes: 1, builder: [join(dir, 'no-such-program')] });
+    assert.equal(r.code, null);
+    assert.match(r.error, /ENOENT/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('regen: a builder that ignores SIGTERM is killed after --max-minutes', { skip: process.platform === 'win32' && 'process groups are POSIX' }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'duramen-launch-'));
+  try {
+    writeFileSync(join(dir, 'stubborn.mjs'), "process.on('SIGTERM', () => {}); setInterval(() => {}, 1000);\n");
+    const t0 = Date.now();
+    const r = await launch(dir, dir, { prompt: 'x', model: 'm', lang: 'ts', maxTurns: 1, maxMinutes: 0.002, killGraceMs: 200, builder: [process.execPath, join(dir, 'stubborn.mjs')] });
+    assert.equal(r.timedOut, true);
+    assert.equal(r.signal, 'SIGKILL');
+    assert.ok(Date.now() - t0 < 5000);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });

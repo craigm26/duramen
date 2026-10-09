@@ -71,7 +71,19 @@ export async function casesOf(driver, files, timeoutMs = 600_000) {
   const resp = r.responses.get('fp');
   if (!resp) return { error: r.error ?? 'no response', stderr: r.stderr };
   if ('error' in resp) return { error: `answered ${JSON.stringify(resp.error)}`, stderr: r.stderr };
+  const why = notASuite(resp.result);
+  if (why) return { error: `answered a result that is not a suite: ${why}`, stderr: r.stderr };
   return { result: resp.result, run: r };
+}
+
+// The builds judged here may be wrong in any way, so a `cases` result is checked before it is
+// compared: an object with a number `errors` and an array `cases` of objects with string IDs.
+export function notASuite(result) {
+  if (!result || typeof result !== 'object' || Array.isArray(result)) return 'not an object';
+  if (typeof result.errors !== 'number') return '"errors" is not a number';
+  if (!Array.isArray(result.cases)) return '"cases" is not an array';
+  const k = result.cases.findIndex((c) => !c || typeof c !== 'object' || Array.isArray(c) || typeof c.id !== 'string');
+  return k >= 0 ? `case ${k + 1} is not an object with a string "id"` : null;
 }
 
 // JSON text with object members sorted, so that equal values give equal text.

@@ -21,25 +21,37 @@ export function globToRegExp(glob) {
   return new RegExp(`^${re}$`, 'u');
 }
 
-const MAX_FILES = 20000;
+export const MAX_FILES = 20000;
+export const MAX_SEARCH_BYTES = 4 * 1024 * 1024;
 
-// Every path in a folder, relative and with "/" separators; folders end with "/". `.git` is skipped.
-export function listTree(dir) {
-  const out = [];
+// Every path in a folder, relative and with "/" separators; folders end with "/". `.git` is
+// skipped. A listing is never cut short in silence: `truncated` says it stopped at MAX_FILES,
+// and `unreadable` names the folders it could not read (the folder itself as "."), so a check
+// that needs the whole tree fails instead of judging part of it.
+export function listTree(dir, max = MAX_FILES) {
+  const paths = [];
+  const unreadable = [];
+  let truncated = false;
   const walk = (d) => {
     let entries;
-    try { entries = readdirSync(d, { withFileTypes: true }); } catch { return; }
+    try { entries = readdirSync(d, { withFileTypes: true }); } catch { unreadable.push(relative(dir, d).split('\\').join('/') || '.'); return; }
     for (const e of entries) {
-      if (out.length >= MAX_FILES) return;
+      if (paths.length >= max) { truncated = true; return; }
       if (e.name === '.git') continue;
       const p = join(d, e.name);
       const rel = relative(dir, p).split('\\').join('/');
-      if (e.isDirectory()) { out.push(rel + '/'); walk(p); } else out.push(rel);
+      if (e.isDirectory()) { paths.push(rel + '/'); walk(p); } else paths.push(rel);
     }
   };
   walk(dir);
-  return out;
+  return { paths, truncated, unreadable };
 }
+
+// Why a check that needs the whole tree cannot be judged, or [] when it can.
+const incomplete = (t, max) => [
+  ...(t.truncated ? [`the folder has more than ${max} entries; only the first ${max} were read, so this cannot be judged`] : []),
+  ...t.unreadable.map((d) => `${d === '.' ? 'the folder' : d} could not be read`),
+];
 
 const matchAny = (globs, path) => globs.some((g) => globToRegExp(g).test(path) || (path.endsWith('/') && globToRegExp(g).test(path.slice(0, -1))));
 const nonBlank = (text) => text.split(/\r?\n/).filter((l) => l.trim() !== '').length;
@@ -72,23 +84,28 @@ function runShell(command, cwd, seconds) {
 }
 
 // Evaluate one static check against a folder. Returns { ok, why: [..] }.
-export async function evaluateStatic(st, dir, typeEnv) {
-  const tree = listTree(dir);
+export async function evaluateStatic(st, dir, typeEnv, { maxFiles = MAX_FILES, maxSearchBytes = MAX_SEARCH_BYTES } = {}) {
+  const listing = ['exists', 'absent', 'lines', 'text'].includes(st.kind) ? listTree(dir, maxFiles) : { paths: [], truncated: false, unreadable: [] };
+  const tree = listing.paths;
   const files = tree.filter((p) => !p.endsWith('/'));
+  const gaps = incomplete(listing, maxFiles);
   switch (st.kind) {
     case 'exists': {
+      // What was found is found; what was not found may lie in the part that was not read.
       const missing = st.globs.filter((g) => !tree.some((p) => matchAny([g], p)));
-      return { ok: !missing.length, why: missing.map((g) => `nothing matches ${JSON.stringify(g)}`) };
+      return { ok: !missing.length, why: [...missing.map((g) => `nothing matches ${JSON.stringify(g)}`), ...(missing.length ? gaps : [])] };
     }
     case 'absent': {
       const found = tree.filter((p) => matchAny(st.globs, p));
-      return { ok: !found.length, why: found.slice(0, 5).map((p) => `${p} should not exist`) };
+      return { ok: !found.length && !gaps.length, why: [...found.slice(0, 5).map((p) => `${p} should not exist`), ...gaps] };
     }
     case 'lines': {
       const counted = files.filter((p) => matchAny(st.globs, p) && !matchAny(st.exclude, p));
       let total = 0;
-      for (const p of counted) { try { total += nonBlank(readFileSync(join(dir, p), 'utf8')); } catch { /* unreadable: not counted */ } }
-      return { ok: total <= st.max, why: total <= st.max ? [] : [`${total} non-blank lines in ${counted.length} files; at most ${st.max}`], measured: total };
+      const unread = [];
+      for (const p of counted) { try { total += nonBlank(readFileSync(join(dir, p), 'utf8')); } catch (e) { unread.push(`${p} could not be read (${e.code ?? e.message}), so its lines were not counted`); } }
+      const why = [...(total > st.max ? [`${total} non-blank lines in ${counted.length} files; at most ${st.max}`] : []), ...unread, ...gaps];
+      return { ok: !why.length, why, measured: total };
     }
     case 'json': {
       let value;
@@ -99,14 +116,19 @@ export async function evaluateStatic(st, dir, typeEnv) {
     case 'text': {
       const re = new RegExp(st.pattern, 'u');
       const hits = [];
+      const unread = [];
       for (const p of files.filter((x) => matchAny(st.globs, x))) {
         let text;
-        try { if (statSync(join(dir, p)).size > 4 * 1024 * 1024) continue; text = readFileSync(join(dir, p), 'utf8'); } catch { continue; }
+        try {
+          if (statSync(join(dir, p)).size > maxSearchBytes) { unread.push(`${p} is larger than ${maxSearchBytes} bytes and was not searched`); continue; }
+          text = readFileSync(join(dir, p), 'utf8');
+        } catch (e) { unread.push(`${p} could not be read (${e.code ?? e.message}) and was not searched`); continue; }
         const lines = text.split(/\r?\n/);
         const k = lines.findIndex((l) => re.test(l));
         if (k >= 0) hits.push(`${p}:${k + 1} matches ${JSON.stringify(st.pattern)}`);
       }
-      return { ok: !hits.length, why: hits.slice(0, 5) };
+      const why = [...hits.slice(0, 5), ...unread.slice(0, 5), ...gaps];
+      return { ok: !why.length, why };
     }
     case 'command': {
       let regen;

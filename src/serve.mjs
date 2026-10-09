@@ -73,7 +73,9 @@ export async function handle(req) {
     const { ast, r, ds } = await checked(entry, rel);
     const errors = ds.filter((d) => d.level === 'error').length;
     if (req.op === 'check') return { id, result: { diagnostics: ds.map((d) => `${d.file}:${d.line}: ${d.level} ${d.code}`), errors, warnings: ds.filter((d) => d.level === 'warning').length } };
-    const cases = errors ? [] : generateCases(ast, r.oracle, r.properties).map(({ id: cid, kind, reqs, platform, line, solo, checks, full }) => ({ id: cid, kind, reqs, platform, line, ...(solo ? { solo } : {}), checks, full }));
+    // Every case as the suite holds it: an example case is the core's, and the cases of the rest
+    // of the language (static checks, evidence, edges, properties) keep what they need to run.
+    const cases = errors ? [] : generateCases(ast, r.oracle, r.properties);
     return { id, result: { errors, cases } };
   });
 }

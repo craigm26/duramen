@@ -75,7 +75,8 @@ async function answers(driver, requests, chunk = 40) {
   return out;
 }
 
-const diagCodes = (resp) => (resp?.result?.diagnostics ?? []).map((d) => d.replace(/^.*: (error|warning|info) /, '$1 '));
+// A build may answer anything: diagnostics that are not strings are compared as their JSON.
+const diagCodes = (resp) => (Array.isArray(resp?.result?.diagnostics) ? resp.result.diagnostics : []).map((d) => (typeof d === 'string' ? d.replace(/^.*: (error|warning|info) /, '$1 ') : JSON.stringify(d)));
 function signature(a, b, op) {
   if (op === 'cases') return a?.result?.errors !== b?.result?.errors ? `cases: errors ${a?.result?.errors} vs ${b?.result?.errors}` : 'cases: the suites differ';
   if (!a?.result || !b?.result) return `check: ${JSON.stringify(a?.error ?? a?.missing ?? null)} vs ${JSON.stringify(b?.error ?? b?.missing ?? null)}`;
