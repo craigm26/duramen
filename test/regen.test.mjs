@@ -54,6 +54,22 @@ test('regen: brief, sandbox, builder, audit, score and ledger, with a stand-in b
   });
 });
 
+test('regen: --brief gives the builder a folder\'s brief, launched, audited and scored as the record\'s', async () => {
+  // The stand-in builder copies the SPEC.md it was given into its build, so the test can see it.
+  const fake = FAKE_BUILDER(CALC_ORACLE).replace("import { writeFileSync } from 'node:fs';", "import { writeFileSync, readFileSync } from 'node:fs';\nwriteFileSync('seen.md', readFileSync('SPEC.md', 'utf8'));");
+  await withFiles({ 'calc.mjs': CALC_ORACLE, 'calc.duramen': SPEC, 'fake.mjs': fake, 'other/SPEC.md': '# calc, as written by hand\n', 'other/DECISIONS.md': 'None.\n' }, async (dir) => {
+    const { ast } = loadRecord(join(dir, 'calc.duramen'));
+    const r = await regen(ast, { lang: 'ts', sandboxRoot: join(dir, 'sb'), runsDir: join(dir, 'runs'), runId: 'b1', version: 'test', builder: ['node', join(dir, 'fake.mjs')], briefDir: join(dir, 'other') });
+    assert.equal(r.error, undefined, r.error);
+    assert.equal(readFileSync(join(r.impl, 'seen.md'), 'utf8'), '# calc, as written by hand\n');
+    assert.equal(r.score.passed, r.score.total, 'scored by the record\'s own suite');
+    assert.equal(r.entry.brief.folder, 'other');
+    assert.match(readFileSync(join(dir, 'runs', 'b1-ts.md'), 'utf8'), /Brief: the folder `other` .*scored by the suite of calc 1\.0\.0/);
+    const missing = await regen(ast, { lang: 'ts', sandboxRoot: join(dir, 'sb'), runsDir: join(dir, 'runs'), version: 'test', builder: ['node', join(dir, 'fake.mjs')], briefDir: join(dir, 'nowhere') });
+    assert.match(missing.error, /has no SPEC\.md/);
+  });
+});
+
 test('regen: the leak check stops a brief that names the reference', async () => {
   await withFiles({ 'calc.mjs': CALC_ORACLE, 'calc.duramen': SPEC.replace('Adds"', 'Adds, as in the Frobnitz library"'), 'fake.mjs': FAKE_BUILDER(CALC_ORACLE) }, async (dir) => {
     const { ast } = loadRecord(join(dir, 'calc.duramen'));
