@@ -114,3 +114,13 @@ req ADD-1 "Adds"
     }
   });
 });
+
+test('diff: an open item added or removed is reported when a requirement keeps the same ID', async () => {
+  const OPEN = 'open ADD-1 "Sums beyond 5"\n  text\n    Open.\n';
+  await withFiles({ 'old.duramen': SPEC('1.0.0'), 'new.duramen': SPEC('1.1.0', OPEN) }, async (dir) => {
+    const a = loadRecord(join(dir, 'old.duramen')).ast;
+    const b = loadRecord(join(dir, 'new.duramen')).ast;
+    assert.ok(diffRecords(a, b).changes.some((c) => c.kind === 'relaxing' && c.what === 'OPEN-ADD-1 added'));
+    assert.ok(diffRecords(b, a).changes.some((c) => c.kind === 'tightening' && c.what === 'OPEN-ADD-1 removed'));
+  });
+});

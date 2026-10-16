@@ -411,3 +411,11 @@ req OR-008 "Values taken from the oracle"
           expect result.y = ?
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:9: error T025"]
+
+open OR-001 "The oracle's standard input and output"
+  text
+    What kind of file the oracle's standard input and output are (pipes, sockets or regular
+    files), and so what an oracle that looks at them finds. Round eleven of CONFIDENCE-3.md
+    found s23 giving its oracle sockets, and s24 files that it wrote in full before starting
+    the oracle. It covers records whose oracle reports the kind of its standard input or
+    output, and nothing else.

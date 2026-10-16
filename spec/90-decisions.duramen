@@ -286,4 +286,23 @@ decision D-023 "What the tenth round's three builds found"
     other two did not, and the words now say so. s21 took the path of `input b  from "t.txt"`,
     with two spaces before `from`, to end in a space, where the others read the file; the
     words now allow white space of any length there. This version was written after the last
-    round of CONFIDENCE-2.md's claim 8, and no build has been made from it.
+    round of CONFIDENCE-2.md's claim 8; round eleven of CONFIDENCE-3.md was built from it.
+
+decision D-024 "What round eleven's two builds found"
+  source blind builds s23 (TypeScript, claude-sonnet-5-5) and s24 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.12.0, round eleven of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 443 records written for recorded choices
+  text
+    The two builds came from two families of models. Each wrote this record's suite with
+    itself as the oracle, and the two suites were the same, case for case; each passed every
+    case of both suites, by both builds' `judge`; and they answered all 9,378 mutated and
+    unmutated records alike. On the records written for recorded choices they read five things
+    two ways where no open item covered them. A request line of other white space than spaces
+    and tabs, which the driver protocol had called open in words only: it is now OPEN-RQ-005.
+    The kind of file an oracle's standard input and output are: s23 gave sockets and s24
+    files, which no requirement decides and no oracle needs; it is now OPEN-OR-001. In
+    REQ-SY-011, three: `input a from"t.txt"`, which s23 read as a `from` line with no white
+    space after `from`, where s24 and duramen read a path; `input b from "\q"`, whose quoted
+    part is not a JSON string, which s24 read as a `from` line that takes no text, where s23
+    and duramen read a path with a text under it; and a `from` name that goes out of the
+    record's folder and back in (`../sub/t.txt` in a record `sub`), which s24 refused with P048
+    as soon as it left. The `input` line now has a grammar in ABNF, and examples show all
+    three, as duramen already read them.
