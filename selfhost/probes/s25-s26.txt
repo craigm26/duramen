@@ -1,0 +1,323 @@
+# Records and requests written to try the choices of round twelve's builds (CONFIDENCE-3.md, R5):
+# s25 (TypeScript, claude-sonnet-5-5, builder A) and s26 (TypeScript, gpt-6.1-sol through the
+# Codex CLI, builder B), both from duramen-core 0.13.0. Written from the two CHOICES.md files
+# alone, before any answer to any of them was seen, for every choice that the brief neither pins
+# nor declares open, as their run records say. Read by selfhost/probe.mjs and
+# selfhost/loop/round.mjs (see s14-s16.txt and s23-s24.txt for the format).
+
+=== s25 C-4, s26 C-19: the folders above the one the oracle starts in
+@op cases
+duramen 0.1
+spec s 1
+oracle node up.mjs
+op f
+  input x? json
+req A "a"
+  example f {}
+    expect result = ?
+--- up.mjs
+// A probe's oracle: for each of the eight folders above it, whether it holds REGEN.json or package.json.
+import fs from 'node:fs';
+const up = (k, f) => fs.existsSync('../'.repeat(k) + f);
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (!line.trim()) continue;
+  let r;
+  try { r = JSON.parse(line); } catch { continue; }
+  console.log(JSON.stringify({ id: r.id ?? null, result: { regen: [1, 2, 3, 4, 5, 6, 7, 8].map((k) => up(k, 'REGEN.json')), packageJson: [1, 2, 3, 4, 5, 6, 7, 8].map((k) => up(k, 'package.json')) } }));
+}
+
+=== s25 C-5: the names of the variables in the oracle's environment
+@op cases
+duramen 0.1
+spec s 1
+oracle node env.mjs
+op f
+  input x? json
+req A "a"
+  example f {}
+    expect result = ?
+--- env.mjs
+// A probe's oracle: the names of the variables in its environment.
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (!line.trim()) continue;
+  let r;
+  try { r = JSON.parse(line); } catch { continue; }
+  console.log(JSON.stringify({ id: r.id ?? null, result: Object.keys(process.env).sort() }));
+}
+
+=== s25 C-6: a `from` name that goes above the request's top folder and comes back to a file there
+@input {"files": {"s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input t from \"../t.txt\"\n", "t.txt": "t\n"}, "entry": "."}
+
+=== s25 C-6: a `from` name that goes above the request's top folder and comes back into the record's folder
+@input {"files": {"r/s.duramen": "duramen 0.1\nspec s 1\nreq A \"a\"\n  example f {}\n    input t from \"../../r/t.txt\"\n", "r/t.txt": "t\n"}, "entry": "r"}
+
+=== s25 C-7: a `#` line indented four spaces inside an `input` text, then lines indented six
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? json
+req A "a"
+  example f {}
+    input t
+      one
+    # four
+      two
+    expect result = ?
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s25 C-8: a line indented one space between the lines of a `text`, then more of the text
+duramen 0.1
+spec s 1
+note
+  text
+    One.
+ one space
+    Two.
+
+=== s25 C-10: `example raw` with words after its closing quote
+duramen 0.1
+spec s 1
+req A "a"
+  example raw '{"id": "x"}' extra
+
+=== s25 C-10: `example raw` whose line holds a quote, in the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example raw '{"id":"r","op":"f","input":{"x":"it's"}}'
+    expect result = ?
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s25 C-11: `expect` lines: `±` with no `≈`, `±` with nothing after it, and two numbers after `±`
+duramen 0.1
+spec s 1
+req A "a"
+  example f {}
+    expect result ±1
+    expect result ≈ 1 ±
+    expect result ≈ 1 ± 1 2
+
+=== s25 C-12, s26 C-16: a table row with too few cells, one of them not JSON
+duramen 0.1
+spec s 1
+req A "a"
+  table f
+    | x | result |
+    | {nope |
+
+=== s25 C-13: a table header cell that names a column again and has a tolerance of no form
+duramen 0.1
+spec s 1
+req A "a"
+  table f
+    | result.x | result.x ± bad |
+    | 1        | 2              |
+
+=== s25 C-14, s26 C-6: a member named twice in an example's input, in a `request` line and in an expectation, in the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1, "x": 2}
+    request {"m": 1, "m": 2}
+    expect result = {"x": 1, "x": 2}
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s25 C-15: the suite's line for a raw example holding a lone surrogate
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example raw "{\"id\":\"r\",\"op\":\"f\",\"input\":{\"x\":\"\udc00\"}}"
+    expect result = ?
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s25 C-18: a record whose only example is a table row of an undeclared operation, with no oracle
+duramen 0.1
+spec s 1
+req A "a"
+  table g
+    | x |
+    | 1 |
+
+=== s25 C-23: a requirement's text that names one declared code twice and says `before`
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+errors
+  too_big when x > 9
+  too_small when x < 0
+req A "a"
+  text
+    too_big is checked before too_big.
+  example f {}
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s25 C-25: an `entry` naming a file whose name starts with `.`
+@input {"files": {".s.duramen": "duramen 0.1\nspec s 1\n", "a.duramen": "frobnicate\n"}, "entry": ".s.duramen"}
+
+=== s26 C-3: request and input members the protocol does not name, of other kinds
+@raw
+"{\"id\": \"x\", \"op\": \"check\", \"input\": {\"files\": {\"a.duramen\": \"duramen 0.1\\nspec a 1\\n\"}}, \"x\": null, \"y\": {\"z\": [1]}}"
+"{\"id\": \"y\", \"op\": \"cases\", \"input\": {\"files\": {\"a.duramen\": \"duramen 0.1\\nspec a 1\\n\"}, \"case\": {}, \"answer\": null}}"
+"{\"id\": \"z\", \"op\": \"judge\", \"input\": {\"case\": {\"checks\": [], \"full\": null}, \"answer\": {\"id\": \"z\"}, \"files\": {}}}"
+
+=== s26 C-5: a request, then a last segment of spaces with no LF
+@stdin64 eyJpZCI6ICJ2IiwgIm9wIjogImNoZWNrIiwgImlucHV0IjogeyJmaWxlcyI6IHsiYS5kdXJhbWVuIjogImR1cmFtZW4gMC4xXG5zcGVjIGEgMVxuIn19fQogICA=
+
+=== s26 C-5: a request ending CR LF, then a last request with no LF
+@stdin64 eyJpZCI6ICJ2IiwgIm9wIjogImNoZWNrIiwgImlucHV0IjogeyJmaWxlcyI6IHsiYS5kdXJhbWVuIjogImR1cmFtZW4gMC4xXG5zcGVjIGEgMVxuIn19fQ0KeyJpZCI6ICJ3IiwgIm9wIjogImNoZWNrIiwgImlucHV0IjogeyJmaWxlcyI6IHsiYS5kdXJhbWVuIjogImR1cmFtZW4gMC4xXG5zcGVjIGEgMVxuIn19fQ==
+
+=== s26 C-10: lines indented one space after an unknown clause and after a second `title`, and a tab line under the second `title`
+duramen 0.1
+spec s 1
+  title "one"
+  colour blue
+ one space
+  title "two"
+	under a tab
+ one more
+
+=== s26 C-12: an operation's `result` clause with nothing after it
+duramen 0.1
+spec s 1
+op f
+  result
+
+=== s26 C-13: `input` lines whose paths are `__proto__` and `constructor`, in the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input __proto__? json, constructor? json
+req A "a"
+  example f {}
+    input __proto__
+      p
+    input constructor.x
+      c
+    expect result = ?
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s26 C-15: a `from` file that is empty
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input t? json
+req A "a"
+  example f {}
+    input t from "empty.txt"
+    expect result.t = ""
+--- empty.txt
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s26 C-18: a straight quotation holding a backslash before a quote, and quotations of two kinds one inside the other
+duramen 0.1
+spec s 1
+note
+  text
+    It says "a \" MUST" here.
+section S "s"
+  text
+    “an outer "MUST" quote” and "a “SHALL” inner" one.
+
+=== s26 C-22: the order of an oracle's runs: examples sent alone between others, and a table row
+@op cases
+duramen 0.1
+spec s 1
+oracle node order.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result = ?
+  example f {"x": 2}
+    omit id
+    expect result = ?
+  example f {"x": 3}
+    expect result = ?
+  example raw '{"id":"r","op":"f","input":{"x":4}}'
+    expect result = ?
+  table f
+    | x | result |
+    | 5 | ?      |
+--- order.mjs
+// A probe's oracle: it counts its runs in a file beside it and answers with the run's number.
+import fs from 'node:fs';
+let n = 0;
+try { n = Number(fs.readFileSync('runs.txt', 'utf8')); } catch {}
+n += 1;
+fs.writeFileSync('runs.txt', String(n));
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (!line.trim()) continue;
+  let r;
+  try { r = JSON.parse(line); } catch { continue; }
+  console.log(JSON.stringify({ id: r.id ?? null, result: { run: n } }));
+}
+
+=== s26 C-23: an oracle whose answer has no LF after it
+duramen 0.1
+spec s 1
+oracle node nolf.mjs
+op f
+  input x? json
+req A "a"
+  example f {}
+    expect result = 1
+--- nolf.mjs
+// A probe's oracle: it answers the request with id A#1 and writes no LF after it.
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+process.stdout.write(JSON.stringify({ id: 'A#1', result: 1 }));
+
+=== s26 C-24: an oracle command with a quote that is not closed, in a record with no example
+duramen 0.1
+spec s 1
+oracle node "echo.mjs
+op f
+  input x? json
+req A "a"
+  text
+    T.
+
+=== s26 C-25: an oracle command's words: backslashes in and out of quotes, a quote inside a word, and an empty word
+@op cases
+duramen 0.1
+spec s 1
+oracle node args.mjs a\b "c\\d" "e\"f" 'g\h' i\ j "k"'l' ""
+op f
+  input x? json
+req A "a"
+  example f {}
+    expect result = ?
+--- args.mjs
+// A probe's oracle: it answers with the words it was started with after its own name.
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (!line.trim()) continue;
+  let r;
+  try { r = JSON.parse(line); } catch { continue; }
+  console.log(JSON.stringify({ id: r.id ?? null, result: process.argv.slice(2) }));
+}
