@@ -740,7 +740,7 @@ req SY-010 "Examples"
     expect result.diagnostics = ["s.duramen:8: error P022", "s.duramen:9: error P006", "s.duramen:10: error P012", "s.duramen:13: error P049"]
 
 req SY-011 "Texts in an example's input"
-  decision D-011, D-012, D-015, D-016, D-018, D-023, D-024
+  decision D-011, D-012, D-015, D-016, D-018, D-023, D-024, D-025
   text
     `input <path>` puts a text in the example's input at the path: names separated by dots,
     each a word (ASCII letters, digits, `_` and `-`) or a quoted string (`files."a.duramen"`),
@@ -780,13 +780,15 @@ req SY-011 "Texts in an example's input"
 
         file-name   = part *( %x2F part )     ; parts between "/"
         part        = *( %x00-2E / %x30-10FFFF )
-                      ; "" and "." are skipped, ".." goes up one folder
+                      ; "" and "." are skipped, so a name may end in "/";
+                      ; ".." goes up one folder, and the request's top folder has none
 
     An `input` line MUST get at most one diagnostic, the first of these that applies: P049
     for a path of any other form (a `from` file is then not read); P048 for a `from` file that
     is not one of the request's files inside the folder of the record (REQ-RC-001), a folder
     and a name that ends outside the record's folder included (where the name ends is what
-    counts, not the folders it passes on the way); P049 for a path through a value that
+    counts, not the folders it passes on the way, and a `..` in the request's top folder
+    names no folder, so the name names no file); P049 for a path through a value that
     is not an object; and P049 for an `input <path>` line with no text under it. These hold
     under an example dropped because its first line is malformed (REQ-SY-010), whose `input`
     lines are read against an empty input. REQ-SU-003 says how such an input is sent.
@@ -924,6 +926,28 @@ req SY-011 "Texts in an example's input"
           expect result = {"t": "t\n", "u": "t\n"}
     input files."sub/echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = []
+  example check {"files": {"sub/f.txt": "f\n"}}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle node echo.mjs
+      op f
+        input a? json
+      req A "a"
+        example f {}
+          input a from "sub/f.txt/"
+          expect result.a = "f\n"
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = []
+  example check {"files": {"t.txt": "t\n"}}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      req A "a"
+        example f {}
+          input a from "../t.txt"
+          input b from "sub/../../t.txt"
+    expect result.diagnostics = ["s.duramen:5: error P048", "s.duramen:6: error P048"]
 
 req SY-012 "Tables"
   decision D-011, D-015, D-016, D-017, D-018, D-022, D-023

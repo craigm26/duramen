@@ -419,3 +419,12 @@ open OR-001 "The oracle's standard input and output"
     found s23 giving its oracle sockets, and s24 files that it wrote in full before starting
     the oracle. It covers records whose oracle reports the kind of its standard input or
     output, and nothing else.
+
+open OR-002 "Where the request's files are put for the oracle"
+  text
+    Where the checker puts the request's files to run the oracle, and so what an oracle finds
+    above the folder that holds them, the request's top folder. Round twelve of
+    CONFIDENCE-3.md found s26 putting them in a folder inside its own implementation's folder,
+    where an oracle that looks one folder up finds that implementation's files, and s25 in the
+    system's folder for temporary files. It covers records whose oracle looks above the
+    request's top folder, and nothing else.

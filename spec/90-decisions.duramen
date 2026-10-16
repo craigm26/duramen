@@ -306,3 +306,18 @@ decision D-024 "What round eleven's two builds found"
     record's folder and back in (`../sub/t.txt` in a record `sub`), which s24 refused with P048
     as soon as it left. The `input` line now has a grammar in ABNF, and examples show all
     three, as duramen already read them.
+
+decision D-025 "What round twelve's two builds found"
+  source blind builds s25 (TypeScript, claude-sonnet-5-5) and s26 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.13.0, round twelve of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 471 records written for recorded choices
+  text
+    As in round eleven, the two suites were the same, every case of both passed by both
+    judges, and the builds answered all 9,382 mutated and unmutated records alike. Three
+    readings split them where no open item covered them. A `from` name with a `..` in the
+    request's top folder: s25 stayed in the top folder, as a POSIX path does, and read
+    `../t.txt` there as `t.txt`, where s26 and duramen named no file (P048); the words said
+    only that `..` goes up one folder, and now say that the top folder has none above it. A
+    `from` name that ends in `/`, as `sub/f.txt/`: s26 gave P048, where s25 and duramen
+    skipped the empty last part, as the words already said. Where the request's files are put
+    to run the oracle: s26 put them inside its own implementation's folder, so that an oracle
+    that looks one folder up finds that implementation's files; this is now OPEN-OR-002.
+    Examples show the first two, as duramen already read them.
