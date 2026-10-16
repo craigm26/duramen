@@ -24,7 +24,7 @@ from a markdown spec: all 18 passed 704 of 706 cases ([`examples/jsonpath/`](exa
 And three more rounds of rebuilding duramen-core each found a few readings its words had not
 settled, so regeneration was not shown to converge.
 
-Status: prototype, version 0.2.0. Node.js 22.18 or later (Node.js 24 and later have a JSON.parse
+Status: prototype, version 0.3.0. Node.js 22.18 or later (Node.js 24 and later have a JSON.parse
 bug that duramen warns of: [DESIGN.md](DESIGN.md#nodejs-versions)), no dependencies.
 
 ```

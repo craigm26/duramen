@@ -14,7 +14,7 @@ import { mutate, oracleSources } from './mutate.mjs';
 import { agree } from './agree.mjs';
 import { diffRecords, behaviorChanges, withBehavior } from './diff.mjs';
 
-export const VERSION = '0.2.0';
+export const VERSION = '0.3.0';
 
 const USAGE = `usage:
   duramen check <record> [--strict] [--no-oracle] [--json]

@@ -3,7 +3,7 @@
 - Program: `heat-engine`
 - Document version: 1.2.0-slice
 - Contract version: `0.2.0`
-- Generated from `heat.duramen` by duramen 0.2.0. Edit the source, not this file.
+- Generated from `heat.duramen` by duramen 0.3.0. Edit the source, not this file.
 
 *Wet-bulb temperature and heat flags, with byte-exact audit records*
 
