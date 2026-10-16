@@ -36,13 +36,13 @@ req OR-001 "A record with examples has an oracle"
     expect result.diagnostics = ["s.duramen:2: error T019", "s.duramen:5: error T001"]
 
 req OR-002 "How the oracle is run"
-  decision D-014, D-015, D-017, D-021
+  decision D-014, D-015, D-017, D-021, D-026
   text
     The oracle is the command after `oracle`, split into words at spaces and tabs, where a
     word may be quoted with `"…"` or `'…'` to hold spaces (inside `"…"`, `\"` stands for `"`
     and every other backslash for itself; a quote may start inside a word, and the parts join,
-    and `""` is an empty word); a command with a quote that is not closed cannot be started
-    (REQ-OR-004). The checker MUST start it without a shell, in the
+    and `""` is an empty word); a command with a quote that is not closed, or whose first word
+    is empty, cannot be started (REQ-OR-004). The checker MUST start it without a shell, in the
     folder of the file that holds the `oracle` statement, as a driver: it writes one request
     line per example to the oracle's standard input, in record order, each ending with LF, in
     UTF-8 (where a raw example's line holds a lone surrogate, a code unit from U+D800 to U+DFFF
@@ -218,6 +218,7 @@ req OR-003 "Examples the oracle disagrees with"
     expect result.diagnostics = ["s.duramen:8: error T002", "s.duramen:9: error T025", "s.duramen:11: error T002"]
 
 req OR-004 "An oracle that fails"
+  decision D-026
   text
     When the oracle cannot be started, exits with a status other than 0, or is stopped (by a
     signal, or for taking too long), the checker MUST report T020 at the `oracle` statement's
@@ -278,6 +279,18 @@ req OR-004 "An oracle that fails"
         input x? json
       req A "a"
         example f {}
+    input files."echo.mjs" from "fixtures/echo.mjs"
+    expect result.diagnostics = ["s.duramen:3: error T020", "s.duramen:7: error T021"]
+  example check {}
+    input files."s.duramen"
+      duramen 0.1
+      spec s 1
+      oracle "" node echo.mjs
+      op f
+        input x? json
+      req A "a"
+        example f {"x": 1}
+          expect result.x = 1
     input files."echo.mjs" from "fixtures/echo.mjs"
     expect result.diagnostics = ["s.duramen:3: error T020", "s.duramen:7: error T021"]
 

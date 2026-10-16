@@ -321,3 +321,15 @@ decision D-025 "What round twelve's two builds found"
     to run the oracle: s26 put them inside its own implementation's folder, so that an oracle
     that looks one folder up finds that implementation's files; this is now OPEN-OR-002.
     Examples show the first two, as duramen already read them.
+
+decision D-026 "What round thirteen's two builds found"
+  source blind builds s27 (TypeScript, claude-sonnet-5-5) and s28 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.14.0, round thirteen of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 484 records written for recorded choices
+  text
+    As in rounds eleven and twelve, the two suites were the same, every case of both passed by
+    both judges, and the builds answered all 9,386 mutated and unmutated records alike. One
+    reading split them where no open item covered it: an oracle command whose first word is
+    empty, `oracle "" node echo.mjs`. s28 and duramen could not start it and gave T020 and
+    T021; s27 failed on the request and answered `internal_error`. The words said that a
+    command with an unclosed quote cannot be started, and now say the same of one whose first
+    word is empty; an example shows it. Round thirteen was the last of CONFIDENCE-3.md's three,
+    and no build has been made from this version.
