@@ -39,7 +39,7 @@ const WORDS = ['duramen', 'spec', 'oracle', 'section', 'op', 'errors', 'req', 'o
   '1', '-1', '{}', '[]', '"t"', "'x'", 'MUST', 'before', 'f', 'g', 'A', 'D-1', 'x', 'posix', 'accepted', 'superseded', 'contested', 'error', 'id'];
 const CHARS = ['"', "'", '{', '}', '[', ']', '|', '\\', ':', ',', '.', '#', ' ', '\t', ' ', '='];
 
-function mutate(seed, others, rng) {
+export function mutate(seed, others, rng) {
   const files = { ...seed.files };
   const names = Object.keys(files).filter((k) => k.endsWith('.duramen'));
   const name = names[Math.floor(rng() * names.length)];
@@ -139,4 +139,4 @@ async function main(argv) {
   return 0;
 }
 
-main(process.argv.slice(2)).then((code) => { process.exitCode = code; });
+if (process.argv[1]?.endsWith('agree.mjs')) main(process.argv.slice(2)).then((code) => { process.exitCode = code; });
