@@ -15,15 +15,53 @@ import { readFileSync } from 'node:fs';
 
 const SYSTEM = /^\/(bin|usr|dev\/null|dev\/std(in|out|err)|dev\/fd|proc\/self|etc\/(os-release|hostname))(\/|$)/;
 
-// The command inside Codex's `/bin/bash -lc '<command>'` wrapper.
+// The command inside Codex's `/bin/bash -lc <command>` wrapper: the one shell word after `-lc`,
+// unquoted as bash unquotes it (Codex sometimes joins differently quoted parts into it).
 export function inner(command) {
-  const m = command.match(/^\/bin\/bash -lc (['"])([\s\S]*)\1$/);
-  return m ? m[2].replace(/'\\''/g, "'") : command;
+  const m = command.match(/^\/bin\/bash -lc /);
+  if (!m) return command;
+  const s = command.slice(m[0].length);
+  let out = '';
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === "'") { const j = s.indexOf("'", i + 1); if (j < 0) return out + s.slice(i + 1); out += s.slice(i + 1, j); i = j; continue; }
+    if (c === '"') {
+      let j = i + 1;
+      for (; j < s.length && s[j] !== '"'; j++) {
+        if (s[j] === '\\' && '"\\$`'.includes(s[j + 1])) { out += s[j + 1]; j++; } else if (s[j] === '\\' && s[j + 1] === '\n') j++; else out += s[j];
+      }
+      i = j;
+      continue;
+    }
+    if (c === '\\') { out += s[i + 1] ?? ''; i++; continue; }
+    if (/\s/.test(c)) break;
+    out += c;
+  }
+  return out;
 }
 
-// The first word of each simple command, joined by && || ; | or a newline.
-export function words(cmd) {
-  return cmd.split(/&&|\|\||;|\||\n/).map((s) => s.trim().replace(/^(\w+=\S*\s+)+/, '')).filter(Boolean).map((s) => s.split(/\s+/)[0]);
+// The simple commands of a command line: split at &&, ||, ; and | outside quotes.
+export function simpleCommands(cmd) {
+  const out = [];
+  let cur = '';
+  let q = null;
+  for (let i = 0; i < cmd.length; i++) {
+    const c = cmd[i];
+    if (q) {
+      if (c === '\\' && q === '"') { cur += c + (cmd[i + 1] ?? ''); i++; continue; }
+      if (c === q) q = null;
+      cur += c;
+      continue;
+    }
+    if (c === "'" || c === '"') { q = c; cur += c; continue; }
+    if (c === '\\') { cur += c + (cmd[i + 1] ?? ''); i++; continue; }
+    const two = cmd.slice(i, i + 2);
+    if (two === '&&' || two === '||') { out.push(cur); cur = ''; i++; continue; }
+    if (c === ';' || c === '|') { out.push(cur); cur = ''; continue; }
+    cur += c;
+  }
+  out.push(cur);
+  return out.map((x) => x.trim()).filter(Boolean);
 }
 
 export function audit(text, box = '/srv/ns/box', { full = false } = {}) {
@@ -54,7 +92,7 @@ export function audit(text, box = '/srv/ns/box', { full = false } = {}) {
       // Only the command's first line is split into simple commands (a here-document's body is
       // data), and a word that does not look like a command's name is counted as "(other)", so
       // that nothing a command carries is printed.
-      for (const part of lines(cmd).split(/&&|\|\||;|\||\n/)) {
+      for (const part of simpleCommands(lines(cmd))) {
         const s = part.trim().replace(/^(\w+=\S*\s+)+/, '');
         if (!s) continue;
         const w0 = s.split(/\s+/)[0];

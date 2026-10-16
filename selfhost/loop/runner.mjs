@@ -31,8 +31,9 @@ export function absoluteCommand(driver) {
 }
 
 // One process: the lines go in, each followed by LF, and standard input is closed after the
-// last. Resolves with every line the process wrote to standard output, and how it ended.
-export function session(driver, lines, { timeoutMs = 300_000 } = {}) {
+// last (or, with `bytes`, exactly those bytes go in). Resolves with every line the process wrote
+// to standard output, and how it ended.
+export function session(driver, lines, { timeoutMs = 300_000, bytes = null } = {}) {
   return new Promise((done) => {
     const words = driver.command.split(' ');
     let finished = false;
@@ -54,7 +55,7 @@ export function session(driver, lines, { timeoutMs = 300_000 } = {}) {
       finish({ lines: ls, exit: code, signal, timedOut, stderr: Buffer.concat(err).toString('utf8').slice(-4000) });
     });
     child.stdin.on('error', () => {});
-    child.stdin.end(lines.map((l) => `${l}\n`).join(''));
+    child.stdin.end(bytes ?? lines.map((l) => `${l}\n`).join(''));
   });
 }
 
@@ -94,10 +95,10 @@ export async function answerAlone(driver, line, { timeoutMs = 300_000 } = {}) {
   return { answer: r.lines.length ? asObject(r.lines[0]) : null, how: 'solo', exit: r.exit, timedOut: r.timedOut || undefined };
 }
 
-// A whole session for a probe written as raw lines: every line written, parsed where it can be,
-// and the exit status.
-export async function rawSession(driver, lines, { timeoutMs = 60_000 } = {}) {
-  const r = await session(driver, lines, { timeoutMs });
+// A whole session for a probe written as raw lines (or as raw bytes): every line written, parsed
+// where it can be, and the exit status.
+export async function rawSession(driver, lines, { timeoutMs = 60_000, bytes = null } = {}) {
+  const r = await session(driver, lines, { timeoutMs, bytes });
   return { exit: r.exit, lines: r.lines.filter((l) => l.trim() !== '').map((l) => { try { return JSON.parse(l); } catch { return { text: l }; } }) };
 }
 

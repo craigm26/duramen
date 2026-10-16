@@ -130,6 +130,7 @@ export function step3Inputs(seedList, count, probeFiles) {
     readProbes(readFileSync(f, 'utf8')).forEach((p, i) => {
       const key = `probe/${name}/${i}`;
       if (p.op === 'raw') inputs.push({ key, kind: 'probe', file: name, name: p.name, raw: p.raw });
+      else if (p.op === 'stdin') inputs.push({ key, kind: 'probe', file: name, name: p.name, stdin: p.stdin });
       else inputs.push({ key, kind: 'probe', file: name, name: p.name, request: { op: p.op, input: p.input ?? { files: p.files, entry: '.' } } });
     });
   }
@@ -143,6 +144,7 @@ async function answerInputs(driver, inputs) {
   const got = await answerById(driver, reqs, { timeoutMs: 600_000 });
   for (const [k, v] of got) out.set(k, v.answer);
   for (const x of inputs) if (x.raw) out.set(x.key, await rawSession(driver, x.raw));
+  for (const x of inputs) if (x.stdin) out.set(x.key, await rawSession(driver, [], { bytes: Buffer.from(x.stdin, 'base64') }));
   return out;
 }
 
@@ -174,7 +176,7 @@ function compareSubjects(inputs, left, right, names) {
     const g = groups.get(sig) ?? { signature: sig, count: 0, keys: [], examples: [] };
     g.count++;
     g.keys.push(x.key);
-    if (g.examples.length < 3) g.examples.push({ key: x.key, from: x.from, mutation: x.mutation, name: x.name, request: x.request ?? { raw: x.raw }, [names[0]]: a, [names[1]]: b });
+    if (g.examples.length < 3) g.examples.push({ key: x.key, from: x.from, mutation: x.mutation, name: x.name, request: x.request ?? (x.raw ? { raw: x.raw } : { stdin64: x.stdin }), [names[0]]: a, [names[1]]: b });
     groups.set(sig, g);
   }
   return { differ: keys.length, of: inputs.length, groups: [...groups.values()].sort((p, q) => q.count - p.count) };
