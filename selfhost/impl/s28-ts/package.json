@@ -1,0 +1,8 @@
+{
+  "name": "duramen-core",
+  "version": "0.14.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test --experimental-test-isolation=none *.test.ts", "start": "node driver.ts" },
+  "engines": { "node": ">=22.18.0" }
+}

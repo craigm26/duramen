@@ -1,0 +1,189 @@
+# Records and requests written to try the choices of round thirteen's builds (CONFIDENCE-3.md, R5):
+# s27 (TypeScript, claude-sonnet-5-5, builder A) and s28 (TypeScript, gpt-6.1-sol through the
+# Codex CLI, builder B), both from duramen-core 0.14.0. Written from the two CHOICES.md files
+# alone, before any answer to any of them was seen, for every choice that the brief neither pins
+# nor declares open, as their run records say. Read by selfhost/probe.mjs and
+# selfhost/loop/round.mjs (see s14-s16.txt and s23-s24.txt for the format).
+
+=== s27 C-3: `req` and `decision` with nothing after the keyword, the second with clauses, and `title` and `rejected` with nothing
+duramen 0.1
+spec s 1
+  title
+req
+decision
+  source s
+  rejected
+
+=== s27 C-10: `omit` of a member nobody sets, in the suite
+@op cases
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    omit nobody
+    expect result = ?
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s27 C-13: a line indented one space and a line led by a tab under a clause the statement does not take, and under a second `text`
+duramen 0.1
+spec s 1
+note
+  colour blue
+ one space
+	  a tab first
+  text
+    T.
+note
+  text
+    One.
+  text
+    Two.
+ one space again
+	  another tab
+
+=== s27 C-16: a record whose only example is under an open item, with no oracle
+duramen 0.1
+spec s 1
+open O "o"
+  example f {}
+  text
+    Open.
+
+=== s27 C-17: `?` in a table cell under an input field
+duramen 0.1
+spec s 1
+oracle node echo.mjs
+op f
+  input x? json
+req A "a"
+  table f
+    | x | result.x |
+    | ? | 1        |
+--- echo.mjs from spec/fixtures/echo.mjs
+
+=== s27 C-23: a file name holding bytes that are not UTF-8
+@stdin64 eyJpZCI6Im4iLCJvcCI6ImNoZWNrIiwiaW5wdXQiOnsiZmlsZXMiOnsiYf8uZHVyYW1lbiI6ImR1cmFtZW4gMC4xXG5zcGVjIGEgMVxuZnJvYm5pY2F0ZVxuIn19fQo=
+
+=== s28 C-6: a request line holding raw CRs inside a JSON string
+@stdin64 eyJpZCI6ImEiLCJvcCI6ImNoZWNrIiwiaW5wdXQiOnsiZmlsZXMiOnsiYS5kdXJhbWVuIjoiZHVyYW1lbiAwLjENc3BlYyBhIDENIn19fQo=
+
+=== s28 C-10: the order of an oracle's runs when every example is sent alone
+@op cases
+duramen 0.1
+spec s 1
+oracle node order.mjs
+op f
+  input x? json
+req A "a"
+  example raw '{"id":"r1","op":"f","input":{"x":1}}'
+    expect result = ?
+  example f {"x": 2}
+    omit id
+    expect result = ?
+  example raw '{"id":"r3","op":"f","input":{"x":3}}'
+    expect result = ?
+--- order.mjs
+// A probe's oracle: it counts its runs in a file beside it and answers with the run's number.
+import fs from 'node:fs';
+let n = 0;
+try { n = Number(fs.readFileSync('runs.txt', 'utf8')); } catch {}
+n += 1;
+fs.writeFileSync('runs.txt', String(n));
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (!line.trim()) continue;
+  let r;
+  try { r = JSON.parse(line); } catch { continue; }
+  console.log(JSON.stringify({ id: r.id ?? null, result: { run: n } }));
+}
+
+=== s28 C-11: an oracle that deletes one of the request's files in its first run
+@op cases
+duramen 0.1
+spec s 1
+oracle node del.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result = ?
+  example raw '{"id":"r","op":"f","input":{"x":2}}'
+    expect result = ?
+--- del.mjs
+// A probe's oracle: on its first run it deletes flag.txt; each run reports whether flag.txt is there.
+import fs from 'node:fs';
+let n = 0;
+try { n = Number(fs.readFileSync('runs.txt', 'utf8')); } catch {}
+n += 1;
+fs.writeFileSync('runs.txt', String(n));
+const had = fs.existsSync('flag.txt');
+if (n === 1 && had) fs.rmSync('flag.txt');
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (!line.trim()) continue;
+  let r;
+  try { r = JSON.parse(line); } catch { continue; }
+  console.log(JSON.stringify({ id: r.id ?? null, result: { run: n, flag: had } }));
+}
+--- flag.txt
+flag
+
+=== s28 C-12: the names of the variables in the environment of an oracle run for an example sent alone
+@op cases
+duramen 0.1
+spec s 1
+oracle node env.mjs
+op f
+  input x? json
+req A "a"
+  example raw '{"id":"r","op":"f","input":{}}'
+    expect result = ?
+--- env.mjs
+// A probe's oracle: the names of the variables in its environment.
+const chunks = [];
+for await (const c of process.stdin) chunks.push(c);
+for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
+  if (!line.trim()) continue;
+  let r;
+  try { r = JSON.parse(line); } catch { continue; }
+  console.log(JSON.stringify({ id: r.id ?? null, result: Object.keys(process.env).sort() }));
+}
+
+=== s28 C-17: a line led by a tab under an example of an open item
+duramen 0.1
+spec s 1
+open O "o"
+  example f {}
+	    expect result = 1
+  text
+    Open.
+
+=== s28 C-18: a rejected alternative whose JSON string holds escaped quotes around an obligation word
+duramen 0.1
+spec s 1
+decision D-1 "d"
+  source s
+  text
+    Fine.
+  rejected "It said \"MUST\" there."
+  rejected "It said \"MUST there."
+req A "a"
+  decision D-1
+  text
+    T.
+
+=== s28 C-19: an oracle command whose first word is empty
+duramen 0.1
+spec s 1
+oracle "" node echo.mjs
+op f
+  input x? json
+req A "a"
+  example f {"x": 1}
+    expect result.x = 1
+--- echo.mjs from spec/fixtures/echo.mjs
