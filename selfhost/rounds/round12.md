@@ -8,8 +8,8 @@ at 21:15 UTC. s25's audit has one violation: a command its harness refused, a li
 sandbox folder above its work folder; nothing was read. Every request and answer is in
 [`round12/`](round12/).
 
-**Verdict: round twelve does not pass R5.** Steps 1 and 2 pass; step 3 finds 10 probe records,
-three readings, that split the builds under no open item.
+**Verdict: round twelve does not pass R5.** Steps 1 and 2 pass; step 3 finds 10 probes, three
+readings, that split the builds under no open item.
 
 ## Step 1
 
@@ -23,11 +23,13 @@ four pairs of suite and answers, and the two judges gave the same verdict all 98
 ## Step 3
 
 9,853 inputs: 9,000 requests for the 4,500 mutated records of seeds 1 to 3, 382 for the suite's
-own 191 records, and 471 probe records (the 443 of round eleven and 28 written for this round's
-choices, [`../probes/s25-s26.txt`](../probes/s25-s26.txt), before any answer to them was seen).
+own 191 records, and 471 probes, 437 records, 12 `judge` requests and 22 protocol sessions (the
+443 of round eleven and 28 written for this round's choices,
+[`../probes/s25-s26.txt`](../probes/s25-s26.txt), before any answer to them was seen).
 
-**A and B answer all 9,382 mutated and unmutated records alike.** They split on 32 probe
-records.
+**A and B answer alike all 9,382 requests for the 4,691 mutated and unmutated records.** They
+split on 32 probes. (4,260 of the mutated records are distinct and differ from every unmutated
+one; 137 are the same as an unmutated record and 103 repeat an earlier mutant.)
 
 **Declared: 22.** OPEN-RC-001, 7 (`s06-s07` #24; `s10-s11` #2, #3; `s12-s13` #4, #5, #39, #40);
 OPEN-RQ-001, 1 (`s14-s16` #1, the 25-second oracle, past s26's five seconds); OPEN-RQ-005, 11
@@ -35,7 +37,7 @@ OPEN-RQ-001, 1 (`s14-s16` #1, the 25-second oracle, past s26's five seconds); OP
 lists; OPEN-JU-001, 1 (`s14-s16` #24); OPEN-RQ-003, 1 (`s14-s16` #36); OPEN-OR-001, 1
 (`s23-s24` #29), the kind of the oracle's standard input and output, which it lists.
 
-**Undeclared: 10 probe records, three readings.**
+**Undeclared: 10 probes, three readings.**
 1. *A `..` in the request's top folder*, as `../t.txt` from a file at the top: A stays in the
    top folder, as a POSIX path does, and reads `t.txt`; B and duramen name no file, P048. 5
    records (`s12-s13` #6; `s17-s19` #18; `s23-s24` #16; `s25-s26` #3, #4). In round eleven both

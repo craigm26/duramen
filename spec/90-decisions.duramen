@@ -289,47 +289,47 @@ decision D-023 "What the tenth round's three builds found"
     round of CONFIDENCE-2.md's claim 8; round eleven of CONFIDENCE-3.md was built from it.
 
 decision D-024 "What round eleven's two builds found"
-  source blind builds s23 (TypeScript, claude-sonnet-5-5) and s24 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.12.0, round eleven of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 443 records written for recorded choices
+  source blind builds s23 (TypeScript, claude-sonnet-5-5) and s24 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.12.0, round eleven of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 443 probes written for recorded choices
   text
-    The two builds came from two families of models. Each wrote this record's suite with
-    itself as the oracle, and the two suites were the same, case for case; each passed every
-    case of both suites, by both builds' `judge`; and they answered all 9,378 mutated and
-    unmutated records alike. On the records written for recorded choices they read five things
-    two ways where no open item covered them. A request line of other white space than spaces
-    and tabs, which the driver protocol had called open in words only: it is now OPEN-RQ-005.
-    The kind of file an oracle's standard input and output are: s23 gave sockets and s24
-    files, which no requirement decides and no oracle needs; it is now OPEN-OR-001. In
+    The two builds came from two families of models. Each wrote this record's suite with itself
+    as the oracle, and the two suites were the same, case for case; each passed every case of
+    both suites, by both builds' `judge`; and they answered alike all 9,378 requests for 4,689
+    mutated and unmutated records. On the probes written for recorded choices they read five
+    things two ways where no open item covered them. A request line of other white space than
+    spaces and tabs, which the driver protocol had called open in words only: it is now
+    OPEN-RQ-005. The kind of file an oracle's standard input and output are: s23 gave sockets
+    and s24 files, which no requirement decides and no oracle needs; it is now OPEN-OR-001. In
     REQ-SY-011, three: `input a from"t.txt"`, which s23 read as a `from` line with no white
     space after `from`, where s24 and duramen read a path; `input b from "\q"`, whose quoted
-    part is not a JSON string, which s24 read as a `from` line that takes no text, where s23
-    and duramen read a path with a text under it; and a `from` name that goes out of the
-    record's folder and back in (`../sub/t.txt` in a record `sub`), which s24 refused with P048
-    as soon as it left. The `input` line now has a grammar in ABNF, and examples show all
-    three, as duramen already read them.
+    part is not a JSON string, which s24 read as a `from` line that takes no text, where s23 and
+    duramen read a path with a text under it; and a `from` name that goes out of the record's
+    folder and back in (`../sub/t.txt` in a record `sub`), which s24 refused with P048 as soon
+    as it left. The `input` line now has a grammar in ABNF, and examples show all three, as
+    duramen already read them.
 
 decision D-025 "What round twelve's two builds found"
-  source blind builds s25 (TypeScript, claude-sonnet-5-5) and s26 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.13.0, round twelve of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 471 records written for recorded choices
+  source blind builds s25 (TypeScript, claude-sonnet-5-5) and s26 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.13.0, round twelve of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 471 probes written for recorded choices
   text
-    As in round eleven, the two suites were the same, every case of both passed by both
-    judges, and the builds answered all 9,382 mutated and unmutated records alike. Three
-    readings split them where no open item covered them. A `from` name with a `..` in the
+    As in round eleven, the two suites were the same, every case of both passed by both judges,
+    and the builds answered alike all 9,382 requests for 4,691 mutated and unmutated records.
+    Three readings split them where no open item covered them. A `from` name with a `..` in the
     request's top folder: s25 stayed in the top folder, as a POSIX path does, and read
-    `../t.txt` there as `t.txt`, where s26 and duramen named no file (P048); the words said
-    only that `..` goes up one folder, and now say that the top folder has none above it. A
-    `from` name that ends in `/`, as `sub/f.txt/`: s26 gave P048, where s25 and duramen
-    skipped the empty last part, as the words already said. Where the request's files are put
-    to run the oracle: s26 put them inside its own implementation's folder, so that an oracle
-    that looks one folder up finds that implementation's files; this is now OPEN-OR-002.
-    Examples show the first two, as duramen already read them.
+    `../t.txt` there as `t.txt`, where s26 and duramen named no file (P048); the words said only
+    that `..` goes up one folder, and now say that the top folder has none above it. A `from`
+    name that ends in `/`, as `sub/f.txt/`: s26 gave P048, where s25 and duramen skipped the
+    empty last part, as the words already said. Where the request's files are put to run the
+    oracle: s26 put them inside its own implementation's folder, so that an oracle that looks
+    one folder up finds that implementation's files; this is now OPEN-OR-002. Examples show the
+    first two, as duramen already read them.
 
 decision D-026 "What round thirteen's two builds found"
-  source blind builds s27 (TypeScript, claude-sonnet-5-5) and s28 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.14.0, round thirteen of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 484 records written for recorded choices
+  source blind builds s27 (TypeScript, claude-sonnet-5-5) and s28 (TypeScript, gpt-6.1-sol through the Codex CLI) of duramen-core 0.14.0, round thirteen of CONFIDENCE-3.md: each wrote this record's suite with itself as the oracle, both judged every answer to both suites, and both answered 4,500 mutated records and 484 probes written for recorded choices
   text
     As in rounds eleven and twelve, the two suites were the same, every case of both passed by
-    both judges, and the builds answered all 9,386 mutated and unmutated records alike. One
-    reading split them where no open item covered it: an oracle command whose first word is
-    empty, `oracle "" node echo.mjs`. s28 and duramen could not start it and gave T020 and
-    T021; s27 failed on the request and answered `internal_error`. The words said that a
-    command with an unclosed quote cannot be started, and now say the same of one whose first
-    word is empty; an example shows it. Round thirteen was the last of CONFIDENCE-3.md's three,
-    and no build has been made from this version.
+    both judges, and the builds answered alike all 9,386 requests for 4,693 mutated and
+    unmutated records. One reading split them where no open item covered it: an oracle command
+    whose first word is empty, `oracle "" node echo.mjs`. s28 and duramen could not start it and
+    gave T020 and T021; s27 failed on the request and answered `internal_error`. The words said
+    that a command with an unclosed quote cannot be started, and now say the same of one whose
+    first word is empty; an example shows it. Round thirteen was the last of CONFIDENCE-3.md's
+    three, and no build has been made from this version.

@@ -8,8 +8,8 @@ the 0.12.0 brief, byte for byte (`SPEC.md` `54d67d72…`, `DECISIONS.md` `7977c4
 is in [`round11/`](round11/), from `node selfhost/loop/round.mjs` (see
 [`../loop/README.md`](../loop/README.md)).
 
-**Verdict: round eleven does not pass R5.** Steps 1 and 2 pass; step 3 finds 16 probe records,
-five readings, that split the builds under no open item.
+**Verdict: round eleven does not pass R5.** Steps 1 and 2 pass; step 3 finds 16 probes, five
+readings, that split the builds under no open item.
 
 ## Step 1: each build writes the suite of spec/ with itself as the oracle
 
@@ -31,12 +31,15 @@ All 972 verdicts of each judge are the same as the other's (`round11/verdicts.js
 ## Step 3: mutated records and probes, answered by A, B and duramen
 
 9,821 inputs: 9,000 requests for the 4,500 mutated records of seeds 1 to 3 (`check` and `cases`
-each), 378 for the suite's own 189 records unmutated, and 443 probe records: the 410 of rounds
-five to ten and 33 written for this round's choices
+each), 378 for the suite's own 189 records unmutated, and 443 probes (412 records, 12 `judge`
+requests and 19 protocol sessions): the 410 of rounds five to ten and 33 written for this round's
+choices
 ([`../probes/s23-s24.txt`](../probes/s23-s24.txt)), before any answer to them was seen.
 
-**A and B answer all 9,378 mutated and unmutated records alike.** They split on 31 probe
-records.
+**A and B answer alike all 9,378 requests for the 4,689 mutated and unmutated records.** They
+split on 31 probes. (Of the 4,500 mutated records, 121 came out of `mutate` the same as their
+own unmutated record and 8 the same as another example's, and 99 repeat an earlier mutant:
+4,272 are distinct records that differ from every unmutated one.)
 
 **Declared: 15**, each under an open item of the 0.12.0 brief:
 - OPEN-RC-001 (the rest of the language), 10: `returns` and `static` clauses and the
@@ -49,13 +52,13 @@ records.
 - OPEN-RQ-003 (names a file system cannot hold), 1 (`s14-s16` #36).
 - OPEN-JU-002 (numbers too large for binary64 in a judge request), 1 (`s17-s19` #10).
 
-**Undeclared: 16 probe records, five readings.**
+**Undeclared: 16 probes, five readings.**
 1. *A request line of white space other than spaces and tabs* (U+000B, U+000C, a lone CR
    before the LF, U+00A0, U+2028, U+FEFF, U+3000): A and duramen answer
    `{"id": null, "error": "bad_request"}`, B treats the line as blank and answers nothing. 11
-   records (`s14-s16` #2 to #6; `s23-s24` #18 to #23). The driver protocol says "whether other
-   white space makes a line blank is open", but under no `OPEN-` ID, and round three counts a
-   disagreement as declared only under an open item cited by ID.
+   protocol sessions (`s14-s16` #2 to #6; `s23-s24` #18 to #23). The driver protocol says
+   "whether other white space makes a line blank is open", but under no `OPEN-` ID, and round
+   three counts a disagreement as declared only under an open item cited by ID.
 2. *`input a from"t.txt"`*, no white space between `from` and the name: A reads a `from` line;
    B and duramen read a path, P049. 1 record (`s23-s24` #3). REQ-SY-011 said "white space of
    any length before `from` and after it".

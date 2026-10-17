@@ -22,7 +22,12 @@ criteria committed before their runs, and both fail. On JSONPath, judged by an o
 compliance suite, builds from a duramen brief did no better than builds from the RFC alone or
 from a markdown spec: all 18 passed 704 of 706 cases ([`examples/jsonpath/`](examples/jsonpath/README.md)).
 And three more rounds of rebuilding duramen-core each found a few readings its words had not
-settled, so regeneration was not shown to converge.
+settled, so regeneration was not shown to converge. [`CONFIDENCE-3.md`](CONFIDENCE-3.md) takes ten
+requirements from those who have written about regenerative software and asks whether duramen can
+meet them. Rebuilt by two model families, with every judgment made by the rebuilds, duramen-core
+again split on a few readings in each of three rounds, so by that file's stopping rule duramen is
+not pure regenerative software; whether a change costs less through the spec than through the code
+was not reached.
 
 Status: prototype, version 0.3.0. Node.js 22.18 or later (Node.js 24 and later have a JSON.parse
 bug that duramen warns of: [DESIGN.md](DESIGN.md#nodejs-versions)), no dependencies.
@@ -187,11 +192,23 @@ Then the loop ran on duramen itself ([`selfhost/`](selfhost/)):
     Each was pinned by an example (0.10.0 to 0.12.0, all tightening), but no round was clean,
     so convergence was not shown ([selfhost/README.md](selfhost/README.md),
     [D-021 to D-023](spec/90-decisions.duramen)).
+12. **Two model families, judging each other.** For [CONFIDENCE-3.md](CONFIDENCE-3.md)'s
+    R5, three rounds, s23 to s28, each paired a `claude-sonnet-5-5` build with a `gpt-6.1-sol`
+    build made through the Codex CLI, from one brief. Each build wrote the suite with itself as
+    the oracle, and both builds' `judge` gave every verdict: each round the two suites were equal,
+    every case passed under both judges, and some 9,400 requests for mutated and unmutated
+    records were answered alike. Probes split them on five readings, then three, then one (an
+    oracle command whose first word is empty, on which the Claude build failed), each under no
+    open item, so the round stopped there
+    ([selfhost/README.md](selfhost/README.md#round-three-two-model-families-judging-each-other),
+    [D-024 to D-026](spec/90-decisions.duramen)). An outside suite of 554 cases, written by a
+    separate Codex session before the first build, found no build wrong.
 
 Blind means the builders were not shown duramen's source; the spec they read describes duramen
-in detail, and these builds by three models of one family are a small sample. Their tools
+in detail, and these builds by four models of two families are a small sample. Their tools
 could have read it (`node` and `python` read any file the user can); their transcripts show
-that none did ([`selfhost/transcripts.mjs`](selfhost/transcripts.mjs), CONFIDENCE.md).
+that none did ([`selfhost/transcripts.mjs`](selfhost/transcripts.mjs), CONFIDENCE.md, and for
+the Codex builds [`selfhost/loop/codex-audit.mjs`](selfhost/loop/codex-audit.mjs), CONFIDENCE-3.md).
 
 ## A second domain: a robot command gate
 

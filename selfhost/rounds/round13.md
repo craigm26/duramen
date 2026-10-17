@@ -8,8 +8,8 @@ at 21:42 UTC. s27's audit has two violations, both commands its harness refused 
 writing `/tmp/fix.mjs`); nothing was read. Every request and answer is in
 [`round13/`](round13/).
 
-**Verdict: round thirteen does not pass R5.** Steps 1 and 2 pass; step 3 finds one probe record,
-one reading, that splits the builds under no open item. It was the last of the three rounds, so
+**Verdict: round thirteen does not pass R5.** Steps 1 and 2 pass; step 3 finds one probe, one
+reading, that splits the builds under no open item. It was the last of the three rounds, so
 **K1 holds: rounds eleven to thirteen ended without one that passes R5**, and round three stops.
 
 ## Step 1
@@ -24,11 +24,13 @@ the same verdict all 988 times.
 ## Step 3
 
 9,870 inputs: 9,000 requests for the 4,500 mutated records of seeds 1 to 3, 386 for the suite's
-own 193 records, and 484 probe records (the 471 of round twelve and 13 written for this round's
-choices, [`../probes/s27-s28.txt`](../probes/s27-s28.txt), before any answer to them was seen).
+own 193 records, and 484 probes, 448 records, 12 `judge` requests and 24 protocol sessions (the
+471 of round twelve and 13 written for this round's choices,
+[`../probes/s27-s28.txt`](../probes/s27-s28.txt), before any answer to them was seen).
 
-**A and B answer all 9,386 mutated and unmutated records alike.** They split on 27 probe
-records.
+**A and B answer alike all 9,386 requests for the 4,693 mutated and unmutated records.** They
+split on 27 probes. (4,279 of the mutated records are distinct and differ from every unmutated
+one; 133 are the same as an unmutated record and 88 repeat an earlier mutant.)
 
 **Declared: 26.** OPEN-RC-001, 10 (`s06-s07` #24; `s10-s11` #2, #3; `s12-s13` #3, #4, #5, #38,
 #39, #40, #41); OPEN-RQ-001, 1 (`s14-s16` #1, the 25-second oracle, past s28's ten seconds);
@@ -36,7 +38,7 @@ OPEN-RQ-005, 11 (`s14-s16` #2 to #6; `s23-s24` #18 to #23); OPEN-JU-001, 1 (`s14
 check whose kind is `1`); OPEN-RQ-003, 1 (`s14-s16` #36); OPEN-OR-001, 1 (`s23-s24` #29);
 OPEN-OR-002, 1 (`s25-s26` #1, the folders above the oracle's, which it lists).
 
-**Undeclared: 1 probe record, one reading.** *An oracle command whose first word is empty*,
+**Undeclared: 1 probe, one reading.** *An oracle command whose first word is empty*,
 `oracle "" node echo.mjs` (`s27-s28` #13): B and duramen cannot start it and give T020 and
 T021; A fails on the request and answers `{"id": …, "error": "internal_error"}`. OPEN-RQ-004
 leaves open what the driver answers when it fails on a request it accepted, but not whether it
@@ -61,7 +63,7 @@ change. No build has been made from 0.15.0: round three stopped at K1.
 
 ## Across the three rounds
 
-| round | brief | suites equal | cases passing, both judges | mutated and unmutated records answered alike | probe records | split | under open items | undeclared (readings) |
+| round | brief | suites equal | cases passing, both judges | requests for mutated and unmutated records answered alike | probes | split | under open items | undeclared (readings) |
 |---|---|---|---|---|---|---|---|---|
 | eleven | 0.12.0 | yes (243) | 972 of 972 | 9,378 of 9,378 | 443 | 31 | 15 | 16 (5) |
 | twelve | 0.13.0 | yes (245) | 980 of 980 | 9,382 of 9,382 | 471 | 32 | 22 | 10 (3) |

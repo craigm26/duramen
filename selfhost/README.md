@@ -80,7 +80,7 @@ measured against the version of `spec/` it was built from (git: 0.2.0 at 63ff35a
 66b0b61, 0.4.0 at ee98e4b, 0.5.0 at b016ec0, 0.6.0 at 78ecd48, 0.7.0 at e39579d, 0.8.0 at c6d499d,
 0.9.0 at 92dfcec, 0.10.0 at fb8f843, 0.11.0 at 4ca0ab7, 0.12.0 at db94452). s01 to s09
 were built by `claude-sonnet-5-5`; s10, s10b and s11 by the models named, for
-[CONFIDENCE.md](../CONFIDENCE.md)'s claim 2; from s14 on, each round is two `claude-sonnet-5-5`
+[CONFIDENCE.md](../CONFIDENCE.md)'s claim 2; from s14 to s22, each round is two `claude-sonnet-5-5`
 builds and one `claude-opus-5-5` build. From s08 on, the rescored column counts the 44
 cases of `judge`, an operation the earlier versions did not have. From s03 on, suites and answers
 are compared as JSON values, member order ignored, as the specification compares results; s01's
@@ -90,3 +90,32 @@ The ledger is [`ledger.jsonl`](ledger.jsonl); the builds are in [`impl/`](impl/)
 their sandboxes unchanged. Blind means the builders were not shown duramen's source or earlier
 builds; it does not mean the model never saw similar code in training. (duramen's source was
 first published in October 2026.)
+
+## Round three: two model families, judging each other
+
+[CONFIDENCE-3.md](../CONFIDENCE-3.md) asks whether duramen can be pure regenerative software. From
+s23 on, each round is two blind builds from one brief, byte for byte: **A** by `claude-sonnet-5-5`
+through `duramen regen`, and **B** by `gpt-6.1-sol` through the Codex CLI on Craig's PC. Every
+judgment about a build is made by the builds ([`loop/`](loop/)): each writes the suite of `spec/`
+with itself as the oracle, both answer both suites and both builds' `judge` rule, and A, B and
+duramen answer the mutated records and every probe. The reports are
+[`rounds/round11.md`](rounds/round11.md), [`round12.md`](rounds/round12.md) and
+[`round13.md`](rounds/round13.md); [`rounds/r6.md`](rounds/r6.md) runs every build and duramen on an
+outside suite of 554 cases, written by a separate Codex session before the first build.
+
+| run | builder | brief | duramen's suite | the suite it wrote | requests for mutated and unmutated records answered as its partner did | probes split from its partner (undeclared) | choices | outside suite |
+|---|---|---|---|---|---|---|---|---|
+| [s23](s23-ts.md) (ts) | A | 0.12.0 | 246/246 | 243 cases, equal to s24's | 9,378 of 9,378 | 31 of 443 (16) | 23 | 550/554 |
+| [s24](s24-ts.md) (ts) | B | 0.12.0 | 246/246 | 243 cases, equal to s23's | 9,378 of 9,378 | 31 of 443 (16) | 21 | 550/554 |
+| [s25](s25-ts.md) (ts) | A | 0.13.0 | 248/248 | 245 cases, equal to s26's | 9,382 of 9,382 | 32 of 471 (10) | 25 | 550/554 |
+| [s26](s26-ts.md) (ts) | B | 0.13.0 | 248/248 | 245 cases, equal to s25's | 9,382 of 9,382 | 32 of 471 (10) | 28 | 550/554 |
+| [s27](s27-ts.md) (ts) | A | 0.14.0 | 250/250 | 247 cases, equal to s28's | 9,386 of 9,386 | 27 of 484 (1) | 23 | 550/554 |
+| [s28](s28-ts.md) (ts) | B | 0.14.0 | 250/250 | 247 cases, equal to s27's | 9,386 of 9,386 | 27 of 484 (1) | 22 | 550/554 |
+
+duramen's suite counts the three protocol cases its own runner adds; the suite a build wrote is the
+record's alone, and both builds of each round passed every case of both suites under both builds'
+`judge`. A probe split is undeclared when no open item of the round's brief covers it, cited by its
+ID. Every program, duramen included, fails the same four cases of the outside suite, and in each the
+outside suite is wrong. No round was free of undeclared splits, so round three stopped at its
+first stopping rule (K1). Versions: 0.12.0 at 6c847eb, 0.13.0 at d843df6, 0.14.0 at 99a1c79, 0.15.0
+at 4d0c3cf; no build was made from 0.15.0.
