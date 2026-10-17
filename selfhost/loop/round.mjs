@@ -55,7 +55,8 @@ export function withOracle(files, command) {
 }
 
 const writeJson = (file, v) => writeFileSync(file, `${JSON.stringify(v, null, 1)}\n`);
-const writeGz = (file, rows) => writeFileSync(file, gzipSync(rows.map((r) => JSON.stringify(r)).join('\n') + '\n'));
+const gzText = (rows) => rows.map((r) => JSON.stringify(r)).join('\n') + '\n';
+const writeGz = (file, rows) => writeFileSync(file, gzipSync(gzText(rows)));
 const readGz = (file) => gunzipSync(readFileSync(file)).toString('utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 
 const isSuite = (r) => r && typeof r === 'object' && typeof r.errors === 'number' && Array.isArray(r.cases)
@@ -195,8 +196,15 @@ async function main(argv) {
   const drivers = { A: driverOf(builds.A), B: driverOf(builds.B) };
   const files = specFiles(value('--spec') ? resolve(value('--spec')) : SPEC);
   const report = existsSync(join(out, 'report.json')) ? JSON.parse(readFileSync(join(out, 'report.json'), 'utf8')) : {};
+  const buildsBefore = report.builds ? canon(report.builds) : null;
   report.builds = Object.fromEntries(Object.entries(builds).map(([k, d]) => [k, { dir: relative(ROOT, d), driver: drivers[k].command }]));
   report.spec = Object.keys(files).sort();
+  // An --out folder holds one pair of builds' answers: answers from other builds would be read
+  // as these builds' answers and corrupt the report.
+  if (buildsBefore !== null && buildsBefore !== canon(report.builds)) {
+    console.error(`round.mjs: ${out} holds the answers of other builds; give a fresh --out`);
+    return 2;
+  }
 
   // 1. The suites.
   let suites = existsSync(join(out, 'suites.json')) ? JSON.parse(readFileSync(join(out, 'suites.json'), 'utf8')) : null;
@@ -254,8 +262,18 @@ async function main(argv) {
   // 3. Mutated records and probes, answered by A, B and duramen.
   if (steps.includes(3)) {
     const inputs = step3Inputs(seedList, count, probeFiles);
-    writeGz(join(out, 'step3-inputs.jsonl.gz'), inputs);
     const subjects = { A: drivers.A, B: drivers.B, duramen: { command: `node ${join(ROOT, 'bin', 'duramen.mjs')} serve`, cwd: ROOT } };
+    // Answers already in --out are used again only if they were made for these very inputs, as
+    // when a run that stopped is run again; answers to other inputs (another count, seed, probe
+    // file or version of spec/) would be paired with these keys and corrupt the report.
+    const inputsFile = join(out, 'step3-inputs.jsonl.gz');
+    const cached = Object.keys(subjects).filter((n) => existsSync(join(out, `step3-${n}.jsonl.gz`)));
+    if (cached.length && !(existsSync(inputsFile) && gunzipSync(readFileSync(inputsFile)).toString('utf8') === gzText(inputs))) {
+      console.error(`round.mjs: ${out} holds step 3 answers (${cached.join(', ')}) to other inputs; give a fresh --out`);
+      return 2;
+    }
+    writeGz(inputsFile, inputs);
+    writeJson(join(out, 'report.json'), report); // names the builds, so that a run that stops can be resumed
     for (const [name, d] of Object.entries(subjects)) {
       const file = join(out, `step3-${name}.jsonl.gz`);
       if (existsSync(file)) { log(`step 3: ${name}'s answers already in ${relative(ROOT, file)}`); continue; }

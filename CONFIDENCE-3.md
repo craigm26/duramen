@@ -360,9 +360,9 @@ only the verdict, the lines marked **Result** and this section were added.
   [`selfhost/loop/r6/`](selfhost/loop/r6/), and the seven programs' answers to it in
   [`selfhost/rounds/r6/`](selfhost/rounds/r6/).
 - **The builds:** [`selfhost/impl/s23-ts`](selfhost/impl/s23-ts) to `s28-ts`, as their builders
-  left them, with run records [`selfhost/s23-ts.md`](selfhost/s23-ts.md) to `s28-ts.md`, each
-  triaging its builder's recorded choices, and rows in
-  [`selfhost/ledger.jsonl`](selfhost/ledger.jsonl).
+  left them but for the brief, which each ledger row names by sha256; with run records
+  [`selfhost/s23-ts.md`](selfhost/s23-ts.md) to `s28-ts.md`, each triaging its builder's recorded
+  choices, and rows in [`selfhost/ledger.jsonl`](selfhost/ledger.jsonl).
 - **The probes** written for each round's choices before any answer to them was seen:
   [`selfhost/probes/s23-s24.txt`](selfhost/probes/s23-s24.txt), `s25-s26.txt` and `s27-s28.txt`.
 - **The build transcripts,** each with the sha256 its ledger row names:
@@ -480,7 +480,14 @@ only the verdict, the lines marked **Result** and this section were added.
    can send bytes that are not lines of UTF-8; neither changes how answers are paired or ruled
    on. The same commit made the audit unquote the command inside Codex's shell wrapper as bash
    does and split it into simple commands outside quotes, and added `import-codex.mjs`. No script
-   of the loop changed after it.
+   of the loop changed after it until the round was over. Then a review of the pull request found
+   that `round.mjs` would use again answers left in an output folder by a run with other inputs;
+   it now refuses, as it does a folder holding other builds' answers. No round used such answers:
+   each round's step 3, run again from its own commit into a fresh folder, gave the same inputs,
+   29,544 in the three rounds, and A's and duramen's answers to all of them were the recorded
+   ones. So were B's, but for its two answers to `s25-s26` #1, in rounds twelve and thirteen, whose
+   oracle looks at the folders above its own, so that the answer depends on where the repository
+   is (14).
 6. **`duramen diff` changed between rounds.** It had left out an added open item whose ID a
    requirement also has (OPEN-OR-001 beside REQ-OR-001); `d843df6`, with round eleven's answers,
    corrected it and added a test, and round eleven's report says so. That is the tool the rule

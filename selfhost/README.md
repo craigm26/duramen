@@ -86,10 +86,15 @@ cases of `judge`, an operation the earlier versions did not have. From s03 on, s
 are compared as JSON values, member order ignored, as the specification compares results; s01's
 and s02's were identical as text too.
 
-The ledger is [`ledger.jsonl`](ledger.jsonl); the builds are in [`impl/`](impl/), copied out of
-their sandboxes unchanged. Blind means the builders were not shown duramen's source or earlier
-builds; it does not mean the model never saw similar code in training. (duramen's source was
-first published in October 2026.)
+The ledger is [`ledger.jsonl`](ledger.jsonl); the builds are in [`impl/`](impl/), as
+`duramen regen` copied them out of their sandboxes (round three's Codex builds, as
+[`loop/import-codex.mjs`](loop/import-codex.mjs) did): unchanged, but without the brief
+(`SPEC.md`, `DECISIONS.md` and `PROMPT.md`), `.git`, `node_modules` and Python's caches. Each
+build's ledger row names its brief by sha256, and `duramen build spec/` at the build's version
+writes `SPEC.md` and `DECISIONS.md` again; some builds' own tests read `SPEC.md`, so copy it into
+the build's folder before running them. Blind means the builders were not shown duramen's source
+or earlier builds; it does not mean the model never saw similar code in training. (duramen's
+source was first published in October 2026.)
 
 ## Round three: two model families, judging each other
 
