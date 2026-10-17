@@ -92,8 +92,12 @@ export function diffRecords(a, b) {
     for (const s of sa) if (!sb.has(s)) add('relaxing', `REQ-${id}: static check removed or changed (${JSON.parse(s).kind})`);
     if (JSON.stringify(old.decisions) !== JSON.stringify(r.decisions)) add('prose', `REQ-${id}: decisions ${old.decisions.join(', ') || '(none)'} -> ${r.decisions.join(', ') || '(none)'}`);
   }
-  for (const id of opensB) if (!opensA.has(id) && !reqsA.has(id)) add('relaxing', `OPEN-${id} added`);
-  for (const id of opensA) if (!opensB.has(id) && !reqsB.has(id)) add('tightening', `OPEN-${id} removed`);
+  // An open item that takes the place of a requirement with its ID is reported with the
+  // requirement above ("now open", "was open"); any other open item added or removed is
+  // reported here, also when a requirement that stays has the same ID (REQ-CK-002 lets the
+  // kinds share IDs, as REQ-OR-001 and OPEN-OR-001 do).
+  for (const id of opensB) if (!opensA.has(id) && !(reqsA.has(id) && !reqsB.has(id))) add('relaxing', `OPEN-${id} added`);
+  for (const id of opensA) if (!opensB.has(id) && !(reqsB.has(id) && !reqsA.has(id))) add('tightening', `OPEN-${id} removed`);
 
   // properties, evidence, edges
   const props = (x) => new Map(x.properties.map((p) => [p.id, JSON.stringify([p.vars.map((v) => [v.name, v.gen.text]), p.where.map((w) => w.text), p.calls.map((c) => [c.name, c.op, c.inputText]), p.expects.map((e) => e.text)])]));

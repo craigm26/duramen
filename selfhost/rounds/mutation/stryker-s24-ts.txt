@@ -1,0 +1,40 @@
+values.ts:47:26
+-     if (actual === null || expected === null || typeof actual !== 'object' || typeof expected !== 'object') return false;
++     if (actual === null || false || typeof actual !== 'object' || typeof expected !== 'object') return false;
+
+[Survived] ConditionalExpression
+values.ts:47:47
+-     if (actual === null || expected === null || typeof actual !== 'object' || typeof expected !== 'object') return false;
++     if (actual === null || expected === null || false || typeof expected !== 'object') return false;
+
+[Survived] ConditionalExpression
+values.ts:55:7
+-     if (actual === missing) return false;
++     if (false) return false;
+
+[Survived] ConditionalExpression
+values.ts:57:7
+-     if (check.kind === 'approx') return typeof actual === 'number' && Math.abs(actual - check.value) <= check.tol;
++     if (true) return typeof actual === 'number' && Math.abs(actual - check.value) <= check.tol;
+
+[Survived] BooleanLiteral
+values.ts:58:10
+-     return false;
++     return true;
+
+Ran 1.00 tests per mutant on average.
+------------|------------------|----------|-----------|------------|----------|----------|
+            | % Mutation score |          |           |            |          |          |
+File        |  total | covered | # killed | # timeout | # survived | # no cov | # errors |
+------------|--------|---------|----------|-----------|------------|----------|----------|
+All files   |  87.41 |   87.41 |     2135 |         4 |        308 |        0 |        0 |
+ checker.ts |  90.59 |   90.59 |      366 |         0 |         38 |        0 |        0 |
+ driver.ts  |  80.95 |   80.95 |       13 |         4 |          4 |        0 |        0 |
+ judge.ts   |  93.10 |   93.10 |      162 |         0 |         12 |        0 |        0 |
+ oracle.ts  |  78.21 |   78.21 |      183 |         0 |         51 |        0 |        0 |
+ parser.ts  |  87.32 |   87.32 |     1129 |         0 |        164 |        0 |        0 |
+ service.ts |  85.98 |   85.98 |       92 |         0 |         15 |        0 |        0 |
+ values.ts  |  88.79 |   88.79 |      190 |         0 |         24 |        0 |        0 |
+------------|--------|---------|----------|-----------|------------|----------|----------|
+16:37:06 (33523) INFO JsonReporter Your report can be found at: file://<build>/reports/mutation/mutation.json
+16:37:06 (33523) INFO MutationTestExecutor Done in 59 minutes and 19 seconds.

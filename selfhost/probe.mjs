@@ -13,7 +13,10 @@
 //   judge" for a judge request);
 // - "@raw" sends, in a driver session of its own, the lines that follow, each written as a JSON
 //   string (so that "\r" or "\u000b" can be one); its answer is every line the driver writes,
-//   parsed, and its exit status.
+//   parsed, and its exit status;
+// - "@stdin64 <base64>" sends exactly those bytes as the whole of a session's standard input (a
+//   last line without LF, a lone CR, bytes that are not UTF-8); only selfhost/loop/round.mjs runs
+//   these, with the same answer as "@raw".
 // With --diff, only the sections whose answers differ are shown; with --json, every answer is
 // written as JSON. Answers are compared as JSON values.
 import { readFileSync } from 'node:fs';
@@ -30,6 +33,7 @@ export function readProbes(text) {
     let op = 'check';
     let input = null;
     let raw = null;
+    let stdin = null;
     const files = {};
     const loaded = new Set();
     let cur = 'a.duramen';
@@ -37,6 +41,7 @@ export function readProbes(text) {
       if (line.startsWith('@op ')) { op = line.slice(4).trim(); continue; }
       if (line.startsWith('@input ')) { input = JSON.parse(line.slice(7)); continue; }
       if (line.trim() === '@raw') { raw = []; continue; }
+      if (line.startsWith('@stdin64 ')) { stdin = line.slice(9).trim(); continue; }
       if (raw) { if (line.trim() !== '') raw.push(JSON.parse(line)); continue; }
       const from = line.match(/^--- (.+) from (\S+)$/);
       if (from) { cur = null; files[from[1]] = readFileSync(join(ROOT, from[2]), 'utf8'); loaded.add(from[1]); continue; }
@@ -46,7 +51,7 @@ export function readProbes(text) {
       files[cur] = (files[cur] ?? '') + line + '\n';
     }
     for (const k of Object.keys(files)) if (!loaded.has(k)) files[k] = files[k].replace(/\n+$/, '\n');
-    probes.push(raw ? { name: head.trim(), op: 'raw', raw } : input ? { name: head.trim(), op, input } : { name: head.trim(), op, files });
+    probes.push(stdin ? { name: head.trim(), op: 'stdin', stdin } : raw ? { name: head.trim(), op: 'raw', raw } : input ? { name: head.trim(), op, input } : { name: head.trim(), op, files });
   }
   return probes;
 }
@@ -55,10 +60,11 @@ const canon = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && 
 
 export async function probe(probes, drivers) {
   for (const d of drivers) {
-    const lines = probes.map((p, i) => (p.raw ? null : JSON.stringify({ id: String(i), op: p.op, input: p.input ?? { files: p.files, entry: '.' } }))).filter((l) => l !== null);
+    const lines = probes.map((p, i) => (p.raw || p.stdin ? null : JSON.stringify({ id: String(i), op: p.op, input: p.input ?? { files: p.files, entry: '.' } }))).filter((l) => l !== null);
     const r = await runDriver(d.command, lines, { cwd: d.cwd, timeoutMs: 300_000 });
     d.res = new Map(r.responses);
     for (const [i, p] of probes.entries()) {
+      if (p.stdin) { d.res.set(String(i), { skipped: 'stdin probes run in selfhost/loop/round.mjs' }); continue; }
       if (!p.raw) continue;
       const one = await runDriver(d.command, p.raw, { cwd: d.cwd, timeoutMs: 60_000 });
       const out = one.stdout.toString('utf8').split('\n').filter((l) => l.trim() !== '').map((l) => { try { return JSON.parse(l); } catch { return { text: l }; } });

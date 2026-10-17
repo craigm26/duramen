@@ -1,0 +1,40 @@
+[Survived] EqualityOperator
+driver.ts:27:7
+-     if (buf !== '') {
++     if (buf === '') {
+
+[Survived] BlockStatement
+driver.ts:27:19
+-     if (buf !== '') {
+-       const rest = buf;
+-       buf = '';
+-       emit(rest);
+-     }
++     if (buf !== '') {}
+
+[Survived] StringLiteral
+driver.ts:29:11
+-       buf = '';
++       buf = "Stryker was here!";
+
+[Survived] CallExpression
+driver.ts:30:5
+-       emit(rest);
++       ;
+
+Ran 1.00 tests per mutant on average.
+-------------|------------------|----------|-----------|------------|----------|----------|
+             | % Mutation score |          |           |            |          |          |
+File         |  total | covered | # killed | # timeout | # survived | # no cov | # errors |
+-------------|--------|---------|----------|-----------|------------|----------|----------|
+All files    |  87.09 |   87.09 |     2539 |         4 |        377 |        0 |        0 |
+ src         |  87.33 |   87.33 |     2523 |         0 |        366 |        0 |        0 |
+  checker.ts |  86.60 |   86.60 |      698 |         0 |        108 |        0 |        0 |
+  json.ts    |  83.44 |   83.44 |      136 |         0 |         27 |        0 |        0 |
+  judge.ts   |  91.95 |   91.95 |      240 |         0 |         21 |        0 |        0 |
+  reader.ts  |  86.86 |   86.86 |     1296 |         0 |        196 |        0 |        0 |
+  server.ts  |  91.62 |   91.62 |      153 |         0 |         14 |        0 |        0 |
+ driver.ts   |  64.52 |   64.52 |       16 |         4 |         11 |        0 |        0 |
+-------------|--------|---------|----------|-----------|------------|----------|----------|
+16:42:21 (560) INFO JsonReporter Your report can be found at: file://<build>/reports/mutation/mutation.json
+16:42:21 (560) INFO MutationTestExecutor Done in 65 minutes and 24 seconds.

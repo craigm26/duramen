@@ -1,0 +1,5010 @@
+{
+ "suite": "selfhost/loop/r6/outside-suite.jsonl",
+ "target": "selfhost/impl/s25-ts",
+ "cases": 554,
+ "passed": 550,
+ "problems": [],
+ "results": [
+  {
+   "name": "protocol-unclosed-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-trailing-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-invalid-string-escape",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-json-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-json-boolean",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-json-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-json-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-json-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-id-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-id-bool",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-id-float",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-id-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-id-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-id-absent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-op-absent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"u-absent\",\"error\":\"unknown_op\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-op-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"u-null\",\"error\":\"unknown_op\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-op-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"u-number\",\"error\":\"unknown_op\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-op-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"u-object\",\"error\":\"unknown_op\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-op-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"u-array\",\"error\":\"unknown_op\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-op-case-sensitive",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"u-case-sensitive\",\"error\":\"unknown_op\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-op-space",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"u-space\",\"error\":\"unknown_op\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-op-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"u-empty\",\"error\":\"unknown_op\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-check-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-check-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-check-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-check-boolean",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-check-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-check-absent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-cases-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-cases-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-cases-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-cases-boolean",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-cases-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-cases-absent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-judge-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-judge-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-judge-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-judge-boolean",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-judge-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-input-judge-absent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"v\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-files-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"f\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-files-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"f\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-files-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"f\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-files-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"f\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-files-null-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"f\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-files-object-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"f\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-files-array-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"f\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-files-bool-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"f\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-0",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-1",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-2",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-3",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-4",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-5",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-6",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-7",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-8",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-9",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-path-10",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-0",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-1",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-2",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-3",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-4",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-5",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-6",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-7",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-8",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-9",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-entry-10",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"entry\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-folder-0",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"conflict\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-folder-1",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"conflict\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-file-folder-2",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"conflict\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-id-empty-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "protocol-id-unicode",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"枝🌱\",\"result\":{\"errors\":0,\"cases\":[]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "stream-only-blank",
+   "pass": true,
+   "failed": [],
+   "lines": [],
+   "exit": 0
+  },
+  {
+   "name": "stream-blank-around-valid",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"next\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "stream-recovers-after-malformed",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}",
+    "{\"id\":\"next\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}",
+    "{\"id\":null,\"error\":\"bad_request\"}",
+    "{\"id\":\"next\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "stream-error-order",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":null,\"error\":\"bad_request\"}",
+    "{\"id\":\"b\",\"error\":\"unknown_op\"}",
+    "{\"id\":\"c\",\"error\":\"bad_request\"}",
+    "{\"id\":\"next\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "stream-repeated-id-is-not-deduplicated",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"next\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}",
+    "{\"id\":\"next\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}",
+    "{\"id\":\"next\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "stream-request-records-isolated",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"a\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}",
+    "{\"id\":\"b\",\"result\":{\"diagnostics\":[\".:1: error P021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "stream-mixed-operations",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"z\",\"result\":{\"pass\":true}}",
+    "{\"id\":\"y\",\"result\":{\"errors\":0,\"cases\":[]}}",
+    "{\"id\":\"next\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-explicit-dot",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-explicit-dot\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-file-without-extension",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-file-without-extension\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-explicit-hidden-file",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-explicit-hidden-file\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-root-exclusions",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-root-exclusions\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-nested-entry",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-nested-entry\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-hidden-folder-as-entry",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-hidden-folder-as-entry\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-node-modules-as-entry",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-node-modules-as-entry\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-excluded-file-explicit",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-excluded-file-explicit\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-missing-file",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-missing-file\",\"result\":{\"diagnostics\":[\"absent.txt:1: error P046\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-missing-folder",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-missing-folder\",\"result\":{\"diagnostics\":[\"no-folder:1: error P046\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-empty-selected-folder",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-empty-selected-folder\",\"result\":{\"diagnostics\":[\"sub:1: error P046\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-all-files-excluded",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-all-files-excluded\",\"result\":{\"diagnostics\":[\".:1: error P046\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-no-extension-root",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-no-extension-root\",\"result\":{\"diagnostics\":[\".:1: error P046\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-non-excluded-similar-folders",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-non-excluded-similar-folders\",\"result\":{\"diagnostics\":[\"builder/a.duramen:2: error P002\",\"node_modules2/a.duramen:2: error P002\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-prefix-is-not-folder",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-prefix-is-not-folder\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-order-capitals",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-order-capitals\",\"result\":{\"diagnostics\":[\"a.duramen:2: error P044\",\"z.duramen:2: error P044\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-order-slash-dot",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-order-slash-dot\",\"result\":{\"diagnostics\":[\"a/one.duramen:2: error P044\",\"a0.duramen:2: error P044\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-order-utf16",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-order-utf16\",\"result\":{\"diagnostics\":[\".duramen:2: error P044\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "record-diagnostic-file-order-utf16",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"record-diagnostic-file-order-utf16\",\"result\":{\"diagnostics\":[\"🌲.duramen:3: error P002\",\".duramen:2: error P002\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-empty-file-explicit",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-empty-file-explicit\",\"result\":{\"diagnostics\":[\"r.duramen:1: error P020\",\"r.duramen:1: error P021\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-no-directive-with-spec",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-no-directive-with-spec\",\"result\":{\"diagnostics\":[\"r.duramen:1: error P020\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-invalid-0",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-invalid-0\",\"result\":{\"diagnostics\":[\"r.duramen:1: error P023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-invalid-1",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-invalid-1\",\"result\":{\"diagnostics\":[\"r.duramen:1: error P023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-invalid-2",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-invalid-2\",\"result\":{\"diagnostics\":[\"r.duramen:1: error P023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-invalid-3",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-invalid-3\",\"result\":{\"diagnostics\":[\"r.duramen:1: error P023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-invalid-4",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-invalid-4\",\"result\":{\"diagnostics\":[\"r.duramen:1: error P023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-second-invalid-only-once",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-second-invalid-only-once\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-second-body-is-read",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-second-body-is-read\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P023\",\"r.duramen:4: error P015\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-first-invalid-second-no-effect",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-first-invalid-second-no-effect\",\"result\":{\"diagnostics\":[\"a.duramen:1: error P023\",\"a.duramen:2: error P023\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-mix-subfolder-location",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-mix-subfolder-location\",\"result\":{\"diagnostics\":[\"forest:1: error P047\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "version-same-02-reading-only",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"version-same-02-reading-only\",\"result\":{\"diagnostics\":[\"a.duramen:3: error P002\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "singleton-second-malformed-spec",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"singleton-second-malformed-spec\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P021\",\"r.duramen:3: error P044\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "singleton-malformed-first-spec-counts",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"singleton-malformed-first-spec-counts\",\"result\":{\"diagnostics\":[\"r.duramen:2: error P021\",\"r.duramen:3: error P044\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "singleton-oracle-empty-then-valid",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"singleton-oracle-empty-then-valid\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P028\",\"r.duramen:4: error P044\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "singleton-errors-malformed-then-malformed",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"singleton-errors-malformed-then-malformed\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P050\",\"r.duramen:4: error P032\",\"r.duramen:4: error P050\",\"r.duramen:5: error P019\"],\"errors\":4,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "reading-errors-suppress-all-checks",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"reading-errors-suppress-all-checks\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P002\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-leading-tab",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-leading-tab\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-leading-nbsp",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-leading-nbsp\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-leading-vertical-tab",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-leading-vertical-tab\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-leading-form-feed",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-leading-form-feed\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-leading-em-space",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-leading-em-space\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-leading-line-separator",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-leading-line-separator\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-leading-bom",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-leading-bom\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-bom-cr-and-crlf",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-bom-cr-and-crlf\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-blank-whitespace-any-indent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-blank-whitespace-any-indent\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-trailing-whitespace",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-trailing-whitespace\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-cr-lines-locations",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-cr-lines-locations\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P002\",\"r.duramen:5: error P002\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-unicode-separators-inside-title",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-unicode-separators-inside-title\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-top-and-clause-comments",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-top-and-clause-comments\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-uppercase-keyword",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-uppercase-keyword\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P002\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-unknown-body-ignored",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-unknown-body-ignored\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P002\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-before-first-statement",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-before-first-statement\",\"result\":{\"diagnostics\":[\".:1: error P021\",\"r.duramen:1: error P003\",\"r.duramen:1: error P020\",\"r.duramen:2: error P003\"],\"errors\":4,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-one-space-comment",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-one-space-comment\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P007\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-three-space-comment-no-clause",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-three-space-comment-no-clause\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P006\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-four-space-without-clause",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-four-space-without-clause\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P006\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-unknown-clause-body-skipped",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-unknown-clause-body-skipped\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P015\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-title-no-continuation",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-title-no-continuation\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P044\",\"r.duramen:8: error P006\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-source-no-continuation",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-source-no-continuation\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P006\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-comment-under-source",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-comment-under-source\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-spec-title",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-spec-title\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P044\",\"r.duramen:4: error P004\",\"r.duramen:5: error P052\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-spec-request",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-spec-request\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P009\",\"r.duramen:4: error P052\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-spec-contract",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-spec-contract\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-spec-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-spec-text\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P008\",\"r.duramen:4: error P052\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-op-result",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-op-result\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-op-audit",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-op-audit\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P050\",\"r.duramen:5: error P052\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-op-request",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-op-request\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P051\",\"r.duramen:5: error P052\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-req-on",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-req-on\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P033\",\"r.duramen:5: error P052\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-req-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-req-text\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-decision-source",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-decision-source\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-decision-status",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-decision-status\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-decision-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-decision-text\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-section-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-section-text\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-open-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-open-text\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-duplicate-note-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-duplicate-note-text\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-request-0",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-request-0\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-request-1",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-request-1\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-request-2",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-request-2\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-request-3",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-request-3\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-request-4",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-request-4\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-request-5",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-request-5\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P051\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-request-6",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-request-6\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P051\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-request-7",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-request-7\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P051\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-spec-arbitrary-name-version",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-spec-arbitrary-name-version\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-malformed-op-body-read",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-malformed-op-body-read\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P031\",\"r.duramen:4: error P050\",\"r.duramen:5: error P017\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-malformed-oracle-body-read",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-malformed-oracle-body-read\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P028\",\"r.duramen:4: error P015\",\"r.duramen:6: error P006\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-text-trailing-words",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-text-trailing-words\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P008\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-text-three-spaces",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-text-three-spaces\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P008\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-text-blank-ends",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-text-blank-ends\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-text-hash-is-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-text-hash-is-text\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-title-no-quotes",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-title-no-quotes\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P005\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-title-single-quote",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-title-single-quote\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P005\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-title-one-quote",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-title-one-quote\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P005\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-title-end-garbage",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-title-end-garbage\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P005\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-title-two-strings",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-title-two-strings\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-title-bad-escape",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-title-bad-escape\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-title-unescaped-tab",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-title-unescaped-tab\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-json-title-escapes",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-json-title-escapes\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-field-no-type",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-field-no-type\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P017\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-field-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-field-empty\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P017\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-field-question-no-space",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-field-question-no-space\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P017\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-field-dot-name",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-field-dot-name\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P017\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-field-unicode-name",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-field-unicode-name\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P017\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-field-two-question",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-field-two-question\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P017\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-field-empty-cells",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-field-empty-cells\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P017\",\"r.duramen:4: error P017\",\"r.duramen:4: error P017\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-malformed-field-reserves-no-name",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-malformed-field-reserves-no-name\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P017\",\"r.duramen:6: error P052\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-fields-bracket-kinds-count-together",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-fields-bracket-kinds-count-together\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-fields-unmatched-close-is-ordinary",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-fields-unmatched-close-is-ordinary\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-fields-quoted-commas",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-fields-quoted-commas\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-tolerance-negative",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-tolerance-negative\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P018\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-tolerance-missing-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-tolerance-missing-number\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P018\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-tolerance-not-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-tolerance-not-number\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P018\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-tolerance-hex",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-tolerance-hex\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P018\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-tolerance-extra-word",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-tolerance-extra-word\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P018\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-tolerance-infinite",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-tolerance-infinite\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P018\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-tolerance-any-path",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-tolerance-any-path\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-malformed-tolerance-claims-no-path",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-malformed-tolerance-claims-no-path\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P018\",\"r.duramen:6: error P052\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-errors-empty-condition",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-errors-empty-condition\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P019\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-errors-wrong-second-word",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-errors-wrong-second-word\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P019\",\"r.duramen:5: error P006\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-errors-repeated-code",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-errors-repeated-code\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-note-takes-no-argument",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-note-takes-no-argument\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P050\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-req-invalid-platform",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-req-invalid-platform\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P033\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-req-foreign-clause",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-req-foreign-clause\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P015\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-decision-rejected-not-json-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-decision-rejected-not-json-string\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-empty\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P012\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-null\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P012\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-array\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P012\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-number\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P012\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-broken-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-broken-json\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-raw-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-raw-empty\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-raw-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-raw-object\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-dropped-example-body",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-dropped-example-body\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P012\",\"r.duramen:5: error P009\",\"r.duramen:6: error P011\",\"r.duramen:7: error P011\"],\"errors\":4,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-raw-forbids-lf",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-raw-forbids-lf\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P026\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-raw-forbids-cr",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-raw-forbids-cr\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P026\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-expect-eq-missing",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-expect-eq-missing\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-expect-eq-invalid",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-expect-eq-invalid\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-expect-approx-no-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-expect-approx-no-tolerance\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P010\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-expect-approx-negative",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-expect-approx-negative\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P010\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-expect-approx-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-expect-approx-string\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P010\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-extra-indent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-extra-indent\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P006\",\"r.duramen:6: error P006\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-second-request-ignored",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-second-request-ignored\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P052\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-example-bad-request-does-not-reserve",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-example-bad-request-does-not-reserve\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P009\",\"r.duramen:6: error P051\",\"r.duramen:8: error P052\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-raw-disallowed-lines-single-error-each",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-raw-disallowed-lines-single-error-each\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P022\",\"r.duramen:6: error P022\",\"r.duramen:7: error P022\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-raw-from-no-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-raw-from-no-text\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P022\",\"r.duramen:6: error P006\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-input-path-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-input-path-empty\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P049\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-input-path-dot",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-input-path-dot\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P049\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-input-path-unquoted-file-key",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-input-path-unquoted-file-key\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P049\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-input-path-array-step",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-input-path-array-step\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P049\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-input-with-no-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-input-with-no-text\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P049\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-input-from-missing",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-input-from-missing\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P048\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-input-invalid-path-before-missing-file",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-input-invalid-path-before-missing-file\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P049\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-dropped-example-from-still-read",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-dropped-example-from-still-read\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P012\",\"r.duramen:5: error P048\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-from-cannot-leave-record-folder",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-from-cannot-leave-record-folder\",\"result\":{\"diagnostics\":[\"sub/r.duramen:5: error P048\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-from-no-continuation",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-from-no-continuation\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P006\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-missing-op",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-missing-op\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P013\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-many-op-words",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-many-op-words\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P013\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-header-only",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-header-only\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P013\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-duplicate-header",
+   "pass": false,
+   "failed": [
+    "response"
+   ],
+   "lines": [
+    "{\"id\":\"syntax-table-duplicate-header\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P013\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-wrong-row-width",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-wrong-row-width\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P014\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-three-space-row",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-three-space-row\",\"result\":{\"diagnostics\":[\"r.duramen:7: error P006\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-invalid-header-stops",
+   "pass": false,
+   "failed": [
+    "response"
+   ],
+   "lines": [
+    "{\"id\":\"syntax-table-invalid-header-stops\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P013\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-prior-tolerance-persists",
+   "pass": false,
+   "failed": [
+    "response"
+   ],
+   "lines": [
+    "{\"id\":\"syntax-table-prior-tolerance-persists\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P010\",\"r.duramen:5: error P013\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-bad-table-still-gets-nonrow",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-bad-table-still-gets-nonrow\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P013\",\"r.duramen:7: error P006\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-number-column-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-number-column-string\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P010\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-number-column-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-number-column-null\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P010\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-bad-cell-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-table-bad-cell-json\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-table-header-tolerance-rest-of-cell",
+   "pass": false,
+   "failed": [
+    "response"
+   ],
+   "lines": [
+    "{\"id\":\"syntax-table-header-tolerance-rest-of-cell\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P010\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-overflow-example-nested",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-overflow-example-nested\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-overflow-example-nonobject",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-overflow-example-nonobject\",\"result\":{\"diagnostics\":[\"r.duramen:4: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-overflow-reserved-request",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-overflow-reserved-request\",\"result\":{\"diagnostics\":[\"r.duramen:3: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-overflow-expect-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-overflow-expect-object\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-overflow-approx-value",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-overflow-approx-value\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P010\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-overflow-approx-tol",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-overflow-approx-tol\",\"result\":{\"diagnostics\":[\"r.duramen:5: error P010\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "syntax-overflow-table-cell",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"syntax-overflow-table-cell\",\"result\":{\"diagnostics\":[\"r.duramen:6: error P009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-each-requirement-needs-example",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-each-requirement-needs-example\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T001\",\"r.duramen:4: error T001\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-duplicate-requirements",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-duplicate-requirements\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T001\",\"r.duramen:4: error T001\",\"r.duramen:4: error T007\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-duplicate-open-items",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-duplicate-open-items\",\"result\":{\"diagnostics\":[\"r.duramen:4: error T007\",\"r.duramen:5: error T007\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-duplicate-decisions-uncited",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-duplicate-decisions-uncited\",\"result\":{\"diagnostics\":[\"r.duramen:3: warning T012\",\"r.duramen:3: warning T013\",\"r.duramen:4: error T007\",\"r.duramen:4: warning T012\",\"r.duramen:4: warning T013\"],\"errors\":1,\"warnings\":4}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-same-id-across-kinds",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-same-id-across-kinds\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-prefixed-id-not-requirement",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-prefixed-id-not-requirement\",\"result\":{\"diagnostics\":[\"r.duramen:5: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-missing-decisions-deduplicated",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-missing-decisions-deduplicated\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T001\",\"r.duramen:3: error T008\",\"r.duramen:3: error T008\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-empty-decision-clause",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-empty-decision-clause\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-example-no-input-member",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-example-no-input-member\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-unknown-op-not-run",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-unknown-op-not-run\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-subpath-does-not-exempt-op",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-subpath-does-not-exempt-op\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T009\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-extra-fields-one-warning-each",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-extra-fields-one-warning-each\",\"result\":{\"diagnostics\":[\"r.duramen:7: warning T011\",\"r.duramen:7: warning T011\"],\"errors\":0,\"warnings\":2}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-missing-required-fields",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-missing-required-fields\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T010\",\"r.duramen:7: error T010\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-duplicate-op-uses-first",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-duplicate-op-uses-first\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T007\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-raw-exempt-from-fields",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-raw-exempt-from-fields\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-exempts-unknown-op",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-exempts-unknown-op\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-undeclared-error-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-undeclared-error-string\",\"result\":{\"diagnostics\":[\"r.duramen:8: error T023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-code-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-code-number\",\"result\":{\"diagnostics\":[\"r.duramen:10: error T023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-code-bool",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-code-bool\",\"result\":{\"diagnostics\":[\"r.duramen:10: error T023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-code-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-code-null\",\"result\":{\"diagnostics\":[\"r.duramen:10: error T023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-code-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-code-object\",\"result\":{\"diagnostics\":[\"r.duramen:10: error T023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-code-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-code-array\",\"result\":{\"diagnostics\":[\"r.duramen:10: error T023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-approx-also-checks-declaration",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-approx-also-checks-declaration\",\"result\":{\"diagnostics\":[\"r.duramen:8: error T023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-question-names-no-code",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-question-names-no-code\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-many-words",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-many-words\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-hyphen-boundary",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-hyphen-boundary\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-nonascii-boundary",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-nonascii-boundary\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-digit-attached",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-digit-attached\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-underscore-attached",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-underscore-attached\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-ascii-attached",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-ascii-attached\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-lowercase",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-lowercase\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-double-quoted",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-double-quoted\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-curly-quoted",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-curly-quoted\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-backtick-quoted",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-backtick-quoted\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-empty-quotes",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-empty-quotes\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-quotation-boundary",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-quotation-boundary\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-quotation-split-word",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-quotation-split-word\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-obligation-quote-does-not-cross-lines",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-obligation-quote-does-not-cross-lines\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-open-obligation-is-warning",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-open-obligation-is-warning\",\"result\":{\"diagnostics\":[\"r.duramen:3: warning T014\"],\"errors\":0,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-title-obligations-not-checked",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-title-obligations-not-checked\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-result-obligation-at-op",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-result-obligation-at-op\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-conditions-hash-is-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-conditions-hash-is-text\",\"result\":{\"diagnostics\":[\"r.duramen:4: error T004\",\"r.duramen:6: error T004\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-rejected-one-diagnostic-each",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-rejected-one-diagnostic-each\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\",\"r.duramen:3: error T004\",\"r.duramen:3: warning T012\"],\"errors\":2,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-rejected-cr-breaks-quotation",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-rejected-cr-breaks-quotation\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T004\",\"r.duramen:3: warning T012\"],\"errors\":1,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-requirement-obligations-allowed",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-requirement-obligations-allowed\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-open-test-bodies-are-not-read",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-open-test-bodies-are-not-read\",\"result\":{\"diagnostics\":[\"r.duramen:4: error T003\",\"r.duramen:7: error T003\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-order-before",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-order-before\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:7: error T005\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-order-case-whitespace",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-order-case-whitespace\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:7: error T005\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-order-hyphen-phrase",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-order-hyphen-phrase\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:7: error T005\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-order-letter-code",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-order-letter-code\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-order-hyphen-code",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-order-hyphen-code\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-order-single-code",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-order-single-code\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-order-substring-phrase",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-order-substring-phrase\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-error-order-nonascii-code",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-error-order-nonascii-code\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:7: error T005\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-accepted",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-accepted\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-implicit",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-implicit\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-observed",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-observed\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:6: warning T028\"],\"errors\":1,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-inferred",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-inferred\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:6: warning T028\"],\"errors\":1,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-proposed",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-proposed\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:6: warning T028\"],\"errors\":1,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-contested",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-contested\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:6: error T028\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-rejected",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-rejected\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:6: error T028\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-comma",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-comma\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T027\",\"r.duramen:6: error T001\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-empty\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T027\",\"r.duramen:6: error T001\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-uppercase",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-uppercase\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T027\",\"r.duramen:6: error T001\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-status-malformed-superseded",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-status-malformed-superseded\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T027\",\"r.duramen:6: error T001\",\"r.duramen:6: error T028\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-empty-source",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-empty-source\",\"result\":{\"diagnostics\":[\"r.duramen:3: warning T012\",\"r.duramen:3: warning T013\"],\"errors\":0,\"warnings\":2}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-valid-supersession",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-valid-supersession\",\"result\":{\"diagnostics\":[\"r.duramen:8: error T001\",\"r.duramen:8: error T028\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-decision-supersession-double-space",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-decision-supersession-double-space\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T027\",\"r.duramen:8: error T001\",\"r.duramen:8: error T028\"],\"errors\":3,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-duplicate-decision-first-status",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-duplicate-decision-first-status\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T007\",\"r.duramen:9: error T001\",\"r.duramen:9: warning T028\"],\"errors\":2,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-same-line-code-before-level",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-same-line-code-before-level\",\"result\":{\"diagnostics\":[\"r.duramen:9: error T001\",\"r.duramen:9: error T028\",\"r.duramen:9: warning T028\"],\"errors\":2,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-missing-with-table",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-missing-with-table\",\"result\":{\"diagnostics\":[\"r.duramen:2: error T019\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-not-required-without-examples",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-not-required-without-examples\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-not-started-without-lines",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-not-started-without-lines\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-still-runs-after-semantic-errors",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-still-runs-after-semantic-errors\",\"result\":{\"diagnostics\":[\"r.duramen:6: error T001\",\"r.duramen:9: error T002\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-equality-objects-and-types",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-equality-objects-and-types\",\"result\":{\"diagnostics\":[\"r.duramen:9: error T002\",\"r.duramen:10: error T002\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-array-index-and-empty-key",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-array-index-and-empty-key\",\"result\":{\"diagnostics\":[\"r.duramen:9: error T002\",\"r.duramen:10: error T002\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-approx-inclusive-boundary",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-approx-inclusive-boundary\",\"result\":{\"diagnostics\":[\"r.duramen:10: error T002\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-binary64-distance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-binary64-distance\",\"result\":{\"diagnostics\":[\"r.duramen:8: error T002\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-audit-path-parses-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-audit-path-parses-text\",\"result\":{\"diagnostics\":[\"r.duramen:9: error T002\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-error-present-null-warning",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-error-present-null-warning\",\"result\":{\"diagnostics\":[\"r.duramen:7: warning T024\"],\"errors\":0,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-no-warning-if-any-expectation",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-no-warning-if-any-expectation\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-failed-expectation-suppresses-warning",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-failed-expectation-suppresses-warning\",\"result\":{\"diagnostics\":[\"r.duramen:8: error T002\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-oracle-error-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-oracle-error-null\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T022\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-oracle-error-false",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-oracle-error-false\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T022\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-oracle-error-text",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-oracle-error-text\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T022\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-question-missing-value",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-question-missing-value\",\"result\":{\"diagnostics\":[\"r.duramen:9: error T025\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-audit-overflow-invalidates-whole-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-audit-overflow-invalidates-whole-json\",\"result\":{\"diagnostics\":[\"r.duramen:8: error T025\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-silent-response",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-silent-response\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unmatched-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unmatched-null\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unmatched-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unmatched-array\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unmatched-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unmatched-string\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unmatched-no-id",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unmatched-no-id\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unmatched-nonstring-id",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unmatched-nonstring-id\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unmatched-wrong-id",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unmatched-wrong-id\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unmatched-nonfinite",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unmatched-nonfinite\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unmatched-not-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unmatched-not-json\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-first-response-with-id-wins",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-first-response-with-id-wins\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-matches-responses-by-id-not-order",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-matches-responses-by-id-not-order\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-raw-allows-idless-response",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-raw-allows-idless-response\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-raw-requires-one-response",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-raw-requires-one-response\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-raw-output-whitespace-ignored",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-raw-output-whitespace-ignored\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-lone-cr-does-not-end-output-line",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-lone-cr-does-not-end-output-line\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T021\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-output-crlf-accepted",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-output-crlf-accepted\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-exit-keeps-responses",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-exit-keeps-responses\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T020\",\"r.duramen:8: error T002\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-solo-exit-diagnostic-at-example",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-solo-exit-diagnostic-at-example\",\"result\":{\"diagnostics\":[\"r.duramen:7: error T020\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unclosed-command-quote",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unclosed-command-quote\",\"result\":{\"diagnostics\":[\"r.duramen:3: error T020\",\"r.duramen:6: error T021\"],\"errors\":2,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-command-double",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-command-double\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-command-single",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-command-single\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-command-joined",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-command-joined\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-command-tabs",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-command-tabs\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "oracle-unicode-line-separators-stay-inside-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"oracle-unicode-line-separators-stay-inside-json\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-no-cases-after-reading-errors",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-no-cases-after-reading-errors\",\"result\":{\"errors\":1,\"cases\":[]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-no-cases-after-semantic-errors",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-no-cases-after-semantic-errors\",\"result\":{\"errors\":2,\"cases\":[]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-no-cases-after-oracle-errors",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-no-cases-after-oracle-errors\",\"result\":{\"errors\":1,\"cases\":[]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-complete-simple-case",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-complete-simple-case\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"Oak#1\",\"kind\":\"example\",\"reqs\":[\"REQ-Oak\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"Oak#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{ \\\"x\\\" : -0.0e1 }}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":0}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":0},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-warnings-do-not-stop",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-warnings-do-not-stop\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"extra\\\":2}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"extra\":2},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-platform-any",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-platform-any\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-platform-posix",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-platform-posix\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"posix\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-platform-windows",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-platform-windows\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"windows\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-examples-and-rows-share-counter",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-examples-and-rows-share-counter\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"Tree#1\",\"kind\":\"example\",\"reqs\":[\"REQ-Tree\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"Tree#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":1}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":1},\"tolerances\":{}}},{\"id\":\"Tree#2\",\"kind\":\"example\",\"reqs\":[\"REQ-Tree\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"Tree#2\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":2}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":2}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":2},\"tolerances\":{}}},{\"id\":\"Tree#3\",\"kind\":\"example\",\"reqs\":[\"REQ-Tree\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"Tree#3\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":3}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":3}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":3},\"tolerances\":{}}},{\"id\":\"Tree#4\",\"kind\":\"example\",\"reqs\":[\"REQ-Tree\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"Tree#4\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":4}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":4},\"tolerances\":{}}},{\"id\":\"Twig#1\",\"kind\":\"example\",\"reqs\":[\"REQ-Twig\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"Twig#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-file-order-is-record-order",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-file-order-is-record-order\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"First#1\",\"kind\":\"example\",\"reqs\":[\"REQ-First\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"First#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":1}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":1},\"tolerances\":{}}},{\"id\":\"Last#1\",\"kind\":\"example\",\"reqs\":[\"REQ-Last\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"Last#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":2}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":2},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-checks-preserve-order-and-oracle-source",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-checks-preserve-order-and-oracle-source\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":[2,4]}}\",\"checks\":[{\"path\":\"result.x.1\",\"kind\":\"eq\",\"value\":4,\"from\":\"oracle\"},{\"path\":\"result.x.0\",\"kind\":\"approx\",\"value\":2.25,\"tol\":0.5},{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":[2,4]}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":[2,4]},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-table-input-spelling-and-order",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-table-input-spelling-and-order\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"y\\\":1.00,\\\"x\\\":-0e2}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":0}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"y\":1,\"x\":0},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-table-empty-input-cells",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-table-empty-input-cells\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{}}\",\"checks\":[{\"path\":\"result\",\"kind\":\"eq\",\"value\":{}}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-table-separators-and-escaped-pipe",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-table-separators-and-escaped-pipe\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":\\\"a|b\\\"}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":\"a|b\"}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":\"a|b\"},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-table-special-header-paths",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-table-special-header-paths\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":{\\\"a=b\\\":1,\\\"c~d\\\":2,\\\"e≈f\\\":3}}}\",\"checks\":[{\"path\":\"result.x.a=b\",\"kind\":\"eq\",\"value\":1},{\"path\":\"result.x.c~d\",\"kind\":\"eq\",\"value\":2},{\"path\":\"result.x.e≈f\",\"kind\":\"eq\",\"value\":3}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":{\"a=b\":1,\"c~d\":2,\"e≈f\":3}},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-table-result-is-path-even-if-input-declared",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-table-result-is-path-even-if-input-declared\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-table-oracle-cell-and-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-table-oracle-cell-and-tolerance\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":6}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":6,\"from\":\"oracle\"}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":6},\"tolerances\":{}}},{\"id\":\"A#2\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#2\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":7}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"approx\",\"value\":7.25,\"tol\":0.5}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":7},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-op-request-replaces-spec-request",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-op-request-replaces-spec-request\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"different\\\",\\\"mode\\\":\\\"op\\\",\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-example-request-merges-keeps-member-position",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-example-request-merges-keeps-member-position\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"first\\\":9,\\\"second\\\":2,\\\"new\\\":null,\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-request-index-members-after-id-and-op",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-request-index-members-after-id-and-op\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"1\\\":\\\"one\\\",\\\"2\\\":\\\"two\\\",\\\"12\\\":\\\"twelve\\\",\\\"01\\\":\\\"zero-one\\\",\\\"early\\\":false,\\\"later\\\":true,\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-omit-adds-up-and-removes-input",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-omit-adds-up-and-removes-input\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"second\\\":2}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-omit-id-sets-solo",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-omit-id-sets-solo\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"op\\\":\\\"echo\\\",\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}},\"solo\":true}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-no-input-does-not-invent-one",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-no-input-does-not-invent-one\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\"}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-input-text-builds-compact-input",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-input-text-builds-compact-input\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"y\\\":0,\\\"x\\\":{\\\"old\\\":1,\\\"new\\\":\\\"\\\\nfirst\\\\n  indented\\\\n\\\"}}}\",\"checks\":[{\"path\":\"result.x.new\",\"kind\":\"eq\",\"value\":\"\\nfirst\\n  indented\\n\"}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"y\":0,\"x\":{\"old\":1,\"new\":\"\\nfirst\\n  indented\\n\"}},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-input-text-comments-do-not-end-it",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-input-text-comments-do-not-end-it\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":\\\"one\\\\ntwo\\\\n\\\"}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":\"one\\ntwo\\n\"}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":\"one\\ntwo\\n\"},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-input-from-resolves-and-keeps-bom",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-input-from-resolves-and-keeps-bom\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":\\\"﻿one\\\\r\\\\ntwo\\\\r\\\"}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":\"﻿one\\r\\ntwo\\r\"},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-input-quoted-path-and-replacement",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-input-quoted-path-and-replacement\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":{\\\"a.b\\\":\\\"new\\\\n\\\"}}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":{\"a.b\":\"new\\n\"}},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-raw-line-preserved-and-no-operation",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-raw-line-preserved-and-no-operation\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"  {\\\"id\\\":\\\"r\\\", \\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":2}}  \",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":2},\"tolerances\":{}},\"solo\":true}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-raw-lone-surrogate-is-replaced",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-raw-lone-surrogate-is-replaced\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"input\\\":{\\\"x\\\":\\\"\\udfff\\\"}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":\"�\",\"from\":\"oracle\"}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":\"�\"},\"tolerances\":{}},\"solo\":true}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-full-sorted-members-extra-values-not-copied",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-full-sorted-members-extra-values-not-copied\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"answer\\\":{\\\"z\\\":2,\\\"a\\\":3,\\\"result\\\":{\\\"x\\\":4},\\\"audit\\\":\\\"text\\\"}}}\",\"checks\":[],\"full\":{\"members\":[\"a\",\"audit\",\"id\",\"result\",\"z\"],\"result\":{\"x\":4},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-audit-and-tolerances",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-audit-and-tolerances\",\"result\":{\"diagnostics\":[],\"errors\":0,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-full-audit-and-proto-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-full-audit-and-proto-tolerance\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"answer\\\":{\\\"result\\\":{\\\"x\\\":2},\\\"audit\\\":\\\"  hi\\\\n\\\"}}}\",\"checks\":[],\"full\":{\"members\":[\"audit\",\"id\",\"result\"],\"result\":{\"x\":2},\"audit\":\"  hi\\n\",\"tolerances\":{\"result.x\":0.25,\"__proto__\":0}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-full-nonstring-audit-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-full-nonstring-audit-null\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"answer\\\":{\\\"result\\\":0,\\\"audit\\\":null}}}\",\"checks\":[],\"full\":{\"members\":[\"audit\",\"id\",\"result\"],\"result\":0,\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-full-nonstring-audit-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-full-nonstring-audit-number\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"answer\\\":{\\\"result\\\":0,\\\"audit\\\":2}}}\",\"checks\":[],\"full\":{\"members\":[\"audit\",\"id\",\"result\"],\"result\":0,\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-full-nonstring-audit-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-full-nonstring-audit-object\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"answer\\\":{\\\"result\\\":0,\\\"audit\\\":{\\\"a\\\":1}}}}\",\"checks\":[],\"full\":{\"members\":[\"audit\",\"id\",\"result\"],\"result\":0,\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-raw-full-ignores-op-audit-and-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-raw-full-ignores-op-audit-and-tolerance\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"answer\\\":{\\\"result\\\":2,\\\"audit\\\":\\\"yes\\\"}}}\",\"checks\":[],\"full\":{\"members\":[\"audit\",\"id\",\"result\"],\"result\":2,\"tolerances\":{}},\"solo\":true}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-full-copies-error-and-result",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-full-copies-error-and-result\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"any\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"answer\\\":{\\\"error\\\":null,\\\"result\\\":5}}}\",\"checks\":[{\"path\":\"id\",\"kind\":\"eq\",\"value\":\"A#1\"}],\"full\":{\"members\":[\"error\",\"id\",\"result\"],\"error\":null,\"result\":5,\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-case-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"case-null\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-case-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"case-string\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-case-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"case-number\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-checks-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"checks-null\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-checks-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"checks-string\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-checks-bool-element",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"checks-bool-element\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-check-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"check-null\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-check-no-path",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"check-no-path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-check-array-path",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"check-array-path\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-check-eq-no-value",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"check-eq-no-value\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-approx-null-value",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"approx-null-value\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-approx-bool-value",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"approx-bool-value\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-approx-string-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"approx-string-tolerance\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-approx-bool-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"approx-bool-tolerance\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-approx-negative-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"approx-negative-tolerance\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-bool",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-bool\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-no-members",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-no-members\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-members-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-members-null\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-members-nested-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-members-nested-array\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-tolerances-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-tolerances-null\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-tolerances-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-tolerances-array\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-tolerance-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-tolerance-null\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-tolerance-bool",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-tolerance-bool\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-tolerance-negative",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-tolerance-negative\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-full-audit-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"full-audit-null\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-answer-bool",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"answer-bool\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-answer-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"answer-number\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-missing-case",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"missing-case\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-invalid-missing-answer",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"missing-answer\",\"error\":\"bad_request\"}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-null-answer-only-failure",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-null-answer-only-failure\",\"result\":{\"pass\":false,\"failed\":[\"answer\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-null-answer-even-with-no-constraints",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-null-answer-even-with-no-constraints\",\"result\":{\"pass\":false,\"failed\":[\"answer\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-empty-answer-with-no-constraints",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-empty-answer-with-no-constraints\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-unused-case-metadata-ignored",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-unused-case-metadata-ignored\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-check-extra-metadata-ignored",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-check-extra-metadata-ignored\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-extra-metadata-ignored",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-extra-metadata-ignored\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-null-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-null-null\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-false-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-false-zero\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-zero-false",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-zero-false\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-true-one",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-true-one\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-one-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-one-string\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-null-false",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-null-false\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-empty-object-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-empty-object-array\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-empty-array-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-empty-array-object\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-empty-string-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-empty-string-null\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-array-order",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-array-order\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-array-extra",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-array-extra\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-object-extra",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-object-extra\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-nested-reorder",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-nested-reorder\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-unicode-no-normalization",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-unicode-no-normalization\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-equality-negative-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-equality-negative-zero\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-number-binary64-rounding",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"round\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-missing-is-not-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-missing-is-not-null\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-zero\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-one",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-one\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-leading-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-leading-zero\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-plus",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-plus\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-decimal",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-decimal\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-exponent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-exponent\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-negative-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-negative-zero\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-negative",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-negative\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-out-of-range",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-out-of-range\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-array-length",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-array-length\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-object-leading-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-object-leading-zero\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-object-negative",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-object-negative\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-object-length",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-object-length\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-string-index",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-string-index\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-string-length",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-string-length\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-number-traversal",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-number-traversal\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-null-traversal",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-null-traversal\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-empty-middle",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-empty-middle\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-empty-last",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-empty-last\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-empty-first",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-empty-first\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-empty-path",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-empty-path\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-proto-own",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-proto-own\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-prototype-absent",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-prototype-absent\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-path-key-with-space",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-path-key-with-space\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-audit-path-object",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-audit-path-object\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-audit-path-root-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-audit-path-root-array\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-audit-path-invalid-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-audit-path-invalid-json\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-audit-path-nonfinite-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-audit-path-nonfinite-json\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-audit-path-null-json",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-audit-path-null-json\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-audit-path-empty-key",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-audit-path-empty-key\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-audit-path-raw-audit-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-audit-path-raw-audit-string\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-audit-path-length-invalid",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-audit-path-length-invalid\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-nested-audit-name-is-ordinary",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-nested-audit-name-is-ordinary\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-at-upper-bound",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-at-upper-bound\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-at-lower-bound",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-at-lower-bound\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-above-bound",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-above-bound\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-below-bound",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-below-bound\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-zero-exact",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-zero-exact\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-zero-near",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-zero-near\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-negative-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-negative-zero\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-negative-values",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-negative-values\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-string\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-bool",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-bool\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-null",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-null\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-rounding-outside",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-rounding-outside\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-rounding-inside",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-rounding-inside\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-overflow-distance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-overflow-distance\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-approx-missing-path",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-approx-missing-path\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-failures-keep-check-order",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-failures-keep-check-order\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\",\"checks.2\",\"checks.3\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-members-values-otherwise-unconstrained",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-members-values-otherwise-unconstrained\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-members-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-members-empty\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-members-extra",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-members-extra\",\"result\":{\"pass\":false,\"failed\":[\"members\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-members-unsorted-full",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-members-unsorted-full\",\"result\":{\"pass\":false,\"failed\":[\"members\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-members-duplicate-full",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-members-duplicate-full\",\"result\":{\"pass\":false,\"failed\":[\"members\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-members-utf16-sort",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-members-utf16-sort\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-error-null-present",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-error-null-present\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-error-null-missing",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-error-null-missing\",\"result\":{\"pass\":false,\"failed\":[\"members\",\"error\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-error-false-present",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-error-false-present\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-error-false-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-error-false-zero\",\"result\":{\"pass\":false,\"failed\":[\"error\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-error-object-reordered",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-error-object-reordered\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-error-object-extra",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-error-object-extra\",\"result\":{\"pass\":false,\"failed\":[\"error\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-error-array-order",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-error-array-order\",\"result\":{\"pass\":false,\"failed\":[\"error\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-error-suppresses-result-and-audit",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-error-suppresses-result-and-audit\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-error-does-not-suppress-checks",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-error-does-not-suppress-checks\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-result-null-is-required",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-result-null-is-required\",\"result\":{\"pass\":false,\"failed\":[\"members\",\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-result-false-is-required",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-result-false-is-required\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-root-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-root-number\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-root-outside",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-root-outside\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-nested-array",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-nested-array\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-wrong-sibling",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-wrong-sibling\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-parent-not-inherited",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-parent-not-inherited\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-missing-leaf",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-missing-leaf\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-extra-leaf",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-extra-leaf\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-extra-array-element",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-extra-array-element\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-number-string",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-number-string\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-bool-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-bool-number\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-null-number",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-null-number\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-string-unchanged",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-string-unchanged\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-object-order",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-object-order\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-empty-member",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-empty-member\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-zero-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-zero-tolerance\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-tolerance-negative-zero",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-tolerance-negative-zero\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-error-tolerance-does-not-apply",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-error-tolerance-does-not-apply\",\"result\":{\"pass\":false,\"failed\":[\"error\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-audit-same",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-audit-same\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-audit-spaces",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-audit-spaces\",\"result\":{\"pass\":false,\"failed\":[\"audit\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-audit-newlines",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-audit-newlines\",\"result\":{\"pass\":false,\"failed\":[\"audit\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-audit-json-spelling",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-audit-json-spelling\",\"result\":{\"pass\":false,\"failed\":[\"audit\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-audit-unicode-normalization",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-audit-unicode-normalization\",\"result\":{\"pass\":false,\"failed\":[\"audit\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-audit-empty",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-audit-empty\",\"result\":{\"pass\":true}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-audit-nonstring",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-audit-nonstring\",\"result\":{\"pass\":false,\"failed\":[\"audit\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-audit-missing",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-audit-missing\",\"result\":{\"pass\":false,\"failed\":[\"members\",\"audit\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-failure-order-result-audit",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-failure-order-result-audit\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\",\"checks.1\",\"members\",\"result\",\"audit\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-failure-order-error-priority",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-failure-order-error-priority\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\",\"checks.1\",\"members\",\"error\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-check-stricter-than-full-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-check-stricter-than-full-tolerance\",\"result\":{\"pass\":false,\"failed\":[\"checks.0\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "judge-full-stricter-than-check-tolerance",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"judge-full-stricter-than-check-tolerance\",\"result\":{\"pass\":false,\"failed\":[\"result\"]}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "stream-empty-input",
+   "pass": true,
+   "failed": [],
+   "lines": [],
+   "exit": 0
+  },
+  {
+   "name": "semantic-table-extra-field-row-location",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-table-extra-field-row-location\",\"result\":{\"diagnostics\":[\"r.duramen:9: warning T011\"],\"errors\":0,\"warnings\":1}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "semantic-table-error-code-without-operation-check",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"semantic-table-error-code-without-operation-check\",\"result\":{\"diagnostics\":[\"r.duramen:9: error T023\"],\"errors\":1,\"warnings\":0}}"
+   ],
+   "exit": 0
+  },
+  {
+   "name": "suite-three-complete-cases",
+   "pass": true,
+   "failed": [],
+   "lines": [
+    "{\"id\":\"suite-three-complete-cases\",\"result\":{\"errors\":0,\"cases\":[{\"id\":\"A#1\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"posix\",\"line\":\"{\\\"id\\\":\\\"A#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":1}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":1},\"tolerances\":{}}},{\"id\":\"A#2\",\"kind\":\"example\",\"reqs\":[\"REQ-A\"],\"platform\":\"posix\",\"line\":\"{\\\"id\\\":\\\"A#2\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{\\\"x\\\":2}}\",\"checks\":[{\"path\":\"result.x\",\"kind\":\"eq\",\"value\":2}],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{\"x\":2},\"tolerances\":{}}},{\"id\":\"B#1\",\"kind\":\"example\",\"reqs\":[\"REQ-B\"],\"platform\":\"windows\",\"line\":\"{\\\"id\\\":\\\"B#1\\\",\\\"op\\\":\\\"echo\\\",\\\"input\\\":{}}\",\"checks\":[],\"full\":{\"members\":[\"id\",\"result\"],\"result\":{},\"tolerances\":{}}}]}}"
+   ],
+   "exit": 0
+  }
+ ]
+}

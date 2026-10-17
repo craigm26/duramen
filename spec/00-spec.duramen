@@ -5,7 +5,7 @@
 
 duramen 0.1
 
-spec duramen-core 0.12.0
+spec duramen-core 0.15.1
   title "The duramen checker and suite generator, for the core of the language"
   text
     duramen is a language for specifications that programs are rebuilt from. A *record* is one
@@ -151,3 +151,12 @@ open RQ-004 "Failures of the checker itself"
   text
     What the driver answers when it fails on a request it accepted. (The reference answers
     `{"id": <id>, "error": "internal_error"}` and writes the details to standard error.)
+
+open RQ-005 "Request lines of other white space"
+  text
+    Whether a request line that holds only white space, at least one character of which is
+    neither a space nor a tab (U+000B, U+000C, a CR before the line's LF, U+00A0, U+2028,
+    U+FEFF, U+3000 or another of REQ-SY-001's list), is blank. The driver protocol called this
+    open in words only; round eleven of CONFIDENCE-3.md found s23 answering such a line
+    `bad_request` and s24 giving it no answer, so it is now an open item. It covers those lines
+    and nothing else.
