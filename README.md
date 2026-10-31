@@ -228,8 +228,9 @@ found disagreements in RCAN's own sources, listed in its [README](examples/rcan-
 [`examples/heat-engine/heat.duramen`](examples/heat-engine/heat.duramen) restates part of
 regen-heat-engine's SPEC 1.0.2: wet-bulb temperature, heat flags, the `canonical` operation,
 audit records and request handling (18 requirements, 62 examples, 11 decisions, 8 open items,
-3 edges). Its oracle is that repository's suite oracle, copied unchanged with attribution,
-behind a 75-line driver. The generated brief, decisions, trace and suite are in
+3 edges). Its oracle is that repository's suite oracle, copied with attribution and unchanged
+except for `flagC`'s overflow path, which it threw on until 1.3.0-slice pinned it (D-026), behind
+a 75-line driver. The generated brief, decisions, trace and suite are in
 [`examples/heat-engine/build/`](examples/heat-engine/build/).
 
 The generated suite has 104 cases (62 examples and 42 edge pack items) plus 3 protocol checks

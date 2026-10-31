@@ -6,7 +6,7 @@
 - Brief: as t06 (heat-engine 1.1.0-slice), with the generic prompt `lib/regen/prompt.py.md`
 - duramen suite: passed 207/207 (example 63/63, evidence 80/80, edge 42/42, property 14/14,
   static 5/5, protocol 3/3); rescored at 1.2.0-slice: **207/209** (the two new examples
-  below)
+  below); at 1.3.0-slice: **208/213** (and two of the three for C-6, D-026)
 - Clean run: **no** (one `clarify`)
 
 ## CHOICES triage
@@ -17,7 +17,7 @@
 | C-3 | Only spaces and tabs make a line blank; a lone CR gets `bad_request` | open | None (the protocol says other white space is open) |
 | C-4 | Invalid UTF-8 becomes U+FFFD; the last duplicate member wins | open | Already OPEN-IF-005 |
 | C-5 | Responses written as ASCII-only JSON | already pinned | None (UTF-8, compared as parsed JSON) |
-| C-6 | `flagC` overflow gives `invalid_input:wetBulbC` | open | Already OPEN-FL-001 |
+| C-6 | `flagC` overflow gives `invalid_input:wetBulbC` | open | Was OPEN-FL-001; 1.3.0-slice pins the other reading, t06's C-5 (D-026) |
 | C-7 | An infinite `tempF` gives `tempC` NaN, so the audit says `"NaN"` | **clarify** | REQ-WB-005 reworded and two examples added (D-025, 1.2.0-slice) |
 | C-8 | `canonical` needs an object `input` with `value` | already pinned | None (REQ-CJ-005) |
 | C-9 | `py -3` on Windows, `python3` elsewhere | open | None (any command that works) |
@@ -32,7 +32,8 @@ REQ-WB-005 gives an infinity (199 of the 400 `wetBulbF` requests). The builder f
 itself (C-7: "Should the spec pin this? yes"). The brief's summary sentence, "a non-finite
 `tempF` gives a non-finite `tempC`", invited the shortcut, so this is `clarify`: 1.2.0-slice
 says the expression applies to non-finite values and pins both infinities. The other
-disagreement, `flagC` at 1.7976931348623157e308, is open (OPEN-FL-001).
+disagreement, `flagC` at 1.7976931348623157e308, was open (OPEN-FL-001); 1.3.0-slice pins it,
+the other way from t07 (D-026).
 
 ## What this run taught
 A suite can pass a build that the spec's text already rules out. `agree` is the check for
