@@ -33,4 +33,5 @@ C-5 and C-6). `duramen agree` showed the split but could not judge it, because t
 there, so it stayed open. Two Graft rebuilds showed it again on 2026-10-31: the two builds of run
 oijHUuC_9S7zQaXq8032Sw split the same way, and the oracle threw on 2 of the 1,500 hidden requests of
 run rDROdKjpQwaa80PjFQ320A. 1.3.0-slice pins t06's reading and fixes the oracle (D-026). 1.4.0-slice adds one static check, so the same two builds score 214/214 and 209/214
-there; it lets a build be in Rust (D-027).
+there; it lets a build be in Rust (D-027). 1.5.0-slice admits Go (D-028) with one more static check:
+215/215 and 210/215.

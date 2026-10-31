@@ -211,3 +211,17 @@ standard library only and no dependency tables, built offline; its build output 
 
 Rejected:
 - A separate record for Rust: two records drift, and the point is one record.
+
+## D-028: The implementation may be in Go
+
+- Source: Graft, 2026-10-31: Go rebuilds, after D-027 for Rust
+- Cited by: REQ-BU-001, REQ-BU-003
+
+As with Rust (D-027), nothing in the record depends on the language but the folder's
+rules. Decision: `lang` may be `"go"`; a Go build has a `go.mod` that requires nothing,
+no `go.sum` and no `vendor/`, builds with the standard toolchain and no network, puts its
+binary in `bin/`, and counts its `.go` files toward the size, tests (`*_test.go`) apart.
+Why: Go, TypeScript and Rust cover most new services; the record should admit all three.
+
+Rejected:
+- Allow modules from a vendored folder: the builder has no network to fetch them, and a vendored tree is code the record never judged.
