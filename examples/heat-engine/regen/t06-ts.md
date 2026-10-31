@@ -10,7 +10,7 @@
   prompt carried nothing about this program: REGEN.json and the budgets were requirements in
   the brief (REQ-BU-001 to REQ-BU-004), checked as static checks.
 - duramen suite: passed 207/207 (example 63/63, evidence 80/80, edge 42/42, property 14/14,
-  static 5/5, protocol 3/3); rescored at 1.2.0-slice: 209/209
+  static 5/5, protocol 3/3); rescored at 1.2.0-slice: 209/209; at 1.3.0-slice: 213/213
 - Clean run: **yes**
 
 ## CHOICES triage
@@ -20,7 +20,7 @@
 | C-2 | `1e400` reads as Infinity; `canonical` writes `null` | open | Already OPEN-CJ-001 |
 | C-3 | Order of the checks inside error step 3 | already pinned | None (they share one code) |
 | C-4 | An array or `null` `input`, a non-string `id` | already pinned | None (errors 1 and 3) |
-| C-5 | `flagC` when the °F conversion overflows | open | Already OPEN-FL-001 |
+| C-5 | `flagC` when the °F conversion overflows | open | Was OPEN-FL-001; 1.3.0-slice pins this reading (D-026) |
 | C-6 | An unknown op wins over a bad `input` | already pinned | None (the numbered list) |
 | C-7 | `test` is `node --test` with a dependency-free `package.json` | already pinned | None (REQ-BU-001 and REQ-BU-002 allow any command that passes) |
 
@@ -29,4 +29,5 @@ Totals: 7 choices; pin 0, clarify 0, open 3, wrong 0, quirk 0; 4 already pinned.
 ## Silent divergences
 `duramen agree` against the oracle and t07 on 2,000 generated requests: t06 agrees with the
 oracle everywhere except `flagC` at 1.7976931348623157e308, where the oracle cannot compute
-and the spec says the behavior is open (OPEN-FL-001).
+and the spec said the behavior was open (OPEN-FL-001; 1.3.0-slice pins it and fixes the
+oracle, D-026).

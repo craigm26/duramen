@@ -1,5 +1,6 @@
 // Copied from github.com/craigm26/regen-heat-engine at 4d99222, .regenerate/suite/oracle.mjs
-// (MIT License, Copyright (c) 2026 craigm26). Unchanged below this header.
+// (MIT License, Copyright (c) 2026 craigm26). Unchanged below this header, except flagC's overflow
+// path, which heat.duramen 1.3.0-slice pins (D-026).
 
 // The spec restated as expectations. Written from SPEC.md, not from any implementation.
 // Each function returns { result, audit } where audit is a plain object; canon() turns it
@@ -100,9 +101,11 @@ export function flagC(c, clock) {
   }
   const f = (c * 9) / 5 + 32;
   const inner = flagF(f, clock);
+  // D-026: a finite wetBulbC whose °F conversion overflows gets flagF's invalid-input result, and the summary ends with it.
+  const end = inner.result ? inner.result.flag : inner.audit.result_summary;
   return {
     result: inner.result,
-    audit: audit('flagFromWetBulbC', { wetBulbC: c }, { ...BOUNDS }, FLAG_CITE, `wetBulbC=${num(c)} → wetBulbF=${fixed(f, 4)} → ${inner.result.flag}`, clock, { children: [inner.audit] }),
+    audit: audit('flagFromWetBulbC', { wetBulbC: c }, { ...BOUNDS }, FLAG_CITE, `wetBulbC=${num(c)} → wetBulbF=${fixed(f, 4)} → ${end}`, clock, { children: [inner.audit] }),
   };
 }
 

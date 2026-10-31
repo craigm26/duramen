@@ -1,7 +1,7 @@
 # heat-engine: specification
 
 - Program: `heat-engine`
-- Document version: 1.2.0-slice
+- Document version: 1.3.0-slice
 - Contract version: `0.2.0`
 - Generated from `heat.duramen` by duramen 0.3.0. Edit the source, not this file.
 
@@ -666,13 +666,21 @@ The audit: `function` `"flagFromWetBulbC"`; `citation` `"USMC 6200.1E Table 3-1"
 `inputs` `{"wetBulbC": wetBulbC}`; the same four `constants` as `flagF`; `result_summary`
 `wetBulbC=<c> → wetBulbF=<f> → <flag>`, with `<c>` as number text and `<f>` fixed to 4
 places; and `children`: an array of one element, the complete `flagF` audit record for the
-converted value.
+converted value. This holds for every finite `wetBulbC`, including one whose conversion
+overflows (from about ±2e307, where `wetBulbC * 9` overflows): then `<f>` is `Infinity` or
+`-Infinity`, the child is
+`flagF`'s invalid-input audit (REQ-FL-003), `<flag>` is `invalid_input:wetBulbF`, and the
+result is `null` (REQ-FL-004).
 
-Decisions: D-001.
+Decisions: D-001, D-026.
 
 Examples:
 - `flagC {"wetBulbC": 30}` ⟶ `audit.result_summary` = `"wetBulbC=30 → wetBulbF=86.0000 → yellow"`; `audit.children.0.result_summary` = `"wetBulbF=86 → yellow"`
 - `flagC {"wetBulbC": 26.66666666666666}` ⟶ `audit.result_summary` = `"wetBulbC=26.66666666666666 → wetBulbF=80.0000 → white"`
+- `flagC {"wetBulbC": 1.7976931348623157e+308}` ⟶ `result` = `null`; `audit.result_summary` = `"wetBulbC=1.7976931348623157e+308 → wetBulbF=Infinity → invalid_input:wetBulbF"`; `audit.children.0.result_summary` = `"invalid_input:wetBulbF"`; `audit.children.0.inputs` = `{"wetBulbF":"Infinity"}`
+- `flagC {"wetBulbC": -5e307}` ⟶ `result` = `null`; `audit.result_summary` = `"wetBulbC=-5e+307 → wetBulbF=-Infinity → invalid_input:wetBulbF"`
+- `flagC {"wetBulbC": 1.997436816513684e+307}` ⟶ `result.flag` = `"black"`; `audit.result_summary` = `"wetBulbC=1.997436816513684e+307 → wetBulbF=3.595386269724631e+307 → black"`
+- `flagC {"wetBulbC": 1.9974368165136842e+307}` ⟶ `result` = `null`; `audit.result_summary` = `"wetBulbC=1.9974368165136842e+307 → wetBulbF=Infinity → invalid_input:wetBulbF"`
 
 **REQ-FL-006.** *Non-finite °C.*
 
@@ -684,9 +692,6 @@ Decisions: D-007.
 
 Examples:
 - `flagC {"wetBulbC": "NaN"}` ⟶ `result` = `null`; `audit.result_summary` = `"invalid_input:wetBulbC"`
-
-**OPEN-FL-001.** *Overflow in the °C path.* `flagC` for a finite `wetBulbC` whose °F conversion overflows to a non-finite value (only
-reachable near ±1.8e308). (Open: implementations may differ; never tested.)
 
 ---
 

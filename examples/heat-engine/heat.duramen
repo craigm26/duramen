@@ -3,7 +3,9 @@
 # (.regenerate/SPEC.md 1.0.2 and DECISIONS.md; MIT License, Copyright (c) 2026 craigm26).
 # Slice versions: 1.0.2-slice was the duramen 0.1 restatement; 1.1.0-slice adds evidence,
 # properties, result types and static checks (duramen diff: tightening, so a new minor);
-# 1.2.0-slice pins infinite tempF in wetBulbF after blind build t07 and duramen agree (D-025).
+# 1.2.0-slice pins infinite tempF in wetBulbF after blind build t07 and duramen agree (D-025);
+# 1.3.0-slice pins flagC's °F overflow after a Graft rebuild's two builds chose differently and
+# the oracle had no answer (D-026).
 # Left out of the slice: work/rest, verdict and the weather cascade. REGEN.json and the budgets
 # are in, as static checks on the implementation folder (section BU).
 # The oracle is that repository's suite oracle, unchanged, behind a small driver. Two evidence
@@ -12,7 +14,7 @@
 
 duramen 0.2
 
-spec heat-engine 1.2.0-slice
+spec heat-engine 1.3.0-slice
   title "Wet-bulb temperature and heat flags, with byte-exact audit records"
   contract 0.2.0
   request {"clock": "2026-05-26T17:00:00.000Z"}
@@ -543,18 +545,36 @@ req FL-004 "Flag from °C"
     | 29.444444443444443 | "green"     |
 
 req FL-005 "°C flag audit record"
-  decision D-001
+  decision D-001, D-026
   text
     The audit: `function` `"flagFromWetBulbC"`; `citation` `"USMC 6200.1E Table 3-1"`;
     `inputs` `{"wetBulbC": wetBulbC}`; the same four `constants` as `flagF`; `result_summary`
     `wetBulbC=<c> → wetBulbF=<f> → <flag>`, with `<c>` as number text and `<f>` fixed to 4
     places; and `children`: an array of one element, the complete `flagF` audit record for the
-    converted value.
+    converted value. This holds for every finite `wetBulbC`, including one whose conversion
+    overflows (from about ±2e307, where `wetBulbC * 9` overflows): then `<f>` is `Infinity` or
+    `-Infinity`, the child is
+    `flagF`'s invalid-input audit (REQ-FL-003), `<flag>` is `invalid_input:wetBulbF`, and the
+    result is `null` (REQ-FL-004).
   example flagC {"wetBulbC": 30}
     expect audit.result_summary = "wetBulbC=30 → wetBulbF=86.0000 → yellow"
     expect audit.children.0.result_summary = "wetBulbF=86 → yellow"
   example flagC {"wetBulbC": 26.66666666666666}
     expect audit.result_summary = "wetBulbC=26.66666666666666 → wetBulbF=80.0000 → white"
+  example flagC {"wetBulbC": 1.7976931348623157e+308}
+    expect result = null
+    expect audit.result_summary = "wetBulbC=1.7976931348623157e+308 → wetBulbF=Infinity → invalid_input:wetBulbF"
+    expect audit.children.0.result_summary = "invalid_input:wetBulbF"
+    expect audit.children.0.inputs = {"wetBulbF": "Infinity"}
+  example flagC {"wetBulbC": -5e307}
+    expect result = null
+    expect audit.result_summary = "wetBulbC=-5e+307 → wetBulbF=-Infinity → invalid_input:wetBulbF"
+  example flagC {"wetBulbC": 1.997436816513684e+307}
+    expect result.flag = "black"
+    expect audit.result_summary = "wetBulbC=1.997436816513684e+307 → wetBulbF=3.595386269724631e+307 → black"
+  example flagC {"wetBulbC": 1.9974368165136842e+307}
+    expect result = null
+    expect audit.result_summary = "wetBulbC=1.9974368165136842e+307 → wetBulbF=Infinity → invalid_input:wetBulbF"
 
 req FL-006 "Non-finite °C"
   decision D-007
@@ -606,10 +626,6 @@ property FL-P3 "A hotter wet-bulb never gives a milder flag"
   call b = flagF {"wetBulbF": w + dw}
   expect {"white": 0, "green": 1, "yellow": 2, "red": 3, "black": 4}[b.result.flag] >= {"white": 0, "green": 1, "yellow": 2, "red": 3, "black": 4}[a.result.flag]
 
-open FL-001 "Overflow in the °C path"
-  text
-    `flagC` for a finite `wetBulbC` whose °F conversion overflows to a non-finite value (only
-    reachable near ±1.8e308).
 
 # ---------------------------------------------------------------------------------------------
 section BU "The implementation folder"
@@ -774,3 +790,22 @@ decision D-025 "Infinite °F converts by the same expression"
     applies to non-finite values too, and two examples pin the infinities. Why: the expression
     was already the rule; the summary sentence invited the shortcut.
   rejected "Treat every non-finite tempF as NaN: loses the sign the input had, and contradicts the exact expression."
+
+decision D-026 "flagC's °F overflow is flagF's invalid input"
+  source Graft rebuilds oijHUuC_9S7zQaXq8032Sw (two builds) and rDROdKjpQwaa80PjFQ320A (holdout), 2026-10-31
+  text
+    OPEN-FL-001 left open what `flagC` does for a finite `wetBulbC` whose °F conversion
+    overflows. Two builds of one rebuild passed every case and chose differently: one gave the
+    REQ-FL-006 form (`invalid_input:wetBulbC`, no children), the other kept REQ-FL-005's shape
+    with `flagF`'s invalid-input audit as the child. t06 and t07 had split the same way (C-5,
+    C-6); blind builds t01 to t05 all chose the child form, ending the summary three different
+    ways (`invalid_input:wetBulbF`, `invalid`, `invalid_input`). `duramen agree` saw the split
+    but could not judge it: the oracle read `.flag` of a `null` result and threw, as it did on 2
+    of the rebuild's 1,500 hidden requests. Decision: REQ-FL-005
+    applies to every finite `wetBulbC`, so the overflow is `flagF`'s invalid input, carried as
+    the child and named at the end of the summary. Examples pin both signs and the two doubles
+    on either side of the first overflow (about 2e307, since `wetBulbC * 9` overflows before the
+    division, which also tells REQ-FL-004's expression from `wetBulbC * 1.8 + 32`), and the
+    oracle follows. Why: REQ-FL-004 already made the result `flagF`'s, and REQ-FL-006 is about a
+    non-finite input, which this is not.
+  rejected "The REQ-FL-006 form: it reports the input as invalid when the input is finite."

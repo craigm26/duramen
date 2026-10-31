@@ -173,3 +173,26 @@ was already the rule; the summary sentence invited the shortcut.
 
 Rejected:
 - Treat every non-finite tempF as NaN: loses the sign the input had, and contradicts the exact expression.
+
+## D-026: flagC's °F overflow is flagF's invalid input
+
+- Source: Graft rebuilds oijHUuC_9S7zQaXq8032Sw (two builds) and rDROdKjpQwaa80PjFQ320A (holdout), 2026-10-31
+- Cited by: REQ-FL-005
+
+OPEN-FL-001 left open what `flagC` does for a finite `wetBulbC` whose °F conversion
+overflows. Two builds of one rebuild passed every case and chose differently: one gave the
+REQ-FL-006 form (`invalid_input:wetBulbC`, no children), the other kept REQ-FL-005's shape
+with `flagF`'s invalid-input audit as the child. t06 and t07 had split the same way (C-5,
+C-6); blind builds t01 to t05 all chose the child form, ending the summary three different
+ways (`invalid_input:wetBulbF`, `invalid`, `invalid_input`). `duramen agree` saw the split
+but could not judge it: the oracle read `.flag` of a `null` result and threw, as it did on 2
+of the rebuild's 1,500 hidden requests. Decision: REQ-FL-005
+applies to every finite `wetBulbC`, so the overflow is `flagF`'s invalid input, carried as
+the child and named at the end of the summary. Examples pin both signs and the two doubles
+on either side of the first overflow (about 2e307, since `wetBulbC * 9` overflows before the
+division, which also tells REQ-FL-004's expression from `wetBulbC * 1.8 + 32`), and the
+oracle follows. Why: REQ-FL-004 already made the result `flagF`'s, and REQ-FL-006 is about a
+non-finite input, which this is not.
+
+Rejected:
+- The REQ-FL-006 form: it reports the input as invalid when the input is finite.
