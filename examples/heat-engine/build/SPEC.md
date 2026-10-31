@@ -1,7 +1,7 @@
 # heat-engine: specification
 
 - Program: `heat-engine`
-- Document version: 1.3.0-slice
+- Document version: 1.4.0-slice
 - Contract version: `0.2.0`
 - Generated from `heat.duramen` by duramen 0.3.0. Edit the source, not this file.
 
@@ -702,16 +702,18 @@ These requirements are checked on the implementation folder, not through the dri
 **REQ-BU-001.** *REGEN.json.*
 
 The implementation folder MUST contain `REGEN.json`, a JSON object with exactly the keys
-`lang` (`"ts"` or `"py"`), `build`, `test` and `driver`. Each of `build`, `test` and
+`lang` (`"ts"`, `"py"` or `"rs"`), `build`, `test` and `driver`. Each of `build`, `test` and
 `driver` is a command string, or an object whose keys are Node.js `process.platform`
 values (such as `"win32"`) plus a required `"default"`, each mapping to a command string.
 Commands run in the implementation folder. `build` and `test` run through the platform
 shell; an empty `build` means there is nothing to build, and build output, if any, goes in
-`bin/`. `driver` is split on single spaces and started without a shell, so it MUST be plain
+`bin/` (for Rust, Cargo's `target/`). `driver` is split on single spaces and started without a shell, so it MUST be plain
 space-separated words. The same REGEN.json MUST work on Windows and on Linux.
 
+Decisions: D-027.
+
 Checked on the implementation folder:
-- `REGEN.json` is JSON of type `{lang: "ts" | "py", build: command, test: command, driver: command}`.
+- `REGEN.json` is JSON of type `{lang: "ts" | "py" | "rs", build: command, test: command, driver: command}`.
 
 **REQ-BU-002.** *Own tests.*
 
@@ -725,18 +727,24 @@ Checked on the implementation folder:
 
 TypeScript MUST run on Node.js 22.18 or later directly by type stripping: erasable syntax
 only, no build step, relative imports with the `.ts` extension. Python MUST run on 3.11 or
-later. Only the language's standard library is used: nothing is installed, and a
-`package.json`, if there is one, declares no dependencies.
+later. Rust MUST build with Cargo, edition 2021, from a `Cargo.toml` at the folder's root,
+with `cargo build --release --offline`. Only the language's standard library is used:
+nothing is installed, a `package.json`, if there is one, declares no dependencies, and a
+`Cargo.toml` has no dependency tables.
+
+Decisions: D-027.
 
 Checked on the implementation folder:
 - the implementation folder has nothing matching `node_modules`, `package-lock.json`, `requirements.txt`, `Pipfile`, `poetry.lock`.
 - no file matching `package.json` has a line matching `"(dev|peer|optional)?[dD]ependencies"`.
+- no file matching `Cargo.toml` has a line matching `^\s*\[(.*\.)?(dev-|build-)?dependencies(\..*)?\]`.
 
 **REQ-BU-004.** *Size.*
 
-At most 800 non-blank lines of source in all: `.ts .mts .mjs .js` or `.py` files under the
-implementation folder, not counting tests (`*.test.*`, `*_test.*`, `test_*.py`, and
-anything under a `test/` or `tests/` folder).
+At most 800 non-blank lines of source in all: `.ts .mts .mjs .js`, `.py` or `.rs` files
+under the implementation folder, not counting tests (`*.test.*`, `*_test.*`, `test_*.py`,
+and anything under a `test/` or `tests/` folder) or Cargo's `target/`. Rust tests kept in
+a source file's own `#[cfg(test)]` module count.
 
 Checked on the implementation folder:
-- files matching `**/*.ts`, `**/*.mts`, `**/*.mjs`, `**/*.js`, `**/*.py`, excluding `**/*.test.*`, `**/*_test.*`, `**/test_*.py`, `**/test/**`, `**/tests/**`, hold at most 800 non-blank lines in total.
+- files matching `**/*.ts`, `**/*.mts`, `**/*.mjs`, `**/*.js`, `**/*.py`, `**/*.rs`, excluding `**/*.test.*`, `**/*_test.*`, `**/test_*.py`, `**/test/**`, `**/tests/**`, `**/target/**`, hold at most 800 non-blank lines in total.
