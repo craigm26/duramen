@@ -196,3 +196,18 @@ non-finite input, which this is not.
 
 Rejected:
 - The REQ-FL-006 form: it reports the input as invalid when the input is finite.
+
+## D-027: The implementation may be in Rust
+
+- Source: Graft, 2026-10-31: Rust rebuilds, proved on this record first
+- Cited by: REQ-BU-001, REQ-BU-003
+
+BU-001 to BU-004 named TypeScript and Python only, so a Rust build of this record failed
+its static checks whatever it did. Nothing else in the record depends on the language: the
+driver protocol is JSON lines, and the edges define number text by ECMAScript's rules, not
+the host's. Decision: `lang` may be `"rs"`; a Rust build uses Cargo, edition 2021, the
+standard library only and no dependency tables, built offline; its build output stays in
+`target/`, outside the size count. Why: the record's point is that any builder can meet it.
+
+Rejected:
+- A separate record for Rust: two records drift, and the point is one record.
