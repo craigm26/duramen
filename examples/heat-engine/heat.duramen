@@ -245,6 +245,13 @@ op wetBulb
   tolerance result.wetBulbC 0.00001
   tolerance result.wetBulbF 0.000018001
   audit text
+  # duramen agree draws from a physical range plus the spec's edges, three draws in four from the
+  # range (issue #9): drawn from any binary64, a tempC near DBL_MAX makes wetBulbF overflow, which
+  # the spec leaves open and the oracle cannot answer. Edges: the validity bounds -20 and 50, 0
+  # and -0.04 ("-0.0" text), RH clamp bounds 5 and 100, and 120 (clamped). Inline, not as named
+  # types, so the suite's static json cases, which carry every named type, do not change.
+  draw tempC number in -40 .. 60 | number in -40 .. 60 | number in -40 .. 60 | (-20 | 50 | 0 | -0.04)
+  draw rhPercent number in 0 .. 100 | number in 0 .. 100 | number in 0 .. 100 | (0 | 5 | 100 | 120)
 
 req WB-001 "Wet-bulb temperature"
   decision D-009, D-018
@@ -331,6 +338,9 @@ op wetBulbF
   tolerance result.wetBulbC 0.00001
   tolerance result.wetBulbF 0.000018001
   audit text
+  # As wetBulb's draws, in °F: -4 and 122 are the validity bounds, 31.928 is -0.04 °C.
+  draw tempF number in -40 .. 140 | number in -40 .. 140 | number in -40 .. 140 | (-4 | 122 | 32 | 31.928)
+  draw rhPercent number in 0 .. 100 | number in 0 .. 100 | number in 0 .. 100 | (0 | 5 | 100 | 120)
 
 req WB-005 "Wet-bulb from °F"
   decision D-010, D-025
