@@ -248,7 +248,7 @@ op wetBulb
   # duramen agree draws from a physical range plus the spec's edges, three draws in four from the
   # range (issue #9): drawn from any binary64, a tempC near DBL_MAX makes wetBulbF overflow, which
   # the spec leaves open and the oracle cannot answer. Edges: the validity bounds -20 and 50, 0
-  # and -0.04 ("-0.0" text), RH clamp bounds 5 and 100, and 120 (clamped). Inline, not as named
+  # and -0.04 ("-0.0" text), RH 0, the RH clamp bounds 5 and 100, and 120 (clamped). Inline, not as named
   # types, so the suite's static json cases, which carry every named type, do not change.
   draw tempC number in -40 .. 60 | number in -40 .. 60 | number in -40 .. 60 | (-20 | 50 | 0 | -0.04)
   draw rhPercent number in 0 .. 100 | number in 0 .. 100 | number in 0 .. 100 | (0 | 5 | 100 | 120)
