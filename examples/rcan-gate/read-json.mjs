@@ -6,9 +6,13 @@
 // go through JSON.parse); everywhere else this is JSON.parse. A copy of duramen's src/json.mjs,
 // kept here so the folder needs nothing outside it.
 
-const probe = `read-json.probe.${process.pid}.${Date.now()}`;
-JSON.parse(`{${JSON.stringify(probe)}:0,"\\\\":0}`);
-const misreads = Object.keys(JSON.parse(`{${JSON.stringify(probe)}:0,"\\"":0}`))[1] !== '"';
+// One probe per escaped key, each a fresh two-member object after one with a "\\" key: the
+// misread follows that object shape, so a bug with a slightly different trigger is still seen.
+const misreads = ['"', '\n', '\u0000', '\u001f'].some((k, n) => {
+  const probe = `read-json.probe.${process.pid}.${Date.now()}.${n}`;
+  JSON.parse(`{${JSON.stringify(probe)}:0,"\\\\":0}`);
+  return Object.keys(JSON.parse(`{${JSON.stringify(probe)}:0,${JSON.stringify(k)}:0}`))[1] !== k;
+});
 
 export function parseJson(text) {
   text = String(text);

@@ -13,9 +13,13 @@
 let misreads;
 function engineMisreads() {
   if (misreads === undefined) {
-    const p = `duramen.json.probe.${process.pid}.${Date.now()}`;
-    JSON.parse(`{${JSON.stringify(p)}:0,"\\\\":0}`);
-    misreads = Object.keys(JSON.parse(`{${JSON.stringify(p)}:0,"\\"":0}`))[1] !== '"';
+    // One probe per escaped key, each a fresh two-member object after one with a "\\" key: the
+    // misread follows that object shape, so a bug with a slightly different trigger is still seen.
+    misreads = ['"', '\n', '\u0000', '\u001f'].some((k, n) => {
+      const p = `duramen.json.probe.${process.pid}.${Date.now()}.${n}`;
+      JSON.parse(`{${JSON.stringify(p)}:0,"\\\\":0}`);
+      return Object.keys(JSON.parse(`{${JSON.stringify(p)}:0,${JSON.stringify(k)}:0}`))[1] !== k;
+    });
   }
   return misreads;
 }
