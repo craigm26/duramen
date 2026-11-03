@@ -1,5 +1,6 @@
 // The command line. Exit status: 0 everything passed; 1 the spec has errors or the suite failed;
 // 2 the command line or a file could not be used; 3 duramen itself failed (a bug: please report).
+import { parseJson } from './json.mjs';
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve, join, dirname, relative, isAbsolute } from 'node:path';
@@ -219,7 +220,7 @@ async function regenCommand(args, io) {
   if (diagnostics.some((d) => d.level === 'error')) { io.err('duramen regen: the record has errors; run duramen check'); return 1; }
   if (!['ts', 'py'].includes(args.lang)) { io.err('duramen regen: --lang ts or --lang py'); return 2; }
   let leakTerms = {};
-  if (args['leak-terms']) { try { leakTerms = JSON.parse(readFileSync(resolve(args['leak-terms']), 'utf8')); } catch (e) { io.err(`duramen regen: --leak-terms: ${e.message}`); return 2; } }
+  if (args['leak-terms']) { try { leakTerms = parseJson(readFileSync(resolve(args['leak-terms']), 'utf8')); } catch (e) { io.err(`duramen regen: --leak-terms: ${e.message}`); return 2; } }
   const maxMinutes = args['max-minutes'] !== undefined ? Number(args['max-minutes']) : 60;
   if (!(maxMinutes > 0)) { io.err('duramen regen: --max-minutes needs a positive number'); return 2; }
   let builder;

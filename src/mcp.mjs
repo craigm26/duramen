@@ -6,6 +6,7 @@
 // names to texts, with `entry`, as `duramen serve` takes it). Nothing here edits a record: the
 // tools read records, write nothing but the temporary folder of a `files` call, and `run`
 // starts the driver an implementation's REGEN.json names, as `duramen run` does.
+import { parseJson } from './json.mjs';
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { validFiles, validName, withRecord } from './serve.mjs';
@@ -146,7 +147,7 @@ export async function mcpServe(input = process.stdin, write = (s) => process.std
   for await (const line of streamLines(input)) {
     if (!line.trim()) continue;
     let msg;
-    try { msg = JSON.parse(line); } catch { write(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } }) + '\n'); continue; }
+    try { msg = parseJson(line); } catch { write(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } }) + '\n'); continue; }
     const job = handle(msg, { version }).then((r) => { if (r && 'id' in msg) write(JSON.stringify(r) + '\n'); }).catch((e) => process.stderr.write(`duramen mcp: ${e.message}\n`));
     pending.add(job);
     job.finally(() => pending.delete(job));

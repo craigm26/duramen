@@ -3,6 +3,7 @@
 // and every bound edge pack is run through the oracle. Examples written `?` take the oracle's
 // value; everything else is a claim the oracle must agree with. A requirement that nothing but
 // the oracle backs is reported (T032), because then the spec is only as right as its model.
+import { parseJson } from './json.mjs';
 import { dirname } from 'node:path';
 import { runDriver, allFinite } from './driver.mjs';
 import { checkType, refsOf, genType, makeRng, seedOf } from './types.mjs';
@@ -71,7 +72,7 @@ export function pick(resp, path) {
     if (i === 0 && parts[0] === 'audit' && parts.length > 1) {
       if (typeof v !== 'string') return { found: false };
       // an audit text that is not JSON, or holds a number too large for binary64, holds no value
-      try { v = JSON.parse(v); } catch { return { found: false }; }
+      try { v = parseJson(v); } catch { return { found: false }; }
       if (!allFinite(v)) return { found: false };
     }
   }

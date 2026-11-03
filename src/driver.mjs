@@ -6,6 +6,7 @@
 // before a failure, so one hung or crashing request does not hide the answers to the others;
 // and it reports what happened (exit status, signal, timeout, output cap, the tail of standard
 // error) instead of throwing.
+import { parseJson } from './json.mjs';
 import { spawn, spawnSync } from 'node:child_process';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -118,7 +119,7 @@ export function parseResponses(stdout, { finite = false } = {}) {
   for (const line of stdout.toString('utf8').split('\n')) {
     if (line.trim() === '') continue;
     let o;
-    try { o = JSON.parse(line); } catch { list.push(undefined); order.push(undefined); bad.push(line); continue; }
+    try { o = parseJson(line); } catch { list.push(undefined); order.push(undefined); bad.push(line); continue; }
     if (finite && !allFinite(o)) { list.push(undefined); order.push(undefined); bad.push(line); continue; }
     if (o && typeof o === 'object' && !Array.isArray(o)) {
       list.push(o);
@@ -197,7 +198,7 @@ export function implDriver(dir) {
   const p = join(dir, 'REGEN.json');
   if (!existsSync(p)) return { error: `${p} not found` };
   let regen;
-  try { regen = JSON.parse(readFileSync(p, 'utf8')); } catch (e) { return { error: `${p} is not valid JSON: ${e.message}` }; }
+  try { regen = parseJson(readFileSync(p, 'utf8')); } catch (e) { return { error: `${p} is not valid JSON: ${e.message}` }; }
   const d = regen?.driver;
   const cmd = typeof d === 'string' || Array.isArray(d) ? d : d && typeof d === 'object' ? d[process.platform] ?? d.default : undefined;
   if (cmd === undefined) return { error: `${p}: no "driver" for ${process.platform}` };

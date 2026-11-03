@@ -3,6 +3,7 @@
 // tree (each node remembers its file), attaches the edge library (lib/edges plus the record's
 // own `edgedef`s), and reads the data files that evidence tables name. The parser stays pure;
 // all file access is here.
+import { parseJson } from './json.mjs';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, resolve, relative, basename, extname, isAbsolute } from 'node:path';
 import { setOwn } from './types.mjs';
@@ -81,7 +82,7 @@ function readJSONL(text) {
   for (let k = 0; k < lines.length; k++) {
     if (lines[k].trim() === '') continue;
     let o;
-    try { o = JSON.parse(lines[k]); } catch (e) { return { error: `line ${k + 1}: ${e.message}` }; }
+    try { o = parseJson(lines[k]); } catch (e) { return { error: `line ${k + 1}: ${e.message}` }; }
     if (!o || typeof o !== 'object' || Array.isArray(o)) return { error: `line ${k + 1}: not an object` };
     rows.push({ line: k + 1, cells: Object.fromEntries(Object.entries(o).map(([key, v]) => [key, typeof v === 'string' ? v : JSON.stringify(v)])), json: o });
   }
@@ -93,7 +94,7 @@ function readJSONL(text) {
 function cellValue(text, as) {
   const t = text.trim();
   if (as !== 'string') {
-    try { const v = JSON.parse(t); return { value: v, raw: t }; } catch { /* a bare word */ }
+    try { const v = parseJson(t); return { value: v, raw: t }; } catch { /* a bare word */ }
   }
   return { value: text, raw: JSON.stringify(text) };
 }
@@ -164,7 +165,9 @@ export function loadRecord(path, { useLibrary = true } = {}) {
     defs.set(def.name, { ...def, fromLib });
     for (const fam of def.family) families.set(fam, [...(families.get(fam) ?? []), def.name]);
   };
-  if (useLibrary) for (const p of library()) for (const def of p.ast.edgedefs) addDef({ ...def, file: p.ast.file }, true);
+  // A library file checked as the record is read once, as the record (not again as the library).
+  const own = new Set(files.map((f) => resolve(f)));
+  if (useLibrary) for (const p of library()) if (!own.has(resolve(p.ast.file))) for (const def of p.ast.edgedefs) addDef({ ...def, file: p.ast.file }, true);
   for (const def of ast.edgedefs) addDef(def, false);
   for (const fam of families.keys()) if (defs.has(fam)) diag('error', defs.get(fam), 'T033', `"${fam}" names both an edge and a family of edges`);
   ast.edgeLib = { defs, families };

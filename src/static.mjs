@@ -2,6 +2,7 @@
 // such as REGEN.json's shape, line and dependency budgets, or the builder's own test command.
 // They run in-process against the folder (the test command runs through the platform shell,
 // as the regen protocol says `build` and `test` do).
+import { parseJson } from './json.mjs';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
@@ -109,7 +110,7 @@ export async function evaluateStatic(st, dir, typeEnv, { maxFiles = MAX_FILES, m
     }
     case 'json': {
       let value;
-      try { value = JSON.parse(readFileSync(join(dir, st.target), 'utf8')); } catch (e) { return { ok: false, why: [`${st.target}: ${e.code === 'ENOENT' ? 'not found' : e.message}`] }; }
+      try { value = parseJson(readFileSync(join(dir, st.target), 'utf8')); } catch (e) { return { ok: false, why: [`${st.target}: ${e.code === 'ENOENT' ? 'not found' : e.message}`] }; }
       const why = checkType(st.type, value, typeEnv);
       return { ok: !why, why: why ? [`${st.target} ${why}`] : [] };
     }
@@ -132,7 +133,7 @@ export async function evaluateStatic(st, dir, typeEnv, { maxFiles = MAX_FILES, m
     }
     case 'command': {
       let regen;
-      try { regen = JSON.parse(readFileSync(join(dir, 'REGEN.json'), 'utf8')); } catch (e) { return { ok: false, why: [`REGEN.json: ${e.code === 'ENOENT' ? 'not found' : e.message}`] }; }
+      try { regen = parseJson(readFileSync(join(dir, 'REGEN.json'), 'utf8')); } catch (e) { return { ok: false, why: [`REGEN.json: ${e.code === 'ENOENT' ? 'not found' : e.message}`] }; }
       const c = regenCommand(regen, st.key);
       if (c.error) return { ok: false, why: [c.error] };
       if (c.command.trim() === '') return { ok: true, why: [] }; // an empty command means there is nothing to do

@@ -12,6 +12,7 @@
 //
 // A breaking change needs a new major version (before 1.0, a new minor: 0.MINOR.PATCH, as npm
 // reads it); tightening and additive changes a new minor; the rest a new patch.
+import { parseJson } from './json.mjs';
 import { dirname } from 'node:path';
 import { requestFor, holds, expectsError, isRaw, isSolo } from './check.mjs';
 import { runDriver } from './driver.mjs';
@@ -88,8 +89,8 @@ export function diffRecords(a, b) {
     for (const [k, ex] of exA) if (!exB.has(k)) add('relaxing', `REQ-${id}: example removed (was line ${ex.line})`);
     const sa = new Set(old.statics.map((s) => JSON.stringify({ ...s, line: 0, file: 0 })));
     const sb = new Set(r.statics.map((s) => JSON.stringify({ ...s, line: 0, file: 0 })));
-    for (const s of sb) if (!sa.has(s)) add('tightening', `REQ-${id}: static check added or changed (${JSON.parse(s).kind})`);
-    for (const s of sa) if (!sb.has(s)) add('relaxing', `REQ-${id}: static check removed or changed (${JSON.parse(s).kind})`);
+    for (const s of sb) if (!sa.has(s)) add('tightening', `REQ-${id}: static check added or changed (${parseJson(s).kind})`);
+    for (const s of sa) if (!sb.has(s)) add('relaxing', `REQ-${id}: static check removed or changed (${parseJson(s).kind})`);
     if (JSON.stringify(old.decisions) !== JSON.stringify(r.decisions)) add('prose', `REQ-${id}: decisions ${old.decisions.join(', ') || '(none)'} -> ${r.decisions.join(', ') || '(none)'}`);
   }
   // An open item that takes the place of a requirement with its ID is reported with the

@@ -2,6 +2,7 @@
 // lines on standard input, one canonical JSON response line per request on standard output.
 // duramen runs every example in the spec through this program before it renders anything.
 import * as O from './oracle.mjs';
+import { parseJson } from './read-json.mjs';
 
 class Bad extends Error {}
 const SPECIAL = { NaN: NaN, Infinity: Infinity, '-Infinity': -Infinity };
@@ -39,7 +40,7 @@ const OPS = {
 
 function handle(line) {
   let req;
-  try { req = JSON.parse(line); } catch { req = undefined; }
+  try { req = parseJson(line); } catch { req = undefined; }
   if (!isObj(req) || typeof req.id !== 'string') return O.canon({ id: null, error: 'bad_request' });
   const { id } = req;
   if (typeof req.op !== 'string' || !has(OPS, req.op)) return O.canon({ id, error: 'unknown_op' });
@@ -68,7 +69,7 @@ for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) {
   // spec leaves open); it says so instead of stopping, and `duramen check` reports the example.
   try { out.push(handle(line) + '\n'); } catch (e) {
     let id = null;
-    try { id = JSON.parse(line).id ?? null; } catch {}
+    try { id = parseJson(line).id ?? null; } catch {}
     out.push(JSON.stringify({ id, oracle_error: e.message }) + '\n');
   }
 }
