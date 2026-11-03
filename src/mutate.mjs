@@ -7,6 +7,7 @@
 // a logical operator), runs `duramen check` against the mutated oracle, and counts the mistakes
 // that some check catches. A mistake nothing catches marks behavior that only the oracle
 // stands behind: add a typed value, evidence or a property there, or say it is open.
+import { parseJson } from './json.mjs';
 import { readFileSync, writeFileSync, mkdtempSync, cpSync, rmSync, readdirSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { join, dirname, relative, resolve } from 'node:path';
@@ -124,7 +125,7 @@ function coverage(covDir, file) {
   const runs = [];
   for (const f of readdirSync(covDir)) {
     let j;
-    try { j = JSON.parse(readFileSync(join(covDir, f), 'utf8')); } catch { continue; }
+    try { j = parseJson(readFileSync(join(covDir, f), 'utf8')); } catch { continue; }
     for (const script of j.result ?? []) {
       if (script.url !== url) continue;
       runs.push(script.functions.flatMap((fn) => fn.ranges.map((r) => [r.startOffset, r.endOffset, r.count])));

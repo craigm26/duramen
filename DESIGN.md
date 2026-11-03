@@ -407,11 +407,20 @@ the container where the rounds ran). Two things change from Node.js 24 on:
   Object.keys(JSON.parse('{"p":0,"\\"":0}'));   // Node.js 22: ["p", "\""]; Node.js 24 and 26: ["p", "\\"]
   ```
 
-  duramen reads all JSON with JSON.parse and does not work around this. It checks for the bug
-  when it starts (`jsonParseMisreadsKeys`) and says so on standard error when the engine has
-  it. Answers can then be wrong for JSON whose objects hold a key that is one backslash. The
-  heat-engine slice has one: property CJ-P1 draws random JSON and fails on such a sample, so on
-  those engines the tests that need the slice to check clean are skipped, saying why.
+  duramen does not read JSON with JSON.parse on such an engine. When it starts it checks for the
+  bug (`jsonParseMisreadsKeys`), and when the engine has it, a text that holds a backslash (the
+  only way a key can hold an escape) is read by `src/json.mjs`, which builds objects member by
+  member and gives the value JSON.parse would; any other text still goes to JSON.parse. The
+  example oracles' drivers carry the same reader (`read-json.mjs` in each folder, so the folder
+  needs nothing outside it). duramen still says on standard error that the engine has the bug,
+  because an oracle or an implementation that reads its requests with JSON.parse can still
+  misread them. Before this, on Node.js 24.16, property CJ-P1 of the heat-engine slice failed in
+  duramen's own `parse` on a sample with the keys `"\u0000"` and `"\""` after an earlier sample had
+  the keys `"\u0000"` and `"\\"`, and property NP-P1 of jsonpath failed in the oracle's process.
+  Both records check clean there now. The
+  TypeScript builds kept here (heat-engine t06-ts and L01-ts, the jsonpath builds, rcan-gate g01)
+  read requests with JSON.parse and can answer such a request wrongly on Node.js 24; their suites
+  ran on Node.js 22.
 
 CI runs the tests on Node.js 22 and 24.
 

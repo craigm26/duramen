@@ -3,6 +3,7 @@
 // expectations (`expect`), table rows (`|`) and other continuation lines are indented four.
 // The parser never throws on bad input: it returns { ast, diagnostics }, and every diagnostic
 // has a file, a line and a column.
+import { parseJson } from './json.mjs';
 import { parseType, setOwn } from './types.mjs';
 import { parseExpr, namesOf, unknownFunctions } from './expr.mjs';
 import { allFinite } from './driver.mjs';
@@ -112,7 +113,7 @@ function parseInto(source, file, ast, diag) {
   const unquote = (s, n, what, col = 1) => {
     const m = s.match(/^"((?:[^"\\]|\\.)*)"$/s);
     if (!m) { diag('error', n, 'P004', `${what} must be a quoted string`, col); return s; }
-    try { return JSON.parse(`"${m[1]}"`); } catch { diag('error', n, 'P004', `${what}: bad string escape`, col); return m[1]; }
+    try { return parseJson(`"${m[1]}"`); } catch { diag('error', n, 'P004', `${what}: bad string escape`, col); return m[1]; }
   };
   const idAndTitle = (s, what) => {
     const m = s.rest.match(/^(\S+)\s+(".*")$/s);
@@ -155,7 +156,7 @@ function parseInto(source, file, ast, diag) {
   // (1e400) cannot be written back, so it is not taken (P009; `example raw` can send one).
   function parseJSON(s, n, what, col = 1) {
     let value;
-    try { value = JSON.parse(s); } catch (e) {
+    try { value = parseJson(s); } catch (e) {
       const at = e.message.match(/position (\d+)/);
       diag('error', n, 'P009', `${what} is not valid JSON: ${e.message}`, col + (at ? Number(at[1]) : 0));
       return { ok: false };
@@ -277,7 +278,7 @@ function parseInto(source, file, ast, diag) {
       if (text[i] === '"') {
         const m = text.slice(i).match(/^"(?:[^"\\]|\\.)*"/s);
         if (!m) return null;
-        try { out.push(JSON.parse(m[0])); } catch { return null; }
+        try { out.push(parseJson(m[0])); } catch { return null; }
         i += m[0].length;
       } else {
         const m = text.slice(i).match(/^[\w-]+/);
@@ -307,7 +308,7 @@ function parseInto(source, file, ast, diag) {
       const dq = c.rest.match(/^raw\s+("(?:[^"\\]|\\.)*")$/s);
       const sq = c.rest.match(/^raw\s+'(.*)'$/s);
       let rawLine = null;
-      if (dq) { try { rawLine = JSON.parse(dq[1]); } catch { rawLine = null; } }
+      if (dq) { try { rawLine = parseJson(dq[1]); } catch { rawLine = null; } }
       else if (sq) rawLine = sq[1];
       if (rawLine === null) { diag('error', c.n, 'P004', 'example raw "<request line>" (a JSON string) or example raw \'<request line>\'', c.restCol + 4); bad = true; }
       else if (/[\r\n]/.test(rawLine)) { diag('error', c.n, 'P026', 'a raw request line cannot contain a line break (CR or LF)', c.restCol); bad = true; }
@@ -336,7 +337,7 @@ function parseInto(source, file, ast, diag) {
         // `from` and a quoted string that is not a JSON string do not end the line: it is then
         // `input <path>`, and that path is of no form (REQ-SY-011).
         let fromName;
-        if (im[2] !== undefined) { try { fromName = JSON.parse(im[2]); } catch { im = [l.text, l.text.replace(/^input\s+/, ''), undefined]; } }
+        if (im[2] !== undefined) { try { fromName = parseJson(im[2]); } catch { im = [l.text, l.text.replace(/^input\s+/, ''), undefined]; } }
         // The text of a block is taken first, so that a bad input line does not make its text
         // look like lines of the example.
         const block = [];
@@ -387,20 +388,20 @@ function parseInto(source, file, ast, diag) {
   //   static text "<glob>"[, ...] not matching "<regex>"
   function staticCheck(c) {
     const s = c.rest;
-    const globs = (t) => { try { const v = JSON.parse(`[${t}]`); return Array.isArray(v) && v.length && v.every((x) => typeof x === 'string') ? v : null; } catch { return null; } };
+    const globs = (t) => { try { const v = parseJson(`[${t}]`); return Array.isArray(v) && v.length && v.every((x) => typeof x === 'string') ? v : null; } catch { return null; } };
     let m = s.match(/^file\s+(.+?)\s+(exists|absent)$/s);
     if (m) { const g = globs(m[1]); if (g) return { kind: m[2] === 'exists' ? 'exists' : 'absent', globs: g, line: c.n }; }
     m = s.match(/^lines\s+(.+?)\s+at most\s+(\d+)(?:\s+excluding\s+(.+))?$/s);
     if (m) { const g = globs(m[1]); const x = m[3] ? globs(m[3]) : []; if (g && x) return { kind: 'lines', globs: g, max: Number(m[2]), exclude: x, line: c.n }; }
     m = s.match(/^json\s+("(?:[^"\\]|\\.)*")\s+matches\s+(.+)$/s);
-    if (m) { const t = typeOf(m[2], c.n, c.restCol + s.indexOf(m[2]), 'static json'); return t ? { kind: 'json', target: JSON.parse(m[1]), type: t, typeText: m[2], line: c.n } : null; }
+    if (m) { const t = typeOf(m[2], c.n, c.restCol + s.indexOf(m[2]), 'static json'); return t ? { kind: 'json', target: parseJson(m[1]), type: t, typeText: m[2], line: c.n } : null; }
     m = s.match(/^command\s+(\S+)\s+exits\s+0(?:\s+within\s+(\d+))?$/);
     if (m) return { kind: 'command', key: m[1], within: m[2] ? Number(m[2]) : 300, line: c.n };
     m = s.match(/^text\s+(.+?)\s+not matching\s+("(?:[^"\\]|\\.)*")$/s);
     if (m) {
       const g = globs(m[1]);
       let re = null;
-      try { re = JSON.parse(m[2]); new RegExp(re, 'u'); } catch (e) { diag('error', c.n, 'P027', `static text: bad pattern: ${e.message}`, c.restCol); return null; }
+      try { re = parseJson(m[2]); new RegExp(re, 'u'); } catch (e) { diag('error', c.n, 'P027', `static text: bad pattern: ${e.message}`, c.restCol); return null; }
       if (g) return { kind: 'text', globs: g, pattern: re, line: c.n };
     }
     diag('error', c.n, 'P027', 'static file "<glob>" exists|absent | lines "<glob>" at most <n> [excluding "<glob>"] | json "<file>" matches <type> | command <key> exits 0 [within <s>] | text "<glob>" not matching "<re>"', c.restCol);
@@ -504,10 +505,10 @@ function parseInto(source, file, ast, diag) {
             const cands = seps.flatMap((sep) => { const at = []; for (let k = c.rest.indexOf(sep); k >= 0; k = c.rest.indexOf(sep, k + 1)) at.push([k, sep]); return at; }).sort((a, b) => a[0] - b[0]);
             for (const [k, sep] of cands) {
               const input = c.rest.slice(0, k);
-              try { JSON.parse(input); } catch { continue; }
+              try { parseJson(input); } catch { continue; }
               let text = c.rest.slice(k + sep.length);
               if (sep === ' escaped ') {
-                try { text = JSON.parse(text); } catch { text = null; }
+                try { text = parseJson(text); } catch { text = null; }
                 if (typeof text !== 'string') { diag('error', c.n, 'P030', 'item <json input> escaped <JSON string>: the expected text is a JSON string', c.restCol + k + sep.length); found = true; break; }
               }
               def.pack.push({ input, text, line: c.n });
@@ -671,7 +672,7 @@ function parseInto(source, file, ast, diag) {
             const m = c.rest.match(/^(\S+)(?:\s+from\s+("(?:[^"\\]|\\.)*"))?$/s);
             if (!m) { diag('error', c.n, 'P041', 'table <op> [from "<file>"]', c.restCol); continue; }
             if (!m[2]) { ev.tables.push({ op: m[1], line: c.n, rows: tableRows(c, m[1], 'evidence') }); continue; }
-            const t = { op: m[1], file: JSON.parse(m[2]), line: c.n, columns: [], expects: [], idColumn: null };
+            const t = { op: m[1], file: parseJson(m[2]), line: c.n, columns: [], expects: [], idColumn: null };
             for (const l of contLines(c)) {
               let mm;
               if ((mm = l.text.match(/^columns\s+(.+)$/s))) {

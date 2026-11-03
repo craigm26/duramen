@@ -7,6 +7,7 @@
 // .claude/settings.json:
 //   {"hooks": {"PostToolUse": [{"matcher": "Edit|Write|MultiEdit",
 //     "hooks": [{"type": "command", "command": "node /path/to/duramen/bin/duramen.mjs hook"}]}]}}
+import { parseJson } from './json.mjs';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve, isAbsolute, basename, relative } from 'node:path';
 import { recordFiles } from './record.mjs';
@@ -33,7 +34,7 @@ export function recordOf(file, top = dirname(file)) {
 
 export async function hook(input, { run } = {}) {
   let event;
-  try { event = JSON.parse(input); } catch { return { code: 0, out: '' }; }
+  try { event = parseJson(input); } catch { return { code: 0, out: '' }; }
   const f = event?.tool_input?.file_path ?? event?.tool_input?.path;
   if (typeof f !== 'string' || !f.endsWith('.duramen')) return { code: 0, out: '' };
   const file = isAbsolute(f) ? f : resolve(event.cwd ?? process.cwd(), f);

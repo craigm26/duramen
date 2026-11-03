@@ -10,6 +10,7 @@
 // the record named by `entry` (a file or a folder; "." for all of them) is read from there, and
 // the folder is removed. A diagnostic is written "<file>:<line>: <level> <code>"; columns and
 // message text are not part of the contract.
+import { parseJson } from './json.mjs';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join, dirname, relative, isAbsolute } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -126,7 +127,7 @@ export async function serve(stdin = process.stdin, write = (s) => process.stdout
     let resp;
     let req;
     try {
-      try { req = JSON.parse(line); } catch { req = undefined; }
+      try { req = parseJson(line); } catch { req = undefined; }
       resp = req === undefined ? ERR(null, 'bad_request') : await handle(req);
     } catch (e) {
       process.stderr.write(`duramen serve: internal error: ${e?.stack ?? e}\n`);

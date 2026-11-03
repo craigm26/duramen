@@ -1,6 +1,7 @@
 // The driver protocol in front of oracle.mjs: one JSON request per line on standard input, one
 // response per non-blank line on standard output, in order.
 import { decide, stateProblem, commandProblem } from './oracle.mjs';
+import { parseJson } from './read-json.mjs';
 
 const answer = (req) => {
   if (req === null || typeof req !== 'object' || Array.isArray(req) || typeof req.id !== 'string') return { id: null, error: 'bad_request' };
@@ -20,6 +21,6 @@ if (lines[lines.length - 1] === '') lines.pop();
 for (const line of lines) {
   if (line.trim() === '') continue;
   let req;
-  try { req = JSON.parse(line); } catch { req = undefined; }
+  try { req = parseJson(line); } catch { req = undefined; }
   process.stdout.write(JSON.stringify(req === undefined ? { id: null, error: 'bad_request' } : answer(req)) + '\n');
 }

@@ -16,6 +16,7 @@
 //
 // The audit and the leak check are adapted from the regen kit's audit-transcript.mjs and
 // leak-check.mjs (MIT, Copyright (c) 2026 craigm26).
+import { parseJson } from './json.mjs';
 import { spawn, spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, statSync, cpSync, existsSync, openSync, closeSync, appendFileSync } from 'node:fs';
@@ -60,7 +61,7 @@ const CODE_HOSTS = ['github.com', 'raw.githubusercontent.com', 'registry.npmjs.o
 
 export function auditTranscript(text, workDir, { identifiers = [], allowedDomains = [], family = 'sonnet' } = {}) {
   const WORK = normalize(resolve(workDir));
-  const lines = text.split('\n').filter((l) => l.trim()).map((l, i) => { try { return JSON.parse(l); } catch { return { type: 'unparseable', line: i + 1 }; } });
+  const lines = text.split('\n').filter((l) => l.trim()).map((l, i) => { try { return parseJson(l); } catch { return { type: 'unparseable', line: i + 1 }; } });
   const init = lines.find((l) => l.type === 'system' && l.subtype === 'init') ?? {};
   const initProblems = [];
   if (normalize(resolve(init.cwd ?? '')).toLowerCase() !== WORK.toLowerCase()) initProblems.push(`cwd ${init.cwd} is not the work folder`);
@@ -132,7 +133,7 @@ export function auditTranscript(text, workDir, { identifiers = [], allowedDomain
 // toolchain, and refusals counted as denied calls.
 export function auditAgentTranscript(text, workDir, { identifiers = [], lang = 'ts' } = {}) {
   const WORK = normalize(resolve(workDir));
-  const lines = text.split('\n').filter((l) => l.trim()).map((l, i) => { try { return JSON.parse(l); } catch { return { type: 'unparseable', line: i + 1 }; } });
+  const lines = text.split('\n').filter((l) => l.trim()).map((l, i) => { try { return parseJson(l); } catch { return { type: 'unparseable', line: i + 1 }; } });
   const inits = lines.filter((l) => l.type === 'init');
   const init = inits[0] ?? {};
   const initProblems = [];

@@ -11,6 +11,8 @@
 // Evaluation never throws: a type error or a missing member makes the expression's value an
 // Undefined with a reason, and an expectation that is not exactly `true` fails with that reason.
 
+import { parseJson } from './json.mjs';
+
 export class Undef {
   constructor(why) { this.why = why; }
 }
@@ -206,7 +208,7 @@ function call(fn, args) {
     case 'len': return typeof args[0] === 'string' || Array.isArray(args[0]) ? args[0].length : args[0] && typeof args[0] === 'object' ? Object.keys(args[0]).length : undef(`len needs a string, array or object, got ${show(args[0])}`);
     case 'keys': return args[0] && typeof args[0] === 'object' && !Array.isArray(args[0]) ? Object.keys(args[0]) : undef(`keys needs an object, got ${show(args[0])}`);
     case 'has': return !isU(args[0]) && args[0] !== null && typeof args[0] === 'object' && typeof args[1] === 'string' && Object.hasOwn(args[0], args[1]);
-    case 'parse': { if (typeof args[0] !== 'string') return undef(`parse needs a string, got ${show(args[0])}`); try { return JSON.parse(args[0]); } catch (e) { return undef(`parse: ${e.message}`); } }
+    case 'parse': { if (typeof args[0] !== 'string') return undef(`parse needs a string, got ${show(args[0])}`); try { return parseJson(args[0]); } catch (e) { return undef(`parse: ${e.message}`); } }
     case 'text': { const s = JSON.stringify(args[0]); return s === undefined ? undef('text: no JSON text') : s; }
     case 'isnum': return num(args[0]) && Number.isFinite(args[0]);
     case 'isint': return Number.isInteger(args[0]);
